@@ -21,7 +21,7 @@ const LoaderWrapper = styled('div')(({ theme }) => ({
   }
 }));
 
-export interface LoaderProps extends LinearProgressProps {}
+export interface LoaderProps extends LinearProgressProps { }
 
 const Loader = () => (
   <LoaderWrapper>

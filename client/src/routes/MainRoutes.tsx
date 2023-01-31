@@ -14,10 +14,7 @@ const MaintenanceComingSoon = Loadable(lazy(() => import('pages/maintenance/comi
 
 // render - sample page
 const ClusterHealth = Loadable(lazy(() => import('pages/dashboard/cluster-health')));
-const DatasetHealth = Loadable(lazy(() => import('pages/dashboard/dataset-health')));
-
-
-// ==============================|| MAIN ROUTING ||============================== //
+const NewDataset = Loadable(lazy(() => import('pages/dataset/new')));
 
 const MainRoutes = {
   path: '/',
@@ -34,12 +31,12 @@ const MainRoutes = {
           path: 'dashboard',
           children: [
             {
-              path: 'cluster',
+              path: 'home',
               element: <ClusterHealth />
             },
             {
-              path: 'dataset',
-              element: <DatasetHealth />
+              path: 'dataset/new',
+              element: <NewDataset />
             }
           ]
         }

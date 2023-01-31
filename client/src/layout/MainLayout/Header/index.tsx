@@ -11,6 +11,8 @@ import IconButton from 'components/@extended/IconButton';
 
 // assets
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import ClusterStatus from 'sections/widgets/Cluster';
+import { useSelector } from 'react-redux';
 
 // ==============================|| MAIN LAYOUT - HEADER ||============================== //
 
@@ -22,6 +24,7 @@ interface Props {
 const Header = ({ open, handleDrawerToggle }: Props) => {
   const theme = useTheme();
   const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
+  const globalConfigState: Record<string, any> = useSelector((state: any) => state.config);
 
   // header content
   const headerContent = useMemo(() => <HeaderContent />, []);
@@ -31,19 +34,24 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
 
   // common header
   const mainHeader: ReactNode = (
-    <Toolbar>
-      <IconButton
-        aria-label="open drawer"
-        onClick={handleDrawerToggle}
-        edge="start"
-        color="secondary"
-        variant="light"
-        sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor, ml: { xs: 0, lg: -2 } }}
-      >
-        {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-      </IconButton>
-      {headerContent}
-    </Toolbar>
+    <div id='rootHeader'>
+      <Toolbar>
+        <IconButton
+          aria-label="open drawer"
+          onClick={handleDrawerToggle}
+          edge="start"
+          color="secondary"
+          variant="light"
+          sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor, ml: { xs: 0, lg: -2 } }}
+        >
+          {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+        </IconButton>
+        {headerContent}
+      </Toolbar>
+      {globalConfigState?.showClusterMenu && <Toolbar>
+        <ClusterStatus focusInput={() => { }}></ClusterStatus>
+      </Toolbar>}
+    </div>
   );
 
   // app-bar params
@@ -65,7 +73,9 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
           {mainHeader}
         </AppBarStyled>
       ) : (
-        <AppBar {...appBar}>{mainHeader}</AppBar>
+        <AppBar {...appBar}>
+          {mainHeader}
+        </AppBar>
       )}
     </>
   );

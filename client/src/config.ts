@@ -35,13 +35,13 @@ export const AUTH0_API = {
 // ==============================|| THEME CONFIG  ||============================== //
 
 const config: DefaultConfigProps = {
-  defaultPath: '/sample-page',
+  defaultPath: '/dashboard/home',
   fontFamily: `'Public Sans', sans-serif`,
   i18n: 'en',
   miniDrawer: false,
   container: true,
   mode: 'light',
-  presetColor: 'default',
+  presetColor: 'theme7',
   themeDirection: 'ltr'
 };
 

@@ -4,12 +4,18 @@ import { combineReducers } from 'redux';
 // project import
 import menu from './menu';
 import snackbar from './snackbar';
-
-// ==============================|| COMBINE REDUCERS ||============================== //
+import config from './config'
+import dataset from './dataset'
+import jsonSchema from './jsonSchema'
+import wizard from './wizard'
 
 const reducers = combineReducers({
   menu,
-  snackbar
+  snackbar,
+  config,
+  dataset,
+  jsonSchema,
+  wizard
 });
 
 export default reducers;

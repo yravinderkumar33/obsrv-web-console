@@ -22,6 +22,8 @@ import { openDrawer } from 'store/reducers/menu';
 
 const MainLayout = () => {
   const theme = useTheme();
+  const [mainContainerHeight, setMainContainerHeight] = useState(0)
+  const globalConfig = useSelector((state: any) => state.config)
   const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
 
   const { container, miniDrawer } = useConfig();
@@ -43,20 +45,22 @@ const MainLayout = () => {
       setOpen(!matchDownLG);
       dispatch(openDrawer({ drawerOpen: !matchDownLG }));
     }
+    setMainContainerHeight(document.querySelector("#rootHeader")?.clientHeight || 0)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matchDownLG]);
+  }, [matchDownLG, globalConfig]);
 
   // useEffect(() => {
   //   if (open !== drawerOpen) setOpen(drawerOpen);
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [drawerOpen]);
 
+
   return (
     <Box sx={{ display: 'flex', width: '100%' }}>
       <Header open={open} handleDrawerToggle={handleDrawerToggle} />
       <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
       <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
-        <Toolbar />
+        <Toolbar style={{ 'height': `${mainContainerHeight}px` }} />
         {container && (
           <Container
             maxWidth="xl"

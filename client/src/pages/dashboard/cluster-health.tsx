@@ -1,17 +1,29 @@
-// material-ui
-import { Typography } from '@mui/material';
+import {
+    Grid
+} from '@mui/material';
+import Loader from 'components/Loader';
+import FilteringTable from 'pages/tables/filtering';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchDataThunk } from 'store/middlewares';
 
-// project import
-import MainCard from 'components/MainCard';
+const ClusterHealth = () => {
 
-// ==============================|| SAMPLE PAGE ||============================== //
+    const dataset = useSelector((state: any) => state.dataset)
+    const dispatch = useDispatch();
 
-const ClusterHealth = () => (
-    <MainCard title="Cluster Health">
-        <Typography variant="body2">
-            Cluster health
-        </Typography>
-    </MainCard>
-);
+    useEffect(() => {
+        dispatch(fetchDataThunk({}))
+    }, [])
+
+    return (
+        <Grid container rowSpacing={4.5} columnSpacing={3}>
+            <Grid item xs={12}>
+                {dataset?.status !== 'success' && <Loader />}
+                {dataset?.status === 'success' && <FilteringTable></FilteringTable>}
+            </Grid>
+        </Grid>
+    )
+};
 
 export default ClusterHealth;

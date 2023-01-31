@@ -12,25 +12,16 @@ const icons = {
   DashboardOutlined
 };
 
-// ==============================|| MENU ITEMS - SUPPORT ||============================== //
-
 const other: NavItemType = {
   id: 'dashboard',
   title: <FormattedMessage id="Dashboard" />,
   type: 'group',
   children: [
     {
-      id: 'cluster',
-      title: <FormattedMessage id="Cluster" />,
+      id: 'home',
+      title: <FormattedMessage id="Home" />,
       type: 'item',
-      url: '/dashboard/cluster',
-      icon: icons.DashboardOutlined
-    },
-    {
-      id: 'dataset',
-      title: <FormattedMessage id="Dataset" />,
-      type: 'item',
-      url: '/dashboard/dataset',
+      url: '/dashboard/home',
       icon: icons.DashboardOutlined
     }
   ]
