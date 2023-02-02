@@ -28,7 +28,6 @@ export default function PlaceholderContent({ type }: { type?: string }) {
               <Typography component="span" color="primary" sx={{ textDecoration: 'underline' }}>
                 browse
               </Typography>
-              &nbsp;thorough your machine
             </Typography>
           </Stack>
         </Stack>

@@ -5,6 +5,7 @@ import * as _ from 'lodash'
 import AnimateButton from 'components/@extended/AnimateButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { addState } from 'store/reducers/wizard';
+import { IWizard } from 'types/formWizard';
 
 const validationSchema = yup.object({ name: yup.string().required('Dataset Name is required') });
 
@@ -13,9 +14,7 @@ interface AddressFormProps {
   setErrorIndex: (i: number | null) => void;
 }
 
-type IWizard = { metadata: object, pages: object };
 const pageMeta = { pageId: 'datasetConfiguration', title: "Dataset Configuration" };
-
 const DatasetConfiguration = ({ handleNext, setErrorIndex }: AddressFormProps) => {
   const dispatch = useDispatch();
   const wizardState: IWizard = useSelector((state: any) => state?.wizard);
@@ -28,6 +27,7 @@ const DatasetConfiguration = ({ handleNext, setErrorIndex }: AddressFormProps) =
       dispatch(
         addState({
           id: pageMeta.pageId,
+          index: 0,
           state: { ...formik.values }
         }));
       handleNext();

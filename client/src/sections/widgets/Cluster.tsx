@@ -44,25 +44,18 @@ const ClusterStatus = ({ focusInput }: Props) => {
               <Box sx={{ position: 'absolute', bottom: '-7px', left: 0, zIndex: 1 }}>
                 <BackLeft />
               </Box>
-              <Grid container justifyContent="space-around" alignItems="center" sx={{ position: 'relative', zIndex: 5 }}>
+              <Grid container justifyContent="space-evenly" alignItems="center" sx={{ position: 'relative', zIndex: 5 }}>
                 <Grid item>
-                  <Stack direction="row" spacing={matchDownSM ? 1 : 1} alignItems="center">
-                    <Box sx={{ ml: { xs: 0, sm: 1 } }}>
-                      <ProfileRadialChart />
-                    </Box>
-                    <Box sx={{ ml: { xs: 0, sm: 1 } }}>
-                      <TrafficSources />
-                    </Box>
-                    <Box sx={{ ml: { xs: 0, sm: 1 } }}>
-                      <ApexChart metadata={chartMeta.disk_line} {...{ shuffle: true }} />
-                    </Box>
-                    <Box sx={{ ml: { xs: 0, sm: 1 } }}>
-                      <ApexChart metadata={chartMeta.cpu_area} {...{ shuffle: true }} />
-                    </Box>
-                    <Box sx={{ ml: { xs: 0, sm: 1 } }}>
-                      <ApexChart metadata={chartMeta.disk_line} {...{ shuffle: true }} />
-                    </Box>
-                  </Stack>
+                  <ProfileRadialChart />
+                </Grid>
+                <Grid item>
+                  <TrafficSources />
+                </Grid>
+                <Grid item>
+                  <ApexChart metadata={chartMeta.disk_line} {...{ shuffle: 'true' }} />
+                </Grid>
+                <Grid item>
+                  <ApexChart metadata={chartMeta.disk_line} {...{ shuffle: 'true' }} />
                 </Grid>
               </Grid>
               <Box sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}>

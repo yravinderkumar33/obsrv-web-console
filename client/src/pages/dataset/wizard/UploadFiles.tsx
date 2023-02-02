@@ -8,18 +8,37 @@ import UploadMultiFile from 'components/third-party/dropzone/MultiFile';
 import { UnorderedListOutlined, AppstoreOutlined } from '@ant-design/icons';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { Button } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import { IWizard } from 'types/formWizard';
+import * as _ from 'lodash';
+import { addState } from 'store/reducers/wizard';
+import { fetchJsonSchemaThunk } from 'store/middlewares';
 
-interface AddressFormProps {
-    handleNext: () => void;
-    handleBack: () => void;
-    setErrorIndex: (i: number | null) => void;
-}
+const pageMeta = { pageId: 'uploadSampleData', title: "Upload Sample Events" };
 
-const UploadFiles = ({ handleNext, setErrorIndex, handleBack }: AddressFormProps) => {
+const UploadFiles = ({ handleNext, setErrorIndex, handleBack }: any) => {
     const [list, setList] = useState(false);
+    const dispatch = useDispatch()
+    const wizardState: IWizard = useSelector((state: any) => state?.wizard);
+    const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
 
-    const onUpload = () => {
-        setErrorIndex(1);
+    const form = {
+        initialState: {
+            files: pageData?.state?.files || null
+        },
+        onSubmit(values: any) {
+            handleNext();
+        }
+    }
+
+    const onUpload = (files: any) => {
+        dispatch(fetchJsonSchemaThunk({}));
+        dispatch(
+            addState({
+                id: pageMeta.pageId,
+                index: 1,
+                state: { files }
+            }));
         handleNext();
     }
 
@@ -28,7 +47,7 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack }: AddressFormProps
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <MainCard
-                        title="Upload Sample Events"
+                        title={pageMeta.title}
                         secondary={
                             <Stack direction="row" alignItems="center" spacing={1.25}>
                                 <IconButton color={list ? 'secondary' : 'primary'} size="small" onClick={() => setList(false)}>
@@ -41,12 +60,12 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack }: AddressFormProps
                         }
                     >
                         <Formik
-                            initialValues={{ files: null }}
+                            initialValues={form.initialState}
                             onSubmit={(values: any) => {
-                                handleNext();
+                                form.onSubmit(values);
                             }}
                             validationSchema={yup.object().shape({
-                                files: yup.mixed().required('Avatar is a required.')
+                                files: yup.mixed().required('File is a required.')
                             })}
                         >
                             {({ values, handleSubmit, setFieldValue, touched, errors }) => (
@@ -59,7 +78,7 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack }: AddressFormProps
                                                     setFieldValue={setFieldValue}
                                                     files={values.files}
                                                     error={touched.files && !!errors.files}
-                                                    onUpload={onUpload}
+                                                    onUpload={() => onUpload(values.files)}
                                                 />
                                                 {touched.files && errors.files && (
                                                     <FormHelperText error id="standard-weight-helper-text-password-login">
@@ -75,7 +94,6 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack }: AddressFormProps
                     </MainCard>
                 </Grid>
                 <Grid item xs={12}>
-
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
                             <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={handleBack}>
@@ -83,7 +101,7 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack }: AddressFormProps
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
-                            <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={() => setErrorIndex(1)}>
+                            <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={form.onSubmit}>
                                 Next
                             </Button>
                         </AnimateButton>

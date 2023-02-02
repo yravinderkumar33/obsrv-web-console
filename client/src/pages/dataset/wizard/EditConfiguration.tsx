@@ -21,23 +21,21 @@ import IconButton from 'components/@extended/IconButton';
 import _ from 'lodash';
 import { Select } from '@mui/material';
 
-const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null']
-
-const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boolean, setData: any, onSubmit: () => void, selection: Record<string, any> }) => {
+const EditConfiguration = ({ open = false, onSubmit, selection, setData }: { open: boolean, setData: any, onSubmit: () => void, selection: Record<string, any> }) => {
   const values = selection?.cell?.row?.values;
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      type: values?.type,
-      // isRequired: true,
-      // dimension: true
+      key: values?.key,
+      value: values?.value
     },
     onSubmit: (formValues) => {
       const updatedValues = { ...values, ...formValues }
       setData((preState: Array<Record<string, any>>) => {
         return _.map(preState, state => {
-          if (_.get(state, 'column') === _.get(updatedValues, 'column')) {
-            return { ...state, ...updatedValues, isModified: true, value: formValues };
+          if (_.get(state, 'key') === _.get(updatedValues, 'key')) {
+            return { ...state, ...updatedValues, isModified: true };
           } else {
             return state
           }
@@ -88,7 +86,7 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
                       verticalAlign: 'middle'
                     }}
                   >
-                    {"Edit Column"}
+                    {"Edit Configuration Value"}
                   </Typography>
                 </Stack>
               </Grid>
@@ -108,64 +106,22 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
             <Box sx={{ p: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12}>
-                      <InputLabel>Column</InputLabel>
-                      <TextField fullWidth id="outlined-basic" value={values?.column} disabled />
+                      <InputLabel>Key</InputLabel>
+                      <TextField fullWidth id='key' name='key' value={formik.values.key} disabled />
                     </Grid>
                     <Grid item xs={12}>
                       <Divider />
                     </Grid>
                     <Grid item xs={12}>
-                      <InputLabel>Data Type</InputLabel>
-                      <Select
-                        fullWidth
-                        id="type"
-                        value={formik?.values?.type}
-                        label="Type"
-                        name='type'
-                        onChange={formik.handleChange}
-                        onSelect={formik.handleChange}
-                      >
-                        {validDatatypes.map((dataType, index) => <MenuItem key={index} value={dataType}>{dataType.toUpperCase()}</MenuItem>)}
-                      </Select>
+                      <InputLabel>Value</InputLabel>
+                      <TextField fullWidth id='value' value={formik.values.value} onChange={formik.handleChange} onInput={formik.handleChange} />
                     </Grid>
                     <Grid item xs={12}>
                       <Divider />
                     </Grid>
-                    {/* <Grid item xs={12}>
-                      <InputLabel>Required</InputLabel>
-                      <RadioGroup
-                        row
-                        value={formik?.values?.isRequired}
-                        id="isRequired"
-                        onChange={formik.handleChange}
-                      >
-                        <FormControlLabel name='isRequired' value="true" control={<Radio />} label="True" />
-                        <FormControlLabel name='isRequired' value="false" control={<Radio />} label="False" />
-                      </RadioGroup>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <InputLabel>Dimension</InputLabel>
-                      <RadioGroup
-                        row
-                        id="dimension"
-                        value={formik?.values?.dimension}
-                        onChange={formik.handleChange}
-                      >
-                        <FormControlLabel name='dimension' value="true" control={<Radio />} label="True" />
-                        <FormControlLabel name='dimension' value="false" control={<Radio />} label="False" />
-                      </RadioGroup>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid> */}
                   </Grid>
-
                 </Grid>
               </Grid>
             </Box>
@@ -193,4 +149,4 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
     </Drawer>
   );
 };
-export default EditDataset;
+export default EditConfiguration;

@@ -9,11 +9,9 @@ export const fetchJsonSchema = (config: Record<string, any>) => {
     })
 }
 
-
 const flatten = (schemaObject: Record<string, any>) => {
     const result: Record<string, any> = {};
     const getKeyName = (prefix: string, key: string) => prefix ? `${prefix}.${key}` : key;
-
     const flattenHelperFn = (propertySchema: Record<string, any>, prefix: string, ref: string) => {
         const { type, properties, items, ...rest } = propertySchema;
         if (type === 'object' && properties) {
@@ -27,7 +25,7 @@ const flatten = (schemaObject: Record<string, any>) => {
                 flattenHelperFn(items, prefix, ref)
             }
         } else {
-            result[prefix] = { type, ref, ...rest };
+            result[prefix] = { type, key: ref, ref, ...rest };
         }
     }
 
@@ -41,14 +39,22 @@ export const flattenSchema = (schema: Record<string, any>) => {
     return _.map(flattend, (value, key) => ({ column: key, ...value }))
 }
 
-export const deleteProperty = (schema: Record<string, any>, refPath: string) => {
-
-}
-
-export const updateProperty = (schema: Record<string, any>, refPath: string, updatePayload: Record<string, any>) => {
-
-}
-
-export const addProperty = () => {
-
+export const updateJSONSchema = (original: any, updatePayload: any) => {
+    const clonedOriginal = _.cloneDeep(original)
+    _.forEach(updatePayload, (values, key) => {
+        const valueFromOriginalPayload = clonedOriginal[key];
+        if (valueFromOriginalPayload) {
+            const modifiedRows = _.filter(values, ['isModified', true]);
+            console.log(modifiedRows);
+            _.forEach(modifiedRows, row => {
+                const { isDeleted = false, key, value } = row;
+                if (isDeleted) {
+                    _.unset(valueFromOriginalPayload, key);
+                } else {
+                    _.set(valueFromOriginalPayload, key, value);
+                }
+            })
+        }
+    })
+    return clonedOriginal;
 }

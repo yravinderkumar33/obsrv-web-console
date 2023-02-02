@@ -28,7 +28,7 @@ const jsonSchema = createSlice({
                 state.data = action.payload;
             })
             .addCase(fetchJsonSchemaThunk.rejected, (state, action) => {
-                state.status = 'failed';
+                state.status = 'error';
                 state.error = action.error.message;
             });
     }

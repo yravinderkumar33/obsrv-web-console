@@ -21,7 +21,7 @@ const dataset = createSlice({
                 state.data = action.payload;
             })
             .addCase(fetchDataThunk.rejected, (state, action) => {
-                state.status = 'failed';
+                state.status = 'error';
                 state.error = action.error.message;
             });
     }

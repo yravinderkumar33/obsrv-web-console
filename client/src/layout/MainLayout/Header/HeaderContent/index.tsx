@@ -14,6 +14,7 @@ import { Avatar } from '@mui/material';
 import { ApiOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setConfig } from 'store/reducers/config';
+import Notification from './Notification';
 // import MegaMenuSection from './MegaMenuSection';
 
 // ==============================|| HEADER - CONTENT ||============================== //
@@ -30,11 +31,12 @@ const HeaderContent = () => {
       {!matchesXs && <Search />}
       {/* {!matchesXs && megaMenu} */}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-      {/* <Notification /> */}
-      {/* <Message /> */}
       <Avatar sx={{ width: 30, height: 30 }} onClick={e => {
         dispatch(setConfig({ key: 'showClusterMenu', value: !(globalConfig?.showClusterMenu) }))
       }}> <ApiOutlined /></Avatar>
+
+      <Notification />
+      {/* <Message /> */}
       {!matchesXs && <Profile />}
       {matchesXs && <MobileSection />}
     </>

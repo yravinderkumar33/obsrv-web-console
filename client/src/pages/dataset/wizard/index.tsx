@@ -1,6 +1,5 @@
 import { useState, ReactNode, useEffect } from 'react';
 import { Button, Step, Stepper, StepLabel, Stack, Typography } from '@mui/material';
-import Review from './Review';
 import MainCard from 'components/MainCard';
 import AnimateButton from 'components/@extended/AnimateButton';
 import DatasetConfiguration from './DatasetConfiguration';
@@ -8,8 +7,11 @@ import UploadFiles from './UploadFiles';
 import { useDispatch } from 'react-redux';
 import { setConfig } from 'store/reducers/config';
 import { reset } from 'store/reducers/wizard';
+import ListColumns from './ListColumns';
+import ListConfigurations from './ListConfigurations';
+import Final from './Final';
 
-const steps = ['Configuration', 'Upload Data', 'Review'];
+const steps = ['Configuration', 'Upload Data', 'Columns', 'Configurations'];
 
 const getStepContent = (
   step: number,
@@ -25,7 +27,11 @@ const getStepContent = (
     case 1:
       return <UploadFiles handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} />
     case 2:
-      return <Review />;
+      return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} />;
+    case 3:
+      return <ListConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} />;
+    case 4:
+      return <Final />
     default:
       throw new Error('Unknown step');
   }
@@ -78,22 +84,6 @@ const ValidationWizard = () => {
       </Stepper>
       <>
         {getStepContent(activeStep, handleNext, handleBack, setErrorIndex)}
-        {activeStep === steps.length - 1 && (
-          <Stack direction="row" justifyContent={activeStep !== 0 ? 'space-between' : 'flex-end'}>
-            {activeStep !== 0 && (
-              <AnimateButton>
-                <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={handleBack}>
-                  Previous
-                </Button>
-              </AnimateButton>
-            )}
-            <AnimateButton>
-              <Button variant="contained" onClick={handleNext} sx={{ my: 3, ml: 1 }}>
-                {activeStep === steps.length - 1 ? 'Submit' : 'Next'}
-              </Button>
-            </AnimateButton>
-          </Stack>
-        )}
       </>
     </MainCard>
   );
