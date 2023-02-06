@@ -12,9 +12,11 @@ import Loader from 'components/Loader';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
+import AlertDialog from 'components/AlertDialog';
 
 
 const pageMeta = { pageId: 'columns', title: "Review Columns" };
+const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you want to delete this column ?' };
 
 const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   const apiResponse = useSelector((state: any) => state.jsonSchema);
@@ -25,6 +27,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   const wizardState: IWizard = useSelector((state: any) => state?.wizard);
   const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
   const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
+  const [openAlertDialog, setOpenAlertDialog] = useState(false);
 
   const markRowAsDeleted = (cellValue: Record<string, any>) => {
     const column = cellValue?.column
@@ -110,7 +113,10 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
             }}>
               <EditOutlined />
             </IconButton>
-            <IconButton color="primary" size="large" onClick={e => markRowAsDeleted(rest?.cell?.row?.values)}>
+            <IconButton color="primary" size="large" onClick={e => {
+              setOpenAlertDialog(true);
+              setSelection({ value: initialValue, ...rest });
+            }}>
               <DeleteOutlined />
             </IconButton>
           </Stack>
@@ -127,6 +133,13 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
     setSkipPageReset(true);
   };
 
+  const handleAlertDialogClose = (status: boolean) => {
+    if (selection && status) {
+      markRowAsDeleted(selection?.cell?.row?.values);
+    }
+    setOpenAlertDialog(false);
+  }
+
   useEffect(() => {
     if (apiResponse?.status === 'success' && apiResponse?.data?.schema) {
       const flattenedSchema = flattenSchema(apiResponse.data.schema) as any;
@@ -137,7 +150,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   }, [apiResponse?.status]);
 
   return <>
-
     <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
       {pageMeta.title}
     </Typography>
@@ -179,6 +191,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
               </AnimateButton>
             </Stack>
           </Grid>
+          <AlertDialog open={openAlertDialog} handleClose={handleAlertDialogClose} context={alertDialogContext}></AlertDialog>
         </>
       }
     </Grid>
