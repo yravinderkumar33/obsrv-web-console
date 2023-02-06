@@ -12,8 +12,10 @@ import { flattenObject } from 'services/utils';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import AnimateButton from 'components/@extended/AnimateButton';
+import AlertDialog from 'components/AlertDialog';
 
 const pageMeta = { pageId: 'configurations', title: "Review" };
+const alertDialogContext = { title: 'Delete Configuration', content: 'Are you sure you want to delete this configuration ?' };
 
 const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index }: any) => {
     const apiResponse = useSelector((state: any) => state.jsonSchema);
@@ -23,6 +25,7 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
+    const [openAlertDialog, setOpenAlertDialog] = useState(false);
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
         const key = cellValue?.key
@@ -80,7 +83,10 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
                         }}>
                             <EditOutlined />
                         </IconButton>
-                        <IconButton color="primary" size="large" onClick={e => markRowAsDeleted(rest?.cell?.row?.values)}>
+                        <IconButton color="primary" size="large" onClick={e => {
+                            setOpenAlertDialog(true);
+                            setSelection({ value: initialValue, ...rest });
+                        }}>
                             <DeleteOutlined />
                         </IconButton>
                     </Stack>
@@ -95,6 +101,13 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
     const updateMyData = (rowIndex: number, columnId: any, value: any) => {
         setSkipPageReset(true);
     };
+
+    const handleAlertDialogClose = (status: boolean) => {
+        if (selection && status) {
+            markRowAsDeleted(selection?.cell?.row?.values);
+        }
+        setOpenAlertDialog(false);
+    }
 
     useEffect(() => {
         if (apiResponse?.status === 'success' && apiResponse?.data?.configurations) {
@@ -166,6 +179,7 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
                 </>
             }
         </Grid>
+        <AlertDialog open={openAlertDialog} handleClose={handleAlertDialogClose} context={alertDialogContext}></AlertDialog>
     </>;
 };
 
