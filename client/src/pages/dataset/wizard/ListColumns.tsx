@@ -16,7 +16,7 @@ import { addState } from 'store/reducers/wizard';
 
 const pageMeta = { pageId: 'columns', title: "Review Columns" };
 
-const ListColumns = ({ handleNext, setErrorIndex, handleBack }: any) => {
+const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   const apiResponse = useSelector((state: any) => state.jsonSchema);
   const suggestions = _.get(apiResponse, 'data.suggestions') || [];
   const [showEdit, setShowEdit] = useState(false);
@@ -47,7 +47,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack }: any) => {
     dispatch(
       addState({
         id: pageMeta.pageId,
-        index: 2,
+        index,
         state: { schema: flattenedData }
       }));
   }
@@ -73,36 +73,30 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack }: any) => {
         accessor: 'type'
       },
       {
-        Header: 'Comments',
+        Header: 'Suggestions',
         accessor: 'ref',
         Cell: ({ value, cell }: any) => {
           const { column } = cell?.row?.values || {};
           const propertySuggestions = _.find(suggestions, ['property', column]);
-          if (propertySuggestions) {
-            const suggestion: Array<{ message: string, advice: string }> = propertySuggestions?.suggestion || [];
-            return <Grid container spacing={2}>
-              <Grid item sm zeroMinWidth>
-                {suggestion.map((payload, index) => {
-                  return <div key={index}>
-                    <Typography variant="body2">
-                      {payload?.message}
-                    </Typography>
-                    <Typography variant="body2">
-                      {payload?.advice}
-                    </Typography>
-                  </div>
-                })}
-              </Grid>
-            </Grid>
-          } else {
-            return <Grid container spacing={2}>
-              <Grid item sm zeroMinWidth>
+          const suggestion: Array<{ message: string, advice: string }> = propertySuggestions?.suggestion || [];
+          return <Grid container spacing={2}>
+            <Grid item sm zeroMinWidth>
+              {suggestion.length == 0 &&
                 <Typography variant="body2">
                   N/A
-                </Typography>
-              </Grid>
+                </Typography>}
+              {suggestion.length !== 0 && suggestion.map((payload, index) => {
+                return <div key={index}>
+                  <Typography variant="body2">
+                    {payload?.message}
+                  </Typography>
+                  <Typography variant="body2">
+                    {payload?.advice}
+                  </Typography>
+                </div>
+              })}
             </Grid>
-          }
+          </Grid>
         }
       },
       {

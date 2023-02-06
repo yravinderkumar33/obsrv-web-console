@@ -1,7 +1,6 @@
 import * as _ from 'lodash'
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { IWizard } from 'types/formWizard';
+import { useSelector } from 'react-redux';
 import { updateJSONSchema } from 'services/json-schema';
 
 
@@ -14,15 +13,14 @@ const Final = () => {
   useEffect(() => {
     if (jsonSchema?.status === 'success') {
       const updated = updateJSONSchema(jsonSchema?.data, { schema: wizardState?.pages?.columns?.state?.schema, configurations: wizardState?.pages?.configurations?.state?.configurations });
-      setState(updated)
-
+      setState(updated);
     }
   }, [])
 
   return (
     <>
       {
-        JSON.stringify(state)
+        JSON.stringify(state, null, 2)
       }
     </>
   );

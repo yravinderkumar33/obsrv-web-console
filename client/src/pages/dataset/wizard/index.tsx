@@ -11,7 +11,7 @@ import ListColumns from './ListColumns';
 import ListConfigurations from './ListConfigurations';
 import Final from './Final';
 
-const steps = ['Configuration', 'Upload Data', 'Columns', 'Configurations'];
+const steps = ['Configuration', 'Upload Data', 'Columns', 'Ingestion', 'Querying', 'Processing', 'Final'];
 
 const getStepContent = (
   step: number,
@@ -21,16 +21,18 @@ const getStepContent = (
 ) => {
   switch (step) {
     case 0:
-      return (
-        <DatasetConfiguration handleNext={handleNext} setErrorIndex={setErrorIndex} />
-      );
+      return <DatasetConfiguration handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} />;
     case 1:
-      return <UploadFiles handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} />
+      return <UploadFiles handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} />
     case 2:
-      return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} />;
+      return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />;
     case 3:
-      return <ListConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} />;
+      return <ListConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} pick='ingestion' index={3} />;
     case 4:
+      return <ListConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} pick='querying' index={4} />;
+    case 5:
+      return <ListConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} pick='processing' index={5} />;
+    case 6:
       return <Final />
     default:
       throw new Error('Unknown step');

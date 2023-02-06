@@ -9,13 +9,9 @@ import { IWizard } from 'types/formWizard';
 
 const validationSchema = yup.object({ name: yup.string().required('Dataset Name is required') });
 
-interface AddressFormProps {
-  handleNext: () => void;
-  setErrorIndex: (i: number | null) => void;
-}
-
 const pageMeta = { pageId: 'datasetConfiguration', title: "Dataset Configuration" };
-const DatasetConfiguration = ({ handleNext, setErrorIndex }: AddressFormProps) => {
+
+const DatasetConfiguration = ({ handleNext, setErrorIndex, index }: any) => {
   const dispatch = useDispatch();
   const wizardState: IWizard = useSelector((state: any) => state?.wizard);
   const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
@@ -27,7 +23,7 @@ const DatasetConfiguration = ({ handleNext, setErrorIndex }: AddressFormProps) =
       dispatch(
         addState({
           id: pageMeta.pageId,
-          index: 0,
+          index,
           state: { ...formik.values }
         }));
       handleNext();

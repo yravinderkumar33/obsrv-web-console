@@ -13,9 +13,9 @@ import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import AnimateButton from 'components/@extended/AnimateButton';
 
-const pageMeta = { pageId: 'configurations', title: "Review Configurations" };
+const pageMeta = { pageId: 'configurations', title: "Review" };
 
-const ListConfigurations = ({ handleNext, setErrorIndex, handleBack }: any) => {
+const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index }: any) => {
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const [showEdit, setShowEdit] = useState(false);
     const [selection, setSelection] = useState<Record<string, any>>({});
@@ -45,7 +45,7 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack }: any) => {
         dispatch(
             addState({
                 id: pageMeta.pageId,
-                index: 3,
+                index,
                 state: { configurations: flattenedData }
             }));
     }
@@ -73,7 +73,7 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack }: any) => {
             {
                 Header: 'Actions',
                 Cell: ({ value: initialValue, updateMyData, ...rest }: any) =>
-                    <Stack direction="row" justifyContent="center" alignItems="center">
+                    <Stack direction="row">
                         <IconButton color="primary" size="large" onClick={_ => {
                             setShowEdit(true)
                             setSelection({ value: initialValue, ...rest })
@@ -107,7 +107,7 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack }: any) => {
 
     return <>
         <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
-            {pageMeta.title}
+            {pageMeta.title} {pick || 'Configurations'}
         </Typography>
 
         <Grid container spacing={2}>
@@ -132,12 +132,14 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack }: any) => {
                                 _.toPairs(_.reduce(fetchNonDeletedData(flattenedData) as [], (acc: Record<string, any>, value: { key: string }) => {
                                     const key = value.key;
                                     const [parent] = key.split('.')
-                                    const values = acc[parent];
-                                    if (!values) acc[parent] = []
-                                    acc[parent].push(value)
+                                    if (parent && parent === pick) {
+                                        const values = acc[parent];
+                                        if (!values) acc[parent] = []
+                                        acc[parent].push(value)
+                                    }
                                     return acc
                                 }, {})).map(([key, value]) =>
-                                    <MainCard content={false} title={key.toUpperCase()} divider={true} >
+                                    <MainCard content={false}>
                                         <ScrollX>
                                             <ReactTable columns={columns} data={value} updateMyData={updateMyData} skipPageReset={skipPageReset} />
                                         </ScrollX>
