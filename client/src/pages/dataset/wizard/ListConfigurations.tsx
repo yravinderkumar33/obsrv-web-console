@@ -71,7 +71,8 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
             },
             {
                 Header: 'value',
-                accessor: 'value'
+                accessor: 'value',
+                Cell: ({ value }: any) => value.toString()
             },
             {
                 Header: 'Actions',
@@ -151,8 +152,8 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
                                         acc[parent].push(value)
                                     }
                                     return acc
-                                }, {})).map(([key, value]) =>
-                                    <MainCard content={false}>
+                                }, {})).map(([key, value], index) =>
+                                    <MainCard content={false} key={index}>
                                         <ScrollX>
                                             <ReactTable columns={columns} data={value} updateMyData={updateMyData} skipPageReset={skipPageReset} />
                                         </ScrollX>

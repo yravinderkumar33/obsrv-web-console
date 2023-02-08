@@ -1,12 +1,17 @@
 import { jsonSchema } from "data/json-schema"
 import * as _ from 'lodash'
+import axios from 'axios';
 
-export const fetchJsonSchema = (config: Record<string, any>) => {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(jsonSchema)
-        }, 2000)
-    })
+
+const fetchMock = () => new Promise((resolve, reject) => {
+    setTimeout(() => {
+        resolve(jsonSchema)
+    }, 2000)
+})
+
+export const fetchJsonSchema = (data: Record<string, any>) => {
+    return axios.post('http://localhost:4000/schema/v2/generate', data)
+        .then(response => response.data?.result);
 }
 
 const flatten = (schemaObject: Record<string, any>) => {

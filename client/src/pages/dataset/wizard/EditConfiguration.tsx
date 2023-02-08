@@ -5,21 +5,16 @@ import {
   Drawer,
   Grid,
   Typography,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
   Stack,
   TextField,
   InputLabel,
   Tooltip,
-  MenuItem
 } from '@mui/material';
 
 import { useFormik } from 'formik';
 import { CloseOutlined } from '@ant-design/icons';
 import IconButton from 'components/@extended/IconButton';
 import _ from 'lodash';
-import { Select } from '@mui/material';
 
 const EditConfiguration = ({ open = false, onSubmit, selection, setData }: { open: boolean, setData: any, onSubmit: () => void, selection: Record<string, any> }) => {
   const values = selection?.cell?.row?.values;

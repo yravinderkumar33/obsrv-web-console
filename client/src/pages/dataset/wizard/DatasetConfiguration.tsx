@@ -19,7 +19,7 @@ const DatasetConfiguration = ({ handleNext, setErrorIndex, index }: any) => {
   const formik = useFormik({
     initialValues: pageData?.state || { name: "" },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (_) => {
       dispatch(
         addState({
           id: pageMeta.pageId,
@@ -49,14 +49,13 @@ const DatasetConfiguration = ({ handleNext, setErrorIndex, index }: any) => {
                 error={formik.touched.name && Boolean(formik.errors.name)}
                 helperText={formik.touched.name && formik.errors.name}
                 fullWidth
-                autoComplete="given-name"
               />
             </Stack>
           </Grid>
           <Grid item xs={12}>
             <Stack direction="row" justifyContent="flex-end">
               <AnimateButton>
-                <Button variant="contained" sx={{ my: 3, ml: 1 }} type="submit" onClick={() => setErrorIndex(0)}>
+                <Button disabled={!formik.isValid} variant="contained" sx={{ my: 3, ml: 1 }} type="submit" onClick={() => setErrorIndex(0)}>
                   Next
                 </Button>
               </AnimateButton>

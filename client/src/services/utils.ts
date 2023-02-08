@@ -21,3 +21,23 @@ export const flattenObject = (obj: Record<string, any>, parentKey = '') => {
 
     return flattenedData;
 }
+
+
+export const readJsonFileContents = (file: File) => {
+    return new Promise((resolve, reject) => {
+        if (file.type === 'application/json') {
+            const reader = new FileReader();
+            reader.addEventListener('load', function () {
+                const fileContents = reader.result;
+                if (typeof fileContents === 'string') {
+                    resolve(JSON.parse(fileContents));
+                } else {
+                    reject('invalid file contents');
+                }
+            });
+            reader.readAsText(file);
+        } else {
+            reject('invalid file type');
+        }
+    })
+}

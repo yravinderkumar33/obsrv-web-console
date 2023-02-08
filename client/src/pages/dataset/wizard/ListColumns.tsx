@@ -14,7 +14,6 @@ import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import AlertDialog from 'components/AlertDialog';
 
-
 const pageMeta = { pageId: 'columns', title: "Review Columns" };
 const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you want to delete this column ?' };
 

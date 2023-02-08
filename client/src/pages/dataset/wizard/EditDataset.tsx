@@ -28,9 +28,7 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      type: values?.type,
-      // isRequired: true,
-      // dimension: true
+      type: values?.type
     },
     onSubmit: (formValues) => {
       const updatedValues = { ...values, ...formValues }
@@ -134,38 +132,7 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
                     <Grid item xs={12}>
                       <Divider />
                     </Grid>
-                    {/* <Grid item xs={12}>
-                      <InputLabel>Required</InputLabel>
-                      <RadioGroup
-                        row
-                        value={formik?.values?.isRequired}
-                        id="isRequired"
-                        onChange={formik.handleChange}
-                      >
-                        <FormControlLabel name='isRequired' value="true" control={<Radio />} label="True" />
-                        <FormControlLabel name='isRequired' value="false" control={<Radio />} label="False" />
-                      </RadioGroup>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <InputLabel>Dimension</InputLabel>
-                      <RadioGroup
-                        row
-                        id="dimension"
-                        value={formik?.values?.dimension}
-                        onChange={formik.handleChange}
-                      >
-                        <FormControlLabel name='dimension' value="true" control={<Radio />} label="True" />
-                        <FormControlLabel name='dimension' value="false" control={<Radio />} label="False" />
-                      </RadioGroup>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid> */}
                   </Grid>
-
                 </Grid>
               </Grid>
             </Box>
