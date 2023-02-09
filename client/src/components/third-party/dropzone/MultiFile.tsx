@@ -25,6 +25,7 @@ const DropzoneWrapper = styled('div')(({ theme }) => ({
 // ==============================|| UPLOAD - MULTIPLE FILE ||============================== //
 
 const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, sx, onUpload, ...other }: UploadMultiFileProps) => {
+  const { onFileRemove } = other || {};
   const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
     multiple: true,
     onDrop: (acceptedFiles: CustomFile[]) => {
@@ -52,11 +53,13 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
 
   const onRemoveAll = () => {
     setFieldValue('files', null);
+    onFileRemove && onFileRemove(null);
   };
 
   const onRemove = (file: File | string) => {
     const filteredItems = files && files.filter((_file) => _file !== file);
     setFieldValue('files', filteredItems);
+    onFileRemove && onFileRemove(filteredItems);
   };
 
   return (

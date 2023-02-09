@@ -8,8 +8,7 @@ import { addState } from 'store/reducers/wizard';
 import { IWizard } from 'types/formWizard';
 
 const validationSchema = yup.object({ name: yup.string().required('Dataset Name is required') });
-
-const pageMeta = { pageId: 'datasetConfiguration', title: "Dataset Configuration" };
+export const pageMeta = { pageId: 'datasetConfiguration', title: "Dataset Configuration" };
 
 const DatasetConfiguration = ({ handleNext, setErrorIndex, index }: any) => {
   const dispatch = useDispatch();

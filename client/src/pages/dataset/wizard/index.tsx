@@ -57,12 +57,21 @@ const ValidationWizard = () => {
     dispatch(setConfig({ key: 'showClusterMenu', value: false }));
     return () => {
       dispatch(setConfig({ key: 'showClusterMenu', value: true }));
-      dispatch(reset());
+      dispatch(reset({}));
     }
   }, [])
 
+  const resetState = () => {
+    dispatch(reset({}));
+    setActiveStep(0);
+  }
+
   return (
-    <MainCard title="Add a New Dataset">
+    <MainCard title="Add a New Dataset"
+      secondary={
+        <Button color="primary" onClick={(_) => resetState()}>
+          Reset
+        </Button>}>
       <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
         {steps.map((label, index) => {
           const labelProps: { error?: boolean; optional?: ReactNode } = {};
@@ -87,7 +96,7 @@ const ValidationWizard = () => {
       <>
         {getStepContent(activeStep, handleNext, handleBack, setErrorIndex)}
       </>
-    </MainCard>
+    </MainCard >
   );
 };
 
