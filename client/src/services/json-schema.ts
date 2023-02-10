@@ -2,7 +2,6 @@ import { jsonSchema } from "data/json-schema"
 import * as _ from 'lodash'
 import axios from 'axios';
 
-
 const fetchMock = () => new Promise((resolve, reject) => {
     setTimeout(() => {
         resolve(jsonSchema)
@@ -37,7 +36,6 @@ const flatten = (schemaObject: Record<string, any>) => {
     flattenHelperFn(schemaObject, "", "");
     return result;
 }
-
 
 export const flattenSchema = (schema: Record<string, any>) => {
     const flattend = flatten(schema)

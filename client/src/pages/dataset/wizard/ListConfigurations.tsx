@@ -134,7 +134,7 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
 
             {apiResponse?.status === 'error' &&
                 <Grid item xs={12} sm={12}>
-                    <div>Error</div>
+                    <div>{apiResponse?.error}</div>
                 </Grid>
             }
 

@@ -13,6 +13,8 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import AlertDialog from 'components/AlertDialog';
+import { Alert } from '@mui/material';
+import { Chip } from '@mui/material';
 
 const pageMeta = { pageId: 'columns', title: "Review Columns" };
 const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you want to delete this column ?' };
@@ -78,9 +80,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
         Header: 'Suggestions',
         accessor: 'ref',
         Cell: ({ value, cell }: any) => {
-          const { column } = cell?.row?.values || {};
-          const propertySuggestions = _.find(suggestions, ['property', column]);
-          const suggestion: Array<{ message: string, advice: string }> = propertySuggestions?.suggestion || [];
+          const { column, ref } = cell?.row?.values || {};
+          const propertySuggestions = _.find(suggestions, ['property', ref]);
+          const suggestion: Array<{ message: string, advice: string, [key: string]: string }> = propertySuggestions?.suggestions || [];
           return <Grid container spacing={2}>
             <Grid item sm zeroMinWidth>
               {suggestion.length == 0 &&
@@ -89,12 +91,18 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
                 </Typography>}
               {suggestion.length !== 0 && suggestion.map((payload, index) => {
                 return <div key={index}>
-                  <Typography variant="body2">
-                    {payload?.message}
-                  </Typography>
-                  <Typography variant="body2">
-                    {payload?.advice}
-                  </Typography>
+                  <Stack spacing={1}>
+                    <Typography variant="body2">
+                      Message - {payload?.message}
+                    </Typography>
+                    <Typography variant="body2">
+                      Advice - {payload?.advice}
+                    </Typography>
+                    <Stack direction="row" spacing={1}>
+                      <Chip label={payload?.priority} color="primary" variant='outlined' />
+                      <Chip label={payload?.resolutionType} color="primary" variant='outlined' />
+                    </Stack>
+                  </Stack>
                 </div>
               })}
             </Grid>
@@ -162,7 +170,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
 
       {apiResponse?.status === 'error' &&
         <Grid item xs={12} sm={12}>
-          <div>Error</div>
+          <Alert severity="error">{apiResponse?.error}</Alert>
         </Grid>
       }
 

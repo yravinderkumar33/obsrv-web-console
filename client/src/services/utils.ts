@@ -32,12 +32,12 @@ export const readJsonFileContents = (file: File) => {
                 if (typeof fileContents === 'string') {
                     resolve(JSON.parse(fileContents));
                 } else {
-                    reject('invalid file contents');
+                    reject('Invalid file contents');
                 }
             });
             reader.readAsText(file);
         } else {
-            reject('invalid file type');
+            reject('Only json files are supported');
         }
     })
 }

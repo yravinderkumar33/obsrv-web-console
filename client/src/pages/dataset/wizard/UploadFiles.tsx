@@ -20,6 +20,7 @@ import Box from '@mui/material/Box';
 import PasteData from './PasteData';
 import { readJsonFileContents } from 'services/utils';
 import { pageMeta as datasetConfigPageMeta } from './DatasetConfiguration'
+import { error } from 'services/toaster';
 
 const pageMeta = { pageId: 'uploadSampleData', title: "Upload Sample Events" };
 const tabProps = (index: number) => ({ id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` });
@@ -62,6 +63,7 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
         initialState: { files },
         onSubmit(values: any) {
             if (!pageData?.state?.data || !pageData?.state.files) {
+                dispatch(error({ message: 'Please upload sample events' }));
                 setErrorIndex(index);
             } else {
                 handleNext();
@@ -75,7 +77,9 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
             resetState();
             dispatch(addState({ id: pageMeta.pageId, index, state: { files } }));
             uploadData(_.flatten(contents));
-        } catch (error) {
+        } catch (err: any) {
+            err?.message && dispatch(error({ message: err?.message }));
+            (typeof err === 'string') && dispatch(error({ message: err }));
             setErrorIndex(index);
         }
     }
@@ -89,8 +93,15 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
     }
 
     const onDataPaste = (event: any) => {
-        const { error, jsObject } = event || {};
-        if (error) { setErrorIndex(index) } else setErrorIndex(null);
+        const { error: err, jsObject } = event || {};
+
+        if (err) {
+            err?.reason && dispatch(error({ message: err?.reason }));
+            setErrorIndex(index);
+        } else {
+            setErrorIndex(null);
+        }
+
         setEditorData(jsObject);
     }
 

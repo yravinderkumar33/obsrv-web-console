@@ -15,8 +15,6 @@ import CircularWithLabel from 'components/@extended/Progress/CircularWithLabel';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router';
 
-// ==============================|| REACT TABLE ||============================== //
-
 function ReactTable({ columns, data }: { columns: Column[]; data: [] }) {
   const filterTypes = useMemo(() => renderFilterTypes, []);
   const defaultColumn = useMemo(() => ({ Filter: DefaultColumnFilter }), []);

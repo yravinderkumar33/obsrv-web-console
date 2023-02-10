@@ -54,7 +54,7 @@ const DatasetConfiguration = ({ handleNext, setErrorIndex, index }: any) => {
           <Grid item xs={12}>
             <Stack direction="row" justifyContent="flex-end">
               <AnimateButton>
-                <Button disabled={!formik.isValid} variant="contained" sx={{ my: 3, ml: 1 }} type="submit" onClick={() => setErrorIndex(0)}>
+                <Button disabled={!formik.isValid} variant="contained" sx={{ my: 3, ml: 1 }} type="submit">
                   Next
                 </Button>
               </AnimateButton>
