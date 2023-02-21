@@ -9,19 +9,24 @@ import {
   TextField,
   InputLabel,
   Tooltip,
-  MenuItem
+  MenuItem,
+  AlertTitle
 } from '@mui/material';
 
 import { useFormik } from 'formik';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, WarningFilled } from '@ant-design/icons';
 import IconButton from 'components/@extended/IconButton';
 import _ from 'lodash';
 import { Select } from '@mui/material';
+import { Alert } from '@mui/material';
+import { useSelector } from 'react-redux';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 
 const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boolean, setData: any, onSubmit: () => void, selection: Record<string, any> }) => {
-  const values = selection?.cell?.row?.values;
+  const values = selection?.cell?.row?.original;
+  const globalConfig = useSelector((state: any) => state?.config);
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -41,6 +46,19 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
       onSubmit();
     }
   });
+
+  const fetchSuggestions = () => {
+    const { suggestions = [] } = values;
+    const { severityToColorMapping } = globalConfig;
+    return suggestions.map((suggestion: any, index: number) => {
+      const color = _.get(severityToColorMapping, [suggestion?.severity || "LOW", "color"])
+      const icon = WarningFilled
+      return <Alert color={color} variant="border" icon={<WarningFilled />}>
+        <AlertTitle>{suggestion?.message}</AlertTitle>
+        <Typography variant="h6"> {suggestion?.advice}</Typography>
+      </Alert>
+    })
+  }
 
   return (
     <Drawer
@@ -103,15 +121,12 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
             <Box sx={{ p: 3 }}>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-
+                  <Stack spacing={1} >
+                    {fetchSuggestions()}
+                  </Stack>
+                </Grid>
+                <Grid item xs={12}>
                   <Grid container spacing={2} alignItems="center">
-                    <Grid item xs={12}>
-                      <InputLabel>Column</InputLabel>
-                      <TextField fullWidth id="outlined-basic" value={values?.column} disabled />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid>
                     <Grid item xs={12}>
                       <InputLabel>Data Type</InputLabel>
                       <Select
@@ -123,7 +138,8 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
                         onChange={formik.handleChange}
                         onSelect={formik.handleChange}
                       >
-                        {validDatatypes.map((dataType, index) => <MenuItem key={index} value={dataType}>{dataType.toUpperCase()}</MenuItem>)}
+                        {values?.oneof && values.oneof.map((dataType: { type: string }, index: number) => <MenuItem key={index} value={dataType.type}>{dataType.type.toUpperCase()}</MenuItem>)}
+                        {!values?.oneof && validDatatypes.map((dataType, index) => <MenuItem key={index} value={dataType}>{dataType.toUpperCase()}</MenuItem>)}
                       </Select>
                     </Grid>
                     <Grid item xs={12}>

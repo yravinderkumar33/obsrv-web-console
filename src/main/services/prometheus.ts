@@ -6,6 +6,12 @@ const service = {
         return prometheusInstance.get(`${baseUrl}`, {
             params: params
         });
+    },
+    query({ params = {} }: any) {
+        const baseUrl = 'api/v1/query';
+        return prometheusInstance.get(`${baseUrl}`, {
+            params: params
+        });
     }
 };
 

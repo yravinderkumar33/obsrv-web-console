@@ -1,26 +1,22 @@
 import { useTheme } from '@mui/material/styles';
-import { useMediaQuery, Box, Grid, Stack, Accordion, AccordionDetails } from '@mui/material';
+import { Box, Grid, Stack, Accordion, AccordionDetails, Typography, Breadcrumbs } from '@mui/material';
 import MainCard from 'components/MainCard';
 import BackLeft from 'assets/images/profile/UserProfileBackLeft';
 import BackRight from 'assets/images/profile/UserProfileBackRight';
 import { useState } from 'react';
-import ProfileRadialChart from './ProfileRadialChart';
 import chartMeta from '../../data/charts'
 import ApexChart from 'sections/dashboard/analytics/apex';
-import TrafficSources from './TrafficSources';
+import ClusterMetrics from './ClusterMetrics';
+import { commonMetrics } from 'data/charts'
 
-interface Props {
-  focusInput: () => void;
-}
-
-const ClusterStatus = ({ focusInput }: Props) => {
+const ClusterStatus = () => {
   const theme = useTheme();
-  const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
   const [open, setOpen] = useState(true);
 
   return (
     <Box
       sx={{
+        width: '100%',
         '& .MuiAccordion-root': {
           zIndex: 0,
           borderColor: theme.palette.divider,
@@ -39,28 +35,34 @@ const ClusterStatus = ({ focusInput }: Props) => {
     >
       <Accordion expanded={open} onChange={e => setOpen(!open)}>
         <AccordionDetails style={{ 'padding': '0px' }}>
-          <Stack spacing={0}>
+          <Stack spacing={0} >
             <MainCard border={false} content={false} sx={{ bgcolor: 'primary.lighter', position: 'relative' }}>
               <Box sx={{ position: 'absolute', bottom: '-7px', left: 0, zIndex: 1 }}>
                 <BackLeft />
               </Box>
-              <Grid container justifyContent="space-evenly" alignItems="center" sx={{ position: 'relative', zIndex: 5 }}>
-                <Grid item>
-                  <ProfileRadialChart />
+              <Grid container justifyContent="center" alignItems="center" sx={{ position: 'relative', zIndex: 5 }}>
+                <Grid item xs={2}>
+                  <ApexChart metadata={chartMeta.nodes_Radial} />
                 </Grid>
-                <Grid item>
-                  <TrafficSources />
+                <Grid item xs={2}>
+                  <ClusterMetrics />
                 </Grid>
-                <Grid item>
-                  <ApexChart metadata={chartMeta.disk_line} {...{ shuffle: 'true' }} />
+                <Grid item xs={4}>
+                  <ApexChart metadata={chartMeta.node_cpu} />
                 </Grid>
-                <Grid item>
-                  <ApexChart metadata={chartMeta.disk_line} {...{ shuffle: 'true' }} />
+                <Grid item xs={4}>
+                  <ApexChart metadata={chartMeta.node_memory} />
                 </Grid>
               </Grid>
               <Box sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}>
                 <BackRight />
               </Box>
+              <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
+                <Breadcrumbs aria-label="breadcrumb">
+                  <Typography variant="h6">Interval: {commonMetrics.interval} Min</Typography>
+                  <Typography variant="h6">Frequency: {commonMetrics.frequency} Sec</Typography>
+                </Breadcrumbs>
+              </Stack>
             </MainCard>
           </Stack>
         </AccordionDetails>

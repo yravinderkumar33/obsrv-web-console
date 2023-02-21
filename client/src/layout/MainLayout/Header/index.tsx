@@ -49,7 +49,7 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
         {headerContent}
       </Toolbar>
       {globalConfigState?.showClusterMenu && <Toolbar>
-        <ClusterStatus focusInput={() => { }}></ClusterStatus>
+        <ClusterStatus />
       </Toolbar>}
     </div>
   );

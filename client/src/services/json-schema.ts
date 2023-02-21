@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import axios from 'axios';
 
 export const fetchJsonSchema = (data: Record<string, any>) => {
-    return axios.post('/api/obs/v1/generate/schema', data)
+    return axios.post('/dataset/v2/schema/generate', data)
         .then(response => response.data?.result);
 }
 
@@ -41,7 +41,6 @@ export const updateJSONSchema = (original: any, updatePayload: any) => {
         const valueFromOriginalPayload = clonedOriginal[key];
         if (valueFromOriginalPayload) {
             const modifiedRows = _.filter(values, ['isModified', true]);
-            console.log(modifiedRows);
             _.forEach(modifiedRows, row => {
                 const { isDeleted = false, key, value } = row;
                 if (isDeleted) {

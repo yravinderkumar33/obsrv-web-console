@@ -4,10 +4,11 @@ import { combineReducers } from 'redux';
 // project import
 import menu from './menu';
 import snackbar from './snackbar';
-import config from './config'
-import dataset from './dataset'
-import jsonSchema from './jsonSchema'
-import wizard from './wizard'
+import config from './config';
+import dataset from './dataset';
+import jsonSchema from './jsonSchema';
+import wizard from './wizard';
+import ingestionConfigMasterData from './ingestionConfigurations';
 
 const reducers = combineReducers({
   menu,
@@ -15,7 +16,8 @@ const reducers = combineReducers({
   config,
   dataset,
   jsonSchema,
-  wizard
+  wizard,
+  ingestionConfigMasterData
 });
 
 export default reducers;

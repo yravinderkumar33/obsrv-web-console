@@ -10,29 +10,19 @@ export default [
         path: 'v1',
         routes: [
           {
-            path: 'fetch',
+            path: 'query',
             method: 'GET',
             middlewares: [
               commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.get' }),
               controllers.get('prometheus:read')?.handler({}),
             ],
-          }
-        ],
-      },
-    ],
-  },
-  {
-    path: 'obs',
-    routes: [
-      {
-        path: 'v1',
-        routes: [
+          },
           {
-            path: 'generate/schema',
-            method: 'POST',
+            path: 'query/range',
+            method: 'GET',
             middlewares: [
-              commonMiddlewares.get('set:metadata')?.handler({ id: 'api.schema.generate' }),
-              controllers.get('schema:generate')?.handler({}),
+              commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.get' }),
+              controllers.get('prometheus:read:range')?.handler({}),
             ],
           }
         ],

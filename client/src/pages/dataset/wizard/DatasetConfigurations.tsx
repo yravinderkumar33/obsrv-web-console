@@ -1,10 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Button, Grid, IconButton, Stack, Typography } from '@mui/material';
-import MainCard from 'components/MainCard';
-import ScrollX from 'components/ScrollX';
+import { Accordion, AccordionDetails, Box, Button, Grid, IconButton, Stack, Tooltip, Typography, useTheme } from '@mui/material';
 import EditConfiguration from './EditConfiguration';
 import * as _ from 'lodash';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { ControlOutlined, DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -13,19 +11,29 @@ import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import AnimateButton from 'components/@extended/AnimateButton';
 import AlertDialog from 'components/AlertDialog';
+import { AccordionSummary } from '@mui/material';
+import { prepareConfigurationsBySection } from 'services/dataset';
 
 const pageMeta = { pageId: 'configurations', title: "Review" };
 const alertDialogContext = { title: 'Delete Configuration', content: 'Are you sure you want to delete this configuration ?' };
 
-const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index }: any) => {
+const DatasetConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index }: any) => {
+
+    const theme = useTheme();
     const apiResponse = useSelector((state: any) => state.jsonSchema);
+    const ingestionConfigMasterData = useSelector((state: any) => state?.ingestionConfigMasterData);
     const [showEdit, setShowEdit] = useState(false);
     const [selection, setSelection] = useState<Record<string, any>>({});
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
+    const [expanded, setExpanded] = useState<string | false>('basic');
+
+    const handleExpansionChange = (panel: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        setExpanded(newExpanded ? panel : false);
+    };
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
         const key = cellValue?.key
@@ -67,7 +75,12 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
         () => [
             {
                 Header: 'Configuration',
-                accessor: 'key'
+                accessor: 'key',
+                Cell: ({ value }: any) => {
+                    return <Tooltip title={_.get(ingestionConfigMasterData, [value, 'description']) || value}>
+                        <div>{_.get(ingestionConfigMasterData, [value, 'label']) || value}</div>
+                    </Tooltip>
+                }
             },
             {
                 Header: 'value',
@@ -76,21 +89,24 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
             },
             {
                 Header: 'Actions',
-                Cell: ({ value: initialValue, updateMyData, ...rest }: any) =>
-                    <Stack direction="row">
+                Cell: ({ value: initialValue, updateMyData, ...rest }: any) => {
+                    const { key } = rest?.cell?.row?.values;
+                    const metadata = _.get(ingestionConfigMasterData, key);
+                    return <Stack direction="row">
                         <IconButton color="primary" size="large" onClick={_ => {
                             setShowEdit(true)
-                            setSelection({ value: initialValue, ...rest })
+                            setSelection({ value: initialValue, metadata, ...rest })
                         }}>
                             <EditOutlined />
                         </IconButton>
                         <IconButton color="primary" size="large" onClick={e => {
                             setOpenAlertDialog(true);
-                            setSelection({ value: initialValue, ...rest });
+                            setSelection({ value: initialValue, metadata, ...rest });
                         }}>
                             <DeleteOutlined />
                         </IconButton>
                     </Stack>
+                }
             }
         ],
         []
@@ -98,10 +114,7 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
 
     const [skipPageReset, setSkipPageReset] = useState(false);
     const fetchNonDeletedData = (flattenedData: Array<any>) => _.filter(flattenedData, payload => !_.has(payload, 'isDeleted'));
-
-    const updateMyData = (rowIndex: number, columnId: any, value: any) => {
-        setSkipPageReset(true);
-    };
+    const updateMyData = (rowIndex: number, columnId: any, value: any) => setSkipPageReset(true);
 
     const handleAlertDialogClose = (status: boolean) => {
         if (selection && status) {
@@ -125,43 +138,45 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
         </Typography>
 
         <Grid container spacing={2}>
-
-            {apiResponse?.status !== 'success' &&
-                <Grid item xs={12} sm={12}>
-                    <Loader />
-                </Grid>
-            }
-
-            {apiResponse?.status === 'error' &&
-                <Grid item xs={12} sm={12}>
-                    <div>{apiResponse?.error}</div>
-                </Grid>
-            }
-
+            {apiResponse?.status !== 'success' && <Grid item xs={12} sm={12}> <Loader /></Grid>}
+            {apiResponse?.status === 'error' && <Grid item xs={12} sm={12}> <div>{apiResponse?.error}</div> </Grid>}
             {apiResponse?.status === 'success' &&
                 <>
                     <Grid item xs={12} sm={12}>
-                        <Stack spacing={2}>
-                            {
-                                _.toPairs(_.reduce(fetchNonDeletedData(flattenedData) as [], (acc: Record<string, any>, value: { key: string }) => {
-                                    const key = value.key;
-                                    const [parent] = key.split('.')
-                                    if (parent && parent === pick) {
-                                        const values = acc[parent];
-                                        if (!values) acc[parent] = []
-                                        acc[parent].push(value)
+                        <Box
+                            sx={{
+                                '& .MuiAccordion-root': {
+                                    borderColor: theme.palette.divider,
+                                    '& .MuiAccordionSummary-root': {
+                                        bgcolor: 'transparent',
+                                        flexDirection: 'row'
+                                    },
+                                    '& .MuiAccordionDetails-root': {
+                                        borderColor: theme.palette.divider
+                                    },
+                                    '& .Mui-expanded': {
+                                        color: theme.palette.primary.main
                                     }
-                                    return acc
-                                }, {})).map(([key, value], index) =>
-                                    <MainCard content={false} key={index}>
-                                        <ScrollX>
-                                            <ReactTable columns={columns} data={value} updateMyData={updateMyData} skipPageReset={skipPageReset} />
-                                        </ScrollX>
-                                    </MainCard >
-                                )
+                                }
+                            }}
+                        >
+                            {
+                                _.toPairs(prepareConfigurationsBySection(fetchNonDeletedData(flattenedData), ingestionConfigMasterData))
+                                    .map(([key, value], index) =>
+                                        <Accordion key={index} expanded={expanded === key} onChange={handleExpansionChange(key)}>
+                                            <AccordionSummary>
+                                                <Stack direction="row" spacing={1.5} alignItems="center">
+                                                    <Typography variant="h6"><ControlOutlined /> {_.capitalize(key)} Configurations</Typography>
+                                                </Stack>
+                                            </AccordionSummary>
+                                            <AccordionDetails>
+                                                <ReactTable columns={columns} data={value as any} updateMyData={updateMyData} skipPageReset={skipPageReset} />
+                                            </AccordionDetails>
+                                        </Accordion>
+                                    )
                             }
-                        </Stack>
-                        {selection && showEdit && <EditConfiguration open={showEdit} setData={setFlattenedData} onSubmit={() => setShowEdit(false)} selection={selection} ></EditConfiguration>}
+                            {selection && showEdit && <EditConfiguration open={showEdit} setData={setFlattenedData} onSubmit={() => setShowEdit(false)} selection={selection} ></EditConfiguration>}
+                        </Box>
                     </Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" justifyContent="space-between">
@@ -184,4 +199,4 @@ const ListConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index
     </>;
 };
 
-export default ListConfigurations;
+export default DatasetConfigurations;

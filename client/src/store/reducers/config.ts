@@ -1,8 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
+import initialconfig from 'data/initialConfig';
 
-const initialState: Record<string, any> = {
-    showClusterMenu: true
-};
+const initialState: Record<string, any> = initialconfig;
 
 const menu = createSlice({
     name: 'config',

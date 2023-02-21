@@ -9,15 +9,19 @@ import {
   TextField,
   InputLabel,
   Tooltip,
+  Select,
+  MenuItem,
+  Alert,
 } from '@mui/material';
 
 import { useFormik } from 'formik';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, InfoCircleFilled } from '@ant-design/icons';
 import IconButton from 'components/@extended/IconButton';
 import _ from 'lodash';
 
 const EditConfiguration = ({ open = false, onSubmit, selection, setData }: { open: boolean, setData: any, onSubmit: () => void, selection: Record<string, any> }) => {
   const values = selection?.cell?.row?.values;
+  const { metadata } = selection;
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -100,6 +104,14 @@ const EditConfiguration = ({ open = false, onSubmit, selection, setData }: { ope
           <form onSubmit={formik.handleSubmit}>
             <Box sx={{ p: 3 }}>
               <Grid container spacing={2}>
+
+                {
+                  metadata?.description && <Grid item>
+                    <Alert color="info" icon={<InfoCircleFilled />}>
+                      {metadata?.description}
+                    </Alert></ Grid>
+                }
+
                 <Grid item xs={12}>
                   <Grid container spacing={2} alignItems="center">
                     <Grid item xs={12}>
@@ -109,13 +121,35 @@ const EditConfiguration = ({ open = false, onSubmit, selection, setData }: { ope
                     <Grid item xs={12}>
                       <Divider />
                     </Grid>
-                    <Grid item xs={12}>
-                      <InputLabel>Value</InputLabel>
-                      <TextField fullWidth id='value' value={formik.values.value} onChange={formik.handleChange} onInput={formik.handleChange} />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Divider />
-                    </Grid>
+
+                    {!metadata?.enum && <>
+                      <Grid item xs={12}>
+                        <InputLabel>Value</InputLabel>
+                        <TextField fullWidth id='value' value={formik.values.value} onChange={formik.handleChange} onInput={formik.handleChange} />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <Divider />
+                      </Grid>
+                    </>}
+                    {
+                      metadata?.enum && <>
+                        <Grid item xs={12}>
+                          <InputLabel>Value</InputLabel>
+                          <Select
+                            fullWidth
+                            id="value"
+                            value={formik?.values?.value?.toLowerCase()}
+                            label="value"
+                            name='value'
+                            onChange={formik.handleChange}
+                            onSelect={formik.handleChange}
+                          >
+                            {metadata?.enum?.map((dataType: string, index: number) => <MenuItem key={index} value={dataType?.toLowerCase()}>{dataType.toUpperCase()}</MenuItem>)}
+                          </Select>
+                        </Grid>
+                      </>
+                    }
+
                   </Grid>
                 </Grid>
               </Grid>

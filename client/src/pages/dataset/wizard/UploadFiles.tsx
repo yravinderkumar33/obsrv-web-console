@@ -87,7 +87,7 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
     const uploadData = (data: any, reset = false) => {
         const dataset = _.get(datasetConfiguration, 'state.name');
         if (reset) resetState();
-        dispatch(fetchJsonSchemaThunk({ data: Array.isArray(data) ? data : [data], config: { dataSet: dataset } }));
+        dispatch(fetchJsonSchemaThunk({ data: Array.isArray(data) ? data : [data], config: { dataset } }));
         dispatch(updateState({ id: pageMeta.pageId, index, state: { data } }));
         handleNext();
     }

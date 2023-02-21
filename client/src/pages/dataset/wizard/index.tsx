@@ -7,10 +7,10 @@ import { useDispatch } from 'react-redux';
 import { setConfig } from 'store/reducers/config';
 import { reset } from 'store/reducers/wizard';
 import ListColumns from './ListColumns';
-import ListConfigurations from './ListConfigurations';
 import Final from './Final';
+import Configurations from './Configurations';
 
-const steps = ['Configuration', 'Upload Data', 'Columns', 'Ingestion', 'Querying', 'Processing', 'Final'];
+const steps = ['Configuration', 'Upload Data', 'Columns', 'Configurations', 'Final'];
 
 const getStepContent = (
   step: number,
@@ -26,12 +26,8 @@ const getStepContent = (
     case 2:
       return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />;
     case 3:
-      return <ListConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} pick='ingestion' index={3} />;
+      return <Configurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} />
     case 4:
-      return <ListConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} pick='querying' index={4} />;
-    case 5:
-      return <ListConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} pick='processing' index={5} />;
-    case 6:
       return <Final />
     default:
       throw new Error('Unknown step');

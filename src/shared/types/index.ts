@@ -49,3 +49,10 @@ export interface ErrorObj {
   responseCode: string;
   errorCode: string;
 }
+
+export interface IProxy {
+  path: string,
+  name: string;
+  handler: (config: Record<string, any>) => Function;
+  [key: string]: any;
+}

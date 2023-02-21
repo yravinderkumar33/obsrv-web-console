@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Button, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { Button, Checkbox, Grid, IconButton, Stack, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import { flattenSchema } from 'services/json-schema';
@@ -15,13 +15,16 @@ import { addState } from 'store/reducers/wizard';
 import AlertDialog from 'components/AlertDialog';
 import { Alert } from '@mui/material';
 import { Chip } from '@mui/material';
+import { Divider } from '@mui/material';
 
 const pageMeta = { pageId: 'columns', title: "Review Columns" };
 const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you want to delete this column ?' };
 
 const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   const apiResponse = useSelector((state: any) => state.jsonSchema);
-  const suggestions = _.get(apiResponse, 'data.suggestions') || [];
+  const configurations = _.get(apiResponse, 'data.configurations') || [];
+  const dedupKeys = _.get(configurations, 'processing.dedupKeys') || [];
+  const timestampKeys = _.get(configurations, 'ingestion.index') || [];
   const [showEdit, setShowEdit] = useState(false);
   const [selection, setSelection] = useState<Record<string, any>>({});
   const dispatch = useDispatch()
@@ -70,41 +73,61 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
     () => [
       {
         Header: 'Name',
-        accessor: 'column'
+        accessor: 'column',
+        tipText: 'Text for the First Name tooltip'
       },
       {
         Header: 'Data type',
         accessor: 'type'
       },
       {
-        Header: 'Suggestions',
-        accessor: 'ref',
+        Header: 'Type',
         Cell: ({ value, cell }: any) => {
           const { column, ref } = cell?.row?.values || {};
-          const propertySuggestions = _.find(suggestions, ['property', ref]);
-          const suggestion: Array<{ message: string, advice: string, [key: string]: string }> = propertySuggestions?.suggestions || [];
+          return 'dimension'
+        }
+      },
+      {
+        Header: 'Timestamp',
+        Cell: ({ value, cell }: any) => {
+          const { column } = cell?.row?.values || {};
+          return _.includes(timestampKeys, column) ? <Checkbox /> : <Typography variant="body2"> N/A</Typography>
+        }
+      },
+      {
+        Header: 'Dedupe',
+        Cell: ({ value, cell }: any) => {
+          const { column } = cell?.row?.values || {};
+          return _.includes(dedupKeys, column) ? <Checkbox /> : <Typography variant="body2"> N/A</Typography>
+        }
+      },
+      {
+        Header: 'Suggestions',
+        accessor: 'suggestions',
+        Cell: ({ value, cell }: any) => {
+          const suggestions = value || [];
           return <Grid container spacing={2}>
             <Grid item sm zeroMinWidth>
-              {suggestion.length == 0 &&
+              {suggestions.length == 0 &&
                 <Typography variant="body2">
                   N/A
                 </Typography>}
-              {suggestion.length !== 0 && suggestion.map((payload, index) => {
-                return <div key={index}>
-                  <Stack spacing={1}>
+              <Stack spacing={1} divider={<Divider orientation='horizontal' flexItem />}>
+                {suggestions.length !== 0 && suggestions.map((payload: any, index: number) => {
+                  return <div key={index}>
                     <Typography variant="body2">
-                      Message - {payload?.message}
+                      <b>Message</b> - {payload?.message}
                     </Typography>
                     <Typography variant="body2">
-                      Advice - {payload?.advice}
+                      <b>Advice</b> - {payload?.advice}
                     </Typography>
                     <Stack direction="row" spacing={1}>
-                      <Chip label={payload?.priority} color="primary" variant='outlined' />
-                      <Chip label={payload?.resolutionType} color="primary" variant='outlined' />
+                      {payload?.severity && <Chip size='small' label={payload?.severity} color="primary" variant='outlined' />}
+                      {payload?.resolutionType && <Chip size='small' label={payload?.resolutionType} color="primary" variant='outlined' />}
                     </Stack>
-                  </Stack>
-                </div>
-              })}
+                  </ div>
+                })}
+              </Stack>
             </Grid>
           </Grid>
         }
@@ -135,6 +158,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   const [skipPageReset, setSkipPageReset] = useState(false);
 
   const fetchNonDeletedData = (flattenedData: Array<any>) => _.filter(flattenedData, payload => !_.has(payload, 'isDeleted'));
+  const sortBySuggestions = (payload: Array<any>) => _.sortBy(payload, value => value?.suggestions);
 
   const updateMyData = (rowIndex: number, columnId: any, value: any) => {
     setSkipPageReset(true);
@@ -179,7 +203,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
           <Grid item xs={12} sm={12}>
             <MainCard content={false}>
               <ScrollX>
-                <ReactTable columns={columns} data={fetchNonDeletedData(flattenedData) as []} updateMyData={updateMyData} skipPageReset={skipPageReset} />
+                <ReactTable columns={columns} data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []} updateMyData={updateMyData} skipPageReset={skipPageReset} />
               </ScrollX>
               {selection && showEdit && <EditDataset open={showEdit} setData={setFlattenedData} onSubmit={() => setShowEdit(false)} selection={selection} ></EditDataset>}
             </MainCard >
