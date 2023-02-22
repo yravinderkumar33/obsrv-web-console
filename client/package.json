@@ -12,6 +12,7 @@
     "@mui/base": "^5.0.0-alpha.101",
     "@mui/lab": "^5.0.0-alpha.103",
     "@mui/material": "^5.10.9",
+    "@mui/styles": "^5.11.9",
     "@mui/system": "^5.10.9",
     "@mui/x-date-pickers": "^5.0.4",
     "@reduxjs/toolkit": "^1.8.6",
