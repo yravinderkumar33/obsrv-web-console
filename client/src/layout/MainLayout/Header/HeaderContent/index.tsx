@@ -28,9 +28,8 @@ const HeaderContent = () => {
 
   return (
     <>
-      {!matchesXs && <Search />}
-      {/* {!matchesXs && megaMenu} */}
       {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
+      {!matchesXs && <Search />}
       <Avatar sx={{ width: 30, height: 30 }} onClick={e => {
         dispatch(setConfig({ key: 'showClusterMenu', value: !(globalConfig?.showClusterMenu) }))
       }}> <ApiOutlined /></Avatar>

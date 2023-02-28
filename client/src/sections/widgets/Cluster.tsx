@@ -7,7 +7,7 @@ import { useState } from 'react';
 import chartMeta from '../../data/charts'
 import ApexChart from 'sections/dashboard/analytics/apex';
 import ClusterMetrics from './ClusterMetrics';
-import { commonMetrics } from 'data/charts'
+import globalConfig from 'data/initialConfig'
 
 const ClusterStatus = () => {
   const theme = useTheme();
@@ -59,8 +59,8 @@ const ClusterStatus = () => {
               </Box>
               <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
                 <Breadcrumbs aria-label="breadcrumb">
-                  <Typography variant="h6">Interval: {commonMetrics.interval} Min</Typography>
-                  <Typography variant="h6">Frequency: {commonMetrics.frequency} Sec</Typography>
+                  <Typography variant="h6">Interval: {globalConfig.clusterMenu.interval} Min</Typography>
+                  <Typography variant="h6">Frequency: {globalConfig.clusterMenu.frequency} Sec</Typography>
                 </Breadcrumbs>
               </Stack>
             </MainCard>

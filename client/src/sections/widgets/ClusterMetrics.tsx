@@ -1,7 +1,7 @@
 import { Grid, LinearProgress, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { useEffect, useMemo, useState } from 'react';
-import { commonMetrics } from 'data/charts'
+import globalConfig from 'data/initialConfig'
 import { fetchChartData } from 'services/clusterMetrics';
 import chartMeta from '../../data/charts'
 import * as _ from 'lodash';
@@ -59,8 +59,8 @@ const ClusterMetrics = () => {
   }
 
   useEffect(() => {
-    const { frequency } = commonMetrics;
-
+    const { frequency } = globalConfig.clusterMenu;
+    fetchMetrics();
     const interval = setInterval(() => {
       fetchMetrics();
     }, frequency * 1000)

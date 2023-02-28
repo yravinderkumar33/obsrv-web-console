@@ -13,7 +13,7 @@ const AlertDialog = ({ handleClose, open = false, context = {} }: any) => {
                 </DialogContent>
                 <DialogActions>
                     <Button color="error" onClick={e => handleClose(false)}>
-                        Disagree
+                        Cancel
                     </Button>
                     <Button variant="contained" onClick={e => handleClose(true)} autoFocus>
                         Agree

@@ -1,15 +1,9 @@
-// third-party
 import { FormattedMessage } from 'react-intl';
-
-// assets
-import { DashboardOutlined } from '@ant-design/icons';
-
-// type
+import { HomeOutlined } from '@ant-design/icons';
 import { NavItemType } from 'types/menu';
 
-// icons
 const icons = {
-  DashboardOutlined
+  HomeOutlined
 };
 
 const other: NavItemType = {
@@ -21,8 +15,8 @@ const other: NavItemType = {
       id: 'home',
       title: <FormattedMessage id="Home" />,
       type: 'item',
-      url: '/dashboard/home',
-      icon: icons.DashboardOutlined
+      url: '/',
+      icon: icons.HomeOutlined
     }
   ]
 };

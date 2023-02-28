@@ -38,4 +38,5 @@ export interface GenericCardProps {
   iconPrimary?: OverrideIcon;
   color?: string;
   size?: string;
+  [key: string]: any;
 }

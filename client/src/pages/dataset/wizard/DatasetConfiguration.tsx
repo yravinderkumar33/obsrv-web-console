@@ -6,37 +6,53 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addState } from 'store/reducers/wizard';
 import { IWizard } from 'types/formWizard';
 import MUIForm from 'components/form';
+import UploadFiles from './UploadFiles';
 
 const fields = [
   {
     name: 'name',
     label: 'Dataset Name',
     type: 'text',
+    required: true
+  },
+  {
+    name: 'isBatch',
+    label: 'Is Batch ?',
+    type: 'select',
+    required: true,
+    selectOptions: [
+      { value: true, label: 'True' },
+      { value: false, label: 'False' }
+    ]
+  },
+  {
+    name: 'dedupe',
+    label: 'Dedupe Key',
+    type: 'text',
+    dependsOn: {
+      key: 'isBatch',
+      value: true
+    }
   },
   {
     name: 'extractionKey',
     label: 'Extraction Key',
     type: 'text',
-  },
-  {
-    name: 'isBatch',
-    label: 'is Batch ?',
-    type: 'radio',
-    selectOptions: [
-      { value: true, label: 'True' },
-      { value: false, label: 'False' }
-    ],
+    dependsOn: {
+      key: 'isBatch',
+      value: true
+    }
   }
 ];
 
 const initialValues = {
   name: '',
-  extractionKey: '',
-  isBatch: true
+  extractionKey: ''
 };
 
 const validationSchema = yup.object().shape({
   name: yup.string().required('Dataset Name is required'),
+  isBatch: yup.boolean().required('Type is Required')
 });
 
 export const pageMeta = { pageId: 'datasetConfiguration', title: "Dataset Configuration" };

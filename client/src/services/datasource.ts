@@ -1,14 +1,20 @@
 import axios from 'axios';
+import * as _ from 'lodash';
+
+import apiEndpoints from 'data/apiEndpoints';
 
 export const saveDatasource = ({ data = {}, config }: any) => {
-    return axios.post('config/v2/dataset/save', data, config)
+    const { ingestionSpec, wizardState } = data;
+
+    const payload = {
+        "dataset_id": _.get(wizardState, 'pages.datasetConfiguration.state.name'),
+        "ingestion_spec": ingestionSpec,
+        "datasource": _.get(wizardState, 'pages.datasetConfiguration.state.name')
+    };
+
+    return axios.post(apiEndpoints.saveDatasource, payload, config);
 }
 
 export const datasourceRead = ({ datasetId, config = {} }: any) => {
-    return axios.get('config/v2/dataset/read', {
-        params: {
-            id: datasetId
-        },
-        ...config
-    })
+    return axios.get(apiEndpoints.readDatasource, { params: { id: datasetId }, ...config });
 }

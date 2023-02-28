@@ -3,14 +3,9 @@ import { Link } from 'react-router-dom';
 // material-ui
 import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 
-// project import
 import config from 'config';
-
-// assets
 import error404 from 'assets/images/maintenance/Error404.png';
 import TwoCone from 'assets/images/maintenance/TwoCone.png';
-
-// ==============================|| ERROR 404 - MAIN ||============================== //
 
 function Error404() {
   return (

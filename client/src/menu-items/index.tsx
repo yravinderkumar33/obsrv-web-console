@@ -1,11 +1,13 @@
 // project import
-import other from './other';
+import other from './home';
+import datasets from './datasets'
 import { NavItemType } from 'types/menu';
+
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems: { items: NavItemType[] } = {
-  items: [other]
+  items: [other, datasets]
 };
 
 export default menuItems;

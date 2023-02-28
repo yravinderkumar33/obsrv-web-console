@@ -1,8 +1,9 @@
 import * as _ from 'lodash'
 import axios from 'axios';
+import apiEndpoint from 'data/apiEndpoints';
 
 export const fetchJsonSchema = (data: Record<string, any>) => {
-    return axios.post('/dataset/v2/schema/generate', data)
+    return axios.post(apiEndpoint.generateJsonSchema, data)
         .then(response => response.data?.result);
 }
 
@@ -35,6 +36,21 @@ export const flattenSchema = (schema: Record<string, any>) => {
     return _.map(flattend, (value, key) => ({ column: key, ...value }))
 }
 
+const removeRequiredFlag = (jsonSchema: any, key: string) => {
+    if (!_.has(jsonSchema, key)) return;
+    const keys = _.split(key, '.');
+    const length = keys.length
+    if (!length) return;
+    const index = _.findLastIndex(keys, 'properties')
+    const parentPath = _.join(_.slice(keys, 0, index), '.');
+    const propertyKey = _.last(keys);
+    const requiredProperties = _.get(jsonSchema, [parentPath, 'required']);
+    if (!requiredProperties) return;
+    const updatedRequiredKey = _.difference(requiredProperties, [propertyKey]);
+    _.set(jsonSchema, `${parentPath}.required`, updatedRequiredKey);
+    console.log(jsonSchema);
+}
+
 export const updateJSONSchema = (original: any, updatePayload: any) => {
     const clonedOriginal = _.cloneDeep(original)
     _.forEach(updatePayload, (values, key) => {
@@ -44,6 +60,7 @@ export const updateJSONSchema = (original: any, updatePayload: any) => {
             _.forEach(modifiedRows, row => {
                 const { isDeleted = false, key, value } = row;
                 if (isDeleted) {
+                    // removeRequiredFlag(valueFromOriginalPayload, key);
                     _.unset(valueFromOriginalPayload, key);
                 } else {
                     _.set(valueFromOriginalPayload, key, value);

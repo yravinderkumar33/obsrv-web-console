@@ -11,7 +11,7 @@ import { RiseOutlined, FallOutlined } from '@ant-design/icons';
 
 interface Props {
   title: string;
-  count: string;
+  count?: string;
   percentage?: number;
   isLoss?: boolean;
   color?: ChipProps['color'];
@@ -26,9 +26,9 @@ const AnalyticsDataCard = ({ color = 'primary', title, count, percentage, isLoss
           {title}
         </Typography>
         <Stack direction="row" alignItems="center">
-          <Typography variant="h4" color="inherit">
+          {count && <Typography variant="h4" color="inherit">
             {count}
-          </Typography>
+          </Typography>}
           {percentage && (
             <Chip
               variant="combined"

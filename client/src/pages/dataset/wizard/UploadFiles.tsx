@@ -94,14 +94,12 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
 
     const onDataPaste = (event: any) => {
         const { error: err, jsObject } = event || {};
-
         if (err) {
             err?.reason && dispatch(error({ message: err?.reason }));
             setErrorIndex(index);
         } else {
             setErrorIndex(null);
         }
-
         setEditorData(jsObject);
     }
 

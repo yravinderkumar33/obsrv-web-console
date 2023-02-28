@@ -2,7 +2,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 import appConfig from '../../shared/resources/appConfig';
 
 export default {
-    path: '/dataset',
+    path: '/obs',
     name: 'dataset',
     handler() {
         return createProxyMiddleware({

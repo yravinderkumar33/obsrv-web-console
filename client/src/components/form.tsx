@@ -1,13 +1,14 @@
 import { makeStyles } from '@mui/styles';
 import * as _ from 'lodash';
 import {
-  Button,
   Checkbox,
   FormControl,
   FormControlLabel,
   FormHelperText,
   FormLabel,
   Grid,
+  InputLabel,
+  MenuItem,
   Radio,
   RadioGroup,
   Select,
@@ -25,7 +26,7 @@ const useStyles = makeStyles((theme: any) => ({
   },
 }));
 
-const MUIForm = ({ initialValues, validationSchema, onSubmit, fields, children }: any) => {
+const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children }: any) => {
   const classes: any = useStyles;
 
   return (
@@ -34,14 +35,22 @@ const MUIForm = ({ initialValues, validationSchema, onSubmit, fields, children }
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ errors, touched }) => (
+      {({ errors, touched, handleChange, values }) => (
         <Form>
           <Grid container spacing={1}>
-            <Grid item xs={12} sm={12}>
-              {fields.map(({ name, label, type, selectOptions }: any) => {
-                switch (type) {
-                  case 'text':
-                    return (
+            {fields.map(({ name, label, type, selectOptions, required = false, dependsOn = null }: any) => {
+
+              if (dependsOn) {
+                const { key, value } = dependsOn;
+                if (!_.get(values, [key]) === value) {
+                  return null
+                }
+              }
+
+              switch (type) {
+                case 'text':
+                  return (
+                    <Grid item xs={12} sm={12}>
                       <Field
                         key={name}
                         as={TextField}
@@ -52,63 +61,64 @@ const MUIForm = ({ initialValues, validationSchema, onSubmit, fields, children }
                         fullWidth
                         error={touched[name] && !!errors[name]}
                         helperText={<ErrorMessage name={name} />}
+                        required={required}
                       />
-                    );
-                  case 'checkbox':
-                    return (
-                      <FormControl fullWidth>
+                    </Grid>
+                  );
+                case 'checkbox':
+                  return (
+                    <Grid item xs={12} sm={12}>
+                      <FormControl fullWidth required={required}>
                         <FormControlLabel
                           key={name}
                           control={<Field as={Checkbox} name={name} />}
                           label={label}
                         />
                       </FormControl>
-                    );
-                  case 'radio':
-                    return (
-                      <FormControl fullWidth component="fieldset" key={name}>
+                    </Grid>
+                  );
+                case 'radio':
+                  return (
+                    <Grid item xs={12} sm={12}>
+                      <FormControl fullWidth component="fieldset" required={required}>
                         <FormLabel component="legend">{label}</FormLabel>
-                        <RadioGroup row>
+                        <RadioGroup name={name} id={name} row onChange={handleChange} value={_.get(values, name)}>
                           {selectOptions.map((option: any) => (
                             <FormControlLabel
                               key={option.value}
-                              control={<Field as={Radio} name={name} value={option.value} />}
+                              value={option.value}
+                              name={name}
+                              control={<Field as={Radio} />}
                               label={option.label}
                             />
                           ))}
                         </RadioGroup>
                       </FormControl>
-                    );
-                  case 'select':
-                    return (
-                      <FormControl fullWidth key={name} className={classes.formControl}>
-                        <FormLabel>{label}</FormLabel>
-                        <Field as={Select} name={name} variant="outlined">
-                          {selectOptions.map((option: any) => (
-                            <option key={option.value} value={option.value}>
-                              {option.label}
-                            </option>
-                          ))}
-                        </Field>
+                    </Grid>
+                  );
+                case 'select':
+                  return (
+                    <Grid item xs={12} sm={12}>
+                      <FormControl fullWidth key={name} className={classes.formControl} required={required}>
+                        <InputLabel >{label}</InputLabel>
+                        <Select name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
+                          {selectOptions.map((option: any) => (<MenuItem value={option.value}>{option.label}</MenuItem>))}
+                        </Select>
                         <FormHelperText>
                           <ErrorMessage name={name} />
                         </FormHelperText>
                       </FormControl>
-                    );
-                  default:
-                    return null;
-                }
-              })}
-            </Grid>
-            {
-              children
-            }
-
+                    </Grid>
+                  );
+                default:
+                  return null;
+              }
+            })}
+            {children}
           </Grid>
         </Form>
       )}
     </Formik>
-
   );
 };
 

@@ -23,8 +23,6 @@ const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you 
 const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   const apiResponse = useSelector((state: any) => state.jsonSchema);
   const configurations = _.get(apiResponse, 'data.configurations') || [];
-  const dedupKeys = _.get(configurations, 'processing.dedupKeys') || [];
-  const timestampKeys = _.get(configurations, 'ingestion.index') || [];
   const [showEdit, setShowEdit] = useState(false);
   const [selection, setSelection] = useState<Record<string, any>>({});
   const dispatch = useDispatch()
@@ -32,6 +30,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
   const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
   const [openAlertDialog, setOpenAlertDialog] = useState(false);
+  const globalConfig = useSelector((state: any) => state?.config);
 
   const markRowAsDeleted = (cellValue: Record<string, any>) => {
     const column = cellValue?.column
@@ -50,14 +49,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
     }
   }
 
-  const persistState = () => {
-    dispatch(
-      addState({
-        id: pageMeta.pageId,
-        index,
-        state: { schema: flattenedData }
-      }));
-  }
+  const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
 
   const gotoNextSection = () => {
     persistState();
@@ -88,24 +80,11 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
         }
       },
       {
-        Header: 'Timestamp',
-        Cell: ({ value, cell }: any) => {
-          const { column } = cell?.row?.values || {};
-          return _.includes(timestampKeys, column) ? <Checkbox /> : <Typography variant="body2"> N/A</Typography>
-        }
-      },
-      {
-        Header: 'Dedupe',
-        Cell: ({ value, cell }: any) => {
-          const { column } = cell?.row?.values || {};
-          return _.includes(dedupKeys, column) ? <Checkbox /> : <Typography variant="body2"> N/A</Typography>
-        }
-      },
-      {
         Header: 'Suggestions',
         accessor: 'suggestions',
         Cell: ({ value, cell }: any) => {
           const suggestions = value || [];
+          const { severityToColorMapping } = globalConfig;
           return <Grid container spacing={2}>
             <Grid item sm zeroMinWidth>
               {suggestions.length == 0 &&
@@ -122,7 +101,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
                       <b>Advice</b> - {payload?.advice}
                     </Typography>
                     <Stack direction="row" spacing={1}>
-                      {payload?.severity && <Chip size='small' label={payload?.severity} color="primary" variant='outlined' />}
+                      {payload?.severity && <Chip size='small' label={payload?.severity} color={_.get(severityToColorMapping, [payload?.severity || "LOW", "color"])} variant='outlined' />}
                       {payload?.resolutionType && <Chip size='small' label={payload?.resolutionType} color="primary" variant='outlined' />}
                     </Stack>
                   </ div>

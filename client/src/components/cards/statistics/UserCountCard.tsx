@@ -1,11 +1,8 @@
-// material-ui
 import { styled } from '@mui/material/styles';
 import { Card, CardContent, Grid, Typography } from '@mui/material';
 
-// types
 import { GenericCardProps } from 'types/root';
 
-// styles
 const IconWrapper = styled('div')({
   position: 'absolute',
   left: '-17px',
@@ -19,21 +16,20 @@ const IconWrapper = styled('div')({
   }
 });
 
-interface UserCountCardProps {
+interface MetricsProps {
   primary: string;
   secondary: string;
   iconPrimary: GenericCardProps['iconPrimary'];
   color: string;
+  onClick: any
 }
 
-// =============================|| USER NUM CARD ||============================= //
-
-const UserCountCard = ({ primary, secondary, iconPrimary, color }: UserCountCardProps) => {
+const MetricsCard = ({ primary, secondary, iconPrimary, color, onClick }: MetricsProps) => {
   const IconPrimary = iconPrimary!;
   const primaryIcon = iconPrimary ? <IconPrimary fontSize="large" /> : null;
 
   return (
-    <Card elevation={0} sx={{ background: color, position: 'relative', color: '#fff' }}>
+    <Card elevation={0} sx={{ background: color, position: 'relative', color: '#fff' }} onClick={onClick}>
       <CardContent>
         <IconWrapper>{primaryIcon}</IconWrapper>
         <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>
@@ -53,4 +49,4 @@ const UserCountCard = ({ primary, secondary, iconPrimary, color }: UserCountCard
   );
 };
 
-export default UserCountCard;
+export default MetricsCard;

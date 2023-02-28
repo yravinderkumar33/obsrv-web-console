@@ -6,7 +6,7 @@ export default {
     name: 'config',
     handler() {
         return createProxyMiddleware({
-            target: appConfig.OBS_API.URL,
+            target: appConfig.CONFIG_API.URL,
             changeOrigin: true
         })
     }

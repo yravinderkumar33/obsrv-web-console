@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Accordion, AccordionDetails, Box, Button, Grid, IconButton, Stack, Tooltip, Typography, useTheme } from '@mui/material';
 import EditConfiguration from './EditConfiguration';
 import * as _ from 'lodash';
-import { ControlOutlined, DeleteOutlined, EditOutlined, InfoCircleOutlined } from '@ant-design/icons';
+import { ControlOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -17,8 +17,7 @@ import { prepareConfigurationsBySection } from 'services/dataset';
 const pageMeta = { pageId: 'configurations', title: "Review" };
 const alertDialogContext = { title: 'Delete Configuration', content: 'Are you sure you want to delete this configuration ?' };
 
-const DatasetConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, index }: any) => {
-
+const Configurations = ({ handleNext, setErrorIndex, handleBack, pick, index }: any) => {
     const theme = useTheme();
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const ingestionConfigMasterData = useSelector((state: any) => state?.ingestionConfigMasterData);
@@ -199,4 +198,4 @@ const DatasetConfigurations = ({ handleNext, setErrorIndex, handleBack, pick, in
     </>;
 };
 
-export default DatasetConfigurations;
+export default Configurations;

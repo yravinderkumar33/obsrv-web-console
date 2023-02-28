@@ -9,5 +9,8 @@ export default {
   },
   OBS_API: {
     URL: env.OBS_API_URL || "http://localhost:4000"
+  },
+  CONFIG_API: {
+    URL: env.CONFIG_API_URL || "http://localhost:4001"
   }
 };

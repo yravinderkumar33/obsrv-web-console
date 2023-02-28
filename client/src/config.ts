@@ -35,7 +35,7 @@ export const AUTH0_API = {
 // ==============================|| THEME CONFIG  ||============================== //
 
 const config: DefaultConfigProps = {
-  defaultPath: '/dashboard/home',
+  defaultPath: '/',
   fontFamily: `'Public Sans', sans-serif`,
   i18n: 'en',
   miniDrawer: false,

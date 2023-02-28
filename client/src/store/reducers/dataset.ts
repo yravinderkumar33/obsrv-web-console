@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { fetchDataThunk } from '../middlewares';
+import { fetchDatasetsThunk } from '../middlewares';
 
 const initialState: Record<string, any> = {
     data: null,
@@ -13,14 +13,14 @@ const dataset = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchDataThunk.pending, (state) => {
+            .addCase(fetchDatasetsThunk.pending, (state) => {
                 state.status = 'loading';
             })
-            .addCase(fetchDataThunk.fulfilled, (state, action) => {
+            .addCase(fetchDatasetsThunk.fulfilled, (state, action) => {
                 state.status = 'success';
                 state.data = action.payload;
             })
-            .addCase(fetchDataThunk.rejected, (state, action) => {
+            .addCase(fetchDatasetsThunk.rejected, (state, action) => {
                 state.status = 'error';
                 state.error = action.error.message;
             });
