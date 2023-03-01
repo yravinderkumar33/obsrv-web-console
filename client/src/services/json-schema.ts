@@ -70,3 +70,17 @@ export const updateJSONSchema = (original: any, updatePayload: any) => {
     })
     return clonedOriginal;
 }
+
+
+export const checkForCriticalSuggestion = (suggestions: any) => _.some(suggestions, suggestion => {
+    return _.includes(['critical', 'high'], suggestion?.severity?.toLowerCase())
+})
+
+export const checkIfAnyCriticalSuggestionsExists = (payload: any) => {
+    const isExists = _.some(payload, data => {
+        const { suggestions = [] } = data;
+        return checkForCriticalSuggestion(suggestions);
+    });
+
+    return isExists;
+}

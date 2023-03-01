@@ -9,13 +9,11 @@ import { useEffect, useState } from 'react';
 
 export const pageMeta = { pageId: 'listDatasetConfigurations', title: "Dataset Configuration" };
 
-const DatasetConfiguration = ({ handleNext, setErrorIndex, handleBack, pick, index }: any) => {
+const DatasetConfiguration = ({ handleNext, handleBack, index }: any) => {
   const dispatch = useDispatch();
   const apiResponse = useSelector((state: any) => state.jsonSchema);
   const wizardState: IWizard = useSelector((state: any) => state?.wizard);
   const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
-  const configurations = useSelector((state: any) => state.jsonSchema?.configurations);
-  const [config, setConfig] = useState(configurations);
   const [updatedConfig, setUpdatedConfig] = useState({});
   const [activeStep, setActiveStep] = useState(0);
   const [steps, setSteps] = useState([]);

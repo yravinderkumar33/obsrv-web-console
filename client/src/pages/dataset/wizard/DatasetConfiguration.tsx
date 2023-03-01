@@ -81,6 +81,10 @@ const DatasetConfiguration = ({ handleNext, setErrorIndex, index }: any) => {
             onSubmit={onSubmit}
             fields={fields}
           >
+            {/* <Grid item xs={12}>
+              <UploadFiles> </UploadFiles>
+            </ Grid> */}
+
             <Grid item xs={12}>
               <Stack direction="row" justifyContent="flex-end">
                 <AnimateButton>

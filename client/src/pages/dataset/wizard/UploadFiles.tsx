@@ -1,11 +1,8 @@
 import { useState } from 'react';
 import { FormHelperText, Grid, Stack } from '@mui/material';
-import MainCard from 'components/MainCard';
 import { Formik } from 'formik';
 import * as yup from 'yup';
-import IconButton from 'components/@extended/IconButton';
 import UploadMultiFile from 'components/third-party/dropzone/MultiFile';
-import { UnorderedListOutlined, AppstoreOutlined } from '@ant-design/icons';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -46,7 +43,6 @@ function TabPanel(props: any) {
 }
 
 const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
-    const [list, setList] = useState(false);
     const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
@@ -124,53 +120,39 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
                             </Tabs>
                         </Box>
                         <TabPanel value={tabIndex} index={0}>
-                            <MainCard
-                                title={pageMeta.title}
-                                secondary={
-                                    <Stack direction="row" alignItems="center" spacing={1.25}>
-                                        <IconButton color={list ? 'secondary' : 'primary'} size="small" onClick={() => setList(false)}>
-                                            <UnorderedListOutlined style={{ fontSize: '1.15rem' }} />
-                                        </IconButton>
-                                        <IconButton color={list ? 'primary' : 'secondary'} size="small" onClick={() => setList(true)}>
-                                            <AppstoreOutlined style={{ fontSize: '1.15rem' }} />
-                                        </IconButton>
-                                    </Stack>
-                                }
+                            <Formik
+                                initialValues={form.initialState}
+                                onSubmit={(values: any) => {
+                                    form.onSubmit(values);
+                                }}
+                                validationSchema={yup.object().shape({
+                                    files: yup.mixed().required('File is a required.')
+                                })}
                             >
-                                <Formik
-                                    initialValues={form.initialState}
-                                    onSubmit={(values: any) => {
-                                        form.onSubmit(values);
-                                    }}
-                                    validationSchema={yup.object().shape({
-                                        files: yup.mixed().required('File is a required.')
-                                    })}
-                                >
-                                    {({ values, handleSubmit, setFieldValue, touched, errors }) => (
-                                        <form onSubmit={handleSubmit}>
-                                            <Grid container spacing={3}>
-                                                <Grid item xs={12}>
-                                                    <Stack spacing={1.5} alignItems="center">
-                                                        <UploadMultiFile
-                                                            showList={list}
-                                                            setFieldValue={setFieldValue}
-                                                            files={values.files}
-                                                            error={touched.files && !!errors.files}
-                                                            onUpload={() => onUpload(values.files)}
-                                                            onFileRemove={onFileRemove}
-                                                        />
-                                                        {touched.files && errors.files && (
-                                                            <FormHelperText error id="standard-weight-helper-text-password-login">
-                                                                {errors.files}
-                                                            </FormHelperText>
-                                                        )}
-                                                    </Stack>
-                                                </Grid>
+                                {({ values, handleSubmit, setFieldValue, touched, errors }) => (
+                                    <form onSubmit={handleSubmit}>
+                                        <Grid container spacing={3}>
+                                            <Grid item xs={12}>
+                                                <Stack spacing={1.5} alignItems="center">
+                                                    <UploadMultiFile
+                                                        showList={false}
+                                                        setFieldValue={setFieldValue}
+                                                        files={values.files}
+                                                        error={touched.files && !!errors.files}
+                                                        onUpload={() => onUpload(values.files)}
+                                                        onFileRemove={onFileRemove}
+                                                    />
+                                                    {touched.files && errors.files && (
+                                                        <FormHelperText error id="standard-weight-helper-text-password-login">
+                                                            {errors.files}
+                                                        </FormHelperText>
+                                                    )}
+                                                </Stack>
                                             </Grid>
-                                        </form>
-                                    )}
-                                </Formik>
-                            </MainCard>
+                                        </Grid>
+                                    </form>
+                                )}
+                            </Formik>
                         </TabPanel>
                         <TabPanel value={tabIndex} index={1}>
                             <PasteData initialData={editorData} onChange={onDataPaste}></PasteData>

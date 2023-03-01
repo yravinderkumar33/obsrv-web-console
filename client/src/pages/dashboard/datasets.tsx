@@ -1,14 +1,14 @@
 import Loader from 'components/Loader';
 import { fetchDatasetsThunk } from 'store/middlewares';
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, Chip, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Alert, Chip, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import {
     SelectColumnFilter,
 } from 'utils/react-table';
 import { IconButton } from '@mui/material';
-import { BugFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { BugFilled, DeleteOutlined, EditOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import CircularWithLabel from 'components/@extended/Progress/CircularWithLabel';
 import { useSelector, useDispatch } from 'react-redux';
 import FilteringTable from 'components/filtering-table';
@@ -126,12 +126,17 @@ const DatasetsList = () => {
                 accessor: 'color',
                 disableFilters: true,
                 Cell: () => <Stack direction="row" justifyContent="center" alignItems="center">
-                    <IconButton color="primary" size="large">
+                    <Tooltip title="Publish Dataset">
+                        <IconButton color="primary" size="large">
+                            <PlayCircleOutlined />
+                        </IconButton>
+                    </Tooltip>
+                    {/* <IconButton color="primary" size="large">
                         <EditOutlined />
                     </IconButton>
                     <IconButton color="inherit" size="large" onClick={e => setOpenAlertDialog(true)}>
                         <DeleteOutlined />
-                    </IconButton>
+                    </IconButton> */}
                 </Stack>
             }
         ],

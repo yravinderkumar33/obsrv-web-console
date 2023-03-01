@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Button, Checkbox, Grid, IconButton, Stack, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import { flattenSchema } from 'services/json-schema';
+import { checkIfAnyCriticalSuggestionsExists, flattenSchema } from 'services/json-schema';
 import EditDataset from './EditDataset';
 import * as _ from 'lodash';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
@@ -16,6 +16,7 @@ import AlertDialog from 'components/AlertDialog';
 import { Alert } from '@mui/material';
 import { Chip } from '@mui/material';
 import { Divider } from '@mui/material';
+import { error } from 'services/toaster';
 
 const pageMeta = { pageId: 'columns', title: "Review Columns" };
 const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you want to delete this column ?' };
@@ -51,7 +52,13 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
 
   const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
 
+
+
   const gotoNextSection = () => {
+    if (checkIfAnyCriticalSuggestionsExists(flattenedData)) {
+      dispatch(error({ message: 'Please resolve conflicts to proceed further' }));
+    }
+
     persistState();
     handleNext();
   }
@@ -71,13 +78,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
       {
         Header: 'Data type',
         accessor: 'type'
-      },
-      {
-        Header: 'Type',
-        Cell: ({ value, cell }: any) => {
-          const { column, ref } = cell?.row?.values || {};
-          return 'dimension'
-        }
       },
       {
         Header: 'Suggestions',

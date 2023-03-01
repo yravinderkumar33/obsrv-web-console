@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { useTable, useFilters, Column } from 'react-table';
 import * as _ from 'lodash';
+import { checkForCriticalSuggestion } from 'services/json-schema';
 
 interface Props {
     columns: Column[];
@@ -10,6 +11,7 @@ interface Props {
 }
 
 function ReactTable({ columns, data, updateMyData, skipPageReset }: Props) {
+    
     const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
         {
             columns,
@@ -37,9 +39,12 @@ function ReactTable({ columns, data, updateMyData, skipPageReset }: Props) {
                     prepareRow(row);
                     return (
                         <TableRow {...row.getRowProps()}>
-                            {row.cells.map((cell: any) => (
-                                <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
-                            ))}
+                            {row.cells.map((cell: any) => {
+                                const suggestions = _.get(cell, 'row.values.suggestions');
+                                const isCritical = checkForCriticalSuggestion(suggestions);
+                                const bgColor = isCritical ? '#f58989' : null;
+                                return <TableCell {...cell.getCellProps()} style={{ 'backgroundColor': bgColor }} >{cell.render('Cell')}</TableCell>
+                            })}
                         </TableRow>
                     );
                 })}
