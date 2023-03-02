@@ -7,7 +7,8 @@ export default {
     handler() {
         return createProxyMiddleware({
             target: appConfig.CONFIG_API.URL,
-            changeOrigin: true
+            changeOrigin: true,
+            pathRewrite: function (path: string, req: any) { return path.replace('/config', '') }
         })
     }
 }

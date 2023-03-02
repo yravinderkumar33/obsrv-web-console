@@ -16,5 +16,5 @@ export const saveDatasource = ({ data = {}, config }: any) => {
 }
 
 export const datasourceRead = ({ datasetId, config = {} }: any) => {
-    return axios.get(apiEndpoints.readDatasource, { params: { id: datasetId }, ...config });
+    return axios.get(`${apiEndpoints.readDatasource}/${datasetId}`, { ...config });
 }

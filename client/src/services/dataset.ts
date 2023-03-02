@@ -48,10 +48,7 @@ export const saveDataset = ({ data = {}, config }: any) => {
 }
 
 export const datasetRead = ({ datasetId, config = {} }: any) => {
-    return axios.get(apiEndpoints.readDataset, {
-        params: {
-            id: datasetId
-        },
+    return axios.get(`${apiEndpoints.readDataset}/${datasetId}`, {
         ...config
     })
 }

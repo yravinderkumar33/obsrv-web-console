@@ -9,7 +9,7 @@ import {
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router';
 
-function FilteringTable({ columns, data }: { columns: Column[]; data: [] }) {
+function FilteringTable({ columns, data }: any) {
     const filterTypes = useMemo(() => renderFilterTypes, []);
     const defaultColumn = useMemo(() => ({ Filter: DefaultColumnFilter }), []);
     const initialState = useMemo(() => ({ filters: [] }), []);

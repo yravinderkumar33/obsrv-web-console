@@ -131,12 +131,6 @@ const DatasetsList = () => {
                             <PlayCircleOutlined />
                         </IconButton>
                     </Tooltip>
-                    {/* <IconButton color="primary" size="large">
-                        <EditOutlined />
-                    </IconButton>
-                    <IconButton color="inherit" size="large" onClick={e => setOpenAlertDialog(true)}>
-                        <DeleteOutlined />
-                    </IconButton> */}
                 </Stack>
             }
         ],

@@ -129,7 +129,7 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
                                     files: yup.mixed().required('File is a required.')
                                 })}
                             >
-                                {({ values, handleSubmit, setFieldValue, touched, errors }) => (
+                                {({ values, handleSubmit, setFieldValue, touched, errors }: any) => (
                                     <form onSubmit={handleSubmit}>
                                         <Grid container spacing={3}>
                                             <Grid item xs={12}>
@@ -143,8 +143,8 @@ const UploadFiles = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
                                                         onFileRemove={onFileRemove}
                                                     />
                                                     {touched.files && errors.files && (
-                                                        <FormHelperText error id="standard-weight-helper-text-password-login">
-                                                            {errors.files}
+                                                        <FormHelperText error>
+                                                            {errors?.files}
                                                         </FormHelperText>
                                                     )}
                                                 </Stack>
