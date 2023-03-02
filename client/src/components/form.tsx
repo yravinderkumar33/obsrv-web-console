@@ -4,7 +4,6 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  FormHelperText,
   FormLabel,
   Grid,
   InputLabel,
@@ -14,7 +13,7 @@ import {
   Select,
   TextField,
 } from '@mui/material';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form } from 'formik';
 
 const useStyles = makeStyles((theme: any) => ({
   formControl: {
@@ -26,8 +25,9 @@ const useStyles = makeStyles((theme: any) => ({
   },
 }));
 
-const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children }: any) => {
+const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, size = {} }: any) => {
   const classes: any = useStyles;
+  const { xs = 12, sm = 12, lg = 12 } = size;
 
   return (
     <Formik
@@ -37,8 +37,9 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
     >
       {({ errors, touched, handleChange, values }) => (
         <Form>
-          <Grid container spacing={1}>
-            {fields.map(({ name, label, type, selectOptions, required = false, dependsOn = null }: any) => {
+          <Grid container spacing={1} justifyContent="center"
+            alignItems="center">
+            {fields.map(({ name, label, type, selectOptions, required = false, dependsOn = null, disabled = false }: any) => {
 
               if (dependsOn) {
                 const { key, value } = dependsOn;
@@ -50,27 +51,26 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
               switch (type) {
                 case 'text':
                   return (
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={xs} sm={sm} lg={lg}>
                       <Field
                         key={name}
                         as={TextField}
                         name={name}
                         label={label}
                         variant="outlined"
-                        margin="normal"
                         fullWidth
-                        error={touched[name] && !!errors[name]}
-                        helperText={<ErrorMessage name={name} />}
                         required={required}
+                        disabled={disabled}
                       />
                     </Grid>
                   );
                 case 'checkbox':
                   return (
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={xs} sm={sm} lg={lg}>
                       <FormControl fullWidth required={required}>
                         <FormControlLabel
                           key={name}
+                          disabled={disabled}
                           control={<Field as={Checkbox} name={name} />}
                           label={label}
                         />
@@ -79,8 +79,8 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                   );
                 case 'radio':
                   return (
-                    <Grid item xs={12} sm={12}>
-                      <FormControl fullWidth component="fieldset" required={required}>
+                    <Grid item xs={xs} sm={sm} lg={lg}>
+                      <FormControl fullWidth component="fieldset" required={required} disabled={disabled}>
                         <FormLabel component="legend">{label}</FormLabel>
                         <RadioGroup name={name} id={name} row onChange={handleChange} value={_.get(values, name)}>
                           {selectOptions.map((option: any) => (
@@ -98,15 +98,12 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                   );
                 case 'select':
                   return (
-                    <Grid item xs={12} sm={12}>
-                      <FormControl fullWidth key={name} className={classes.formControl} required={required}>
+                    <Grid item xs={xs} sm={sm} lg={lg}>
+                      <FormControl fullWidth key={name} className={classes.formControl} required={required} disabled={disabled}>
                         <InputLabel >{label}</InputLabel>
                         <Select name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
                           {selectOptions.map((option: any) => (<MenuItem value={option.value}>{option.label}</MenuItem>))}
                         </Select>
-                        <FormHelperText>
-                          <ErrorMessage name={name} />
-                        </FormHelperText>
                       </FormControl>
                     </Grid>
                   );

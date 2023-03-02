@@ -4,7 +4,7 @@ metadata:
   labels:
     app: web-console
   name: web-console
-  namespace: default
+  namespace: web-console
 spec:
   replicas: 1
   selector:
@@ -29,7 +29,7 @@ metadata:
   labels:
     app: web-console
   name: web-console
-  namespace: default
+  namespace: web-console
 spec:
   ports:
     - name: 3000-3000

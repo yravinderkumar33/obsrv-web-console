@@ -33,10 +33,11 @@ export const prepareConfigurationsBySection = (payload: Record<string, any>[], m
 export const saveDataset = ({ data = {}, config }: any) => {
     const { schema, wizardState } = data;
     const payload = {
-        "id": _.get(wizardState, 'pages.datasetConfiguration.state.name'),
+        "id": _.get(wizardState, 'pages.datasetConfiguration.state.config.id'),
+        "dataset_name": _.get(wizardState, 'pages.datasetConfiguration.state.config.name'),
         "extraction_config": {
-            "is_batch_event": _.get(wizardState, 'pages.datasetConfiguration.state.isBatch'),
-            "extraction_key": _.get(wizardState, 'pages.datasetConfiguration.state.extractionKey')
+            "is_batch_event": _.get(wizardState, 'pages.datasetConfiguration.state.isBatch') || true,
+            "extraction_key": _.get(wizardState, 'pages.datasetConfiguration.state.extractionKey') || "events"
         },
         "dedup_config": {
             "drop_duplicates": _.lowerCase(_.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.processing.dropDuplicates')) === 'yes',
@@ -58,7 +59,7 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
     const payload = {
         schema,
         config: {
-            "dataset": _.get(wizardState, 'pages.datasetConfiguration.state.name'),
+            "dataset": _.get(wizardState, 'pages.datasetConfiguration.state.config.name'),
             "indexCol": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.ingestion.index'),
             "granularitySpec": {
                 "segmentGranularity": "DAY",

@@ -8,7 +8,7 @@ import {
     SelectColumnFilter,
 } from 'utils/react-table';
 import { IconButton } from '@mui/material';
-import { BugFilled, DeleteOutlined, EditOutlined, PlayCircleOutlined } from '@ant-design/icons';
+import { BugFilled, PlayCircleOutlined } from '@ant-design/icons';
 import CircularWithLabel from 'components/@extended/Progress/CircularWithLabel';
 import { useSelector, useDispatch } from 'react-redux';
 import FilteringTable from 'components/filtering-table';
@@ -16,7 +16,8 @@ import AlertDialog from 'components/AlertDialog';
 import AlertMessage from 'components/AlertMessage';
 
 const completionPercentage = 60;
-const connectors = ["Kafka", "S3"];
+
+const connectors = ["Kafka"];
 
 const metrics = [
     {
@@ -53,7 +54,7 @@ const DatasetsList = () => {
                         </Grid>
                         <Grid item xs zeroMinWidth>
                             <Typography align="left" variant="subtitle1">
-                                {row.id}
+                                {row?.dataset_name}
                             </Typography>
                             <Stack
                                 direction="row"
@@ -73,6 +74,24 @@ const DatasetsList = () => {
                         </Grid>
                     </Grid>
                 }
+            },
+            {
+                Header: 'Status',
+                accessor: 'status',
+                Filter: SelectColumnFilter,
+                filter: 'includes',
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+                    return <Grid container spacing={1} justifyContent="center">
+                        <Grid item>
+                            <Chip color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase()} size="small" variant="light" />          </Grid>
+                    </Grid>
+                }
+            },
+            {
+                Header: 'Published On',
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => ""
             },
             {
                 Header: 'Metrics',
@@ -95,19 +114,6 @@ const DatasetsList = () => {
                                 </Grid>
                             })
                         }
-                    </Grid>
-                }
-            },
-            {
-                Header: 'Status',
-                accessor: 'status',
-                Filter: SelectColumnFilter,
-                filter: 'includes',
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    return <Grid container spacing={1} justifyContent="center">
-                        <Grid item>
-                            <Chip color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase()} size="small" variant="light" />          </Grid>
                     </Grid>
                 }
             },

@@ -33,13 +33,23 @@ const DatasetConfiguration = ({ handleNext, handleBack, index }: any) => {
   const getFields = (payload: Record<string, any>) => {
     const pairs = _.toPairs(payload);
     return pairs.map((pair, index) => {
-      const [name, values] = pair
-      return {
-        name,
-        label: _.capitalize(name),
-        type: 'select',
-        required: true,
-        selectOptions: _.map(values, value => ({ label: _.toString(value), value }))
+      const [name, values] = pair;
+      if (Array.isArray(values)) {
+        return {
+          name,
+          label: _.capitalize(name),
+          type: 'select',
+          required: true,
+          selectOptions: _.map(values, value => ({ label: _.toString(value), value }))
+        }
+      } else {
+        return {
+          name,
+          label: _.capitalize(name),
+          type: 'text',
+          required: true,
+          value: values
+        }
       }
     })
   }

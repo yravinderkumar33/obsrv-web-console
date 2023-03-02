@@ -7,9 +7,9 @@ export const saveDatasource = ({ data = {}, config }: any) => {
     const { ingestionSpec, wizardState } = data;
 
     const payload = {
-        "dataset_id": _.get(wizardState, 'pages.datasetConfiguration.state.name'),
+        "dataset_id": _.get(wizardState, 'pages.datasetConfiguration.state.config.id'),
         "ingestion_spec": ingestionSpec,
-        "datasource": _.get(wizardState, 'pages.datasetConfiguration.state.name')
+        "datasource": _.get(wizardState, 'pages.datasetConfiguration.state.config.name')
     };
 
     return axios.post(apiEndpoints.saveDatasource, payload, config);

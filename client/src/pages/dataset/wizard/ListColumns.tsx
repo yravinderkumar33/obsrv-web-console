@@ -3,7 +3,7 @@ import { Button, Checkbox, Grid, IconButton, Stack, Typography } from '@mui/mate
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import { checkIfAnyCriticalSuggestionsExists, flattenSchema } from 'services/json-schema';
-import EditDataset from './EditDataset';
+import EditDataset from './EditColumn';
 import * as _ from 'lodash';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
@@ -51,8 +51,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   }
 
   const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
-
-
 
   const gotoNextSection = () => {
     if (checkIfAnyCriticalSuggestionsExists(flattenedData)) {

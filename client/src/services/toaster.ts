@@ -12,7 +12,7 @@ const defaultConfig = {
 }
 
 export const success = (config: Partial<typeof defaultConfig>) => {
-    return openSnackbar({ ...defaultConfig, variant: 'success', alert: { color: 'success' }, ...config })
+    return openSnackbar({ ...defaultConfig, alert: { color: 'success' }, ...config })
 }
 
 export const error = (config: Partial<typeof defaultConfig>) => {
