@@ -66,12 +66,17 @@ const MetricsDetails = () => {
             return _.flatten(_.map(charts, (value, key) => {
                 const { size, metadata = [] } = value;
                 const { xs, sm, lg, md } = size;
-                return _.map(metadata, meta => {
-                    const { chart } = meta;
-                    return <Grid item xs={xs} sm={sm} md={md} lg={lg}>
-                        {chart}
-                    </Grid>
-                })
+                return <Grid container rowSpacing={2} columnSpacing={2} marginBottom={2}>
+                    {
+                        _.map(metadata, meta => {
+                            const { chart } = meta;
+                            return <Grid item xs={xs} sm={sm} md={md} lg={lg}>
+                                {chart}
+                            </Grid>
+                        })
+                    }
+
+                </Grid>
             }))
         }
     }
@@ -80,7 +85,7 @@ const MetricsDetails = () => {
         <>
             <MainCard title={`${metadata?.primaryLabel || ""} Metrics`}
                 secondary={getFilters()}>
-                <Grid container rowSpacing={2} columnSpacing={2}>
+                <Grid container rowSpacing={2} columnSpacing={2} marginBottom={2}>
                     {metadata?.description &&
                         <Grid item xs={12}>
                             <Alert color="info" icon={<QuestionCircleFilled />}>
@@ -88,8 +93,8 @@ const MetricsDetails = () => {
                             </Alert>
                         </Grid>
                     }
-                    {renderCharts()}
                 </Grid>
+                {renderCharts()}
             </MainCard >
         </>
     )

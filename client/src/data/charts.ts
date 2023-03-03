@@ -486,7 +486,7 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: 'druid_running_tasks'
+                query: 'count(druid_tasks_duration{task_status="RUNNING"}) by (task_status)'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -511,7 +511,32 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: 'druid_completed_tasks'
+                query: 'count(druid_tasks_duration{task_status="SUCCESS"}) by (task_status)'
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                const sum = _.sumBy(result, (payload: any) => {
+                    const { value } = payload;
+                    const [_, percentage = 0] = value;
+                    return +percentage
+                })
+                return _.floor(sum / result?.length);
+            },
+            error() {
+                return [0]
+            }
+        }
+    },
+    druid_failed_tasks: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'count(druid_tasks_duration{task_status="FAILED"}) by (task_status)'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -546,7 +571,59 @@ export default {
                     return +percentage
                 })
 
-                return sum === 1 ? "Healthy" : "Unhealthy";
+                return sum === 1 ? "HEALTHY" : "UNHEALTHY";
+            },
+            error() {
+                return "UNHEALTHY"
+            }
+        }
+    },
+    druid_total_datasources: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'count(druid_datasource{})'
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                const sum = _.sumBy(result, (payload: any) => {
+                    const { value } = payload;
+                    const [_, percentage = 0] = value;
+                    return +percentage
+                })
+
+                return _.floor(sum / result?.length);
+            },
+            error() {
+                return [0]
+            }
+        }
+    },
+    druid_total_segments: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'count(druid_datasource{})'
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                const sum = _.sumBy(result, (payload: any) => {
+                    const { value } = payload;
+                    const [_, percentage = 0] = value;
+                    return +percentage
+                })
+
+                return _.floor(sum / result?.length);
             },
             error() {
                 return [0]
