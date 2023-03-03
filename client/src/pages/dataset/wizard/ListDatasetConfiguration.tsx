@@ -6,6 +6,7 @@ import { addState } from 'store/reducers/wizard';
 import { IWizard } from 'types/formWizard';
 import MUIForm from 'components/form';
 import { useEffect, useState } from 'react';
+import commonConfigurations from 'data/ingestionConfigurations';
 
 export const pageMeta = { pageId: 'listDatasetConfigurations', title: "Dataset Configuration" };
 
@@ -102,7 +103,8 @@ const DatasetConfiguration = ({ handleNext, handleBack, index }: any) => {
 
   useEffect(() => {
     if (apiResponse?.status === 'success' && apiResponse?.data?.configurations) {
-      setSteps(createSteps(apiResponse.data.configurations) as any);
+      const configurations = _.get(apiResponse, 'data.configurations');
+      setSteps(createSteps({ ...configurations, ...commonConfigurations }) as any);
     }
   }, [apiResponse?.status]);
 

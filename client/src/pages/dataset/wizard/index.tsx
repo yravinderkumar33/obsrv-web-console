@@ -10,7 +10,7 @@ import Review from './Review';
 import ListDatasetConfigurations from './ListDatasetConfiguration';
 import * as _ from 'lodash';
 
-const steps = ['Columns', 'Configurations', 'Review'];
+const steps = ['Schema', 'Configurations', 'Review'];
 
 const getStepContent = (
   step: number,

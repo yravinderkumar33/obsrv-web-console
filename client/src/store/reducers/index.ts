@@ -8,7 +8,6 @@ import config from './config';
 import dataset from './dataset';
 import jsonSchema from './jsonSchema';
 import wizard from './wizard';
-import ingestionConfigMasterData from './ingestionConfigurations';
 
 const reducers = combineReducers({
   menu,
@@ -16,8 +15,7 @@ const reducers = combineReducers({
   config,
   dataset,
   jsonSchema,
-  wizard,
-  ingestionConfigMasterData
+  wizard
 });
 
 export default reducers;

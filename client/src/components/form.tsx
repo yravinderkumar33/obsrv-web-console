@@ -35,9 +35,9 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ errors, touched, handleChange, values }) => (
+      {({ handleChange, values }) => (
         <Form>
-          <Grid container spacing={1} justifyContent="center"
+          <Grid container spacing={3} justifyContent="center"
             alignItems="center">
             {fields.map(({ name, label, type, selectOptions, required = false, dependsOn = null, disabled = false }: any) => {
 

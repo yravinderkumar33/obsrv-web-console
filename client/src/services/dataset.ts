@@ -3,6 +3,8 @@ import axios from 'axios';
 import { updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
+import { v4 } from 'uuid';
+
 
 export const searchDatasets = ({ data = { filters: {} }, config }: any) => {
     return axios.post(apiEndpoints.listDatasets, data, config);
@@ -62,9 +64,9 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
             "dataset": _.get(wizardState, 'pages.datasetConfiguration.state.config.name'),
             "indexCol": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.ingestion.index'),
             "granularitySpec": {
-                "segmentGranularity": "DAY",
-                "queryGranularity": "HOUR",
-                "rollup": false
+                "segmentGranularity": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.segmentGranularity'),
+                "queryGranularity": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.queryGranularity'),
+                "rollup": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.rollup')
             },
             "tuningConfig": {
                 "maxRowPerSegment": 50000,
@@ -87,4 +89,18 @@ export const publishDataset = async (jsonSchema: Record<string, any>, wizardStat
     const saveDatasetResponse = await saveDataset({ data: { schema, wizardState } });
     const saveDatasourceResponse = await saveDatasource({ data: { wizardState, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
 }
+
+
+export const sendEvents = ({ datasetId, events, config }: any) => {
+
+    const payload = {
+        data: {
+            id: v4(),
+            events
+        }
+    }
+
+    return axios.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, config);
+}
+
 

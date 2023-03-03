@@ -8,31 +8,16 @@ import {
     SelectColumnFilter,
 } from 'utils/react-table';
 import { IconButton } from '@mui/material';
-import { BugFilled, PlayCircleOutlined } from '@ant-design/icons';
+import { BugFilled, PlayCircleOutlined, EditOutlined, DatabaseOutlined, DashboardOutlined } from '@ant-design/icons';
 import CircularWithLabel from 'components/@extended/Progress/CircularWithLabel';
 import { useSelector, useDispatch } from 'react-redux';
 import FilteringTable from 'components/filtering-table';
 import AlertDialog from 'components/AlertDialog';
 import AlertMessage from 'components/AlertMessage';
+import { useNavigate } from 'react-router';
 
 const completionPercentage = 60;
-
 const connectors = ["Kafka"];
-
-const metrics = [
-    {
-        key: "Total Events",
-        value: "200K"
-    },
-    {
-        key: "Avg Processing Time",
-        value: "2 seconds"
-    },
-    {
-        key: "Last Synced",
-        value: "2 seconds ago"
-    }
-];
 
 const alertDialogContext = { title: 'Delete Dataset', content: 'Are you sure you want to delete this dataset ?' };
 
@@ -40,6 +25,11 @@ const DatasetsList = () => {
     const datasets = useSelector((state: any) => state?.dataset?.data);
     const [data, setData] = useState<any>(datasets);
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
+    const navigate = useNavigate()
+
+    const navigateToPath = (path: string) => {
+        navigate(path);
+    }
 
     const columns = useMemo(
         () => [
@@ -91,53 +81,62 @@ const DatasetsList = () => {
             {
                 Header: 'Published On',
                 disableFilters: true,
-                Cell: ({ value, cell }: any) => ""
+                Cell: ({ value, cell }: any) => new Date().toLocaleDateString()
             },
             {
-                Header: 'Metrics',
+                Header: 'Total Events (Prev Day)',
                 disableFilters: true,
-                Cell: ({ value }: any) => {
-                    return <Grid container spacing={2} alignItems="center">
-                        {
-                            Array.isArray(metrics) && metrics.map(metric => {
-                                return <Grid item xs={12}>
-                                    <Grid container alignItems="center" spacing={1}>
-                                        <Grid item sm zeroMinWidth>
-                                            <Typography variant="body2">{metric?.key}</Typography>
-                                        </Grid>
-                                        <Grid item>
-                                            <Typography variant="body2" align="right">
-                                                {metric?.value}
-                                            </Typography>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            })
-                        }
-                    </Grid>
-                }
+                Cell: ({ value, cell }: any) => 0
             },
             {
-                Header: 'Created On',
-                accessor: 'created_date',
+                Header: 'Total Events (Today)',
                 disableFilters: true,
-                Filter: SelectColumnFilter,
-                filter: 'includes',
-                Cell: ({ value, cell }: any) => {
-                    return new Date(value).toLocaleDateString();
-                }
+                Cell: ({ value, cell }: any) => 0
+            },
+            {
+                Header: 'Avg Processing Time (Today)',
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => 0
+            },
+            {
+                Header: 'Last Synced Time',
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => 0
+            },
+            {
+                Header: 'Event Failure Percentage',
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => 0
             },
             {
                 Header: 'Actions',
                 accessor: 'color',
                 disableFilters: true,
-                Cell: () => <Stack direction="row" justifyContent="center" alignItems="center">
-                    <Tooltip title="Publish Dataset">
-                        <IconButton color="primary" size="large">
-                            <PlayCircleOutlined />
-                        </IconButton>
-                    </Tooltip>
-                </Stack>
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+                    return <Stack direction="row" justifyContent="center" alignItems="center">
+                        <Tooltip title="View Metrics">
+                            <IconButton color="primary" size="large">
+                                <PlayCircleOutlined />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Publish Dataset">
+                            <IconButton color="primary" size="large">
+                                <DashboardOutlined />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Dataset">
+                            <IconButton color="primary" size="large">
+                                <EditOutlined />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}`)}>
+                            <IconButton color="primary" size="large">
+                                <DatabaseOutlined />
+                            </IconButton>
+                        </Tooltip>
+                    </Stack>
+                }
             }
         ],
         []
@@ -161,10 +160,8 @@ const DatasetsList = () => {
 };
 
 const ClusterHealth = () => {
-
     const dataset = useSelector((state: any) => state.dataset)
     const dispatch = useDispatch();
-
     const showNoDatasetsError = () => <AlertMessage color='error' messsage={' No Datasets Found'} icon={BugFilled} />
 
     useEffect(() => {
