@@ -3,7 +3,7 @@ import appConfig from '../../shared/resources/appConfig';
 
 export default {
     path: '/system',
-    name: 'config',
+    name: 'system',
     handler() {
         return createProxyMiddleware({
             target: appConfig.SYSTEM_API.URL,
