@@ -25,8 +25,8 @@ const DatasetCreateEvents = () => {
 
     const pushEvents = async () => {
         try {
-            const { datasetId } = params;
-            await sendEvents({ datasetId, events: data });
+            const { datasetId, datasetName } = params;
+            await sendEvents({ datasetId, datasetName, events: data });
             dispatch(success({ message: 'Events pushed successfully.' }))
         } catch (err) {
             dispatch(error({ message: 'Failed to push events. Please try again later' }))

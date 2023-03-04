@@ -91,16 +91,16 @@ export const publishDataset = async (jsonSchema: Record<string, any>, wizardStat
 }
 
 
-export const sendEvents = ({ datasetId, events, config }: any) => {
+export const sendEvents = ({ datasetId, datasetName, events, config }: any) => {
 
     const payload = {
         data: {
-            id: v4(),
+            id: datasetId,
             events
         }
     }
 
-    return axios.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, config);
+    return axios.post(`${apiEndpoints.sendEvents}/${datasetName}`, payload, config);
 }
 
 

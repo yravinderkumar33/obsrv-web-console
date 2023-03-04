@@ -1,12 +1,9 @@
 import Loader from 'components/Loader';
 import { fetchDatasetsThunk } from 'store/middlewares';
 import { useEffect, useMemo, useState } from 'react';
-import { Alert, Chip, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Chip, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import {
-    SelectColumnFilter,
-} from 'utils/react-table';
 import { IconButton } from '@mui/material';
 import { BugFilled, PlayCircleOutlined, EditOutlined, DatabaseOutlined, DashboardOutlined } from '@ant-design/icons';
 import CircularWithLabel from 'components/@extended/Progress/CircularWithLabel';
@@ -36,6 +33,7 @@ const DatasetsList = () => {
             {
                 Header: 'Name',
                 accessor: 'id',
+                disableFilters: true,
                 Cell: (value: any) => {
                     const row = value?.cell?.row?.original || {};
                     return <Grid container spacing={2} alignItems="center" sx={{ flexWrap: 'nowrap' }}>
@@ -68,8 +66,7 @@ const DatasetsList = () => {
             {
                 Header: 'Status',
                 accessor: 'status',
-                Filter: SelectColumnFilter,
-                filter: 'includes',
+                disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     return <Grid container spacing={1} justifyContent="center">
@@ -130,7 +127,7 @@ const DatasetsList = () => {
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}`)}>
+                        <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_name}`)}>
                             <IconButton color="primary" size="large">
                                 <DatabaseOutlined />
                             </IconButton>
@@ -170,11 +167,20 @@ const ClusterHealth = () => {
 
     return (
         <Grid container rowSpacing={4.5} columnSpacing={3}>
-            <Grid item xs={12}>
-                {dataset?.status !== 'success' && <Loader />}
-                {dataset?.status === 'success' && dataset?.data?.length == 0 && showNoDatasetsError()}
-                {dataset?.status === 'success' && dataset?.data?.length > 0 && <DatasetsList />}
-            </Grid>
+            {dataset?.status !== 'success' && <Loader />}
+
+            {dataset?.status === 'success' && dataset?.data?.length == 0 &&
+                <Grid item xs={12}>
+                    {showNoDatasetsError()}
+                </Grid>
+            }
+
+            {dataset?.status === 'success' && dataset?.data?.length > 0 &&
+                <Grid item xs={12}>
+                    <DatasetsList />
+                </Grid>
+            }
+
         </Grid>
     )
 };

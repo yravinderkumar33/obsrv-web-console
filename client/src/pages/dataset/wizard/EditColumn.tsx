@@ -33,11 +33,12 @@ const EditDataset = ({ open = false, onSubmit, selection, setData }: { open: boo
       type: values?.type
     },
     onSubmit: (formValues) => {
-      const updatedValues = { ...values, ...formValues }
+      const updatedValues = { ...values, ...formValues };
+      const hasConflicts = _.get(values, 'suggestions.length');
       setData((preState: Array<Record<string, any>>) => {
         return _.map(preState, state => {
           if (_.get(state, 'column') === _.get(updatedValues, 'column')) {
-            return { ...state, ...updatedValues, isModified: true, value: formValues };
+            return { ...state, ...updatedValues, isModified: true, value: formValues, ...(hasConflicts && { resolved: true }) };
           } else {
             return state
           }

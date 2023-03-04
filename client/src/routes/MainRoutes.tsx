@@ -33,7 +33,7 @@ const MainRoutes = {
           element: <DatasetDetails />
         },
         {
-          path: 'datasets/addEvents/:datasetId',
+          path: 'datasets/addEvents/:datasetId/:datasetName',
           element: <DatasetCreateEvents />
         },
         {

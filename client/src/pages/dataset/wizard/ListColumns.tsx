@@ -1,11 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Button, Checkbox, Grid, IconButton, Stack, Typography } from '@mui/material';
+import { Button, Checkbox, Grid, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import { checkIfAnyCriticalSuggestionsExists, flattenSchema } from 'services/json-schema';
 import EditDataset from './EditColumn';
 import * as _ from 'lodash';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -17,6 +16,8 @@ import { Alert } from '@mui/material';
 import { Chip } from '@mui/material';
 import { Divider } from '@mui/material';
 import { error } from 'services/toaster';
+import { Box } from '@mui/material';
+import { areConflictsResolved, checkForCriticalSuggestion, flattenSchema } from 'services/json-schema';
 
 const pageMeta = { pageId: 'columns', title: "Review Columns" };
 const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you want to delete this column ?' };
@@ -53,12 +54,13 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
   const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
 
   const gotoNextSection = () => {
-    if (checkIfAnyCriticalSuggestionsExists(flattenedData)) {
+    if (areConflictsResolved(flattenedData)) {
+      persistState();
+      handleNext();
+    } else {
       dispatch(error({ message: 'Please resolve conflicts to proceed further' }));
+      setErrorIndex(index)
     }
-
-    persistState();
-    handleNext();
   }
 
   const gotoPreviousSection = () => {
@@ -71,7 +73,25 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index }: any) => {
       {
         Header: 'Name',
         accessor: 'column',
-        tipText: 'Text for the First Name tooltip'
+        Cell: ({ value, cell }: any) => {
+          const row = cell?.row?.original || {};
+          const suggestions = _.get(row, 'suggestions');
+          const hasCriticalConflicts = checkForCriticalSuggestion(suggestions || []);
+          const isResolved = _.get(row, 'resolved') || false;
+          const PrimaryIcon = isResolved ? CheckOutlined : CloseOutlined;
+          const color = isResolved ? "primary" : "error";
+          return <Box display="flex" alignItems="center">
+            <Typography variant="body1">
+              {value}
+            </Typography>
+            {hasCriticalConflicts && <Tooltip title={isResolved ? "Resolved" : "Unresolved"}>
+              <IconButton color={color}>
+                <PrimaryIcon />
+              </IconButton>
+            </Tooltip>
+            }
+          </Box>;
+        }
       },
       {
         Header: 'Data type',

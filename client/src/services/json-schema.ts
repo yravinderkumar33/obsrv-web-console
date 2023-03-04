@@ -71,16 +71,16 @@ export const updateJSONSchema = (original: any, updatePayload: any) => {
     return clonedOriginal;
 }
 
-
 export const checkForCriticalSuggestion = (suggestions: any) => _.some(suggestions, suggestion => {
     return _.includes(['critical', 'high'], suggestion?.severity?.toLowerCase())
 })
 
-export const checkIfAnyCriticalSuggestionsExists = (payload: any) => {
-    const isExists = _.some(payload, data => {
-        const { suggestions = [] } = data;
-        return checkForCriticalSuggestion(suggestions);
-    });
+export const isResolved = (payload: Record<string, any>) => {
+    const { suggestions = [], resolved = false } = payload;
+    const isCritical = checkForCriticalSuggestion(suggestions);
+    return isCritical ? resolved : true;
+}
 
-    return isExists;
+export const areConflictsResolved = (payload: Array<any>) => {
+    return _.every(payload, isResolved);
 }
