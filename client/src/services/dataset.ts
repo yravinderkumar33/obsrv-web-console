@@ -38,8 +38,8 @@ export const saveDataset = ({ data = {}, config }: any) => {
         "id": _.get(wizardState, 'pages.datasetConfiguration.state.config.id'),
         "dataset_name": _.get(wizardState, 'pages.datasetConfiguration.state.config.name'),
         "extraction_config": {
-            "is_batch_event": _.get(wizardState, 'pages.datasetConfiguration.state.isBatch') || true,
-            "extraction_key": _.get(wizardState, 'pages.datasetConfiguration.state.extractionKey') || "events"
+            "is_batch_event": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.isBatch') || true,
+            "extraction_key": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.extractionKey') || ""
         },
         "dedup_config": {
             "drop_duplicates": _.lowerCase(_.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.processing.dropDuplicates')) === 'yes',

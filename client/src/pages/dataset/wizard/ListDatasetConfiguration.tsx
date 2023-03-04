@@ -44,12 +44,14 @@ const DatasetConfiguration = ({ handleNext, handleBack, index }: any) => {
           selectOptions: _.map(values, value => ({ label: _.toString(value), value }))
         }
       } else {
+        const { value, dependsOn } = values;
         return {
           name,
           label: _.capitalize(name),
           type: 'text',
           required: true,
-          value: values
+          value: value || values,
+          dependsOn
         }
       }
     })
@@ -57,8 +59,12 @@ const DatasetConfiguration = ({ handleNext, handleBack, index }: any) => {
 
   const getInitialValues = (payload: Record<string, any>) => {
     return _.mapValues(payload, (value) => {
-      const [firstValue] = value;
-      return firstValue
+      if (Array.isArray(value)) {
+        const [firstValue] = value;
+        return firstValue;
+      } else {
+        return _.has(value, 'value') ? _.get(value, 'value') : value;
+      }
     })
   }
 

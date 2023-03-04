@@ -37,6 +37,13 @@ export default {
             "year",
         ],
         rollup: [false, true],
-
+        isBatch: [true, false],
+        extractionKey: {
+            value: '',
+            dependsOn: {
+                key: 'isBatch',
+                value: true
+            }
+        }
     }
 }
