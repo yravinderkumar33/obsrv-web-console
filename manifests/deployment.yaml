@@ -21,9 +21,8 @@ spec:
           resources: {}
           envFrom:
             - configMapRef:
-              name: web-console
+                name: web-console
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
@@ -39,4 +38,4 @@ spec:
       targetPort: 3000
   selector:
     app: web-console
-  type: LoadBalancer
+  type: ClusterIP

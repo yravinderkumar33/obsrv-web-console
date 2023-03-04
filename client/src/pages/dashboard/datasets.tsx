@@ -115,7 +115,7 @@ const DatasetsList = () => {
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     return <Stack direction="row" justifyContent="center" alignItems="center">
-                        <Tooltip title="View Metrics">
+                        <Tooltip title="View Metrics" onClick={(e: any) => navigateToPath(`/datasets/${row?.id}`)}>
                             <IconButton color="primary" size="large">
                                 <PlayCircleOutlined />
                             </IconButton>

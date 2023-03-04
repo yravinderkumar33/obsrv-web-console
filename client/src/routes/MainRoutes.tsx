@@ -2,6 +2,7 @@ import { lazy } from 'react';
 
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'components/Loadable';
+import DatasetDetails from 'pages/dashboard/datasetsDetails';
 
 const ClusterHealth = Loadable(lazy(() => import('pages/dashboard/datasets')));
 const NewDataset = Loadable(lazy(() => import('pages/dataset/newDataset')));
@@ -26,6 +27,10 @@ const MainRoutes = {
         {
           path: 'datasets',
           element: <ClusterHealth />
+        },
+        {
+          path: 'datasets/:datasetId',
+          element: <DatasetDetails />
         },
         {
           path: 'datasets/addEvents/:datasetId',

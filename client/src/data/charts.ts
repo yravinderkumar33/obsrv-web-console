@@ -234,7 +234,7 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: "100 - (avg by (instance) (irate(node_cpu_seconds_total{mode='idle'}[5m])) * 100)"
+                query: 'cluster:node_cpu:ratio_rate5m{cluster=""}'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -243,10 +243,10 @@ export default {
                     const [_, percentage = 0] = value;
                     return +percentage
                 })
-                return _.floor(sum / result?.length);
+                return result?.length ? _.floor((sum / result?.length) * 100) : 0;
             },
             error() {
-                return [0]
+                return 0;
             }
         }
     },
@@ -259,7 +259,7 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: "100 - ((node_memory_MemFree_bytes / node_memory_MemTotal_bytes) * 100)"
+                query: 'sum(:node_memory_MemAvailable_bytes:sum{cluster=""}) / sum(node_memory_MemTotal_bytes{job="node-exporter",cluster=""})'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -268,10 +268,10 @@ export default {
                     const [_, percentage = 0] = value;
                     return +percentage
                 })
-                return _.floor(sum / result?.length);
+                return result?.length ? _.floor((sum / result?.length) * 100) : 0;
             },
             error() {
-                return [0]
+                return 0
             }
         }
     },
@@ -400,10 +400,10 @@ export default {
                     const [_, percentage = 0] = value;
                     return +percentage
                 })
-                return _.floor(sum / result?.length);
+                return result?.length ? _.floor(sum / result?.length) : 0;
             },
             error() {
-                return [0]
+                return 0
             }
         }
     },
@@ -495,10 +495,10 @@ export default {
                     const [_, percentage = 0] = value;
                     return +percentage
                 })
-                return _.floor(sum / result?.length);
+                return result?.length ? _.floor(sum / result?.length) : 0;
             },
             error() {
-                return [0]
+                return 0
             }
         }
     },
@@ -520,10 +520,10 @@ export default {
                     const [_, percentage = 0] = value;
                     return +percentage
                 })
-                return _.floor(sum / result?.length);
+                return result?.length ? _.floor(sum / result?.length) : 0;
             },
             error() {
-                return [0]
+                return 0
             }
         }
     },
@@ -545,10 +545,10 @@ export default {
                     const [_, percentage = 0] = value;
                     return +percentage
                 })
-                return _.floor(sum / result?.length);
+                return result?.length ? _.floor(sum / result?.length) : 0;
             },
             error() {
-                return [0]
+                return 0
             }
         }
     },
@@ -597,10 +597,10 @@ export default {
                     return +percentage
                 })
 
-                return _.floor(sum / result?.length);
+                return result?.length ? _.floor(sum / result?.length) : 0;
             },
             error() {
-                return [0]
+                return 0
             }
         }
     },
@@ -623,11 +623,355 @@ export default {
                     return +percentage
                 })
 
-                return _.floor(sum / result?.length);
+                return result?.length ? _.floor(sum / result?.length) : 0;
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    druid_unloaded_segments: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'count(druid_datasource{})'
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                const sum = _.sumBy(result, (payload: any) => {
+                    const { value } = payload;
+                    const [_, percentage = 0] = value;
+                    return +percentage
+                })
+
+                return result?.length ? _.floor(sum / result?.length) : 0;
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    druid_cpu_usage: {
+        type: 'area',
+        series: [],
+        options: {
+            chart: {
+                type: 'area',
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 2000
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            title: {
+                "text": "CPU Usage"
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return Math.floor(value * 100);
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                },
+                y: {
+                    formatter(val: number) {
+                        return Math.floor(val * 100);
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    show: false
+                },
+                crosshairs: {
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            colorFrom: '#D8E3F0',
+                            colorTo: '#BED1E6',
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=""}) by (druid)',
+                end: 1676457179.487,
+                start: 1676456879.487,
+                step: 1
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.instance') || "Druid",
+                    data: _.get(payload, 'values')
+                }))
             },
             error() {
                 return [0]
             }
         }
-    }
+    },
+    kafka_cpu_usage: {
+        type: 'area',
+        series: [],
+        options: {
+            chart: {
+                type: 'area',
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 2000
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            title: {
+                "text": "CPU Usage"
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return Math.floor(value * 100);
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                },
+                y: {
+                    formatter(val: number) {
+                        return Math.floor(val * 100);
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    show: false
+                },
+                crosshairs: {
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            colorFrom: '#D8E3F0',
+                            colorTo: '#BED1E6',
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=""}) by (kafka)',
+                end: 1676457179.487,
+                start: 1676456879.487,
+                step: 1
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.instance') || "Kafka",
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return [0]
+            }
+        }
+    },
+    postgres_cpu_usage: {
+        type: 'area',
+        series: [],
+        options: {
+            chart: {
+                type: 'area',
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 2000
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            title: {
+                "text": "CPU Usage"
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return Math.floor(value * 100);
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                },
+                y: {
+                    formatter(val: number) {
+                        return Math.floor(val * 100);
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    show: false
+                },
+                crosshairs: {
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            colorFrom: '#D8E3F0',
+                            colorTo: '#BED1E6',
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=""}) by (postgresql)',
+                end: 1676457179.487,
+                start: 1676456879.487,
+                step: 1
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.instance') || "Postgres",
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return [0]
+            }
+        }
+    },
 }

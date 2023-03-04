@@ -6,5 +6,6 @@ export default {
     saveDatasource: "/obsrv/v1/datasources",
     readDatasource: "/obsrv/v1/datasources",
     listDatasets: "/obsrv/v1/datasets/list",
-    sendEvents: "/obsrv/v1/data"
+    sendEvents: "/obsrv/v1/data",
+    publishDataset: "/system/dataset/command"
 }

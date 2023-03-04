@@ -45,8 +45,8 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <AnalyticsDataCard title="Kafka Broker Uptime">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
+                        chart: <AnalyticsDataCard title="Kafka CPU Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'kafka_cpu_usage')}></ApexChart>
                         </AnalyticsDataCard>
                     },
                     {
@@ -119,7 +119,7 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         chart: <AnalyticsDataCard title="CPU Percentage">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
+                            <ApexChart metadata={_.get(chartMeta, 'druid_cpu_usage')}></ApexChart>
                         </AnalyticsDataCard>
                     },
                     {
@@ -189,7 +189,7 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         chart: <AnalyticsDataCard title="CPU Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
+                            <ApexChart metadata={_.get(chartMeta, 'postgres_cpu_usage')}></ApexChart>
                         </AnalyticsDataCard>
                     },
                     {
