@@ -48,7 +48,7 @@ export const metricsMetadata = [
                     },
                     {
                         chart: <AnalyticsDataCard title="Memory Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
+                            <ApexChart metadata={_.get(chartMeta, 'kafka_memory_usage')}></ApexChart>
                         </AnalyticsDataCard>
                     },
                     {
@@ -71,7 +71,11 @@ export const metricsMetadata = [
                     lg: 12
                 },
                 metadata: [
-                   
+                    // {
+                    //     chart: <AnalyticsDataCard title="Partitions per Topic">
+                    //         <ApexChart metadata={_.get(chartMeta, 'kafka_partitions_per_topic')}></ApexChart>
+                    //     </AnalyticsDataCard>
+                    // }
                 ]
             }
         }

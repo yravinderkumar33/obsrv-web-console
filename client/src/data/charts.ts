@@ -69,18 +69,6 @@ export default {
                 labels: {
                     show: false
                 },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
-                },
                 tooltip: {
                     enabled: false
                 }
@@ -172,18 +160,6 @@ export default {
                 },
                 labels: {
                     show: false
-                },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
                 },
                 tooltip: {
                     enabled: false
@@ -710,18 +686,6 @@ export default {
                 labels: {
                     show: false
                 },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
-                },
                 tooltip: {
                     enabled: false
                 }
@@ -812,18 +776,6 @@ export default {
                 },
                 labels: {
                     show: false
-                },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
                 },
                 tooltip: {
                     enabled: false
@@ -916,18 +868,6 @@ export default {
                 labels: {
                     show: false
                 },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
-                },
                 tooltip: {
                     enabled: false
                 }
@@ -987,9 +927,6 @@ export default {
             stroke: {
                 curve: 'smooth'
             },
-            title: {
-                "text": "CPU Usage"
-            },
             yaxis: {
                 labels: {
                     formatter: function (value: number) {
@@ -1021,18 +958,6 @@ export default {
                 },
                 labels: {
                     show: false
-                },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
                 },
                 tooltip: {
                     enabled: false
@@ -1125,18 +1050,6 @@ export default {
                 labels: {
                     show: false
                 },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
-                },
                 tooltip: {
                     enabled: false
                 }
@@ -1227,18 +1140,6 @@ export default {
                 },
                 labels: {
                     show: false
-                },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
                 },
                 tooltip: {
                     enabled: false
@@ -1354,7 +1255,7 @@ export default {
             yaxis: {
                 labels: {
                     formatter: function (value: number) {
-                        return Math.floor(value * 100);
+                        return value;
                     }
                 }
             },
@@ -1368,7 +1269,7 @@ export default {
                 },
                 y: {
                     formatter(val: number) {
-                        return Math.floor(val * 100);
+                        return _.round(val, 1);
                     }
                 }
             },
@@ -1383,18 +1284,6 @@ export default {
                 labels: {
                     show: false
                 },
-                crosshairs: {
-                    fill: {
-                        type: 'gradient',
-                        gradient: {
-                            colorFrom: '#D8E3F0',
-                            colorTo: '#BED1E6',
-                            stops: [0, 100],
-                            opacityFrom: 0.4,
-                            opacityTo: 0.5
-                        }
-                    }
-                },
                 tooltip: {
                     enabled: false
                 }
@@ -1403,22 +1292,81 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: '/api/report/v1/query/range',
             method: 'GET',
             headers: {},
             body: {},
             params: {
-                query: 'sum(container_memory_working_set_bytes{job="kubelet", metrics_path="/metrics/cadvisor", cluster="", namespace="postgresql",container!="", image!=""}) / sum(kube_pod_container_resource_requests{job="kube-state-metrics", cluster="", namespace="postgresql", resource="memory"})'
+                query: 'sum(container_memory_rss{job="kubelet", metrics_path="/metrics/cadvisor", cluster="", container!="", namespace="postgresql"}) by (namespace)',
+                end: 1676457179.487,
+                start: 1676456879.487,
+                step: 1
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
                 return _.map(result, payload => ({
-                    name: _.get(payload, 'metric.topic'),
+                    name: _.get(payload, 'metric.namespace'),
                     data: _.get(payload, 'values')
                 }))
             },
             error() {
                 return [0]
+            }
+        }
+    },
+    kafka_partitions_per_topic: {
+        type: 'bar',
+        series: [],
+        options: {
+            chart: {
+                type: 'bar'
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 4,
+                    horizontal: true,
+                }
+            },
+            dataLabels: {
+                enabled: false
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'sum by(topic) (kafka_topic_partitions{instance="10.10.1.149:9308",topic=~"(dev\\.denorm|dev\\.denorm\\.failed|dev\\.druid\\.events\\.summary|dev\\.druid\\.events\\.telemetry|dev\\.duplicate|dev\\.extractor\\.duplicate|dev\\.extractor\\.failed|dev\\.failed|dev\\.ingest|dev\\.invalid|dev\\.raw|dev\\.stats|dev\\.system\\.events|dev\\.telemetry\\.denorm|dev\\.telemetry\\.duplicate|dev\\.telemetry\\.failed|dev\\.transform|dev\\.unique|local\\.ingest|obs20-events)"})',
+                end: 1676457179.487,
+                start: 1676456879.487,
+                step: 1
+            },
+            setConfig: (options: any, setOptions: any, response: any) => {
+                const result = _.get(response, 'result.data.result') || [];
+                const xAxisLabels = _.map(result, 'metric.topic');
+                setOptions({
+                    ...options, xAxis: {
+                        categories: xAxisLabels,
+                    }
+                }
+                )
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result') || [];
+                const series = _.map(result, 'value[1]')
+                return {
+                    name: 'partitions',
+                    data: series
+                }
+            },
+            error() {
+                return {
+                    name: 'partitions',
+                    data: []
+                }
             }
         }
     }

@@ -8,5 +8,6 @@ export interface IChartFetchRequest {
     body: object;
     params: object;
     parse: (response: object) => Array<object>
+    setConfig: (options: any, setOptions: any, response: any) => void;
     error: () => Array<any>
 }

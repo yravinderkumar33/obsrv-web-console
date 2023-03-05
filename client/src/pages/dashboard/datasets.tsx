@@ -12,6 +12,8 @@ import FilteringTable from 'components/filtering-table';
 import AlertDialog from 'components/AlertDialog';
 import AlertMessage from 'components/AlertMessage';
 import { useNavigate } from 'react-router';
+import { publishDataset } from 'services/system';
+import { error, success } from 'services/toaster';
 
 const completionPercentage = 60;
 const connectors = ["Kafka"];
@@ -22,10 +24,21 @@ const DatasetsList = () => {
     const datasets = useSelector((state: any) => state?.dataset?.data);
     const [data, setData] = useState<any>(datasets);
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const navigateToPath = (path: string) => {
         navigate(path);
+    }
+
+    const publish = async (payload: Record<string, any>) => {
+        const { id, dataset_name } = payload;
+        try {
+            await publishDataset({ datasetId: id });
+            dispatch(success({ message: "Dataset publishing is under progress." }))
+        } catch (err) {
+            dispatch(error({ message: "Failed to publish dataset" }));
+        }
     }
 
     const columns = useMemo(
@@ -37,9 +50,9 @@ const DatasetsList = () => {
                 Cell: (value: any) => {
                     const row = value?.cell?.row?.original || {};
                     return <Grid container spacing={2} alignItems="center" sx={{ flexWrap: 'nowrap' }}>
-                        <Grid item>
+                        {/* <Grid item>
                             <CircularWithLabel value={completionPercentage} color="success" />
-                        </Grid>
+                        </Grid> */}
                         <Grid item xs zeroMinWidth>
                             <Typography align="left" variant="subtitle1">
                                 {row?.dataset_name}
@@ -77,8 +90,9 @@ const DatasetsList = () => {
             },
             {
                 Header: 'Published On',
+                accessor: 'published_date',
                 disableFilters: true,
-                Cell: ({ value, cell }: any) => new Date().toLocaleDateString()
+                Cell: ({ value, cell }: any) => value || "-"
             },
             {
                 Header: 'Total Events (Prev Day)',
@@ -112,19 +126,14 @@ const DatasetsList = () => {
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     return <Stack direction="row" justifyContent="center" alignItems="center">
+                        <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
+                            <IconButton color="primary" size="large">
+                                < PlayCircleOutlined />
+                            </IconButton>
+                        </Tooltip>
                         <Tooltip title="View Metrics" onClick={(e: any) => navigateToPath(`/datasets/${row?.id}`)}>
                             <IconButton color="primary" size="large">
-                                <PlayCircleOutlined />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Publish Dataset">
-                            <IconButton color="primary" size="large">
-                                <DashboardOutlined />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit Dataset">
-                            <IconButton color="primary" size="large">
-                                <EditOutlined />
+                                < DashboardOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_name}`)}>

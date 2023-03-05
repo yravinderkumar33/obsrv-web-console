@@ -25,7 +25,7 @@ const ApexChart = (props: any) => {
       try {
         params.start = new Date(Date.now() - interval * 60000).toISOString();
         params.end = new Date().toISOString();
-        const seriesData = await fetchChartData(query);
+        const seriesData = await fetchChartData(query, options, setOptions);
         setSeries(seriesData);
       } catch (error) {
         setSeries([])

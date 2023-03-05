@@ -7,5 +7,6 @@ export default {
     readDatasource: "/obsrv/v1/datasources",
     listDatasets: "/obsrv/v1/datasets/list",
     sendEvents: "/obsrv/v1/data",
-    publishDataset: "/system/dataset/command"
+    publishDataset: "/system/dataset/command",
+    druidNativeQuery: "/obsrv/v1/query"
 }
