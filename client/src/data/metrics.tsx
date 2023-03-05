@@ -26,13 +26,10 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="0" secondary="Total  Brokers" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'number_of_kafka_brokers.query')} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Message in Per Topic" iconPrimary={BarChartOutlined} />
+                        chart: <ReportCard primary="0" secondary="Total In Messages" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'kafka_total_in_messages.query')} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Bytes In Per Topic" iconPrimary={BarChartOutlined} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Bytes Out Per Topic" iconPrimary={BarChartOutlined} />
+                        chart: <ReportCard primary="0" secondary="Total Out Messages" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'kafka_total_out_messages.query')} />
                     }
                 ]
             },
@@ -45,30 +42,36 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <AnalyticsDataCard title="Kafka CPU Usage">
+                        chart: <AnalyticsDataCard title="CPU Usage">
                             <ApexChart metadata={_.get(chartMeta, 'kafka_cpu_usage')}></ApexChart>
                         </AnalyticsDataCard>
                     },
                     {
-                        chart: <AnalyticsDataCard title="JVM Memory Usage">
+                        chart: <AnalyticsDataCard title="Memory Usage">
                             <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
                         </AnalyticsDataCard>
                     },
                     {
-                        chart: <AnalyticsDataCard title="Bytes in per Topic">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
+                        chart: <AnalyticsDataCard title="Messages read per 5 min">
+                            <ApexChart metadata={_.get(chartMeta, 'kafka_messages_read_in_five_min')}></ApexChart>
                         </AnalyticsDataCard>
                     },
                     {
-                        chart: <AnalyticsDataCard title="Bytes out per Topic">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
-                        </AnalyticsDataCard>
-                    },
-                    {
-                        chart: <AnalyticsDataCard title="Messages in per Topic">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
+                        chart: <AnalyticsDataCard title="Messages consume per 5 min">
+                            <ApexChart metadata={_.get(chartMeta, 'kafka_messages_consume_in_five_min')}></ApexChart>
                         </AnalyticsDataCard>
                     }
+                ]
+            },
+            large: {
+                size: {
+                    xs: 12,
+                    sm: 12,
+                    md: 12,
+                    lg: 12
+                },
+                metadata: [
+                   
                 ]
             }
         }
@@ -194,7 +197,7 @@ export const metricsMetadata = [
                     },
                     {
                         chart: <AnalyticsDataCard title="Memory Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
+                            <ApexChart metadata={_.get(chartMeta, 'postgres_memory_usage')}></ApexChart>
                         </AnalyticsDataCard>
                     }
                 ]
