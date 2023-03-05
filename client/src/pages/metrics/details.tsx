@@ -50,6 +50,7 @@ const MetricsDetails = () => {
     const handleFilterChange = (e: any) => { }
 
     const getFilters = () => {
+        return;
         return <Stack>
             <FormControl fullWidth sx={{ m: 1, minWidth: 150 }}>
                 <InputLabel>Select Interval</InputLabel>

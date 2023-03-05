@@ -1,12 +1,12 @@
 import * as _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux';
-import { Button } from '@mui/material';
+import { Button, Grid } from '@mui/material';
 import { publishDataset } from 'services/dataset';
 import { error } from 'services/toaster';
 import { fetchDatasetsThunk } from 'store/middlewares';
 import { useNavigate } from 'react-router';
 
-const Final = () => {
+const Final = ({ handleNext, handleBack, index }: any) => {
   const wizardState: any = useSelector((state: any) => state?.wizard);
   const jsonSchema: any = useSelector((state: any) => state?.jsonSchema);
   const dispatch = useDispatch();
@@ -27,7 +27,11 @@ const Final = () => {
 
   return (
     <>
-      <Button variant="contained" onClick={publish}>Publish</Button>
+      <Grid container spacing={1}>
+        <Grid item xs={4}>
+          <Button variant="contained" onClick={publish}>Save Dataset</Button>
+        </Grid>
+      </Grid>
     </>
   );
 };

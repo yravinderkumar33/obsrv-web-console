@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import dayjs from 'dayjs';
 
 export const commonMetrics = {
     frequency: 15,
@@ -651,13 +652,10 @@ export default {
             stroke: {
                 curve: 'smooth'
             },
-            title: {
-                "text": "CPU Usage"
-            },
             yaxis: {
                 labels: {
                     formatter: function (value: number) {
-                        return Math.floor(value * 100);
+                        return _.round(value, 1);
                     }
                 }
             },
@@ -667,11 +665,6 @@ export default {
                     show: true,
                     formatter(value: number) {
                         return new Date(value * 1000)
-                    }
-                },
-                y: {
-                    formatter(val: number) {
-                        return Math.floor(val * 100);
                     }
                 }
             },
@@ -1369,5 +1362,287 @@ export default {
                 }
             }
         }
-    }
+    },
+    druid_memory_usage: {
+        type: 'area',
+        series: [],
+        options: {
+            chart: {
+                type: 'area',
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 2000
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return value;
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                },
+                y: {
+                    formatter(val: number) {
+                        return _.round(val, 1);
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    show: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'sum(container_memory_rss{job="kubelet", metrics_path="/metrics/cadvisor", cluster="", container!="", namespace="druid-raw"}) by (namespace)',
+                end: 1676457179.487,
+                start: 1676456879.487,
+                step: 1
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: "Kafka",
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return [0]
+            }
+        }
+    },
+    postgres_fds: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: 'process_max_fds{namespace="postgresql"}'
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                const sum = _.sumBy(result, (payload: any) => {
+                    const { value } = payload;
+                    const [_, percentage = 0] = value;
+                    return +percentage
+                })
+
+                return result?.length ? sum : 0;
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    druid_avg_processing_time: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/obsrv/v1/query',
+            method: 'POST',
+            headers: {},
+            body: {},
+            params: {},
+            parse: (response: any) => {
+                const result = _.get(response, 'result') || [];
+                return _.sumBy(result, val => {
+                    return _.round(_.get(val, 'event.total_processing_time') || 0, 2)
+                })
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    last_synced_time: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/obsrv/v1/query',
+            method: 'POST',
+            headers: {},
+            body: {},
+            params: {},
+            parse: (response: any) => {
+                return _.get(response, 'result[0].event.last_synced_time') || "Unavailable";
+            },
+            error() {
+                return "Unavailable"
+            }
+        }
+    },
+    total_events_processed: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/obsrv/v1/query',
+            method: 'POST',
+            headers: {},
+            body: {},
+            params: {},
+            parse: (response: any) => {
+                const payload = _.get(response, 'result') || [];
+                return _.sumBy(payload, value => {
+                    return _.get(value, 'result.count') || 0;
+                })
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    failed_events_summary: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/obsrv/v1/query',
+            method: 'POST',
+            headers: {},
+            body: {},
+            params: {},
+            parse: (response: any) => {
+                const payload = _.get(response, 'result') || [];
+                return _.sumBy(payload, value => {
+                    return _.get(value, 'event.count') || 0;
+                })
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    average_processing_time_series: {
+        type: 'area',
+        series: [],
+        options: {
+            chart: {
+                type: 'area',
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 2000,
+                    dynamicAnimation: {
+                        speed: 2000
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return _.round(value, 1);
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    show: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/obsrv/v1/query',
+            method: 'POST',
+            headers: {},
+            body: {},
+            params: {},
+            parse: (response: any) => {
+                const payload = _.get(response, 'result') || [];
+                const series = _.map(payload, value => {
+                    const timestamp = Date.parse(_.get(value, 'timestamp'));
+                    const time = _.get(value, 'result.total_processing_time')
+                    return [timestamp, time];
+                });
+
+                return [{
+                    name: 'Average Processing Time',
+                    data: series
+                }]
+            },
+            error() {
+                return 0
+            }
+        }
+    },
 }

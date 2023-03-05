@@ -20,11 +20,11 @@ const getStepContent = (
 ) => {
   switch (step) {
     case 0:
-      return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />;
+      return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} />;
     case 1:
-      return <ListDatasetConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} />
+      return <ListDatasetConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} />
     case 2:
-      return <Review />
+      return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
     default:
       throw new Error('Unknown step');
   }

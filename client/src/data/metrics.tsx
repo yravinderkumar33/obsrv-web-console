@@ -130,31 +130,10 @@ export const metricsMetadata = [
                         </AnalyticsDataCard>
                     },
                     {
-                        chart: <AnalyticsDataCard title="Total number of segments per datasource">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
+                        chart: <AnalyticsDataCard title="Memory Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'druid_memory_usage')}></ApexChart>
                         </AnalyticsDataCard>
-                    },
-                    {
-                        chart: <AnalyticsDataCard title="Total Unloaded segments per datasource">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
-                        </AnalyticsDataCard>
-                    },
-                    {
-                        chart: <AnalyticsDataCard title="Total Unloaded segments size per datasource">
-                            <ApexChart metadata={_.get(chartMeta, 'kafka_broker_upTime')}></ApexChart>
-                        </AnalyticsDataCard>
-                    },
-                ]
-            },
-            large: {
-                size: {
-                    xs: 12,
-                    sm: 12,
-                    md: 12,
-                    lg: 12
-                },
-                metadata: [
-
+                    }
                 ]
             }
         }
@@ -176,36 +155,33 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ReportCard primary="0" secondary="Number of active connections" iconPrimary={BarChartOutlined} />,
+                        chart: <ReportCard primary="1" secondary="Number of active connections" iconPrimary={BarChartOutlined} />,
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Max number of connections" iconPrimary={BarChartOutlined} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Open File descriptors" iconPrimary={BarChartOutlined} />
+                        chart: <ReportCard primary="0" secondary="Open File descriptors" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'postgres_fds.query')}/>
                     }
-                ]
+                            ]
             },
-            medium: {
-                size: {
-                    xs: 12,
-                    sm: 6,
-                    md: 6,
-                    lg: 6
+                            medium: {
+                                size: {
+                                xs: 12,
+                            sm: 6,
+                            md: 6,
+                            lg: 6
                 },
-                metadata: [
-                    {
-                        chart: <AnalyticsDataCard title="CPU Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'postgres_cpu_usage')}></ApexChart>
-                        </AnalyticsDataCard>
+                            metadata: [
+                            {
+                                chart: <AnalyticsDataCard title="CPU Usage">
+                                <ApexChart metadata={_.get(chartMeta, 'postgres_cpu_usage')}></ApexChart>
+                            </AnalyticsDataCard>
                     },
-                    {
-                        chart: <AnalyticsDataCard title="Memory Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'postgres_memory_usage')}></ApexChart>
-                        </AnalyticsDataCard>
+                            {
+                                chart: <AnalyticsDataCard title="Memory Usage">
+                                <ApexChart metadata={_.get(chartMeta, 'postgres_memory_usage')}></ApexChart>
+                            </AnalyticsDataCard>
                     }
-                ]
+                            ]
             }
         }
     }
-]
+                            ]

@@ -11,7 +11,7 @@ export const searchDatasets = ({ data = { filters: {} }, config }: any) => {
 }
 
 export const fetchDatasets = (config: Record<string, any>) => {
-    return searchDatasets({})
+    return searchDatasets(config)
         .then(response => _.get(response, 'data.result'))
         .catch(err => ([]));
 }
