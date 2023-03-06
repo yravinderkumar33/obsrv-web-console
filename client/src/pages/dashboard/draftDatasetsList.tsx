@@ -76,7 +76,7 @@ const DraftDatasetsList = ({ datasets }: any) => {
                     const row = cell?.row?.original || {};
                     return <Grid container spacing={1} justifyContent="center">
                         <Grid item>
-                            <Chip color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase()} size="small" variant="light" />          </Grid>
+                            <Chip color={'warning' || row?.color} label={typeof value == 'string' && value.toUpperCase()} size="small" variant="light" />          </Grid>
                     </Grid>
                 }
             },

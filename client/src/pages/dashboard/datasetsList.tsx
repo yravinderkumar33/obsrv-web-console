@@ -168,7 +168,7 @@ const DatasetsList = ({ datasets }: any) => {
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     const datasetId = row?.id;
-                    const startDate = dayjs().format('YYYY-MM-DD');
+                    const startDate = '2000-01-01';
                     const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
                     const body = druidQueries.last_synced_time({ datasetId, intervals: `${startDate}/${endDate}` })
                     const query = _.get(chartMeta, 'last_synced_time.query');
