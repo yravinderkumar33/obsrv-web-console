@@ -108,6 +108,20 @@ const DatasetDetails = () => {
                     chart: ({ title, query }: any) => <AnalyticsDataCard title={title}>
                         <ApexChart metadata={query}></ApexChart>
                     </AnalyticsDataCard>
+                },
+                {
+                    title: 'Total Events Processed',
+                    query: () => {
+                        const startDate = '2023-03-01';
+                        const endDate = dayjs().add(2, 'day').format('YYYY-MM-DD');
+                        const body = druidQueries.totalEventsProcessedTimeSeries({ datasetId, intervals: `${startDate}/${endDate}` })
+                        const metadata = _.cloneDeep(_.get(chartMeta, 'total_events_processed_time_series'));
+                        metadata.query.body = body;
+                        return metadata;
+                    },
+                    chart: ({ title, query }: any) => <AnalyticsDataCard title={title}>
+                        <ApexChart metadata={query}></ApexChart>
+                    </AnalyticsDataCard>
                 }
             ]
         }

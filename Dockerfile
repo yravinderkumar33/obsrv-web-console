@@ -3,5 +3,5 @@ WORKDIR /opt/app
 COPY ./package.json .
 RUN yarn install --silent
 COPY . .
-RUN node build.js
+# RUN node build.js
 CMD ["npm", "run", "start"]

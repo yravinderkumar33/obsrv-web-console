@@ -1510,10 +1510,11 @@ export default {
             body: {},
             params: {},
             parse: (response: any) => {
-                return _.get(response, 'result[0].event.last_synced_time') || "Unavailable";
+                const ms = _.get(response, 'result[0].event.last_synced_time') || 0;
+                return dayjs(ms).format('YYYY-MM-DD HH:mm:ss')
             },
             error() {
-                return "Unavailable"
+                return 0
             }
         }
     },
@@ -1637,6 +1638,94 @@ export default {
 
                 return [{
                     name: 'Average Processing Time',
+                    data: series
+                }]
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    total_events_processed_time_series: {
+        type: 'area',
+        series: [],
+        options: {
+            chart: {
+                type: 'area',
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 2000,
+                    dynamicAnimation: {
+                        speed: 2000
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth'
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return _.round(value, 1);
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                labels: {
+                    show: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/obsrv/v1/query',
+            method: 'POST',
+            headers: {},
+            body: {},
+            params: {},
+            parse: (response: any) => {
+                const payload = _.get(response, 'result') || [];
+                const series = _.map(payload, value => {
+                    const timestamp = Date.parse(_.get(value, 'timestamp'));
+                    const count = _.get(value, 'result.count')
+                    return [timestamp, count];
+                });
+
+                return [{
+                    name: 'Events Processed',
                     data: series
                 }]
             },

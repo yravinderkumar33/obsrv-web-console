@@ -121,16 +121,17 @@ const DatasetsList = ({ datasets }: any) => {
                 Header: 'Published On',
                 accessor: 'published_date',
                 disableFilters: true,
-                Cell: ({ value, cell }: any) => value || "-"
+                Cell: ({ value, cell }: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') || "-"
             },
             {
                 Header: 'Total Events (Today)',
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
+                    const datasetId = row?.id;
                     const startDate = dayjs().format('YYYY-MM-DD');
                     const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
-                    const body = druidQueries.total_events_processed({ datasetId: 'c0e96d5a-f00c-43da-b500-4837fd5bfe69', intervals: `${startDate}/${endDate}` })
+                    const body = druidQueries.total_events_processed({ datasetId, intervals: `${startDate}/${endDate}` })
                     const query = _.get(chartMeta, 'total_events_processed.query');
                     return AsyncColumnData({ ...query, body });
                 }
@@ -140,9 +141,10 @@ const DatasetsList = ({ datasets }: any) => {
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
+                    const datasetId = row?.id;
                     const startDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
                     const endDate = dayjs().format('YYYY-MM-DD');
-                    const body = druidQueries.total_events_processed({ datasetId: 'c0e96d5a-f00c-43da-b500-4837fd5bfe69', intervals: `${startDate}/${endDate}` })
+                    const body = druidQueries.total_events_processed({ datasetId, intervals: `${startDate}/${endDate}` })
                     const query = _.get(chartMeta, 'total_events_processed.query');
                     return AsyncColumnData({ ...query, body });
                 }
@@ -152,9 +154,10 @@ const DatasetsList = ({ datasets }: any) => {
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
+                    const datasetId = row?.id;
                     const startDate = dayjs().format('YYYY-MM-DD');
                     const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
-                    const body = druidQueries.druid_avg_processing_time({ datasetId: 'c0e96d5a-f00c-43da-b500-4837fd5bfe69', intervals: `${startDate}/${endDate}` })
+                    const body = druidQueries.druid_avg_processing_time({ datasetId, intervals: `${startDate}/${endDate}` })
                     const query = _.get(chartMeta, 'druid_avg_processing_time.query');
                     return AsyncColumnData({ ...query, body });
                 }
@@ -164,9 +167,10 @@ const DatasetsList = ({ datasets }: any) => {
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
+                    const datasetId = row?.id;
                     const startDate = dayjs().format('YYYY-MM-DD');
                     const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
-                    const body = druidQueries.last_synced_time({ datasetId: 'c0e96d5a-f00c-43da-b500-4837fd5bfe69', intervals: `${startDate}/${endDate}` })
+                    const body = druidQueries.last_synced_time({ datasetId, intervals: `${startDate}/${endDate}` })
                     const query = _.get(chartMeta, 'last_synced_time.query');
                     return AsyncColumnData({ ...query, body });
                 }
@@ -176,9 +180,10 @@ const DatasetsList = ({ datasets }: any) => {
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
+                    const datasetId = row?.id;
                     const startDate = dayjs().format('YYYY-MM-DD');
                     const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
-                    const body = druidQueries.failed_events_summary({ datasetId: 'c0e96d5a-f00c-43da-b500-4837fd5bfe69', intervals: `${startDate}/${endDate}` })
+                    const body = druidQueries.failed_events_summary({ datasetId, intervals: `${startDate}/${endDate}` })
                     const query = _.get(chartMeta, 'failed_events_summary.query');
                     return AsyncColumnData({ ...query, body });
                 }
@@ -190,11 +195,6 @@ const DatasetsList = ({ datasets }: any) => {
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     return <Stack direction="row" justifyContent="center" alignItems="center">
-                        <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
-                            <IconButton color="primary" size="large">
-                                < PlayCircleOutlined />
-                            </IconButton>
-                        </Tooltip>
                         <Tooltip title="View Metrics" onClick={(e: any) => navigateToPath(`/datasets/${row?.id}`)}>
                             <IconButton color="primary" size="large">
                                 < DashboardOutlined />
@@ -203,6 +203,11 @@ const DatasetsList = ({ datasets }: any) => {
                         <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_name}`)}>
                             <IconButton color="primary" size="large">
                                 <DatabaseOutlined />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Dataset">
+                            <IconButton color="primary" size="large" disabled>
+                                <EditOutlined />
                             </IconButton>
                         </Tooltip>
                     </Stack>

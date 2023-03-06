@@ -1,19 +1,16 @@
-import { useEffect, useMemo, useState } from 'react';
-import { Chip, CircularProgress, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { useMemo, useState } from 'react';
+import { Chip, Divider, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import { IconButton } from '@mui/material';
-import { PlayCircleOutlined, EditOutlined, DatabaseOutlined, DashboardOutlined } from '@ant-design/icons';
+import { PlayCircleOutlined, EditOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import FilteringTable from 'components/filtering-table';
 import AlertDialog from 'components/AlertDialog';
 import { useNavigate } from 'react-router';
 import { publishDataset } from 'services/system';
 import { error, success } from 'services/toaster';
-import { fetchChartData } from 'services/clusterMetrics';
-import { druidQueries } from 'services/druid';
 import dayjs from 'dayjs';
-import chartMeta from 'data/charts';
 import * as _ from 'lodash';
 
 const connectors = ["Kafka"];
@@ -38,40 +35,6 @@ const DraftDatasetsList = ({ datasets }: any) => {
             dispatch(error({ message: "Failed to publish dataset" }));
         }
     }
-
-
-    const AsyncColumnData = (query: Record<string, any>) => {
-        const [asyncData, setAsyncData] = useState(null);
-        const [isLoading, setIsLoading] = useState(false);
-
-        const memoizedAsyncData = useMemo(() => asyncData, [asyncData]);
-
-        useEffect(() => {
-            const fetchData = async (value: any) => {
-                setIsLoading(true);
-                try {
-                    const data = await fetchChartData(value)
-                    setAsyncData(data as any);
-                }
-                catch (error) { }
-                finally {
-                    setIsLoading(false)
-                }
-            };
-
-            if (!memoizedAsyncData) {
-                fetchData(query);
-            }
-
-        }, [memoizedAsyncData]);
-
-        if (isLoading) {
-            return <CircularProgress size={20} color="success" />;
-        }
-
-        return <div>{asyncData}</div>;
-    }
-
 
     const columns = useMemo(
         () => [
@@ -118,10 +81,10 @@ const DraftDatasetsList = ({ datasets }: any) => {
                 }
             },
             {
-                Header: 'Published On',
-                accessor: 'published_date',
+                Header: 'Created On',
+                accessor: 'created_date',
                 disableFilters: true,
-                Cell: ({ value, cell }: any) => value || "-"
+                Cell: ({ value, cell }: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') || "-"
             },
             {
                 Header: 'Total Events (Today)',
@@ -158,6 +121,11 @@ const DraftDatasetsList = ({ datasets }: any) => {
                         <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
                             <IconButton color="primary" size="large">
                                 < PlayCircleOutlined />
+                            </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit Dataset">
+                            <IconButton color="primary" size="large" disabled>
+                                <EditOutlined />
                             </IconButton>
                         </Tooltip>
                     </Stack>

@@ -160,5 +160,31 @@ export const druidQueries = {
                 ]
             }
         }
+    },
+    totalEventsProcessedTimeSeries: ({ datasetId, intervals }: any) => {
+        return {
+            "context": {
+                "dataSource": "system-stats"
+            },
+            "query": {
+                "queryType": "timeseries",
+                "dataSource": "system-stats",
+                "intervals": intervals,
+                "granularity": "five_minute",
+                "filter": {
+                    "type": "selector",
+                    "dimension": "dataset",
+                    "value": datasetId
+                },
+                "aggregations": [
+                    {
+                        "type": "count",
+                        "name": "count",
+                        "fieldName": "count"
+                    }
+                ]
+            },
+            "limit": 100
+        }
     }
 }
