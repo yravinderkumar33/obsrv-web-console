@@ -50,15 +50,16 @@ const MetricsDetails = () => {
     const handleFilterChange = (e: any) => { }
 
     const getFilters = () => {
-        return;
-        return <Stack>
-            <FormControl fullWidth sx={{ m: 1, minWidth: 150 }}>
-                <InputLabel>Select Interval</InputLabel>
-                <Select value={5} onChange={handleFilterChange}>
-                    {filters.map((filter, index) => <MenuItem key={index} value={filter.value}>{filter?.label}</MenuItem>)}
-                </Select>
-            </FormControl>
-        </ Stack>
+        return (
+            <Stack>
+                <FormControl fullWidth sx={{ m: 1, minWidth: 150 }}>
+                    <InputLabel>Select Interval</InputLabel>
+                    <Select value={5} onChange={handleFilterChange}>
+                        {filters.map((filter, index) => <MenuItem key={index} value={filter.value}>{filter?.label}</MenuItem>)}
+                    </Select>
+                </FormControl>
+            </ Stack>
+        );
     }
 
     const renderCharts = () => {

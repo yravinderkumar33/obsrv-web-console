@@ -17,70 +17,75 @@ import Breadcrumbs from 'components/@extended/Breadcrumbs';
 // types
 import { RootStateProps } from 'types/root';
 import { openDrawer } from 'store/reducers/menu';
+import ScrollButton from 'components/ScrollButton';
 
 // ==============================|| MAIN LAYOUT ||============================== //
 
 const MainLayout = () => {
-  const theme = useTheme();
-  const [mainContainerHeight, setMainContainerHeight] = useState(0)
-  const globalConfig = useSelector((state: any) => state.config)
-  const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
+    const theme = useTheme();
+    const [mainContainerHeight, setMainContainerHeight] = useState(0)
+    const globalConfig = useSelector((state: any) => state.config)
+    const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
 
-  const { container, miniDrawer } = useConfig();
-  const dispatch = useDispatch();
+    const { container, miniDrawer } = useConfig();
+    const dispatch = useDispatch();
 
-  const menu = useSelector((state: RootStateProps) => state.menu);
-  const { drawerOpen } = menu;
+    const menu = useSelector((state: RootStateProps) => state.menu);
+    const { drawerOpen } = menu;
 
-  // drawer toggler
-  const [open, setOpen] = useState(!miniDrawer || drawerOpen);
-  const handleDrawerToggle = () => {
-    setOpen(!open);
-    dispatch(openDrawer({ drawerOpen: !open }));
-  };
+    // drawer toggler
+    const [open, setOpen] = useState(!miniDrawer || drawerOpen);
+    const handleDrawerToggle = () => {
+        setOpen(!open);
+        dispatch(openDrawer({ drawerOpen: !open }));
+    };
 
-  // set media wise responsive drawer
-  useEffect(() => {
-    if (!miniDrawer) {
-      setOpen(!matchDownLG);
-      dispatch(openDrawer({ drawerOpen: !matchDownLG }));
-    }
-    setMainContainerHeight(document.querySelector("#rootHeader")?.clientHeight || 0)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [matchDownLG, globalConfig]);
+    // set media wise responsive drawer
+    useEffect(() => {
+        if (!miniDrawer) {
+            setOpen(!matchDownLG);
+            dispatch(openDrawer({ drawerOpen: !matchDownLG }));
+        }
+        setMainContainerHeight(document.querySelector("#rootHeader")?.clientHeight || 0)
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [matchDownLG, globalConfig]);
 
-  // useEffect(() => {
-  //   if (open !== drawerOpen) setOpen(drawerOpen);
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [drawerOpen]);
+    // useEffect(() => {
+    //   if (open !== drawerOpen) setOpen(drawerOpen);
+    //   // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [drawerOpen]);
 
 
-  return (
-    <Box sx={{ display: 'flex', width: '100%' }}>
-      <Header open={open} handleDrawerToggle={handleDrawerToggle} />
-      <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
-      <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
-        <Toolbar style={{ 'height': `${mainContainerHeight}px` }} />
-        {container && (
-          <Container
-            maxWidth="xl"
-            sx={{ px: { xs: 0, sm: 2 }, position: 'relative', minHeight: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}
-          >
-            <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
-            <Outlet />
-            <Footer />
-          </Container>
-        )}
-        {!container && (
-          <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}>
-            <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
-            <Outlet />
-            <Footer />
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
+    return (
+        <>
+            <Box sx={{ display: 'flex', width: '100%' }} position="relative">
+                <Header open={open} handleDrawerToggle={handleDrawerToggle} />
+                <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
+                <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
+                    <Toolbar style={{ 'height': `${mainContainerHeight}px` }} />
+                    {container && (
+                        <Container
+                            maxWidth="xl"
+                            sx={{ px: { xs: 0, sm: 2 }, position: 'relative', minHeight: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}
+                        >
+                            <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
+                            <Outlet />
+                            <Footer />
+                        </Container>
+                    )}
+                    {!container && (
+                        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}>
+                            <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
+                            <Outlet />
+                            <Footer />
+                        </Box>
+                    )}
+                </Box>
+
+            </Box>
+            <ScrollButton />
+        </>
+    );
 };
 
 export default MainLayout;
