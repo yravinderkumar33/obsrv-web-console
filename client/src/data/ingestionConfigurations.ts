@@ -1,4 +1,27 @@
 export default {
+    batchConfiguration: {
+        isBatch: [true, false],
+        extractionKey: {
+            value: '',
+            dependsOn: {
+                key: 'isBatch',
+                value: true
+            }
+        },
+        dedupeEvents: [true, false],
+        dedupeKey: {
+            value: '',
+            dependsOn: {
+                key: 'dedupeEvents',
+                value: true
+            }
+        },
+        dedupePeriod: { value: '' },
+        validateData: [true, false]
+    },
+    ingestionConfiguration: {
+        ingestionType: ['API', 'Kafka', 'Custom']
+    },
     advanced: {
         segmentGranularity: [
             "all",
@@ -37,13 +60,5 @@ export default {
             "year",
         ],
         rollup: [false, true],
-        isBatch: [true, false],
-        extractionKey: {
-            value: '',
-            dependsOn: {
-                key: 'isBatch',
-                value: true
-            }
-        }
     }
 }

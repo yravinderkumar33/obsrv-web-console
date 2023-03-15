@@ -7,7 +7,7 @@ const NewDataset = () => {
     return (
         <Grid container rowSpacing={4.5} columnSpacing={3}>
             <Grid item xs={12}>
-                <NewDatasetOnboardingWizard></NewDatasetOnboardingWizard>
+                <NewDatasetOnboardingWizard />
             </Grid>
         </Grid>
     )

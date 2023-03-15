@@ -13,7 +13,7 @@ export default {
             "color": "error"
         },
         "LOW": {
-            "color": "warning"
+            "color": "info"
         },
         "MEDIUM": {
             "color": "warning"

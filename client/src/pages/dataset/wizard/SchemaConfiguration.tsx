@@ -1,30 +1,27 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
     Button, Grid, IconButton,
-    Stack, TextField, Tooltip, Typography,
-    FormControl, InputLabel, Select, MenuItem, SelectChangeEvent,
-    FormControlLabel, Chip, Alert, Divider, Box
+    Stack, Tooltip, Typography, FormControl,
+    ToggleButton, ToggleButtonGroup, Box,
+    FormControlLabel, Chip, Alert
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import EditDataset from './EditColumn';
 import * as _ from 'lodash';
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, DeleteFilled } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, DeleteFilled } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
-import AlertDialog from 'components/AlertDialog';
 import { error } from 'services/toaster';
 import { areConflictsResolved, checkForCriticalSuggestion, flattenSchema } from 'services/json-schema';
 import RequiredSwitch from 'components/RequiredSwitch';
 import { connect } from 'react-redux';
 
-const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
+const validOpTypes = ['mask', 'encrypt'];
 const pageMeta = { pageId: 'columns', title: "Review Columns" };
-const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you want to delete this column ?' };
 
 interface columnFilter {
     label: string,
@@ -35,67 +32,28 @@ interface columnFilter {
 
 const columnFilters: columnFilter[] = [
     {
-        'label': 'Critical',
-        'id': 'CRITICAL',
-        'lookup': 'severity',
-        'color': "error"
-    },
-    {
-        'label': 'High',
-        'id': 'HIGH',
-        'lookup': 'severity',
-        'color': "error"
-    },
-    {
-        'label': 'Medium',
-        'id': 'MEDIUM',
-        'lookup': 'severity',
-        'color': "warning"
-    },
-    {
-        'label': 'Low',
-        'id': 'LOW',
-        'lookup': 'severity',
+        'label': 'Index',
+        'id': true,
+        'lookup': 'index',
         'color': "info"
     },
     {
-        'label': 'Resolved',
+        'label': 'PII',
         'id': true,
-        'lookup': 'resolved',
-        'color': "success"
-    }
+        'lookup': 'pii',
+        'color': "warning"
+    },
 ];
 
-const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState }: any) => {
+const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState }: any) => {
+    const dispatch = useDispatch()
+    const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const configurations = _.get(apiResponse, 'data.configurations') || [];
-    const [showEdit, setShowEdit] = useState(false);
-    const [selection, setSelection] = useState<Record<string, any>>({});
-    const dispatch = useDispatch()
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
-    const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
-    const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const globalConfig = useSelector((state: any) => state?.config);
     const [filterByChip, setFilterByChip] = useState<columnFilter | null>(null);
-
-    const markRowAsDeleted = (cellValue: Record<string, any>) => {
-        const column = cellValue?.column
-        if (column) {
-            setFlattenedData((preState: Array<Record<string, any>>) => {
-                return _.map(preState, payload => {
-                    return {
-                        ...payload,
-                        ...(_.get(payload, 'column') === column && {
-                            isModified: true,
-                            isDeleted: true
-                        })
-                    }
-                })
-            });
-            persistState();
-        }
-    }
 
     const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
     const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
@@ -129,7 +87,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     const isResolved = _.get(row, 'resolved') || false;
                     const PrimaryIcon = isResolved ? CheckOutlined : CloseOutlined;
                     const color = isResolved ? "primary" : "error";
-                    return <Box display="flex" alignItems="center">
+                    const isCritical = checkForCriticalSuggestion(suggestions);
+                    const bgColor = (isCritical && !isResolved) ? '#f58989' : 'transparent';
+                    return <Box display="flex" alignItems="center" bgcolor={bgColor}>
                         <Typography variant="body1">
                             {value}
                         </Typography>
@@ -143,125 +103,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 }
             },
             {
-                Header: 'Description',
-                accessor: 'description',
-                tipText: 'Description for the field',
-                editable: true,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const [edit, setEdit] = useState(false);
-                    const editDescription = () => setEdit((prevState) => !prevState);
-                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, description: e.target.value };
-                                else return state
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-
-                    return <Box onClick={editDescription} display="flex" alignItems="center">
-                        {edit && <TextField
-                            fullWidth
-                            onChange={handleChange}
-                            autoFocus
-                            label='Description'
-                            onBlur={editDescription}
-                        />}
-                        {!edit && <Typography>{value}</Typography>}
-                        {!edit && !value && <Typography variant="subtitle2">Click to edit description</Typography>}
-                    </Box>;
-                }
-            },
-            {
-                Header: 'Data type',
-                accessor: 'type',
-                tipText: 'Data type of the field',
-                editable: true,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const [edit, setEdit] = useState(false);
-                    const editType = () => setEdit((prevState) => !prevState);
-                    const hasConflicts = _.get(row, 'suggestions.length');
-                    const handleChange = (e: SelectChangeEvent<string>) => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, type: e.target.value, ...(hasConflicts && { resolved: true }) };
-                                else return state
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-
-                    return <Box onClick={editType} display="flex" alignItems="center">
-                        {edit && <FormControl fullWidth>
-                            <InputLabel>{'Select data type'}</InputLabel>
-                            <Select
-                                defaultOpen
-                                label={'Select data type'}
-                                onChange={handleChange}
-                                autoFocus
-                                onBlur={editType}
-                            >
-                                {
-                                    validDatatypes.map((option: any) =>
-                                        (<MenuItem value={option} key={option}>{option}</MenuItem>))
-                                }
-                            </Select>
-                        </FormControl>}
-                        {!edit && <Typography>{value}</Typography>}
-                        {!edit && !value && <Typography variant="subtitle2">Click to edit description</Typography>}
-                    </Box>;
-                }
-            },
-            {
-                Header: 'Suggestions',
-                accessor: 'suggestions',
-                tipText: 'Suggestions for the field',
-                editable: false,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const suggestions = value || [];
-                    const { severityToColorMapping } = globalConfig;
-                    return <Grid container spacing={2}>
-                        <Grid item sm zeroMinWidth>
-                            {suggestions.length === 0 &&
-                                <Typography variant="body2">
-                                    N/A
-                                </Typography>}
-                            <Stack spacing={1} divider={<Divider orientation='horizontal' flexItem />}>
-                                {suggestions.length !== 0 && suggestions.map((payload: any, index: number) => {
-                                    return (<div key={index}>
-                                        <Typography variant="body2">
-                                            <b>Message</b> - {payload?.message}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            <b>Advice</b> - {payload?.advice}
-                                        </Typography>
-                                        <Stack direction="row" spacing={1}>
-                                            {payload?.severity && <Chip size='small' label={payload?.severity} color={_.get(severityToColorMapping, [payload?.severity || "LOW", "color"])} variant='outlined' />}
-                                            {payload?.resolutionType && <Chip size='small' label={payload?.resolutionType} color="primary" variant='outlined' />}
-                                        </Stack>
-                                    </div>);
-                                })}
-                            </Stack>
-                        </Grid>
-                    </Grid>
-                }
-            },
-            {
-                Header: 'Required',
-                accessor: 'required',
-                tipText: 'Field is required',
+                Header: 'Index',
+                accessor: 'index',
+                tipText: 'Field to be indexed, default indexed on time',
                 editable: true,
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
@@ -271,7 +115,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                             const updatedValues = { ...row };
                             const values = _.map(preState, state => {
                                 if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, required: e.target.checked };
+                                    return { ...state, ...updatedValues, isModified: true, index: e.target.checked };
                                 else return state
                             });
                             pushStateToStore(values);
@@ -281,9 +125,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
 
                     return (
                         <Box display="flex" alignItems="center">
-                            <FormControl fullWidth sx={{ alignItems: 'center' }}>
+                            <FormControl sx={{ alignItems: 'center', display: 'block' }}>
                                 <FormControlLabel
-                                    sx={{ m: 'auto' }}
                                     control={<RequiredSwitch defaultChecked onChange={handleChange} />}
                                     label={''}
                                 />
@@ -293,26 +136,64 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 }
             },
             {
-                Header: 'Actions',
-                tipText: 'Perform actions on the field',
-                editable: false,
+                Header: 'PII',
+                accessor: 'pii',
+                tipText: 'PII Data operations',
+                editable: true,
                 disableFilters: true,
-                Cell: ({ value: initialValue, updateMyData, ...rest }: any) =>
-                    <Stack direction="row">
-                        {/* <IconButton color="primary" size="large" onClick={_ => {
-              setShowEdit(true)
-              setSelection({ value: initialValue, ...rest })
-            }}>
-              <EditOutlined />
-            </IconButton> */}
-                        <IconButton color="primary" size="large" sx={{ m: 'auto' }} onClick={e => {
-                            setOpenAlertDialog(true);
-                            setSelection({ value: initialValue, ...rest });
-                        }}>
-                            <DeleteOutlined />
-                        </IconButton>
-                    </Stack>
-            },
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                        setFlattenedData((preState: Array<Record<string, any>>) => {
+                            const updatedValues = { ...row };
+                            const values = _.map(preState, state => {
+                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
+                                    return { ...state, ...updatedValues, isModified: true, pii: { "value": e.target.checked, "op": "mask" } };
+                                else return state
+                            });
+                            pushStateToStore(values);
+                            return values;
+                        });
+                    }
+                    const handleOpChange = (e: React.MouseEvent<HTMLElement, MouseEvent>, val: string) => {
+                        setFlattenedData((preState: Array<Record<string, any>>) => {
+                            const updatedValues = { ...row };
+                            const values = _.map(preState, state => {
+                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
+                                    return { ...state, ...updatedValues, isModified: true, pii: { "value": row?.pii, "op": val } };
+                                else return state;
+                            });
+                            pushStateToStore(values);
+                            return values;
+                        });
+                    }
+
+                    return (
+                        <Box alignItems="center" display="flex">
+                            <FormControl sx={{ alignItems: 'left', }}>
+                                <FormControlLabel
+                                    control={<RequiredSwitch onChange={handleChange} />}
+                                    label={''}
+                                    labelPlacement="bottom"
+                                />
+                            </FormControl>
+                            {row && row?.pii?.value &&
+                                <ToggleButtonGroup
+                                    color="success"
+                                    defaultValue={'mask'}
+                                    value={row?.pii?.op}
+                                    exclusive
+                                    aria-required={'true'}
+                                    onChange={handleOpChange}
+                                    aria-label="Platform"
+                                >
+                                    {validOpTypes.map((opType) => <ToggleButton value={opType}>{_.capitalize(opType)}</ToggleButton>)}
+                                </ToggleButtonGroup>
+                            }
+                        </Box>
+                    );
+                }
+            }
         ],
         []
     );
@@ -326,27 +207,11 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         setSkipPageReset(true);
     };
 
-    const handleAlertDialogClose = (status: boolean) => {
-        if (selection && status) {
-            markRowAsDeleted(selection?.cell?.row?.values);
-        }
-        setOpenAlertDialog(false);
-    }
-
     const handleFilterChange = (filter: columnFilter) => {
         setFilterByChip(filter);
         setFlattenedData(() => {
             const data = wizardStoreState.pages[pageMeta.pageId].state.schema;
-            if (filter.lookup === 'severity') {
-                let result: any[] = [];
-                _.filter(data, function (item) {
-                    return item.suggestions?.map((sv_item: any) => {
-                        if (sv_item.severity === filter.id) return result.push(item);
-                    })
-                });
-                return result;
-            }
-            else return _.filter(data, [filter.lookup, filter.id])
+            return _.filter(data, [filter.lookup, filter.id])
         })
     }
 
@@ -408,7 +273,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                             <ScrollX>
                                 <ReactTable columns={columns} data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []} updateMyData={updateMyData} skipPageReset={skipPageReset} />
                             </ScrollX>
-                            {/* {selection && showEdit && <EditDataset open={showEdit} setData={setFlattenedData} onSubmit={() => setShowEdit(false)} selection={selection} ></EditDataset>} */}
                         </MainCard >
                     </Grid>
                     <Grid item xs={12}>
@@ -425,7 +289,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                             </AnimateButton>
                         </Stack>
                     </Grid>
-                    <AlertDialog open={openAlertDialog} handleClose={handleAlertDialogClose} context={alertDialogContext}></AlertDialog>
                 </>
             }
         </Grid>
@@ -438,4 +301,4 @@ const mapStateToProps = (state: any) => {
     }
 }
 
-export default connect(mapStateToProps, {})(ListColumns);
+export default connect(mapStateToProps, {})(SchemaConfiguration);
