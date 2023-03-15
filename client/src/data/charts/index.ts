@@ -1,6 +1,7 @@
 import kafka from './kafka'
 import druid from './druid'
 import infra from './infra'
+import alerts from './alerts'
 
 export const commonMetrics = {
     frequency: 15,
@@ -10,5 +11,6 @@ export const commonMetrics = {
 export default {
     ...kafka,
     ...druid,
-    ...infra
+    ...infra,
+    ...alerts
 }

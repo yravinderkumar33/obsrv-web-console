@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
-import { Theme } from '@mui/material';
 import promql from '../promql';
 
 export default {
