@@ -12,7 +12,13 @@ const service = {
         return prometheusInstance.get(`${baseUrl}`, {
             params: params
         });
-    }
+    },
+    alerts({ params = {} }: any) {
+        const baseUrl = '/api/v1/alerts';
+        return prometheusInstance.get(`${baseUrl}`, {
+            params: params
+        });
+    },
 };
 
 export default service;

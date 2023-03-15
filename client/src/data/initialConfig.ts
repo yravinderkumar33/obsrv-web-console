@@ -2,7 +2,7 @@
 export default {
     showClusterMenu: true,
     clusterMenu: {
-        frequency: 30,
+        frequency: 10,
         interval: 5
     },
     severityToColorMapping: {

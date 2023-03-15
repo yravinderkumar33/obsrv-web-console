@@ -24,6 +24,14 @@ export default [
               commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.get' }),
               controllers.get('prometheus:read:range')?.handler({}),
             ],
+          },
+          {
+            path: 'alerts',
+            method: 'GET',
+            middlewares: [
+              commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.alerts.get' }),
+              controllers.get('prometheus:alerts')?.handler({}),
+            ],
           }
         ],
       },

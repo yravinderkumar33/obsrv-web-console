@@ -4,8 +4,82 @@ import ApexChart from "sections/dashboard/analytics/apex";
 import chartMeta from 'data/charts';
 import ReportCard from "components/cards/statistics/ReportCard";
 import AnalyticsDataCard from "components/cards/statistics/AnalyticsDataCard";
+import AlertsMessages from "components/cards/statistics/Alerts";
 
 export const metricsMetadata = [
+    {
+        id: "overallInfra",
+        primaryLabel: "Overall Infra",
+        secondaryLabel: "Metrics",
+        description: "This page shows the metrics of overall infrastructure",
+        icon: DotChartOutlined,
+        color: 'main',
+        charts: {
+            small: {
+                size: {
+                    xs: 12,
+                    sm: 6,
+                    md: 4,
+                    lg: 3
+                },
+                metadata: [
+                    {
+                        chart: <ReportCard primary="1" secondary="Cluster Nodes" iconPrimary={BarChartOutlined} />
+                    },
+                    {
+                        chart: <ReportCard primary="0" suffix={'%'} secondary="CPU Usage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'cpu_percentage.query')} />
+                    },
+                    {
+                        chart: <ReportCard primary="0" suffix={'%'} secondary="Memory Usage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'memory_percentage.query')} />
+                    },
+                    {
+                        chart: <ReportCard primary="0" suffix={'%'} secondary="Disk Usage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'disk_percentage.query')} />
+                    }
+                ]
+            },
+            medium: {
+                size: {
+                    xs: 12,
+                    sm: 6,
+                    md: 6,
+                    lg: 6
+                },
+                metadata: [
+
+                ]
+            },
+            large: {
+                size: {
+                    xs: 12,
+                    sm: 12,
+                    md: 12,
+                    lg: 12
+                },
+                metadata: [
+                    {
+                        chart: <AnalyticsDataCard title="CPU Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} height={250} interval={11520}></ApexChart>
+                        </AnalyticsDataCard>
+                    },
+                    {
+                        chart: <AnalyticsDataCard title="Memory Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={11520}></ApexChart>
+                        </AnalyticsDataCard>
+                    },
+                    {
+                        chart: <AnalyticsDataCard title="Disk Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'instance_disk')} height={250} interval={11520}></ApexChart>
+                        </AnalyticsDataCard>
+                    },
+                    {
+                        chart: <AnalyticsDataCard title="Incidents">
+                            <AlertsMessages />
+                        </AnalyticsDataCard>
+                    }
+                ]
+            }
+        }
+    },
     {
         id: "kafka",
         primaryLabel: "Kafka",
@@ -158,30 +232,30 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="1" secondary="Number of active connections" iconPrimary={BarChartOutlined} />,
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Open File descriptors" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'postgres_fds.query')}/>
+                        chart: <ReportCard primary="0" secondary="Open File descriptors" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'postgres_fds.query')} />
                     }
-                            ]
+                ]
             },
-                            medium: {
-                                size: {
-                                xs: 12,
-                            sm: 6,
-                            md: 6,
-                            lg: 6
+            medium: {
+                size: {
+                    xs: 12,
+                    sm: 6,
+                    md: 6,
+                    lg: 6
                 },
-                            metadata: [
-                            {
-                                chart: <AnalyticsDataCard title="CPU Usage">
-                                <ApexChart metadata={_.get(chartMeta, 'postgres_cpu_usage')}></ApexChart>
-                            </AnalyticsDataCard>
+                metadata: [
+                    {
+                        chart: <AnalyticsDataCard title="CPU Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'postgres_cpu_usage')}></ApexChart>
+                        </AnalyticsDataCard>
                     },
-                            {
-                                chart: <AnalyticsDataCard title="Memory Usage">
-                                <ApexChart metadata={_.get(chartMeta, 'postgres_memory_usage')}></ApexChart>
-                            </AnalyticsDataCard>
+                    {
+                        chart: <AnalyticsDataCard title="Memory Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'postgres_memory_usage')}></ApexChart>
+                        </AnalyticsDataCard>
                     }
-                            ]
+                ]
             }
         }
     }
-                            ]
+]

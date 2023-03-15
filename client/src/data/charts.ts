@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
+import { Theme } from '@mui/material';
 
 export const commonMetrics = {
     frequency: 15,
@@ -8,25 +9,52 @@ export const commonMetrics = {
 
 export default {
     node_memory: {
-        type: 'area',
+        type: 'line',
         series: [],
         options: {
             chart: {
-                type: 'area',
+                type: 'line',
                 animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 2000,
+                    enabled: true, // enable animations
+                    easing: 'linear', // set easing type
+                    speed: 1000, // set animation speed
+                    animateGradually: {
+                        enabled: true,
+                        delay: 150 // set delay for gradual animation
+                    },
                     dynamicAnimation: {
-                        speed: 2000
+                        enabled: true,
+                        speed: 350 // set speed for dynamic animation
                     }
                 },
                 toolbar: {
                     show: false
                 }
             },
-            dataLabels: {
-                enabled: false
+            fill: {
+                type: "gradient",
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 1,
+                    opacityTo: 1,
+                    colorStops: [
+                        {
+                            offset: 80,
+                            color: "green",
+                            opacity: 1
+                        },
+                        {
+                            offset: 90,
+                            color: "red",
+                            opacity: 1
+                        },
+                        {
+                            offset: 100,
+                            color: "red",
+                            opacity: 1
+                        }
+                    ]
+                }
             },
             legend: {
                 show: false
@@ -35,6 +63,7 @@ export default {
                 enabled: false
             },
             stroke: {
+                width: 2,
                 curve: 'smooth'
             },
             title: {
@@ -46,7 +75,7 @@ export default {
                 tickAmount: 5,
                 labels: {
                     formatter: function (value: number) {
-                        return _.round(value, 1);
+                        return ` ${_.round(value, 1)}%`;
                     }
                 }
             },
@@ -61,14 +90,10 @@ export default {
             },
             xaxis: {
                 type: 'datetime',
-                axisBorder: {
-                    show: false
-                },
-                axisTicks: {
-                    show: false
-                },
                 labels: {
-                    show: false
+                    formatter: function (value: any, timestamp: any) {
+                        return dayjs.unix(timestamp).format('HH:mm:ss');
+                    }
                 },
                 tooltip: {
                     enabled: false
@@ -101,11 +126,11 @@ export default {
         }
     },
     node_cpu: {
-        type: 'area',
+        type: 'line',
         series: [],
         options: {
             chart: {
-                type: 'area',
+                type: 'line',
                 animations: {
                     enabled: true,
                     easing: 'linear',
@@ -117,17 +142,15 @@ export default {
                     show: false
                 }
             },
-            dataLabels: {
-                enabled: false
+            stroke: {
+                width: 2,
+                curve: 'smooth'
             },
             legend: {
                 show: false
             },
             zoom: {
                 enabled: false
-            },
-            stroke: {
-                curve: 'smooth'
             },
             title: {
                 "text": "CPU Usage"
@@ -138,7 +161,7 @@ export default {
                 tickAmount: 5,
                 labels: {
                     formatter: function (value: number) {
-                        return _.round(value, 1);
+                        return ` ${_.round(value, 1)}%`;
                     }
                 }
             },
@@ -153,14 +176,10 @@ export default {
             },
             xaxis: {
                 type: 'datetime',
-                axisBorder: {
-                    show: false
-                },
-                axisTicks: {
-                    show: false
-                },
                 labels: {
-                    show: false
+                    formatter: function (value: any, timestamp: any) {
+                        return dayjs.unix(timestamp).format('HH:mm:ss');
+                    }
                 },
                 tooltip: {
                     enabled: false
@@ -190,6 +209,10 @@ export default {
             error() {
                 return [0]
             }
+        },
+        getColor: (theme: Theme, series: Array<any>) => {
+            const threshHold = 10;
+
         }
     },
     cpu_percentage: {
@@ -263,7 +286,7 @@ export default {
                 return _.floor(sum / result?.length);
             },
             error() {
-                return [0]
+                return 0
             }
         }
     },
@@ -314,10 +337,10 @@ export default {
                         },
                         value: {
                             offsetY: 5,
-                            fontSize: '1rem',
+                            fontSize: '0.7rem',
                             fontWeight: 500,
                             formatter: function (val: any) {
-                                return `${val}% UP`
+                                return `1/1 Nodes UP`
                             }
                         }
                     }
@@ -1734,4 +1757,301 @@ export default {
             }
         }
     },
+    lineChartExample: {
+        type: 'linearGauge',
+        series: [
+            {
+                name: 'Gauge',
+                data: [80],
+            }
+        ],
+        options: {
+            chart: {
+                height: 350,
+                type: 'linearGauge',
+            },
+            plotOptions: {
+                linearGauge: {
+                    min: 0,
+                    max: 100,
+                    strokeWidth: 15,
+                    color: '#546E7A',
+                    trackColor: '#EEEEEE',
+                    dataLabels: {
+                        showOn: 'always',
+                        style: {
+                            fontSize: '16px',
+                            fontWeight: 'bold',
+                        },
+                    },
+                },
+            }
+        }
+    },
+    instance_memory: {
+        type: 'line',
+        series: [],
+        options: {
+            chart: {
+                type: 'line',
+                animations: {
+                    enabled: true, // enable animations
+                    easing: 'linear', // set easing type
+                    speed: 1000, // set animation speed
+                    animateGradually: {
+                        enabled: true,
+                        delay: 150 // set delay for gradual animation
+                    },
+                    dynamicAnimation: {
+                        enabled: true,
+                        speed: 350 // set speed for dynamic animation
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            legend: {
+                show: false
+            },
+            stroke: {
+                width: 2,
+                curve: 'smooth'
+            },
+            yaxis: {
+                min: 0,
+                max: 100,
+                tickAmount: 5,
+                labels: {
+                    formatter: function (value: number) {
+                        return ` ${_.round(value, 1)}%`;
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                }
+            },
+            xaxis: {
+                tickAmount: 10,
+                type: 'datetime',
+                labels: {
+                    formatter: function (value: any, timestamp: any) {
+                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: '(1 - sum(:node_memory_MemAvailable_bytes:sum{cluster=""}) / sum(node_memory_MemTotal_bytes{job="node-exporter",cluster=""})) * 100',
+                step: 2419
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.instance'),
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return [0]
+            }
+        }
+    },
+    instance_cpu: {
+        type: 'line',
+        series: [],
+        options: {
+            chart: {
+                type: 'line',
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 2000
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            stroke: {
+                width: 2,
+                curve: 'smooth'
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            yaxis: {
+                min: 0,
+                max: 100,
+                tickAmount: 5,
+                labels: {
+                    formatter: function (value: number) {
+                        return ` ${_.round(value, 1)}%`;
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                }
+            },
+            xaxis: {
+                tickAmount: 10,
+                type: 'datetime',
+                labels: {
+                    formatter: function (value: any, timestamp: any) {
+                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: '(cluster:node_cpu:ratio_rate5m{cluster=""}) * 100',
+                step: 2419
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.instance'),
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return [0]
+            }
+        }
+    },
+    instance_disk: {
+        type: 'line',
+        series: [],
+        options: {
+            chart: {
+                type: 'line',
+                animations: {
+                    enabled: true,
+                    easing: 'linear',
+                    dynamicAnimation: {
+                        speed: 2000
+                    }
+                },
+                toolbar: {
+                    show: false
+                }
+            },
+            stroke: {
+                width: 2,
+                curve: 'smooth'
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            yaxis: {
+                min: 0,
+                max: 100,
+                tickAmount: 5,
+                labels: {
+                    formatter: function (value: number) {
+                        return ` ${_.round(value, 1)}%`;
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                }
+            },
+            xaxis: {
+                tickAmount: 10,
+                type: 'datetime',
+                labels: {
+                    formatter: function (value: any, timestamp: any) {
+                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: '100 - ((node_filesystem_free_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"}) * 100)',
+                step: 2419
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.instance'),
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return [0]
+            }
+        }
+    },
+    alerts: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/alerts',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {},
+            parse: (response: any) => {
+                return _.get(response, 'result.data.alerts') || [];
+            },
+            error() {
+                return []
+            }
+        }
+    }
 }

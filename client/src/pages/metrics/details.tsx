@@ -8,6 +8,7 @@ import { metricsMetadata } from 'data/metrics';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { error } from 'services/toaster';
 import { QuestionCircleFilled } from '@ant-design/icons';
+import { setConfig } from 'store/reducers/config';
 
 const filters = [
     {
@@ -21,6 +22,10 @@ const filters = [
     {
         label: 'Last 15 Minutes',
         value: 15
+    },
+    {
+        label: 'Last 7 days',
+        value: 11520
     }
 ];
 
@@ -29,6 +34,7 @@ const MetricsDetails = () => {
     const navigate = useNavigate()
     let [searchParams] = useSearchParams();
     const [metadata, setmetadata] = useState<Record<string, any>>();
+    const [filter, setFilter] = useState(null);
 
     const navigateToHome = ({ errMsg }: any) => {
         navigate('/');
@@ -44,13 +50,19 @@ const MetricsDetails = () => {
     }
 
     useEffect(() => {
+        dispatch(setConfig({ key: 'showClusterMenu', value: false }));
         fetchMetadata();
+        return () => {
+            dispatch(setConfig({ key: 'showClusterMenu', value: true }));
+        }
     }, []);
 
-    const handleFilterChange = (e: any) => { }
+    const handleFilterChange = (e: any) => {
+        const selectedFilter = _.get(e, 'target.value');
+        setFilter(selectedFilter);
+    }
 
     const getFilters = () => {
-        return;
         return <Stack>
             <FormControl fullWidth sx={{ m: 1, minWidth: 150 }}>
                 <InputLabel>Select Interval</InputLabel>

@@ -23,11 +23,6 @@ const ClusterMetrics = () => {
       label: 'Disk',
       metadata: chartMeta.disk_percentage,
       value: 0
-    },
-    {
-      label: 'Nodes',
-      metadata: chartMeta.nodes_percentage,
-      value: 0
     }
   ], [])
 
@@ -82,7 +77,7 @@ const ClusterMetrics = () => {
               </Grid>
               <Grid item>
                 <Typography variant="body2" align="right">
-                  {value}
+                  {value}%
                 </Typography>
               </Grid>
               <Grid item xs={12}>

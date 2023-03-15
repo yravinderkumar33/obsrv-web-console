@@ -11,7 +11,7 @@ import Profile from './Profile';
 // import Notification from './Notification';
 import MobileSection from './MobileSection';
 import { Avatar } from '@mui/material';
-import { ApiOutlined } from '@ant-design/icons';
+import { LineChartOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setConfig } from 'store/reducers/config';
 import Notification from './Notification';
@@ -32,11 +32,11 @@ const HeaderContent = () => {
       {!matchesXs && <Search />}
       <Avatar sx={{ width: 30, height: 30 }} onClick={e => {
         dispatch(setConfig({ key: 'showClusterMenu', value: !(globalConfig?.showClusterMenu) }))
-      }}> <ApiOutlined /></Avatar>
+      }}> <LineChartOutlined /></Avatar>
 
       <Notification />
       {/* <Message /> */}
-      {!matchesXs && <Profile />}
+      {/* {!matchesXs && <Profile />} */}
       {matchesXs && <MobileSection />}
     </>
   );

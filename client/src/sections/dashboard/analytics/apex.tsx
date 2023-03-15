@@ -4,7 +4,8 @@ import useConfig from 'hooks/useConfig';
 import ReactApexChart, { Props as ChartProps } from 'react-apexcharts';
 import _ from 'lodash'
 import { fetchChartData } from 'services/clusterMetrics';
-import globalConfig from 'data/initialConfig'
+import globalConfig from 'data/initialConfig';
+import dayjs from 'dayjs';
 
 const ApexChart = (props: any) => {
   const { metadata, ...rest } = props;
@@ -18,13 +19,13 @@ const ApexChart = (props: any) => {
 
 
   const fetchMetric = async (query: Record<string, any>) => {
-    const { interval } = globalConfig.clusterMenu;
+    const interval = rest.interval || globalConfig.clusterMenu.interval;
     const { type, params = {} } = query;
 
     if (type === 'api') {
       try {
-        params.start = new Date(Date.now() - interval * 60000).toISOString();
-        params.end = new Date().toISOString();
+        params.start = dayjs().subtract(interval, 'minutes').unix();
+        params.end = dayjs().unix();
         const seriesData = await fetchChartData(query, options, setOptions);
         setSeries(seriesData);
       } catch (error) {
@@ -34,7 +35,7 @@ const ApexChart = (props: any) => {
   }
 
   const configureMetricFetcher = (query: Record<string, any>) => {
-    const { frequency } = globalConfig.clusterMenu;
+    const frequency = rest?.frequency || globalConfig.clusterMenu.frequency;
     fetchMetric(query);
     return setInterval(() => {
       fetchMetric(query);

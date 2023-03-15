@@ -73,8 +73,8 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
                 "taskCount": 1
             },
             "ioConfig": {
-                "topic": "obsrv.telemetry.input",
-                "bootstrap": "localhost:9092",
+                "topic": "obs20-events",
+                "bootstrap": "kafka-headless.kafka.svc.cluster.local:9092",
                 "taskDuration": "PT8H"
             }
         }

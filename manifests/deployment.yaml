@@ -16,7 +16,7 @@ spec:
         app: web-console
     spec:
       containers:
-        - image: yravinderkumar33/web-console:v6
+        - image: yravinderkumar33/web-console:v10
           name: web-console
           resources: {}
           envFrom:
