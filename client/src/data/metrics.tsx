@@ -9,7 +9,7 @@ import AlertsMessages from "components/cards/statistics/Alerts";
 export const metricsMetadata = [
     {
         id: "overallInfra",
-        primaryLabel: "Overall Infra",
+        primaryLabel: "Infrastructure",
         secondaryLabel: "Metrics",
         description: "This page shows the metrics of overall infrastructure",
         icon: DotChartOutlined,
@@ -27,13 +27,19 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="1" secondary="Cluster Nodes" iconPrimary={BarChartOutlined} />
                     },
                     {
-                        chart: <ReportCard primary="0" suffix={'%'} secondary="CPU Usage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'cpu_percentage.query')} />
+                        chart: <AnalyticsDataCard title="CPU Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'cpu_usage_radial')}></ApexChart>
+                        </AnalyticsDataCard>
                     },
                     {
-                        chart: <ReportCard primary="0" suffix={'%'} secondary="Memory Usage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'memory_percentage.query')} />
+                        chart: <AnalyticsDataCard title="Disk Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'memory_usage_radial')}></ApexChart>
+                        </AnalyticsDataCard>
                     },
                     {
-                        chart: <ReportCard primary="0" suffix={'%'} secondary="Disk Usage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'disk_percentage.query')} />
+                        chart: <AnalyticsDataCard title="Disk Usage">
+                            <ApexChart metadata={_.get(chartMeta, 'disk_usage_radial')}></ApexChart>
+                        </AnalyticsDataCard>
                     }
                 ]
             },
@@ -145,11 +151,6 @@ export const metricsMetadata = [
                     lg: 12
                 },
                 metadata: [
-                    // {
-                    //     chart: <AnalyticsDataCard title="Partitions per Topic">
-                    //         <ApexChart metadata={_.get(chartMeta, 'kafka_partitions_per_topic')}></ApexChart>
-                    //     </AnalyticsDataCard>
-                    // }
                 ]
             }
         }
