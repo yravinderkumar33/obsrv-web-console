@@ -28,30 +28,37 @@ export default {
                     show: false
                 }
             },
-            fill: {
-                type: "gradient",
-                gradient: {
-                    shadeIntensity: 1,
-                    opacityFrom: 1,
-                    opacityTo: 1,
-                    colorStops: [
-                        {
-                            offset: 80,
-                            color: "green",
-                            opacity: 1
-                        },
-                        {
-                            offset: 90,
-                            color: "red",
-                            opacity: 1
-                        },
-                        {
-                            offset: 100,
-                            color: "red",
-                            opacity: 1
+            annotations: {
+                yaxis: [
+                    {
+                        y: 80,
+                        y2: 90,
+                        fillColor: '#FEB019',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Warn',
                         }
-                    ]
-                }
+                    },
+                    {
+                        y: 90,
+                        y2: 100,
+                        fillColor: '#FF0000',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Critical',
+                        }
+                    }
+                ]
             },
             legend: {
                 show: false
@@ -64,7 +71,8 @@ export default {
                 curve: 'smooth'
             },
             title: {
-                "text": "Memory Usage"
+                "text": "Memory Usage",
+                align: "right"
             },
             yaxis: {
                 min: 0,
@@ -89,7 +97,7 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('HH:mm:ss');
+                        return dayjs.unix(timestamp).format('HH:mm');
                     }
                 },
                 tooltip: {
@@ -139,6 +147,38 @@ export default {
                     show: false
                 }
             },
+            annotations: {
+                yaxis: [
+                    {
+                        y: 80,
+                        y2: 90,
+                        fillColor: '#FEB019',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Warn',
+                        }
+                    },
+                    {
+                        y: 90,
+                        y2: 100,
+                        fillColor: '#FF0000',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Critical',
+                        }
+                    }
+                ]
+            },
             stroke: {
                 width: 2,
                 curve: 'smooth'
@@ -150,7 +190,8 @@ export default {
                 enabled: false
             },
             title: {
-                "text": "CPU Usage"
+                "text": "CPU Usage",
+                align: "right"
             },
             yaxis: {
                 min: 0,
@@ -175,7 +216,7 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('HH:mm:ss');
+                        return dayjs.unix(timestamp).format('HH:mm');
                     }
                 },
                 tooltip: {
@@ -314,59 +355,29 @@ export default {
     },
     nodes_Radial: {
         type: 'radialBar',
-        series: [],
+        series: [0],
         options: {
             chart: {
-                type: 'radialBar'
+                type: 'radialBar',
             },
             plotOptions: {
                 radialBar: {
                     hollow: {
                         margin: 0,
-                        size: '85%'
+                        size: '90%'
                     },
                     track: {
                         margin: 0
                     },
                     dataLabels: {
-                        name: {
-                            show: false
-                        },
                         value: {
-                            offsetY: 5,
-                            fontSize: '0.7rem',
-                            fontWeight: 500,
-                            formatter: function (val: any) {
-                                return `1/1 Nodes UP`
-                            }
+                            show: false
                         }
                     }
-                }
+                },
+
             },
             labels: ['Nodes'],
-        },
-        query: {
-            type: 'api',
-            timeout: 3000,
-            url: '/api/report/v1/query',
-            method: 'GET',
-            headers: {},
-            body: {},
-            params: {
-                query: promql.nodes_Radial.query
-            },
-            parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
-                const sum = _.sumBy(result, (payload: any) => {
-                    const { value } = payload;
-                    const [_, percentage = 0] = value;
-                    return +percentage
-                })
-                return [_.floor(sum / result?.length)];
-            },
-            error() {
-                return [0]
-            }
         }
     },
     instance_memory: {
@@ -376,21 +387,53 @@ export default {
             chart: {
                 type: 'line',
                 animations: {
-                    enabled: true, // enable animations
-                    easing: 'linear', // set easing type
-                    speed: 1000, // set animation speed
+                    enabled: true,
+                    easing: 'linear',
+                    speed: 1000,
                     animateGradually: {
                         enabled: true,
-                        delay: 150 // set delay for gradual animation
+                        delay: 150
                     },
                     dynamicAnimation: {
                         enabled: true,
-                        speed: 350 // set speed for dynamic animation
+                        speed: 350
                     }
                 },
                 toolbar: {
                     show: false
                 }
+            },
+            annotations: {
+                yaxis: [
+                    {
+                        y: 80,
+                        y2: 90,
+                        fillColor: '#FEB019',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Warn',
+                        }
+                    },
+                    {
+                        y: 90,
+                        y2: 100,
+                        fillColor: '#FF0000',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Critical',
+                        }
+                    }
+                ]
             },
             legend: {
                 show: false
@@ -439,8 +482,7 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: promql.instance_memory.query,
-                step: 2419
+                query: promql.instance_memory.query
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -470,6 +512,38 @@ export default {
                 toolbar: {
                     show: false
                 }
+            },
+            annotations: {
+                yaxis: [
+                    {
+                        y: 80,
+                        y2: 90,
+                        fillColor: '#FEB019',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Warn',
+                        }
+                    },
+                    {
+                        y: 90,
+                        y2: 100,
+                        fillColor: '#FF0000',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Critical',
+                        }
+                    }
+                ]
             },
             stroke: {
                 width: 2,
@@ -552,6 +626,38 @@ export default {
                 toolbar: {
                     show: false
                 }
+            },
+            annotations: {
+                yaxis: [
+                    {
+                        y: 60,
+                        y2: 80,
+                        fillColor: '#FEB019',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Warn',
+                        }
+                    },
+                    {
+                        y: 80,
+                        y2: 100,
+                        fillColor: '#FF0000',
+                        opacity: 0.3,
+                        label: {
+                            borderColor: '#333',
+                            style: {
+                                fontSize: '10px',
+                                background: '#FEB019',
+                            },
+                            text: 'Critical',
+                        }
+                    }
+                ]
             },
             stroke: {
                 width: 2,
@@ -679,9 +785,6 @@ export default {
                     top: -10
                 }
             },
-            stroke: {
-                dashArray: 4
-            },
             fill: {
                 type: 'gradient',
                 gradient: {
@@ -762,9 +865,6 @@ export default {
                 padding: {
                     top: -10
                 }
-            },
-            stroke: {
-                dashArray: 4
             },
             fill: {
                 type: 'gradient',
@@ -847,9 +947,6 @@ export default {
                     top: -10
                 }
             },
-            stroke: {
-                dashArray: 4
-            },
             fill: {
                 type: 'gradient',
                 gradient: {
@@ -886,5 +983,55 @@ export default {
                 return [0]
             }
         }
-    }
+    },
+    total_nodes_count: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.cluster_total_nodes_count.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                const sum = _.sumBy(result, (payload: any) => {
+                    const { value } = payload;
+                    const [_, percentage = 0] = value;
+                    return +percentage
+                })
+                return _.floor(sum);
+            },
+            error() {
+                return 0;
+            }
+        }
+    },
+    total_running_nodes_count: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.cluster_running_nodes_count.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                const sum = _.sumBy(result, (payload: any) => {
+                    const { value } = payload;
+                    const [_, percentage = 0] = value;
+                    return +percentage
+                })
+                return _.floor(sum);
+            },
+            error() {
+                return 0
+            }
+        }
+    },
 }

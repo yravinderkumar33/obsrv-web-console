@@ -26,27 +26,12 @@ const ClusterMetrics = () => {
     }
   ], [])
 
-
   const [metrics, setMetrics] = useState(metricsMetadata)
-
-  const fetchData = async (metadata: Record<string, any>) => {
-    const { query } = metadata;
-    const { type } = query;
-    if (type === 'api') {
-      try {
-        return fetchChartData(query)
-      } catch (error) {
-        return 0;
-      }
-    } else {
-      return 0;
-    }
-  }
 
 
   const fetchMetrics = async () => {
     try {
-      const updatedMetrics = await Promise.all(_.map(metrics, metric => fetchData(metric.metadata).then((value: any) => ({ ...metric, value }))));
+      const updatedMetrics = await Promise.all(_.map(metrics, metric => fetchChartData(metric.metadata.query as any).then((value: any) => ({ ...metric, value }))));
       setMetrics(updatedMetrics);
     } catch (error) {
       setMetrics(metricsMetadata);

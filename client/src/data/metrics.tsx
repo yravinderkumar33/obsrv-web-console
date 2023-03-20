@@ -5,6 +5,7 @@ import chartMeta from 'data/charts';
 import ReportCard from "components/cards/statistics/ReportCard";
 import AnalyticsDataCard from "components/cards/statistics/AnalyticsDataCard";
 import AlertsMessages from "components/cards/statistics/Alerts";
+import GaugeChart from "sections/dashboard/analytics/guageChart";
 
 export const metricsMetadata = [
     {
@@ -24,23 +25,25 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ReportCard primary="1" secondary="Cluster Nodes" iconPrimary={BarChartOutlined} />
+                        chart: <AnalyticsDataCard title="Nodes Usage">
+                            <GaugeChart arcsLength={null} nrOfLevels={20} colors={['#EA4228', '#5BE12C']} query={_.get(chartMeta, 'nodes_percentage.query')} />
+                        </AnalyticsDataCard>
                     },
                     {
                         chart: <AnalyticsDataCard title="CPU Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'cpu_usage_radial')}></ApexChart>
+                            <GaugeChart query={_.get(chartMeta, 'cpu_usage_radial.query')} />
+                        </AnalyticsDataCard>
+                    },
+                    {
+                        chart: <AnalyticsDataCard title="Memory Usage">
+                            <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
                         </AnalyticsDataCard>
                     },
                     {
                         chart: <AnalyticsDataCard title="Disk Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'memory_usage_radial')}></ApexChart>
+                            <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
                         </AnalyticsDataCard>
                     },
-                    {
-                        chart: <AnalyticsDataCard title="Disk Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'disk_usage_radial')}></ApexChart>
-                        </AnalyticsDataCard>
-                    }
                 ]
             },
             medium: {

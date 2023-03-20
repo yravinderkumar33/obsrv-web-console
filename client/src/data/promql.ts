@@ -15,7 +15,7 @@ export default {
         "query": "100 - ((node_filesystem_free_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"}) * 100)"
     },
     "nodes_percentage": {
-        "query": "abs(sum(kube_node_info))"
+        "query": "100 * (count(up == 1) by (instance) / count(up) by (instance))"
     },
     "nodes_Radial": {
         "query": "100 * count(up == 1) by (instance) / count(up) by (instance)"
@@ -87,7 +87,7 @@ export default {
         "query": "(1 - sum(:node_memory_MemAvailable_bytes:sum{cluster=\"\"}) / sum(node_memory_MemTotal_bytes{job=\"node-exporter\",cluster=\"\"})) * 100"
     },
     "instance_cpu": {
-        "query": "(cluster:node_cpu:ratio_rate5m{cluster=\"\"}) * 100"
+        "query": '(cluster:node_cpu:ratio_rate5m{cluster=""}) * 100'
     },
     "instance_disk": {
         "query": "100 - ((node_filesystem_free_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"}) * 100)"
@@ -100,5 +100,11 @@ export default {
     },
     "memory_usage_radial": {
         "query": "1 - sum(:node_memory_MemAvailable_bytes:sum{cluster=\"\"}) / sum(node_memory_MemTotal_bytes{job=\"node-exporter\",cluster=\"\"})"
+    },
+    "cluster_total_nodes_count": {
+        "query": "count(kube_node_info)"
+    },
+    "cluster_running_nodes_count": {
+        "query": 'count(kube_node_status_condition{condition="Ready",status="true"})'
     }
 }
