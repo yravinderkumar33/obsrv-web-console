@@ -2,14 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import {
     Button, Grid, IconButton,
     Stack, TextField, Tooltip, Typography,
-    FormControl, InputLabel, Select, MenuItem, Dialog,
+    FormControl, Select, MenuItem, Dialog,
     FormControlLabel, Chip, Alert, DialogTitle, Box
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
-import EditDataset from './EditColumn';
 import * as _ from 'lodash';
-import { CheckOutlined, CloseOutlined, DeleteOutlined, EditOutlined, DeleteFilled } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -47,18 +46,6 @@ const columnFilters: columnFilter[] = [
         'color': "error"
     },
     {
-        'label': 'Medium',
-        'id': 'MEDIUM',
-        'lookup': 'severity',
-        'color': "warning"
-    },
-    {
-        'label': 'Low',
-        'id': 'LOW',
-        'lookup': 'severity',
-        'color': "info"
-    },
-    {
         'label': 'Resolved',
         'id': true,
         'lookup': 'resolved',
@@ -68,8 +55,6 @@ const columnFilters: columnFilter[] = [
 
 const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState }: any) => {
     const apiResponse = useSelector((state: any) => state.jsonSchema);
-    const configurations = _.get(apiResponse, 'data.configurations') || [];
-    const [showEdit, setShowEdit] = useState(false);
     const [selection, setSelection] = useState<Record<string, any>>({});
     const dispatch = useDispatch()
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
@@ -416,9 +401,14 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     <Grid item xs={12} sm={12}>
                         <MainCard content={false}>
                             <ScrollX>
-                                <ReactTable columns={columns} data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []} updateMyData={updateMyData} skipPageReset={skipPageReset} />
+                                <ReactTable
+                                    columns={columns}
+                                    data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []}
+                                    updateMyData={updateMyData}
+                                    skipPageReset={skipPageReset}
+                                    limitHeight
+                                />
                             </ScrollX>
-                            {/* {selection && showEdit && <EditDataset open={showEdit} setData={setFlattenedData} onSubmit={() => setShowEdit(false)} selection={selection} ></EditDataset>} */}
                         </MainCard >
                     </Grid>
                     <Grid item xs={12}>

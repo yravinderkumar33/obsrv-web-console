@@ -1,14 +1,13 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
-    Button, Grid, IconButton,
+    Button, Grid, ToggleButtonGroup, Box,
     Stack, Tooltip, Typography, FormControl,
-    ToggleButton, ToggleButtonGroup, Box,
-    FormControlLabel, Chip, Alert
+    ToggleButton, Chip, Alert, FormControlLabel
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
-import { CheckOutlined, CloseOutlined, DeleteFilled } from '@ant-design/icons';
+import { DeleteFilled } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -21,7 +20,7 @@ import RequiredSwitch from 'components/RequiredSwitch';
 import { connect } from 'react-redux';
 
 const validOpTypes = ['mask', 'encrypt'];
-const pageMeta = { pageId: 'columns', title: "Review Columns" };
+const pageMeta = { pageId: 'dataSchemaConfig', title: "Review Columns" };
 
 interface columnFilter {
     label: string,
@@ -283,7 +282,13 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                     <Grid item xs={12} sm={12}>
                         <MainCard content={false}>
                             <ScrollX>
-                                <ReactTable columns={columns} data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []} updateMyData={updateMyData} skipPageReset={skipPageReset} />
+                                <ReactTable
+                                    columns={columns}
+                                    data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []}
+                                    updateMyData={updateMyData}
+                                    skipPageReset={skipPageReset}
+                                    limitHeight
+                                />
                             </ScrollX>
                         </MainCard >
                     </Grid>

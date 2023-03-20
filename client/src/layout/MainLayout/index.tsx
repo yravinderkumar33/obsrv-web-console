@@ -58,27 +58,31 @@ const MainLayout = () => {
 
     return (
         <>
-            <Box sx={{ display: 'flex', width: '100%' }} position="relative">
+            <Box sx={{ display: 'flex', width: '100%', }} position="relative">
                 <Header open={open} handleDrawerToggle={handleDrawerToggle} />
                 <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
                 <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, py: { xs: 2, sm: 3 }, px: { xs: 2, sm: 1 } }}>
                     <Toolbar style={{ 'height': `${mainContainerHeight}px` }} />
                     {container && (
-                        <Container
-                            maxWidth="xl"
-                            sx={{ px: { xs: 0, sm: 2 }, position: 'relative', minHeight: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}
-                        >
-                            {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
-                            <Outlet />
+                        <>
+                            <Container
+                                maxWidth="xl"
+                                sx={{ px: { xs: 0, sm: 2 }, position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 'calc(110vh - 220px)' }}
+                            >
+                                {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
+                                <Outlet />
+                            </Container>
                             <Footer />
-                        </Container>
+                        </>
                     )}
                     {!container && (
-                        <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}>
-                            {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
-                            <Outlet />
+                        <>
+                            <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 'calc(110vh - 220px)' }}>
+                                {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
+                                <Outlet />
+                            </Box>
                             <Footer />
-                        </Box>
+                        </>
                     )}
                 </Box>
             </Box>

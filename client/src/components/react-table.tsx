@@ -9,9 +9,11 @@ interface Props {
     data: [];
     updateMyData: (rowIndex: number, columnId: any, value: any) => void;
     skipPageReset: boolean;
+    limitHeight: boolean;
 }
 
-function ReactTable({ columns, data, updateMyData, skipPageReset }: Props) {
+function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }: Props) {
+    const tableSx = limitHeight ? { height: 300, overflowY: 'scroll' } : {};
 
     const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
         {
@@ -25,7 +27,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset }: Props) {
     );
 
     return (
-        <TableContainer>
+        <TableContainer sx={tableSx}>
             <Table stickyHeader sx={{ borderCollapse: 'collapse' }} {...getTableProps()}>
                 <TableHead>
                     {headerGroups.map((headerGroup) => (
@@ -53,9 +55,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset }: Props) {
                 <TableBody {...getTableBodyProps()}>
                     {rows.map((row: any, i: number) => {
                         prepareRow(row);
-                        console.log(row);
                         const suggestions = _.get(row, 'original.suggestions');
-                        console.log(suggestions);
                         const isResolved = _.get(row, 'original.resolved') || false;
                         const isCritical = checkForCriticalSuggestion(suggestions);
                         const bgColor = () => {

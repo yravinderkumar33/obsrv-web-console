@@ -1,22 +1,29 @@
 import { Box, Fab } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 const ScrollButton = () => {
     const [icon, setIcon] = useState(<ArrowDownOutlined />);
     const [scrollDirection, setScrollDirection] = useState<string>('bottom');
     const toggleScroll = () => {
-        if (scrollDirection === 'bottom') {
-            scrollToBottom();
-            setIcon(<ArrowUpOutlined />);
-            setScrollDirection('top');
-        }
-        else {
-            scrollToTop();
-            setIcon(<ArrowDownOutlined />);
-            setScrollDirection('bottom');
-        }
+        if (scrollDirection === 'bottom') scrollToBottom();
+        else scrollToTop();
     };
+
+    useEffect(() => {
+        const onScroll = () => setScrollDirection(() => {
+            if (window.scrollY > 50) {
+                setIcon(<ArrowUpOutlined />);
+                return 'top';
+            } else {
+                setIcon(<ArrowDownOutlined />);
+                return 'bottom';
+            };
+        });
+        window.removeEventListener('scroll', onScroll);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
 
     const scrollToTop = () => {
         window.scrollTo({
@@ -33,7 +40,7 @@ const ScrollButton = () => {
         });
     };
 
-    return (<Box sx={{ position: 'fixed', bottom: 0, mb: 4, right: 0, mr: 1 }}>
+    return (<Box sx={{ position: 'fixed', bottom: 0, mb: 5, right: 0, mr: 1 }}>
         <Fab
             size='medium'
             onClick={() => toggleScroll()}

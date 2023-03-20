@@ -12,7 +12,7 @@ import * as _ from 'lodash';
 import SchemaConfiguration from './SchemaConfiguration';
 
 //'Ingestion Config',
-const steps = ['Schema', 'Schema Config', 'Processing Config', 'Review'];
+const steps = ['Derive Schema', 'Configure Data Schema', 'Processing Configuration', 'Ingestion Configuration', 'Review'];
 
 const getStepContent = (
     step: number,
