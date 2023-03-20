@@ -95,11 +95,11 @@ const DatasetOnboarding = () => {
 
     const getDatasetName = () => {
         const name = _.get(wizardState, 'pages.datasetConfiguration.state.config.name');
-        return name ? `(${name})` : '';
+        return name ? name : '';
     }
 
     return (
-        <MainCard title={`New Dataset ${getDatasetName()}`}
+        <MainCard title={getDatasetName()}
             secondary={
                 showWizard && <>
                     <Button onClick={(_) => resetState()}>

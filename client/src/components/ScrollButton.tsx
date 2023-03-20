@@ -33,7 +33,7 @@ const ScrollButton = () => {
         });
     };
 
-    return (<Box sx={{ position: 'fixed', bottom: 0, mb: 3, right: 0, mr: 1 }}>
+    return (<Box sx={{ position: 'fixed', bottom: 0, mb: 4, right: 0, mr: 1 }}>
         <Fab
             size='medium'
             onClick={() => toggleScroll()}

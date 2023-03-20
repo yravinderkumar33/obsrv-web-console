@@ -85,21 +85,18 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                     const suggestions = _.get(row, 'suggestions');
                     const hasCriticalConflicts = checkForCriticalSuggestion(suggestions || []);
                     const isResolved = _.get(row, 'resolved') || false;
-                    const PrimaryIcon = isResolved ? CheckOutlined : CloseOutlined;
-                    const color = isResolved ? "primary" : "error";
-                    const isCritical = checkForCriticalSuggestion(suggestions);
-                    const bgColor = (isCritical && !isResolved) ? '#f58989' : 'transparent';
-                    return <Box display="flex" alignItems="center" bgcolor={bgColor}>
-                        <Typography variant="body1">
-                            {value}
-                        </Typography>
-                        {hasCriticalConflicts && <Tooltip title={isResolved ? "Resolved" : "Unresolved"}>
-                            <IconButton color={color}>
-                                <PrimaryIcon />
-                            </IconButton>
-                        </Tooltip>
-                        }
-                    </Box>;
+                    return (
+                        <Box display="flex" alignItems="center">
+                            <Typography variant="body1">
+                                {value}
+                            </Typography>
+                            {hasCriticalConflicts && isResolved && <Tooltip title={"Resolved"}>
+                                <Stack direction="column" spacing={1} m={1}>
+                                    <Chip size='small' label={'Resolved'} color="success" variant='outlined' />
+                                </Stack>
+                            </Tooltip>}
+                        </Box>
+                    );
                 }
             },
             {
@@ -148,20 +145,8 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                             const updatedValues = { ...row };
                             const values = _.map(preState, state => {
                                 if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, pii: { "value": e.target.checked, "op": "mask" } };
+                                    return { ...state, ...updatedValues, isModified: true, pii: { "value": e.target.checked, "op": "" } };
                                 else return state
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-                    const handleOpChange = (e: React.MouseEvent<HTMLElement, MouseEvent>, val: string) => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, pii: { "value": row?.pii, "op": val } };
-                                else return state;
                             });
                             pushStateToStore(values);
                             return values;
@@ -177,23 +162,50 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                                     labelPlacement="bottom"
                                 />
                             </FormControl>
-                            {row && row?.pii?.value &&
-                                <ToggleButtonGroup
-                                    color="success"
-                                    defaultValue={'mask'}
-                                    value={row?.pii?.op}
-                                    exclusive
-                                    aria-required={'true'}
-                                    onChange={handleOpChange}
-                                    aria-label="Platform"
-                                >
-                                    {validOpTypes.map((opType) => <ToggleButton value={opType}>{_.capitalize(opType)}</ToggleButton>)}
-                                </ToggleButtonGroup>
-                            }
                         </Box>
                     );
                 }
-            }
+            },
+            {
+                Header: 'Actions',
+                accessor: 'actions',
+                tipText: 'Actions to perform',
+                editable: true,
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+
+                    const handleOpChange = (e: React.MouseEvent<HTMLElement, MouseEvent>, val: string) => {
+                        setFlattenedData((preState: Array<Record<string, any>>) => {
+                            const updatedValues = { ...row };
+                            const values = _.map(preState, state => {
+                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
+                                    return { ...state, ...updatedValues, isModified: true, pii: { "value": row?.pii?.value, "op": val } };
+                                else return state;
+                            });
+                            pushStateToStore(values);
+                            return values;
+                        });
+                    }
+
+                    return (
+                        <Box alignItems="center" display="flex">
+                            <ToggleButtonGroup
+                                color="info"
+                                defaultValue={''}
+                                value={row?.pii?.op}
+                                exclusive
+                                aria-required={'true'}
+                                onChange={handleOpChange}
+                                aria-label="pii operations"
+                            >
+                                {validOpTypes.map((opType) => <ToggleButton value={opType}>{_.capitalize(opType)}</ToggleButton>)}
+                            </ToggleButtonGroup>
+
+                        </Box>
+                    );
+                }
+            },
         ],
         []
     );

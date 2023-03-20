@@ -61,27 +61,26 @@ const MainLayout = () => {
             <Box sx={{ display: 'flex', width: '100%' }} position="relative">
                 <Header open={open} handleDrawerToggle={handleDrawerToggle} />
                 <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
-                <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
+                <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, py: { xs: 2, sm: 3 }, px: { xs: 2, sm: 1 } }}>
                     <Toolbar style={{ 'height': `${mainContainerHeight}px` }} />
                     {container && (
                         <Container
                             maxWidth="xl"
                             sx={{ px: { xs: 0, sm: 2 }, position: 'relative', minHeight: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}
                         >
-                            <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
+                            {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
                             <Outlet />
                             <Footer />
                         </Container>
                     )}
                     {!container && (
                         <Box sx={{ position: 'relative', minHeight: 'calc(100vh - 110px)', display: 'flex', flexDirection: 'column' }}>
-                            <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
+                            {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
                             <Outlet />
                             <Footer />
                         </Box>
                     )}
                 </Box>
-
             </Box>
             <ScrollButton />
         </>

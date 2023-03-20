@@ -85,8 +85,8 @@ const UploadFiles = ({ data, setData, files, setFiles }: any) => {
                     <Box sx={{ width: '100%' }}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                                <Tab label="Upload/Drop File" {...tabProps(0)} />
-                                <Tab label="Paste/Edit Data" {...tabProps(1)} />
+                                <Tab label="Upload JSON Data/Schema" {...tabProps(0)} />
+                                <Tab label="Paste/Edit JSON Data/Schema" {...tabProps(1)} />
                             </Tabs>
                         </Box>
                         <TabPanel value={tabIndex} index={0}>

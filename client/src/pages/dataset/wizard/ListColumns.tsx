@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import {
     Button, Grid, IconButton,
     Stack, TextField, Tooltip, Typography,
-    FormControl, InputLabel, Select, MenuItem, SelectChangeEvent,
-    FormControlLabel, Chip, Alert, Divider, Box
+    FormControl, InputLabel, Select, MenuItem, Dialog,
+    FormControlLabel, Chip, Alert, DialogTitle, Box
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
@@ -124,22 +124,46 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 editable: false,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
+                    const { severityToColorMapping } = globalConfig;
                     const suggestions = _.get(row, 'suggestions');
                     const hasCriticalConflicts = checkForCriticalSuggestion(suggestions || []);
                     const isResolved = _.get(row, 'resolved') || false;
-                    const PrimaryIcon = isResolved ? CheckOutlined : CloseOutlined;
-                    const color = isResolved ? "primary" : "error";
-                    return <Box display="flex" alignItems="center">
-                        <Typography variant="body1">
-                            {value}
-                        </Typography>
-                        {hasCriticalConflicts && <Tooltip title={isResolved ? "Resolved" : "Unresolved"}>
-                            <IconButton color={color}>
-                                <PrimaryIcon />
-                            </IconButton>
-                        </Tooltip>
-                        }
-                    </Box>;
+                    return (
+                        <>
+                            <Box display="flex" alignItems="baseline">
+                                <Typography variant="body1">
+                                    {value}
+                                </Typography>
+                                {hasCriticalConflicts && !isResolved && <Tooltip title={"Unresolved"}>
+                                    <Stack direction="row" spacing={1} m={1}>
+                                        {suggestions.map((payload: any, index: number) => {
+                                            if (['HIGH', 'CRITICAL'].includes(payload?.severity))
+                                                return (<div key={index}>
+                                                    {payload?.severity && <Chip size='small' label={payload?.severity} color={_.get(severityToColorMapping, [payload?.severity || "LOW", "color"])} variant='outlined' />}
+                                                </div>);
+                                            return null;
+                                        })}
+                                    </Stack>
+                                </Tooltip>}
+                                {hasCriticalConflicts && isResolved && <Tooltip title={"Resolved"}>
+                                    <Stack direction="column" spacing={1} m={1}>
+                                        <Chip size='small' label={'Resolved'} color="success" variant='outlined' />
+                                    </Stack>
+                                </Tooltip>}
+                            </Box>
+                            <Box alignItems="baseline">
+                                {hasCriticalConflicts && !isResolved &&
+                                    suggestions.map((payload: any, index: number) => {
+                                        if (['HIGH', 'CRITICAL'].includes(payload?.severity))
+                                            return (<div key={index}>
+                                                <Typography maxWidth={'310px'} color="info.main">{payload?.message}</Typography>
+                                            </div>);
+                                        return null;
+                                    })
+                                }
+                            </Box>
+                        </>
+                    );
                 }
             },
             {
@@ -151,13 +175,22 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     const [edit, setEdit] = useState(false);
-                    const editDescription = () => setEdit((prevState) => !prevState);
+                    const [text, setText] = useState('');
+                    const editDescription = () => {
+                        setEdit((prevState) => !prevState);
+                        updateState();
+                    }
+
                     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                        setText(e.target.value);
+                    }
+
+                    const updateState = () => {
                         setFlattenedData((preState: Array<Record<string, any>>) => {
                             const updatedValues = { ...row };
                             const values = _.map(preState, state => {
                                 if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, description: e.target.value };
+                                    return { ...state, ...updatedValues, isModified: true, description: text };
                                 else return state
                             });
                             pushStateToStore(values);
@@ -165,16 +198,44 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         });
                     }
 
-                    return <Box onClick={editDescription} display="flex" alignItems="center">
-                        {edit && <TextField
-                            fullWidth
-                            onChange={handleChange}
-                            autoFocus
-                            label='Description'
-                            onBlur={editDescription}
-                        />}
-                        {!edit && <Typography>{value}</Typography>}
-                        {!edit && !value && <Typography variant="subtitle2">Click to edit description</Typography>}
+                    const handleCancel = () => {
+                        setText('');
+                        setEdit((prevState) => !prevState);
+                    }
+
+
+                    return <Box display="flex" alignItems="center">
+                        <Dialog open={edit} onClose={editDescription}>
+                            <DialogTitle id="dialog-title">
+                                {`Edit description for field - ${row.column}`}
+                            </DialogTitle>
+                            <Box p={2}>
+                                <Box m={1}>
+                                    <TextField
+                                        InputLabelProps={{
+                                            shrink: true
+                                        }}
+                                        fullWidth
+                                        defaultValue={value}
+                                        onChange={handleChange}
+                                        label='Description'
+                                    />
+                                </Box>
+                                <Stack direction="row"
+                                    justifyContent="flex-end"
+                                    alignItems="center"
+                                    spacing={2} >
+                                    <Button color="error" size="small" onClick={handleCancel}>
+                                        Cancel
+                                    </Button>
+                                    <Button variant="contained" size="small" onClick={editDescription}>
+                                        Save
+                                    </Button>
+                                </Stack>
+                            </Box>
+                        </Dialog>
+                        {!edit && <Typography onClick={editDescription}>{value}</Typography>}
+                        {!edit && !value && <Box onClick={editDescription}>... <EditOutlined /></Box>}
                     </Box>;
                 }
             },
@@ -186,15 +247,13 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
-                    const [edit, setEdit] = useState(false);
-                    const editType = () => setEdit((prevState) => !prevState);
                     const hasConflicts = _.get(row, 'suggestions.length');
-                    const handleChange = (e: SelectChangeEvent<string>) => {
+                    const updateValue = (val: string) => {
                         setFlattenedData((preState: Array<Record<string, any>>) => {
                             const updatedValues = { ...row };
                             const values = _.map(preState, state => {
                                 if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, type: e.target.value, ...(hasConflicts && { resolved: true }) };
+                                    return { ...state, ...updatedValues, isModified: true, type: val, ...(hasConflicts && { resolved: true }) };
                                 else return state
                             });
                             pushStateToStore(values);
@@ -202,60 +261,18 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         });
                     }
 
-                    return <Box onClick={editType} display="flex" alignItems="center">
-                        {edit && <FormControl fullWidth>
-                            <InputLabel>{'Select data type'}</InputLabel>
+                    return (
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                             <Select
-                                defaultOpen
-                                label={'Select data type'}
-                                onChange={handleChange}
-                                autoFocus
-                                onBlur={editType}
+                                defaultValue={value}
                             >
                                 {
                                     validDatatypes.map((option: any) =>
-                                        (<MenuItem value={option} key={option}>{option}</MenuItem>))
+                                        (<MenuItem onClick={() => updateValue(option)} value={option} key={option}>{option}</MenuItem>))
                                 }
                             </Select>
-                        </FormControl>}
-                        {!edit && <Typography>{value}</Typography>}
-                        {!edit && !value && <Typography variant="subtitle2">Click to edit description</Typography>}
-                    </Box>;
-                }
-            },
-            {
-                Header: 'Suggestions',
-                accessor: 'suggestions',
-                tipText: 'Suggestions for the field',
-                editable: false,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const suggestions = value || [];
-                    const { severityToColorMapping } = globalConfig;
-                    return <Grid container spacing={2}>
-                        <Grid item sm zeroMinWidth>
-                            {suggestions.length === 0 &&
-                                <Typography variant="body2">
-                                    N/A
-                                </Typography>}
-                            <Stack spacing={1} divider={<Divider orientation='horizontal' flexItem />}>
-                                {suggestions.length !== 0 && suggestions.map((payload: any, index: number) => {
-                                    return (<div key={index}>
-                                        <Typography variant="body2">
-                                            <b>Message</b> - {payload?.message}
-                                        </Typography>
-                                        <Typography variant="body2">
-                                            <b>Advice</b> - {payload?.advice}
-                                        </Typography>
-                                        <Stack direction="row" spacing={1}>
-                                            {payload?.severity && <Chip size='small' label={payload?.severity} color={_.get(severityToColorMapping, [payload?.severity || "LOW", "color"])} variant='outlined' />}
-                                            {payload?.resolutionType && <Chip size='small' label={payload?.resolutionType} color="primary" variant='outlined' />}
-                                        </Stack>
-                                    </div>);
-                                })}
-                            </Stack>
-                        </Grid>
-                    </Grid>
+                        </FormControl>
+                    );
                 }
             },
             {
@@ -299,17 +316,11 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 disableFilters: true,
                 Cell: ({ value: initialValue, updateMyData, ...rest }: any) =>
                     <Stack direction="row">
-                        {/* <IconButton color="primary" size="large" onClick={_ => {
-              setShowEdit(true)
-              setSelection({ value: initialValue, ...rest })
-            }}>
-              <EditOutlined />
-            </IconButton> */}
                         <IconButton color="primary" size="large" sx={{ m: 'auto' }} onClick={e => {
                             setOpenAlertDialog(true);
                             setSelection({ value: initialValue, ...rest });
                         }}>
-                            <DeleteOutlined />
+                            <DeleteOutlined style={{ color: "#F04134" }} />
                         </IconButton>
                     </Stack>
             },
@@ -382,7 +393,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     color={filterByChip?.label === filter.label ? filter.color : undefined}
                     size="small"
                     onClick={() => handleFilterChange(filter)}
-                    deleteIcon={filterByChip?.label === filter.label ? <DeleteFilled /> : undefined}
                     onDelete={filterByChip?.label === filter.label ? () => deleteFilter() : undefined}
                 />
                 )}

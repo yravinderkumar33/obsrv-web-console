@@ -10,7 +10,7 @@ import { v4 } from 'uuid';
 import { useState } from 'react';
 import { error } from 'services/toaster';
 import { fetchJsonSchemaThunk } from 'store/middlewares';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import { generateSlug } from 'utils/stringUtils';
 
 const initialValues = {
@@ -21,8 +21,10 @@ const initialValues = {
 
 const validationSchema = yup.object()
     .shape({
-        name: yup.string().required('Dataset Name is required'),
-        slug: yup.string().required('Dataset Slug is Required'),
+        name: yup.string().required('Dataset Name is required')
+            .min(4, 'Minimum of 4 characters are required').max(30, 'Maximum of 30 characters are allowed'),
+        slug: yup.string().required('Dataset ID is Required')
+            .min(4, 'Minimum of 4 characters are required').max(30, 'Maximum of 30 characters are allowed'),
         id: yup.string().uuid().required(),
     });
 
@@ -71,34 +73,46 @@ const DatasetConfiguration = ({ index, setShowWizard }: any) => {
                         validationSchema={validationSchema}
                         onSubmit={onSubmit}
                     >
-                        {({ setFieldValue }) => (
+                        {({ setFieldValue, touched, errors, values, handleBlur, handleChange }) => (
                             <Form>
                                 <Grid container spacing={3} justifyContent="center"
-                                    alignItems="center">
-                                    <Grid item xs={12} sm={12} lg={6}>
-                                        <Field
-                                            as={TextField}
+                                    alignItems="baseline" display="flex">
+                                    <Grid item xs={12} sm={6} lg={6}>
+                                        <TextField
                                             name={'name'}
                                             label={'Dataset Name'}
-                                            variant="outlined"
-                                            fullWidth
+                                            onBlur={handleBlur}
                                             onChange={(
                                                 e: React.ChangeEvent<HTMLInputElement>) =>
                                                 handleNameChange(e, setFieldValue, 'slug', 'name')
                                             }
-                                            required={true}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={12} lg={6}>
-                                        <Field
-                                            as={TextField}
-                                            name={'slug'}
-                                            label={'Dataset Slug'}
+                                            required
+                                            value={values['name']}
                                             variant="outlined"
                                             fullWidth
-                                            required={true}
+                                            error={Boolean(errors['name'])}
+                                            helperText={touched['name'] && errors['name'] && String(errors['name'])}
                                         />
                                     </Grid>
+                                    <Grid item xs={12} sm={6} lg={6}>
+                                        <TextField
+                                            name={'slug'}
+                                            label={'Dataset ID'}
+                                            onBlur={handleBlur}
+                                            onChange={(
+                                                e: React.ChangeEvent<HTMLInputElement>) =>
+                                                handleChange(e)
+                                            }
+                                            required
+                                            value={values['slug']}
+                                            variant="outlined"
+                                            fullWidth
+                                            error={Boolean(errors['slug'])}
+                                            helperText={touched['slug'] && errors['slug'] && String(errors['slug'])}
+                                        />
+                                    </Grid>
+                                </Grid>
+                                <Grid container spacing={3} justifyContent="center" alignItems="center">
                                     <Grid item xs={12}>
                                         <UploadFiles data={data} setData={setData} files={files} setFiles={setFiles} />
                                     </Grid>
