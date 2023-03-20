@@ -83,11 +83,18 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }
 
     const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
+    const setNextStepStore = () => {
+        const values = _.map(flattenedData, state => {
+            return { ...state, index: true, pii: { value: false, op: '' } };
+        });
+        dispatch(addState({ id: 'dataSchemaConfig', index, state: { schema: values } }));
+    }
     const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
 
     const gotoNextSection = () => {
         if (areConflictsResolved(flattenedData)) {
             persistState();
+            setNextStepStore();
             handleNext();
         } else {
             dispatch(error({ message: 'Please resolve conflicts to proceed further' }));

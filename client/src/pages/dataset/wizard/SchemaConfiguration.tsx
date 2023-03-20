@@ -48,10 +48,8 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
     const dispatch = useDispatch()
     const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
     const apiResponse = useSelector((state: any) => state.jsonSchema);
-    const configurations = _.get(apiResponse, 'data.configurations') || [];
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
-    const globalConfig = useSelector((state: any) => state?.config);
     const [filterByChip, setFilterByChip] = useState<columnFilter | null>(null);
 
     const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));

@@ -30,7 +30,7 @@ const validationSchema = yup.object()
 
 export const pageMeta = { pageId: 'datasetConfiguration' };
 
-const DatasetConfiguration = ({ index, setShowWizard }: any) => {
+const DatasetConfiguration = ({ setShowWizard }: any) => {
 
     const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
@@ -47,7 +47,7 @@ const DatasetConfiguration = ({ index, setShowWizard }: any) => {
     const onSubmit = (config: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
-            dispatch(addState({ id: pageMeta.pageId, index, state: { data, files, config } }));
+            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config } }));
             setShowWizard(true);
         } else {
             dispatch(error({ message: "Please fill the required fields" }));

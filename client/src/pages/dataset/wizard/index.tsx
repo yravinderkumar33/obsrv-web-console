@@ -107,7 +107,7 @@ const DatasetOnboarding = () => {
                     </Button>
                 </>
             }>
-            {!showWizard && <DatasetConfiguration index={1} setShowWizard={setShowWizard} />}
+            {!showWizard && <DatasetConfiguration setShowWizard={setShowWizard} />}
             {showWizard && wizard()}
         </MainCard >
     );
