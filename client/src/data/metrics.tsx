@@ -6,6 +6,8 @@ import ReportCard from "components/cards/statistics/ReportCard";
 import AnalyticsDataCard from "components/cards/statistics/AnalyticsDataCard";
 import AlertsMessages from "components/cards/statistics/Alerts";
 import GaugeChart from "sections/dashboard/analytics/guageChart";
+import ApexWithFilters from "sections/dashboard/analytics/ChartFilters";
+import filters from 'data/chartFilters';
 
 export const metricsMetadata = [
     {
@@ -14,6 +16,11 @@ export const metricsMetadata = [
         secondaryLabel: "Metrics",
         description: "This page shows the metrics of overall infrastructure",
         icon: DotChartOutlined,
+        links: {
+            grafana: {
+                link: "http://localhost:9000/d/efa86fd1d0c121a26444b636a3f509a8/kubernetes-compute-resources-cluster?orgId=1&refresh=10s"
+            }
+        },
         color: 'main',
         charts: {
             small: {
@@ -66,19 +73,19 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <AnalyticsDataCard title="CPU Usage">
+                        chart: <ApexWithFilters title="CPU Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} height={250} interval={11520}></ApexChart>
-                        </AnalyticsDataCard>
+                        </ApexWithFilters>
                     },
                     {
-                        chart: <AnalyticsDataCard title="Memory Usage">
+                        chart: <ApexWithFilters title="Memory Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={11520}></ApexChart>
-                        </AnalyticsDataCard>
+                        </ApexWithFilters>
                     },
                     {
-                        chart: <AnalyticsDataCard title="Disk Usage">
+                        chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_disk')} height={250} interval={11520}></ApexChart>
-                        </AnalyticsDataCard>
+                        </ApexWithFilters>
                     },
                     {
                         chart: <AnalyticsDataCard title="Incidents">
@@ -217,10 +224,10 @@ export const metricsMetadata = [
         }
     },
     {
-        id: "postgres",
-        primaryLabel: "Postgres",
+        id: "api",
+        primaryLabel: "API",
         secondaryLabel: "Metrics",
-        description: "This page shows the range of metrics related to your Postgres setup.",
+        description: "This page shows the metrics of http requests",
         icon: DotChartOutlined,
         color: 'main',
         charts: {
@@ -229,14 +236,28 @@ export const metricsMetadata = [
                     xs: 12,
                     sm: 6,
                     md: 4,
-                    lg: 4
+                    lg: 3
                 },
                 metadata: [
                     {
-                        chart: <ReportCard primary="1" secondary="Number of active connections" iconPrimary={BarChartOutlined} />,
+                        chart: <AnalyticsDataCard title="Health">
+                            <GaugeChart arcsLength={null} nrOfLevels={20} colors={['#EA4228', '#5BE12C']} query={_.get(chartMeta, 'nodes_percentage.query')} />
+                        </AnalyticsDataCard>
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Open File descriptors" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'postgres_fds.query')} />
+                        chart: <AnalyticsDataCard title="Query Response Time (Max)">
+                            <GaugeChart arcsLength={null} nrOfLevels={20} colors={['#EA4228', '#5BE12C']} query={_.get(chartMeta, 'nodes_percentage.query')} />
+                        </AnalyticsDataCard>
+                    },
+                    {
+                        chart: <AnalyticsDataCard title="Query Response Time (Min)">
+                            <GaugeChart query={_.get(chartMeta, 'cpu_usage_radial.query')} />
+                        </AnalyticsDataCard>
+                    },
+                    {
+                        chart: <AnalyticsDataCard title="Query Response Time (Avg)">
+                            <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
+                        </AnalyticsDataCard>
                     }
                 ]
             },
@@ -248,18 +269,39 @@ export const metricsMetadata = [
                     lg: 6
                 },
                 metadata: [
+
+                ]
+            },
+            large: {
+                size: {
+                    xs: 12,
+                    sm: 12,
+                    md: 12,
+                    lg: 12
+                },
+                metadata: [
                     {
-                        chart: <AnalyticsDataCard title="CPU Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'postgres_cpu_usage')}></ApexChart>
-                        </AnalyticsDataCard>
+                        chart: <ApexWithFilters title="Query Response Time (Min, Max, Avg)" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} height={250} interval={11520}></ApexChart>
+                        </ApexWithFilters>
                     },
                     {
-                        chart: <AnalyticsDataCard title="Memory Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'postgres_memory_usage')}></ApexChart>
+                        chart: <ApexWithFilters title="Query Throughput" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={11520}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <ApexWithFilters title="Number of API Calls" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_disk')} height={250} interval={11520}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <AnalyticsDataCard title="Incidents">
+                            <AlertsMessages />
                         </AnalyticsDataCard>
                     }
                 ]
             }
         }
-    }
+    },
 ]

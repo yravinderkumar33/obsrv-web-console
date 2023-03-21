@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
 import promql from '../promql';
+import defaultConf from './common';
 
 export default {
     druid_running_tasks: {
@@ -188,13 +189,7 @@ export default {
         options: {
             chart: {
                 type: 'area',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -274,13 +269,7 @@ export default {
         options: {
             chart: {
                 type: 'area',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -443,14 +432,7 @@ export default {
         options: {
             chart: {
                 type: 'area',
-                animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 2000,
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -531,14 +513,7 @@ export default {
         options: {
             chart: {
                 type: 'area',
-                animations: {
-                    enabled: true,
-                    easing: 'easeinout',
-                    speed: 2000,
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }

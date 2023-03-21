@@ -90,7 +90,7 @@ export default {
         "query": '(cluster:node_cpu:ratio_rate5m{cluster=""}) * 100'
     },
     "instance_disk": {
-        "query": "100 - ((node_filesystem_free_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"}) * 100)"
+        "query": "(1 - (sum(node_filesystem_free_bytes) / sum(node_filesystem_size_bytes))) * 100"
     },
     "disk_usage_radial": {
         "query": "100 - ((node_filesystem_free_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"}) * 100)"

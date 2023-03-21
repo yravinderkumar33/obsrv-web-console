@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import dayjs from 'dayjs';
 import { Theme } from '@mui/material';
 import promql from '../promql';
-
+import defaultConf from './common'
 
 export default {
     node_memory: {
@@ -11,19 +11,7 @@ export default {
         options: {
             chart: {
                 type: 'line',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    speed: 1000,
-                    animateGradually: {
-                        enabled: true,
-                        delay: 150
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                        speed: 350
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -34,7 +22,7 @@ export default {
                         y: 80,
                         y2: 90,
                         fillColor: '#FEB019',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {
@@ -136,13 +124,7 @@ export default {
         options: {
             chart: {
                 type: 'line',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -153,7 +135,7 @@ export default {
                         y: 80,
                         y2: 90,
                         fillColor: '#FEB019',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {
@@ -167,7 +149,7 @@ export default {
                         y: 90,
                         y2: 100,
                         fillColor: '#FF0000',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {
@@ -386,19 +368,7 @@ export default {
         options: {
             chart: {
                 type: 'line',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    speed: 1000,
-                    animateGradually: {
-                        enabled: true,
-                        delay: 150
-                    },
-                    dynamicAnimation: {
-                        enabled: true,
-                        speed: 350
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -409,7 +379,7 @@ export default {
                         y: 80,
                         y2: 90,
                         fillColor: '#FEB019',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {
@@ -423,7 +393,7 @@ export default {
                         y: 90,
                         y2: 100,
                         fillColor: '#FF0000',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {
@@ -502,13 +472,7 @@ export default {
         options: {
             chart: {
                 type: 'line',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -519,7 +483,7 @@ export default {
                         y: 80,
                         y2: 90,
                         fillColor: '#FEB019',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {
@@ -533,7 +497,7 @@ export default {
                         y: 90,
                         y2: 100,
                         fillColor: '#FF0000',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {
@@ -616,13 +580,7 @@ export default {
         options: {
             chart: {
                 type: 'line',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -633,7 +591,7 @@ export default {
                         y: 60,
                         y2: 80,
                         fillColor: '#FEB019',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {
@@ -647,7 +605,7 @@ export default {
                         y: 80,
                         y2: 100,
                         fillColor: '#FF0000',
-                        opacity: 0.3,
+                        opacity: 0.2,
                         label: {
                             borderColor: '#333',
                             style: {

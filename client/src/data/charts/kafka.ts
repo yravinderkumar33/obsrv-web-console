@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import promql from '../promql';
+import defaultConf from './common';
 
 export default {
     number_of_kafka_brokers: {
@@ -103,13 +104,7 @@ export default {
         options: {
             chart: {
                 type: 'area',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -194,13 +189,7 @@ export default {
         options: {
             chart: {
                 type: 'area',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -285,13 +274,7 @@ export default {
         options: {
             chart: {
                 type: 'area',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
@@ -376,13 +359,7 @@ export default {
         options: {
             chart: {
                 type: 'area',
-                animations: {
-                    enabled: true,
-                    easing: 'linear',
-                    dynamicAnimation: {
-                        speed: 2000
-                    }
-                },
+                animations: defaultConf.animations,
                 toolbar: {
                     show: false
                 }
