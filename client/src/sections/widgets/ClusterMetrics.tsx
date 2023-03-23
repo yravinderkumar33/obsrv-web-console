@@ -12,41 +12,51 @@ const ClusterMetrics = () => {
     {
       label: 'CPU',
       metadata: chartMeta.cpu_percentage,
-      value: 0
+      value: 0,
+      colors: {
+        "primary": [0, 79],
+        "warning": [80, 90],
+        "error": [91, 100],
+      }
     },
     {
       label: 'Memory',
       metadata: chartMeta.memory_percentage,
-      value: 0
+      value: 0,
+      colors: {
+        "primary": [0, 79],
+        "warning": [80, 90],
+        "error": [91, 100],
+      }
     },
     {
       label: 'Disk',
       metadata: chartMeta.disk_percentage,
-      value: 0
+      value: 0,
+      colors: {
+        "primary": [0, 59],
+        "warning": [60, 79],
+        "error": [80, 100],
+      }
     }
   ], [])
 
-
   const [metrics, setMetrics] = useState(metricsMetadata)
 
-  const fetchData = async (metadata: Record<string, any>) => {
-    const { query } = metadata;
-    const { type } = query;
-    if (type === 'api') {
-      try {
-        return fetchChartData(query)
-      } catch (error) {
-        return 0;
-      }
-    } else {
-      return 0;
-    }
-  }
+  const getColor = (metric: Record<string, any>, value: number) => {
+    const { colors } = metric;
+    const color = _.findKey(colors, (range) => {
+      const [start, end] = range;
+      if (value >= start && value <= end) return true;
+      return false;
+    })
 
+    return color || "primary"
+  }
 
   const fetchMetrics = async () => {
     try {
-      const updatedMetrics = await Promise.all(_.map(metrics, metric => fetchData(metric.metadata).then((value: any) => ({ ...metric, value }))));
+      const updatedMetrics = await Promise.all(_.map(metrics, metric => fetchChartData(metric.metadata.query as any).then((value: any) => ({ ...metric, value }))));
       setMetrics(updatedMetrics);
     } catch (error) {
       setMetrics(metricsMetadata);
@@ -81,7 +91,7 @@ const ClusterMetrics = () => {
                 </Typography>
               </Grid>
               <Grid item xs={12}>
-                <LinearProgress variant="determinate" value={value} color="primary" />
+                <LinearProgress variant="determinate" value={value} color={getColor(metric, value) as any} />
               </Grid>
             </Grid>
           </Grid>

@@ -204,12 +204,12 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between">
                     <AnimateButton>
-                        <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                        <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                             Previous
                         </Button>
                     </AnimateButton>
                     <AnimateButton>
-                        <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
+                        <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoNextSection}>
                             Next
                         </Button>
                     </AnimateButton>

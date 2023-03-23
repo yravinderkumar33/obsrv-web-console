@@ -1,17 +1,22 @@
 import * as _ from 'lodash';
-import { Alert, Grid } from '@mui/material';
+import { Alert, Grid, Tooltip } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import MainCard from 'components/MainCard';
 import { metricsMetadata } from 'data/metrics';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { error } from 'services/toaster';
-import { QuestionCircleFilled } from '@ant-design/icons';
+import { PieChartOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { setConfig } from 'store/reducers/config';
+import { Avatar } from '@mui/material';
+import { navigateToGrafana } from 'services/grafana';
+import { useTheme } from '@mui/material';
+import grafanaIcon from 'assets/images/icons/grafana_icon.svg';
 
 const MetricsDetails = () => {
     const dispatch = useDispatch();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const theme = useTheme();
     let [searchParams] = useSearchParams();
     const [metadata, setmetadata] = useState<Record<string, any>>();
 
@@ -57,9 +62,19 @@ const MetricsDetails = () => {
         }
     }
 
+    const navigateToGrafanaDashboard = (e: any) => {
+        const link = _.get(metadata, 'links.grafana.link');
+        link && navigateToGrafana(link);
+    }
+
     return (
         <>
-            <MainCard title={`${metadata?.primaryLabel || ""} Metrics`}>
+            <MainCard title={`${metadata?.primaryLabel || ""} Metrics`} secondary={
+                <Tooltip title="Navigate to Grafana Dashboard" onClick={navigateToGrafanaDashboard}>
+                    <Avatar alt="Gradana" src={grafanaIcon} />
+                </Tooltip>
+            }
+            >
                 <Grid container rowSpacing={2} columnSpacing={2} marginBottom={2}>
                     {metadata?.description &&
                         <Grid item xs={12}>

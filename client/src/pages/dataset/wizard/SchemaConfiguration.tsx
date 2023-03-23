@@ -20,7 +20,7 @@ import RequiredSwitch from 'components/RequiredSwitch';
 import { connect } from 'react-redux';
 
 const validOpTypes = ['mask', 'encrypt'];
-const pageMeta = { pageId: 'dataSchemaConfig', title: "Review Columns" };
+const pageMeta = { pageId: 'dataSchemaConfig', title: "Configure Data Schema" };
 
 interface columnFilter {
     label: string,

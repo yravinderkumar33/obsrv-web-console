@@ -119,7 +119,7 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
                                     <Grid item xs={12}>
                                         <Stack direction="row" justifyContent="flex-end">
                                             <AnimateButton>
-                                                <Button disabled={!(files || data)} variant="contained" sx={{ my: 3, ml: 1 }} type="submit">
+                                                <Button disabled={!(files || data)} variant="contained" sx={{ my: 1, ml: 1 }} type="submit">
                                                     Next
                                                 </Button>
                                             </AnimateButton>

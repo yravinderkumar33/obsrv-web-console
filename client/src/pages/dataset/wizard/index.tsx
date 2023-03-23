@@ -1,5 +1,5 @@
 import { useState, ReactNode, useEffect } from 'react';
-import { Button, Step, Stepper, StepLabel, Stack, Typography } from '@mui/material';
+import { Button, Step, Stepper, StepLabel, Stack, Typography, Box } from '@mui/material';
 import MainCard from 'components/MainCard';
 import DatasetConfiguration from './DatasetConfiguration';
 import { useDispatch, useSelector } from 'react-redux';
@@ -68,8 +68,8 @@ const DatasetOnboarding = () => {
         setActiveStep(0);
     }
 
-    const wizard = () => <>
-        <Stepper activeStep={activeStep} sx={{ pt: 3, pb: 5 }}>
+    const stepper = () => (
+        <Stepper activeStep={activeStep} sx={{ py: 2 }}>
             {steps.map((label, index) => {
                 const labelProps: { error?: boolean; optional?: ReactNode } = {};
                 if (index === errorIndex) {
@@ -87,11 +87,7 @@ const DatasetOnboarding = () => {
                 );
             })}
         </Stepper>
-        <>
-            {getStepContent(activeStep, handleNext, handleBack, setErrorIndex)}
-        </>
-    </>
-
+    );
 
     const getDatasetName = () => {
         const name = _.get(wizardState, 'pages.datasetConfiguration.state.config.name');
@@ -99,17 +95,20 @@ const DatasetOnboarding = () => {
     }
 
     return (
-        <MainCard title={getDatasetName()}
-            secondary={
-                showWizard && <>
-                    <Button onClick={(_) => resetState()}>
-                        Reset
-                    </Button>
-                </>
-            }>
-            {!showWizard && <DatasetConfiguration setShowWizard={setShowWizard} />}
-            {showWizard && wizard()}
-        </MainCard >
+        <Box>
+            {showWizard && stepper()}
+            <MainCard title={getDatasetName()}
+                secondary={
+                    showWizard && <>
+                        <Button onClick={(_) => resetState()}>
+                            Reset
+                        </Button>
+                    </>
+                }>
+                {!showWizard && <DatasetConfiguration setShowWizard={setShowWizard} />}
+                {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex)}
+            </MainCard >
+        </Box>
     );
 };
 

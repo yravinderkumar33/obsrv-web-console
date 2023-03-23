@@ -9,7 +9,8 @@ import { KeyedObject } from 'types/root';
 
 // header style
 const headerSX = {
-    p: 2.5,
+    px: 2.5,
+    py: 1,
     '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
 };
 
@@ -41,7 +42,7 @@ const MainCard = forwardRef(
             children,
             subheader,
             content = true,
-            contentSX = {},
+            contentSX = { px: 3 },
             darkTitle,
             divider = true,
             elevation,

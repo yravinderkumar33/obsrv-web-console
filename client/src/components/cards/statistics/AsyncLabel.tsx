@@ -1,0 +1,37 @@
+import { Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { fetchChartData, fetchMultipleMetrics } from "services/clusterMetrics";
+import globalConfig from 'data/initialConfig';
+
+const AsyncLabel = (props: any) => {
+
+    const { query, transformer, suffix = '', prefix = '', ...rest } = props;
+    const [label, setLabel] = useState('');
+
+    const fetchMetric = async (query: any) => {
+        try {
+            const response = await fetchMultipleMetrics(query);
+            const transformedLabel = (transformer && transformer(response)) || response;
+            setLabel(transformedLabel as any);
+        } catch (error) { }
+    }
+
+    const configureMetricFetcher = (query: any) => {
+        const frequency = rest?.frequency || globalConfig.clusterMenu.frequency;
+        fetchMetric(query);
+        return setInterval(() => fetchMetric(query), frequency * 1000)
+    }
+
+    useEffect(() => {
+        const interval = configureMetricFetcher(query);
+        return () => interval && clearInterval(interval)
+    }, [query]);
+
+    return <>
+        <Typography {...rest} >
+            {prefix} {label} {suffix}
+        </Typography>
+    </>
+};
+
+export default AsyncLabel;

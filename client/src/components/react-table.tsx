@@ -13,7 +13,7 @@ interface Props {
 }
 
 function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }: Props) {
-    const tableSx = limitHeight ? { height: 300, overflowY: 'scroll' } : {};
+    const tableSx = limitHeight ? { height: 400, overflowY: 'scroll' } : {};
 
     const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
         {
@@ -44,7 +44,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
                                     }
                                     placement="top-start"
                                 >
-                                    <TableCell {...column.getHeaderProps()}>
+                                    <TableCell sx={{ p: 0.5 }} {...column.getHeaderProps()}>
                                         {column.render('Header')}{`﹖`}
                                     </TableCell>
                                 </HtmlTooltip>
@@ -67,7 +67,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
                             <TableRow {...row.getRowProps()} sx={bgColor()}>
                                 {
                                     row.cells.map((cell: any) =>
-                                        <TableCell {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
+                                        <TableCell sx={{ p: 0.5 }} {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
                                     )
                                 }
                             </TableRow>

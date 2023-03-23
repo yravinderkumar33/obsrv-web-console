@@ -12,3 +12,7 @@ export const fetchChartData = (config: Partial<IChartFetchRequest>, options: any
         })
 }
 
+export const fetchMultipleMetrics = (queries: Partial<IChartFetchRequest>[], options: any = null, setOptions: any = null) => {
+    return Promise.all(queries.map(query => fetchChartData(query)));
+}
+

@@ -22,7 +22,7 @@ import RequiredSwitch from 'components/RequiredSwitch';
 import { connect } from 'react-redux';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
-const pageMeta = { pageId: 'columns', title: "Review Columns" };
+const pageMeta = { pageId: 'columns', title: "Derive Schema" };
 const alertDialogContext = { title: 'Delete Column', content: 'Are you sure you want to delete this column ?' };
 
 interface columnFilter {
@@ -421,12 +421,12 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     <Grid item xs={12}>
                         <Stack direction="row" justifyContent="space-between">
                             <AnimateButton>
-                                <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                                <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                     Previous
                                 </Button>
                             </AnimateButton>
                             <AnimateButton>
-                                <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
+                                <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoNextSection}>
                                     Next
                                 </Button>
                             </AnimateButton>

@@ -8,6 +8,7 @@ import chartMeta from '../../data/charts'
 import ApexChart from 'sections/dashboard/analytics/apex';
 import ClusterMetrics from './ClusterMetrics';
 import globalConfig from 'data/initialConfig'
+import ClusterNodes from './ClusterNodes';
 
 const ClusterStatus = () => {
   const theme = useTheme();
@@ -42,7 +43,7 @@ const ClusterStatus = () => {
               </Box>
               <Grid container justifyContent="center" alignItems="center" sx={{ position: 'relative', zIndex: 5 }}>
                 <Grid item xs={2}>
-                  <ApexChart metadata={chartMeta.nodes_Radial} />
+                  <ClusterNodes />
                 </Grid>
                 <Grid item xs={2}>
                   <ClusterMetrics />

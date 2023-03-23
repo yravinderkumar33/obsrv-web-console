@@ -7,18 +7,30 @@ import { fetchChartData } from 'services/clusterMetrics';
 import chartMeta from 'data/charts'
 import * as _ from 'lodash';
 
-const AlertsMessages = () => {
+const AlertsMessages = (props: any) => {
+  const { interval } = props;
   const [alerts, setAlerts] = useState<Record<string, any>>([]);
+
+  const calcInterval = (minutes: number) => {
+    return [dayjs().subtract(minutes, 'minutes'), dayjs()]
+  }
 
   const fetchAlerts = async () => {
     const { query } = chartMeta.alerts;
+    if (interval) {
+      const [startsAt, endsAt] = calcInterval(interval);
+      query.params = {
+        ...query.params,
+        startsAt, endsAt
+      }
+    }
     const alerts = await fetchChartData(query);
     setAlerts(alerts);
   }
 
   useEffect(() => {
     fetchAlerts();
-  }, [])
+  }, [interval])
 
   const getAlert = (alert: Record<string, any>) => {
 
@@ -35,7 +47,7 @@ const AlertsMessages = () => {
           <Grid container spacing={0}>
             <Grid item xs={12}>
               <Typography align="left" variant="caption" color="secondary">
-                {dayjs(alert?.activeAt).format('DD/MM/YYYY::DD:mm:ss')}
+                {dayjs(alert?.startsAt).format('DD/MM/YYYY::DD:mm:ss')}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -80,7 +92,7 @@ const AlertsMessages = () => {
         }}
       >
         {
-          alerts.map((alert: Record<string, any>) => getAlert(alert))
+          _.map(_.orderBy(alerts, ['startsAt'], ['desc']), getAlert)
         }
       </Grid>
     </CardContent>

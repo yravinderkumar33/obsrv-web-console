@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
+import dayjs from 'dayjs';
+import _ from 'lodash'
+
 import { useTheme } from '@mui/material/styles';
 import useConfig from 'hooks/useConfig';
 import ReactApexChart, { Props as ChartProps } from 'react-apexcharts';
-import _ from 'lodash'
 import { fetchChartData } from 'services/clusterMetrics';
 import globalConfig from 'data/initialConfig';
-import dayjs from 'dayjs';
+import Loader from 'components/Loader';
+
 
 const ApexChart = (props: any) => {
   const { metadata, ...rest } = props;
@@ -16,21 +19,30 @@ const ApexChart = (props: any) => {
   const line = theme.palette.divider;
   const [options, setOptions] = useState<ChartProps>(meta);
   const [series, setSeries] = useState(chartSeries);
-
+  const { step, interval } = rest;
+  const [loading, setLoading] = useState(false);
 
   const fetchMetric = async (query: Record<string, any>) => {
     const interval = rest.interval || globalConfig.clusterMenu.interval;
+    const step = rest.step || '1m';
     const { type, params = {} } = query;
 
     if (type === 'api') {
       try {
+        setLoading(true);
         params.start = dayjs().subtract(interval, 'minutes').unix();
         params.end = dayjs().unix();
+        if (step) {
+          params.step = step;
+        }
         const seriesData = await fetchChartData(query, options, setOptions);
         setSeries(seriesData);
       } catch (error) {
         setSeries([])
+      } finally {
+        setLoading(false);
       }
+
     }
   }
 
@@ -59,9 +71,12 @@ const ApexChart = (props: any) => {
       interval && clearInterval(interval)
     }
 
-  }, [mode, primary, secondary, line, theme]);
+  }, [mode, primary, secondary, line, theme, step, interval]);
 
-  return <ReactApexChart options={options} series={series} type={type} {...rest} />;
+  return <>
+    {loading && <Loader />}
+    <ReactApexChart options={options} series={series} type={type} {...rest} />
+  </>;
 };
 
 export default ApexChart;
