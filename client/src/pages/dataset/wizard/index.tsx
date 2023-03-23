@@ -7,9 +7,9 @@ import { setConfig } from 'store/reducers/config';
 import { reset } from 'store/reducers/wizard';
 import ListColumns from './ListColumns';
 import Review from './Review';
-import ListDatasetConfigurations from './ListDatasetConfiguration';
 import * as _ from 'lodash';
 import SchemaConfiguration from './SchemaConfiguration';
+import ProcessingConfiguration from './ProcesssingConfiguration';
 
 //'Ingestion Config',
 const steps = ['Derive Schema', 'Configure Data Schema', 'Processing Configuration', 'Ingestion Configuration', 'Review'];
@@ -26,7 +26,7 @@ const getStepContent = (
         case 1:
             return <SchemaConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} />
         case 2:
-            return <ListDatasetConfigurations handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
+            return <ProcessingConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
         case 3:
             return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} />
         default:

@@ -1,23 +1,48 @@
+import * as yup from "yup";
+
 export default {
     batchConfiguration: {
-        isBatch: [true, false],
         extractionKey: {
+            required: true,
             value: '',
-            dependsOn: {
-                key: 'isBatch',
-                value: true
-            }
         },
-        dedupeEvents: [true, false],
+        idForTheBatch: {
+            required: true,
+            value: '',
+        },
+        dedupeEvents: {
+            required: false,
+            value: [false, true],
+        },
         dedupeKey: {
+            required: true,
             value: '',
             dependsOn: {
                 key: 'dedupeEvents',
                 value: true
-            }
+            },
+            validationSchema: yup.string().when('dedupeEvents', {
+                is: true,
+                then: yup.string().required("Value is required for the field"),
+            }),
         },
-        dedupePeriod: { value: '' },
-        validateData: [true, false]
+        dedupePeriod: {
+            label: 'Dedupe Period in Days',
+            required: true,
+            value: '',
+            dependsOn: {
+                key: 'dedupeEvents',
+                value: true
+            },
+            validationSchema: yup.number().when('dedupeEvents', {
+                is: true,
+                then: yup.number().required("Value is required for the field"),
+            })
+        },
+        validateData: {
+            required: true,
+            value: [false, true],
+        }
     },
     ingestionConfiguration: {
         ingestionType: ['API', 'Kafka', 'Custom']

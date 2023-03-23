@@ -93,6 +93,7 @@ const DatasetConfiguration = ({ handleNext, handleBack, index }: any) => {
                         initialValues={_.get(pageData, ['state', name]) || initialValues}
                         onSubmit={(value: any) => onSubmission(name, value)}
                         fields={fields}
+                        size={{ xs: 12, sm: 6, lg: 6 }}
                     >
                         <Grid item xs={12}>
                             <Box sx={{ mb: 2 }}>
@@ -129,7 +130,7 @@ const DatasetConfiguration = ({ handleNext, handleBack, index }: any) => {
                 <Grid item xs={12} sm={12}>
                     <Stepper activeStep={activeStep} orientation="vertical">
                         {steps.map((step: any, index) => (
-                            <Step key={step?.label} onClick={_ => setActiveStep(index)}>
+                            <Step key={index} onClick={_ => setActiveStep(index)}>
                                 <StepLabel optional={index === 2 ? <Typography variant="caption">Last step</Typography> : null}>{step?.label}</StepLabel>
                                 <StepContent>
                                     <Typography>{step?.description}</Typography>
