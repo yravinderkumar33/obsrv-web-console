@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import { Grid, Tooltip, useTheme } from '@mui/material';
-import MetricsCard from 'components/cards/statistics/UserCountCard';
+import MetricsCard from 'components/cards/statistics/BigNumber';
 import { metricsMetadata } from 'data/metrics'
 import { useNavigate } from 'react-router';
 

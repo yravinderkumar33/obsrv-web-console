@@ -18,11 +18,13 @@ interface Props {
   children: any;
 }
 
-const AnalyticsDataCard = ({ color = 'primary', title, count, percentage, isLoss, children }: Props) => (
-  <MainCard content={false}>
+const AnalyticsDataCard = ({ color = 'primary', title, count, percentage, isLoss, children }: Props) => {
+
+
+  return <MainCard content={false}>
     <Box sx={{ p: 2.25 }}>
       <Stack spacing={0.5}>
-        <Typography variant="h6" color="textSecondary">
+        <Typography align='center' variant="h6" color="textSecondary">
           {title}
         </Typography>
         <Stack direction="row" alignItems="center">
@@ -45,10 +47,10 @@ const AnalyticsDataCard = ({ color = 'primary', title, count, percentage, isLoss
             />
           )}
         </Stack>
+        {children}
       </Stack>
     </Box>
-    {children}
   </MainCard>
-);
+};
 
 export default AnalyticsDataCard;

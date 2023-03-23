@@ -33,5 +33,18 @@ export default {
             value: 43200,
             step: '2h'
         }
+    ],
+    variant1: [
+        {
+            label: 'Today',
+            value: 1140,
+            default: true,
+            step: '5m',
+        },
+        {
+            label: 'Last 7 Days',
+            value: 10080,
+            step: '30m'
+        }
     ]
 }

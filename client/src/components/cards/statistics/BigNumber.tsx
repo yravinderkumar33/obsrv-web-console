@@ -24,7 +24,7 @@ interface MetricsProps {
   onClick: any
 }
 
-const MetricsCard = ({ primary, secondary, iconPrimary, color, onClick }: MetricsProps) => {
+const BigNumberCard = ({ primary, secondary, iconPrimary, color, onClick }: MetricsProps) => {
   const IconPrimary = iconPrimary!;
   const primaryIcon = iconPrimary ? <IconPrimary fontSize="large" /> : null;
 
@@ -49,4 +49,4 @@ const MetricsCard = ({ primary, secondary, iconPrimary, color, onClick }: Metric
   );
 };
 
-export default MetricsCard;
+export default BigNumberCard;

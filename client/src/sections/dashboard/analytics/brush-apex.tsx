@@ -6,6 +6,8 @@ import _ from 'lodash'
 import { fetchChartData } from 'services/clusterMetrics';
 import globalConfig from 'data/initialConfig';
 import dayjs from 'dayjs';
+import Loader from 'components/Loader';
+
 
 const BrushChart = (props: any) => {
   const { metadata, ...rest } = props;
@@ -14,6 +16,7 @@ const BrushChart = (props: any) => {
   const { primary: primaryChart, secondary: secondaryChart, query = {}, } = metadata;
   const { type: primaryType, options: primaryOptions, series: primarySeries, height: heightPrimary } = primaryChart;
   const { type: secondaryType, options: secondaryOptions, series: secondarySeries, height: heightSecondary } = secondaryChart;
+  const [loading, setLoading] = useState(false);
 
   const { primary, secondary } = theme.palette.text;
   const line = theme.palette.divider;
@@ -29,6 +32,7 @@ const BrushChart = (props: any) => {
     const { type, params = {} } = query;
     if (type === 'api') {
       try {
+        setLoading(true);
         params.start = dayjs().subtract(interval, 'minutes').unix();
         params.end = dayjs().unix();
         const seriesData = await fetchChartData(query);
@@ -37,6 +41,8 @@ const BrushChart = (props: any) => {
       } catch (error) {
         setPrimaryChartSeries([]);
         setSecondaryChartSeries([]);
+      } finally {
+        setLoading(false);
       }
     }
   }
@@ -67,6 +73,7 @@ const BrushChart = (props: any) => {
   }, [mode, primary, secondary, line, theme]);
 
   return <div id="wrapper">
+    {loading && <Loader />}
     <div id="chart-line2">
       <ReactApexChart options={primaryChartOptions} series={primaryChartSeries} type={primaryType} height={heightPrimary} {...rest} />
     </div>

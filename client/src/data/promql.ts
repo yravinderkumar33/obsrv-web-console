@@ -106,5 +106,11 @@ export default {
     },
     "cluster_running_nodes_count": {
         "query": 'count(kube_node_status_condition{condition="Ready",status="true"})'
+    },
+    "totalCpuCores": {
+        "query": 'count(node_cpu_seconds_total{mode="idle"}) without (cpu,mode)'
+    },
+    "throughput": {
+        "query": 'sum(rate(container_network_receive_bytes_total{namespace="obsrv-api-service-dev"}[1m])) + sum(rate(container_network_transmit_bytes_total{namespace="obsrv-api-service-dev"}[1m]))'
     }
 }

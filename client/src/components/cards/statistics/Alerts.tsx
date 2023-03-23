@@ -7,8 +7,24 @@ import { fetchChartData } from 'services/clusterMetrics';
 import chartMeta from 'data/charts'
 import * as _ from 'lodash';
 
-const AlertsMessages = () => {
+const AlertsMessages = (props: any) => {
+  const { filters } = props;
   const [alerts, setAlerts] = useState<Record<string, any>>([]);
+
+
+  const filterAlerts = () => {
+    return _.reduce(alerts, (accumulator: any[], current: any) => {
+      if (_.get(filters, 'length')) {
+        const allChecksPassed = _.every(filters, filter => filter(current));
+        if (allChecksPassed) {
+          accumulator.push(current);
+        }
+      } else {
+        accumulator.push(current);
+      }
+      return accumulator;
+    }, [])
+  }
 
   const fetchAlerts = async () => {
     const { query } = chartMeta.alerts;
@@ -80,7 +96,7 @@ const AlertsMessages = () => {
         }}
       >
         {
-          alerts.map((alert: Record<string, any>) => getAlert(alert))
+          _.map(_.orderBy(alerts, ['activeAt'], ['desc']), getAlert)
         }
       </Grid>
     </CardContent>

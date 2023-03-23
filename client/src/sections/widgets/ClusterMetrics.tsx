@@ -47,7 +47,7 @@ const ClusterMetrics = () => {
     const { colors } = metric;
     const color = _.findKey(colors, (range) => {
       const [start, end] = range;
-      if (value >= start || value <= end) return true;
+      if (value >= start && value <= end) return true;
       return false;
     })
 

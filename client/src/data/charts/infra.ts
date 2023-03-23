@@ -992,4 +992,102 @@ export default {
             }
         }
     },
+    totalCPU: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.totalCpuCores.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                const sum = _.sumBy(result, (payload: any) => {
+                    const { value } = payload;
+                    const [_, percentage = 0] = value;
+                    return +percentage
+                })
+                return _.floor(sum);
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    throughput: {
+        type: 'line',
+        series: [],
+        options: {
+            chart: {
+                type: 'line',
+                animations: defaultConf.animations,
+                toolbar: {
+                    show: false
+                }
+            },
+            legend: {
+                show: true
+            },
+            zoom: {
+                enabled: false
+            },
+            stroke: {
+                width: 2,
+                curve: 'smooth'
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return `${_.round(value / 1024, 1)} kB/s`;
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                labels: {
+                    formatter: function (value: any, timestamp: any) {
+                        return dayjs.unix(timestamp).format('HH:mm');
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.throughput.query,
+                step: '2m30s'
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.namespace'),
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return [0]
+            }
+        }
+    }
+
 }
