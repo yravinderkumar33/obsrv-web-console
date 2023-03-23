@@ -69,7 +69,7 @@ const MainLayout = () => {
                                 maxWidth="xl"
                                 sx={{ px: { xs: 0, sm: 2 }, position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 'calc(110vh - 220px)' }}
                             >
-                                {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
+                                <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
                                 <Outlet />
                             </Container>
                             <Footer />
@@ -78,7 +78,7 @@ const MainLayout = () => {
                     {!container && (
                         <>
                             <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 'calc(110vh - 220px)' }}>
-                                {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
+                                <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
                                 <Outlet />
                             </Box>
                             <Footer />
