@@ -17,7 +17,7 @@ const ClusterNodes = () => {
             const nodeRunningPercentage = (totalNodes && getNodeRunningPercentage(totalNodes as any, totalRunningNodes as any)) || 0;
             const meta = _.cloneDeep(chartMeta.nodes_Radial);
             _.set(meta, 'series', [nodeRunningPercentage]);
-            _.set(meta, 'options.labels', [`${totalRunningNodes}/${totalNodes} \n Nodes`]);
+            _.set(meta, 'options.labels', [`${totalRunningNodes}/${totalNodes} Nodes`]);
             setChartMetadata(meta as any);
         } catch (error) {
             console.log(error);

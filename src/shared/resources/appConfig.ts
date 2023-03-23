@@ -15,5 +15,11 @@ export default {
   },
   SYSTEM_API: {
     URL: env.SYSTEM_API_URL || "http://localhost:4002"
+  },
+  ALERT_MANAGER: {
+    URL: env.ALERT_MANAGER_URL || "http://localhost:9093"
+  },
+  GRAFANA: {
+    URL: env.ALERT_MANAGER_URL || "http://localhost:8000"
   }
 };

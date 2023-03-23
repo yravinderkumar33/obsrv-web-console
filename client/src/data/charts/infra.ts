@@ -349,7 +349,8 @@ export default {
                         size: '90%'
                     },
                     track: {
-                        margin: 0
+                        margin: 0,
+                        background: '#FF0000'
                     },
                     dataLabels: {
                         value: {

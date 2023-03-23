@@ -16,7 +16,7 @@ export const metricsMetadata = [
         id: "overallInfra",
         primaryLabel: "Infrastructure",
         secondaryLabel: "Metrics",
-        description: "This page shows the metrics of overall infrastructure",
+        description: "This page shows the essential metrics of your cluster. With this information, you can easily monitor the health of your cluster and make informed decisions about scaling and resource allocation.",
         icon: DotChartOutlined,
         links: {
             grafana: {
@@ -96,7 +96,7 @@ export const metricsMetadata = [
                         </ApexWithFilters>
                     },
                     {
-                        chart: <ApexWithFilters title="Incidents/Alerts" filters={_.get(filters, 'variant1')}>
+                        chart: <ApexWithFilters title="Incidents/Alerts" filters={_.get(filters, 'default')}>
                             <AlertsMessages />
                         </ApexWithFilters>
                     }
@@ -108,7 +108,7 @@ export const metricsMetadata = [
         id: "api",
         primaryLabel: "API",
         secondaryLabel: "Metrics",
-        description: "This page shows the metrics of http requests",
+        description: "This page shows the metrics of http requests. Here you'll find real-time data on our API performance, including the number of requests received, the average response time, failed api calls etc. With this information, you can easily track how your API is performing, identify any bottlenecks or issues, and make data-driven decisions to optimize your API's performance",
         icon: DotChartOutlined,
         color: 'main',
         charts: {
@@ -390,63 +390,5 @@ export const metricsMetadata = [
                 ]
             }
         }
-    },
-    {
-        id: "druid",
-        primaryLabel: "Druid",
-        secondaryLabel: "Metrics",
-        description: "This page shows the range of metrics related to your Druid clusters",
-        icon: DotChartOutlined,
-        color: 'main',
-        charts: {
-            small: {
-                size: {
-                    xs: 12,
-                    sm: 6,
-                    md: 4,
-                    lg: 3
-                },
-                metadata: [
-                    {
-                        chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_health_status.query')} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Total Datasources" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_total_datasources.query')} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Total Completed Tasks" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_completed_tasks.query')} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Total Failed Tasks" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_failed_tasks.query')} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Total Running Tasks" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_running_tasks.query')} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Total Segments" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_total_segments.query')} />
-                    }
-                ]
-            },
-            medium: {
-                size: {
-                    xs: 12,
-                    sm: 6,
-                    md: 6,
-                    lg: 6
-                },
-                metadata: [
-                    {
-                        chart: <AnalyticsDataCard title="CPU Percentage">
-                            <ApexChart metadata={_.get(chartMeta, 'druid_cpu_usage')}></ApexChart>
-                        </AnalyticsDataCard>
-                    },
-                    {
-                        chart: <AnalyticsDataCard title="Memory Usage">
-                            <ApexChart metadata={_.get(chartMeta, 'druid_memory_usage')}></ApexChart>
-                        </AnalyticsDataCard>
-                    }
-                ]
-            }
-        }
-    },
+    }
 ]

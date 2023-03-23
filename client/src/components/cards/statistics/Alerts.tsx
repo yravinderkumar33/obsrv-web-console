@@ -8,33 +8,29 @@ import chartMeta from 'data/charts'
 import * as _ from 'lodash';
 
 const AlertsMessages = (props: any) => {
-  const { filters } = props;
+  const { interval } = props;
   const [alerts, setAlerts] = useState<Record<string, any>>([]);
 
-
-  const filterAlerts = () => {
-    return _.reduce(alerts, (accumulator: any[], current: any) => {
-      if (_.get(filters, 'length')) {
-        const allChecksPassed = _.every(filters, filter => filter(current));
-        if (allChecksPassed) {
-          accumulator.push(current);
-        }
-      } else {
-        accumulator.push(current);
-      }
-      return accumulator;
-    }, [])
+  const calcInterval = (minutes: number) => {
+    return [dayjs().subtract(minutes, 'minutes'), dayjs()]
   }
 
   const fetchAlerts = async () => {
     const { query } = chartMeta.alerts;
+    if (interval) {
+      const [startsAt, endsAt] = calcInterval(interval);
+      query.params = {
+        ...query.params,
+        startsAt, endsAt
+      }
+    }
     const alerts = await fetchChartData(query);
     setAlerts(alerts);
   }
 
   useEffect(() => {
     fetchAlerts();
-  }, [])
+  }, [interval])
 
   const getAlert = (alert: Record<string, any>) => {
 
@@ -51,7 +47,7 @@ const AlertsMessages = (props: any) => {
           <Grid container spacing={0}>
             <Grid item xs={12}>
               <Typography align="left" variant="caption" color="secondary">
-                {dayjs(alert?.activeAt).format('DD/MM/YYYY::DD:mm:ss')}
+                {dayjs(alert?.startsAt).format('DD/MM/YYYY::DD:mm:ss')}
               </Typography>
             </Grid>
             <Grid item xs={12}>
@@ -96,7 +92,7 @@ const AlertsMessages = (props: any) => {
         }}
       >
         {
-          _.map(_.orderBy(alerts, ['activeAt'], ['desc']), getAlert)
+          _.map(_.orderBy(alerts, ['startsAt'], ['desc']), getAlert)
         }
       </Grid>
     </CardContent>

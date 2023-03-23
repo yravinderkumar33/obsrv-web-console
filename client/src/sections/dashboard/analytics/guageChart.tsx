@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import Chart from 'react-gauge-chart'
 import { v4 } from 'uuid'
 import globalConfig from 'data/initialConfig';
-
 import { fetchChartData } from 'services/clusterMetrics';
 
 const GaugeChart = (props: any) => {

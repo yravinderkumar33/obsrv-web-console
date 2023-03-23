@@ -1,6 +1,7 @@
 import { FormattedMessage } from 'react-intl';
 import { HomeOutlined } from '@ant-design/icons';
 import { NavItemType } from 'types/menu';
+import { metricsMetadata } from 'data/metrics'
 
 const icons = {
   HomeOutlined
@@ -17,7 +18,14 @@ const other: NavItemType = {
       type: 'item',
       url: '/',
       icon: icons.HomeOutlined
-    }
+    },
+    ...(metricsMetadata.map(metric => ({
+      id: metric.id,
+      title: <FormattedMessage id={metric.primaryLabel} />,
+      type: 'item',
+      url: `/metrics/details?id=${metric.id}`,
+      icon: icons.HomeOutlined
+    })))
   ]
 };
 
