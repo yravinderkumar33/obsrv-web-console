@@ -4,9 +4,9 @@ import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
 
 const ScrollButton = () => {
     const [icon, setIcon] = useState(<ArrowDownOutlined />);
-    const [scrollDirection, setScrollDirection] = useState<string>('bottom');
+    const [scrollDirection, setScrollDirection] = useState<string>("bottom");
     const toggleScroll = () => {
-        if (scrollDirection === 'bottom') scrollToBottom();
+        if (scrollDirection === "bottom") scrollToBottom();
         else scrollToTop();
     };
 
@@ -14,21 +14,21 @@ const ScrollButton = () => {
         const onScroll = () => setScrollDirection(() => {
             if (window.scrollY > 50) {
                 setIcon(<ArrowUpOutlined />);
-                return 'top';
+                return "top";
             } else {
                 setIcon(<ArrowDownOutlined />);
-                return 'bottom';
+                return "bottom";
             };
         });
-        window.removeEventListener('scroll', onScroll);
-        window.addEventListener('scroll', onScroll, { passive: true });
-        return () => window.removeEventListener('scroll', onScroll);
+        window.removeEventListener("scroll", onScroll);
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
     }, []);
 
     const scrollToTop = () => {
         window.scrollTo({
             top: 0,
-            behavior: 'smooth'
+            behavior: "smooth"
         });
     };
 
@@ -36,16 +36,16 @@ const ScrollButton = () => {
         const scrollingElement = (document.scrollingElement || document.body);
         window.scrollTo({
             top: scrollingElement.scrollHeight,
-            behavior: 'smooth'
+            behavior: "smooth"
         });
     };
 
-    return (<Box sx={{ position: 'fixed', bottom: 0, mb: 5, right: 0, mr: 1 }}>
+    return (<Box sx={{ position: "fixed", bottom: 0, mb: 5, right: 0, mr: 1 }}>
         <Fab
-            size='medium'
+            size="medium"
             onClick={() => toggleScroll()}
-            sx={{ minWidth: 'unset' }}
-            color='info'
+            sx={{ minWidth: "unset" }}
+            color="primary"
         >
             {icon}
         </Fab>

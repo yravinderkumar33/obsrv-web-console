@@ -8,11 +8,9 @@ export default function ListItemButton(theme: Theme) {
         MuiListItemButton: {
             styleOverrides: {
                 root: {
-                    '&.Mui-selected': {
-                        color: theme.palette.primary.contrastText,
-                        '& .MuiListItemIcon-root': {
-                            color: theme.palette.primary.contrastText
-                        }
+                    color: theme.palette.primary.main,
+                    '& .MuiListItemIcon-root': {
+                        color: theme.palette.primary.main
                     }
                 }
             }

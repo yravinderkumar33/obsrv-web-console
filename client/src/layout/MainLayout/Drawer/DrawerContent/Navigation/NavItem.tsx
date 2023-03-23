@@ -68,7 +68,7 @@ const NavItem = ({ item, level }: Props) => {
     }, [pathname]);
 
     const textColor = theme.palette.mode === 'dark' ? 'grey.400' : 'text.primary';
-    const iconSelectedColor = theme.palette.mode === 'dark' && drawerOpen ? 'text.primary' : 'primary.contrastText';
+    const iconSelectedColor = theme.palette.mode === 'dark' && drawerOpen ? 'text.primary' : 'primary.main';
 
     return (
         <ListItemButton
@@ -84,12 +84,12 @@ const NavItem = ({ item, level }: Props) => {
                         bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'primary.lighter'
                     },
                     '&.Mui-selected': {
-                        bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'info.main',
-                        borderRight: `2px solid ${theme.palette.info.main}`,
+                        bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'primary.lighter',
+                        borderRight: `2px solid ${theme.palette.primary.main}`,
                         color: iconSelectedColor,
                         '&:hover': {
                             color: iconSelectedColor,
-                            bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'info.main'
+                            bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'primary.lighter'
                         }
                     }
                 }),
@@ -110,6 +110,7 @@ const NavItem = ({ item, level }: Props) => {
                 <ListItemIcon
                     sx={{
                         minWidth: 28,
+                        color: isSelected ? iconSelectedColor : textColor,
                         ...(!drawerOpen && {
                             borderRadius: 1.5,
                             width: 36,
@@ -126,8 +127,7 @@ const NavItem = ({ item, level }: Props) => {
                             '&:hover': {
                                 bgcolor: theme.palette.mode === 'dark' ? 'primary.darker' : 'primary.lighter'
                             }
-                        }),
-                        color: isSelected ? iconSelectedColor : textColor,
+                        })
                     }}
                 >
                     {itemIcon}
