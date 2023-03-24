@@ -1,6 +1,6 @@
 
 export default {
-    showClusterMenu: true,
+    showClusterMenu: false,
     clusterMenu: {
         frequency: 100,
         interval: 10

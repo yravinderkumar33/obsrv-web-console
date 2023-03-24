@@ -2,7 +2,7 @@ import { QuestionCircleFilled } from '@ant-design/icons';
 import { Alert, Grid, Button } from '@mui/material';
 import MainCard from 'components/MainCard';
 import UploadFiles from 'pages/dataset/wizard/UploadFiles';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { sendEvents } from 'services/dataset';
@@ -15,13 +15,6 @@ const DatasetCreateEvents = () => {
     const [files, setFiles] = useState();
     const dispatch = useDispatch();
     const params = useParams();
-
-    useEffect(() => {
-        dispatch(setConfig({ key: 'showClusterMenu', value: false }));
-        return () => {
-            dispatch(setConfig({ key: 'showClusterMenu', value: true }));
-        }
-    }, [])
 
     const pushEvents = async () => {
         try {

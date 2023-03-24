@@ -48,9 +48,9 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
         </IconButton>
         {headerContent}
       </Toolbar>
-      {globalConfigState?.showClusterMenu && <Toolbar>
+      {/* {globalConfigState?.showClusterMenu && <Toolbar>
         <ClusterStatus />
-      </Toolbar>}
+      </Toolbar>} */}
     </div>
   );
 
