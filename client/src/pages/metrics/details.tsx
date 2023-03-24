@@ -13,12 +13,14 @@ import { navigateToGrafana } from 'services/grafana';
 import { useTheme } from '@mui/material';
 import grafanaIcon from 'assets/images/icons/grafana_icon.svg';
 
-const MetricsDetails = () => {
+const MetricsDetails = (props: any) => {
+    const { id, showClusterPanel = false } = props;
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const theme = useTheme();
     let [searchParams] = useSearchParams();
     const [metadata, setmetadata] = useState<Record<string, any>>();
+    const metricId = id || searchParams.get('id')
 
     const navigateToHome = ({ errMsg }: any) => {
         navigate('/');
@@ -26,7 +28,6 @@ const MetricsDetails = () => {
     }
 
     const fetchMetadata = () => {
-        const metricId = searchParams.get('id');
         if (!metricId) navigateToHome({ errMsg: 'Metric Id Missing' });
         const metricsMeta = _.find(metricsMetadata, ['id', metricId]);
         if (!metricsMeta) navigateToHome({ errMsg: 'Invalid Metric' })
@@ -34,12 +35,12 @@ const MetricsDetails = () => {
     }
 
     useEffect(() => {
-        dispatch(setConfig({ key: 'showClusterMenu', value: false }));
+        !showClusterPanel && dispatch(setConfig({ key: 'showClusterMenu', value: false }));
         fetchMetadata();
         return () => {
-            dispatch(setConfig({ key: 'showClusterMenu', value: true }));
+            !showClusterPanel && dispatch(setConfig({ key: 'showClusterMenu', value: true }));
         }
-    }, []);
+    }, [metricId]);
 
     const renderCharts = () => {
         if (metadata) {

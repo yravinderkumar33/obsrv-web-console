@@ -24,7 +24,7 @@ const other: NavItemType = {
       title: <FormattedMessage id={metric.primaryLabel} />,
       type: 'item',
       url: `/metrics/details?id=${metric.id}`,
-      icon: icons.HomeOutlined
+      icon: metric.menuIcon || icons.HomeOutlined
     })))
   ]
 };
