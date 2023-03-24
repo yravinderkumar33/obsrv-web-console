@@ -7,12 +7,6 @@ export default {
             step: '5m',
         },
         {
-            label: 'Last 30 Minutes',
-            value: 30,
-            default: true,
-            step: '2m',
-        },
-        {
             label: 'Last 7 Days',
             value: 10080,
             step: '30m'

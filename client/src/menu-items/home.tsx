@@ -13,20 +13,30 @@ const other: NavItemType = {
   type: 'group',
   children: [
     {
-      id: 'home',
-      title: <FormattedMessage id="Home" />,
-      type: 'item',
-      url: '/',
-      icon: icons.HomeOutlined
+      id: 'dashboard',
+      title: <FormattedMessage id="dashboard" />,
+      type: 'collapse',
+      icon: icons.HomeOutlined,
+      children: [
+        {
+          id: 'All',
+          title: <FormattedMessage id="All" />,
+          type: 'item',
+          url: '/',
+          icon: icons.HomeOutlined
+        },
+        ...(metricsMetadata.map(metric => ({
+          id: metric.id,
+          title: <FormattedMessage id={metric.primaryLabel} />,
+          type: 'item',
+          url: `/metrics/details?id=${metric.id}`,
+          icon: metric.menuIcon || icons.HomeOutlined
+        })))
+      ]
     },
-    ...(metricsMetadata.map(metric => ({
-      id: metric.id,
-      title: <FormattedMessage id={metric.primaryLabel} />,
-      type: 'item',
-      url: `/metrics/details?id=${metric.id}`,
-      icon: metric.menuIcon || icons.HomeOutlined
-    })))
   ]
 };
 
 export default other;
+
+
