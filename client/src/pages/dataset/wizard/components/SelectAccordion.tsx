@@ -22,8 +22,22 @@ const SelectAccordion = ({ handleBack, handleNext, setErrorIndex, index, configu
     const [manageStep, setManageStep] = useState<string>('');
     const [updatedConfig, setUpdatedConfig] = useState(configuration);
 
-    const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { configurations: updatedConfig } }));
+    const persistState = () => dispatch(addState(
+        {
+            id: pageMeta.pageId,
+            index,
+            state: { configurations: stateToRedux() }
+        }));
 
+    const stateToRedux = () => {
+        let data = Object.entries(updatedConfig).map(([key, value]: any) => {
+            value = delete value.form;
+            return {
+                [key]: value
+            }
+        })
+        return data;
+    }
     const gotoNextSection = () => {
         persistState();
         handleNext();

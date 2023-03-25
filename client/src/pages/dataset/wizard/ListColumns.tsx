@@ -84,7 +84,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
 
     const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
     const setNextStepStore = () => {
-        if (!wizardStoreState.hasOwnProperty('dataSchemaConfig')) {
+        if (!wizardStoreState.pages.hasOwnProperty('dataSchemaConfig')) {
             const values = _.map(flattenedData, state => {
                 return { ...state, index: true, pii: { value: false, op: '' } };
             });

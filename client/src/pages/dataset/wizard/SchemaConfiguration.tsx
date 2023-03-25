@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react';
 import {
     Button, Grid, ToggleButtonGroup, Box,
     Stack, Typography, FormControl,
-    ToggleButton, Chip, Alert, FormControlLabel
+    ToggleButton, Chip, Alert, FormControlLabel,
+    TextField
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
@@ -206,7 +207,41 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                     );
                 }
             },
+            {
+                Header: 'Transformations',
+                accessor: 'transformation',
+                tipText: 'Data Transformations (JSONata Expressions)',
+                editable: true,
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                        setFlattenedData((preState: Array<Record<string, any>>) => {
+                            const updatedValues = { ...row };
+                            const values = _.map(preState, state => {
+                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
+                                    return { ...state, ...updatedValues, isModified: true, transformation: e.target.value };
+                                else return state
+                            });
+                            pushStateToStore(values);
+                            return values;
+                        });
+                    }
 
+                    return (
+                        <Box alignItems="center" display="flex">
+                            <TextField
+                                type="text"
+                                label="JSONata Expression"
+                                value={value}
+                                onChange={handleChange}
+                                variant="outlined"
+                                fullWidth
+                            />
+                        </Box>
+                    );
+                }
+            },
         ],
         []
     );
