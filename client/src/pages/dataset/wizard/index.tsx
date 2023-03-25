@@ -9,7 +9,7 @@ import ListColumns from './ListColumns';
 import Review from './Review';
 import * as _ from 'lodash';
 import SchemaConfiguration from './SchemaConfiguration';
-import ProcessingConfiguration from './ProcesssingConfiguration';
+import ProcessingConfiguration from './ProcessingConfiguration';
 
 //'Ingestion Config',
 const steps = ['Derive Schema', 'Configure Data Schema', 'Processing Configuration', 'Ingestion Configuration', 'Review'];

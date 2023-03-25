@@ -232,6 +232,44 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 }
             },
             {
+                Header: 'Suggestions',
+                accessor: 'suggestions',
+                tipText: 'Suggestions provided for the field',
+                editable: false,
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+                    const hasConflicts = _.get(row, 'suggestions.length');
+                    const updateValue = (val: string) => {
+                        setFlattenedData((preState: Array<Record<string, any>>) => {
+                            const updatedValues = { ...row };
+                            const values = _.map(preState, state => {
+                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
+                                    return { ...state, ...updatedValues, isModified: true, type: val, ...(hasConflicts && { resolved: true }) };
+                                else return state
+                            });
+                            pushStateToStore(values);
+                            return values;
+                        });
+                    }
+
+                    return (
+                        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                            {row?.oneof?.map((suggestion: any) => <Chip
+                                key={suggestion.type}
+                                aria-label='fix-data-type'
+                                clickable
+                                label={`Convert to ${_.capitalize(suggestion.type)}`}
+                                sx={{ m: 1 }}
+                                color='success'
+                                onClick={() => updateValue(suggestion.type)}
+                                size="small"
+                            />)}
+                        </FormControl>
+                    );
+                }
+            },
+            {
                 Header: 'Data type',
                 accessor: 'type',
                 tipText: 'Data type of the field',
@@ -256,7 +294,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     return (
                         <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
                             <Select
-                                defaultValue={value}
+                                value={value}
                             >
                                 {
                                     validDatatypes.map((option: any) =>

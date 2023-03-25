@@ -8,57 +8,20 @@ import { useState } from "react";
 import MUIForm from "components/form";
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
-import commonConfigurations from 'data/ingestionConfigurations';
 import { addState } from 'store/reducers/wizard';
 import * as yup from "yup";
 import * as _ from 'lodash'
 import RequiredSwitch from "components/RequiredSwitch";
 import AnimateButton from "components/@extended/AnimateButton";
+import { camelCaseToString } from "utils/stringUtils";
 
-
-export const pageMeta = { pageId: 'processingConfigurations', title: "Processing Configuration" };
-
-type stepQuestion = "batchConfiguration" | "ingestionConfiguration" | "advanced"
-
-interface questionSteps {
-    id: "batchConfiguration" | "ingestionConfiguration" | "advanced",
-    question: string,
-    completed: boolean,
-    rootQId: string,
-    rootQValue: boolean,
-    state: any
-}
-
-const camelToString = (text: string) => {
-    const result = text.replace(/([A-Z])/g, " $1");
-    const finalResult = result.charAt(0).toUpperCase() + result.slice(1);
-    return finalResult;
-}
-
-const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index }: any) => {
+const BooleanAccordion = ({ handleBack, handleNext, setErrorIndex, index, configuration, pageMeta }: any) => {
     const dispatch = useDispatch();
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [manageStep, setManageStep] = useState<string>('');
-    const [updatedConfig, setUpdatedConfig] = useState<Record<string, questionSteps>>({
-        batchConfiguration: {
-            id: "batchConfiguration",
-            question: "Does your data arrive in Batch? ",
-            rootQId: 'isBatch',
-            rootQValue: false,
-            completed: false,
-            state: {
-                dedupeEvents: false,
-                dedupeKey: "",
-                dedupePeriod: "",
-                extractionKey: "",
-                idForTheBatch: "",
-                validateData: false,
-            }
-        },
-
-    });
+    const [updatedConfig, setUpdatedConfig] = useState(configuration);
 
     const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { configurations: updatedConfig } }));
 
@@ -72,15 +35,15 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
         handleBack();
     }
 
-    const getFields = (stepItem: questionSteps) => {
-        const pairs = _.toPairs(commonConfigurations[stepItem.id]);
+    const getFields = (stepItem: any) => {
+        const pairs = _.toPairs(configuration[stepItem.id].form);
         return pairs.map((pair, index) => {
             const [name, values] = pair;
             const { value, required, dependsOn = null, label = null, }: any = values;
             if (Array.isArray(value))
                 return {
                     name,
-                    label: label || camelToString(name),
+                    label: label || camelCaseToString(name),
                     type: 'select',
                     required: required,
                     disabled: !stepItem.rootQValue,
@@ -90,7 +53,7 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
             else
                 return {
                     name,
-                    label: label || camelToString(name),
+                    label: label || camelCaseToString(name),
                     type: 'text',
                     required: required,
                     disabled: !stepItem.rootQValue,
@@ -100,8 +63,8 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
         });
     }
 
-    const getValidationSchemas = (id: stepQuestion) => {
-        const data = _.mapValues(commonConfigurations[id], (value: any) => {
+    const getValidationSchemas = (id: any) => {
+        const data = _.mapValues(configuration[id], (value: any) => {
             return _.has(value, 'validationSchema') ? _.get(value, 'validationSchema') : null;
         });
         return yup.object().shape({
@@ -113,7 +76,7 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
         setManageStep((prevState) => id === prevState ? '' : id);
     }
 
-    const handleChange = (stepItem: questionSteps, checked: boolean) => {
+    const handleChange = (stepItem: any, checked: boolean) => {
         setUpdatedConfig((prevState: any) => {
             const data = prevState;
             data[stepItem.id].rootQValue = checked;
@@ -123,16 +86,7 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
         else setManageStep('');
     }
 
-    // const getFormValues = (values: any, stepId: stepQuestion) => {
-    //     setUpdatedConfig((prevState: any) => {
-    //         const data = prevState;
-    //         data[stepItem.id].completed = true;
-    //         data[stepItem.id].state = { ...values };
-    //         return data;
-    //     });
-    // }
-
-    const handleStepComplete = (values: any, stepItem: questionSteps) => {
+    const handleStepComplete = (values: any, stepItem: any) => {
         setUpdatedConfig((prevState: any) => {
             const data = prevState;
             data[stepItem.id].completed = true;
@@ -147,7 +101,7 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
 
     return (
         <Grid container spacing={3}>
-            {Object.values(updatedConfig).map((stepItem) => {
+            {Object.values(updatedConfig).map((stepItem: any) => {
                 return (
                     <Grid item xs={12} key={stepItem.id}>
                         <Accordion expanded={manageStep === stepItem.id} onChange={
@@ -155,8 +109,8 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
                         }>
                             <AccordionSummary
                                 expandIcon={null}
-                                aria-controls="batch-config-content"
-                                id="batch-config-header"
+                                aria-controls="config-content"
+                                id="config-header"
                                 sx={{
                                     alignItems: "center",
                                     '& .MuiAccordionSummary-content': {
@@ -168,7 +122,7 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
                                 <Box display="flex" justifyContent="space-between" alignItems="center" width="100%">
                                     <FormControl sx={{ alignItems: 'center' }}>
                                         <FormControlLabel
-                                            name="isBatch"
+                                            name={stepItem.rootQId}
                                             control={<RequiredSwitch value={stepItem.rootQValue} onChange={(_, checked) => handleChange(stepItem, checked)} />}
                                             label={''}
                                         />
@@ -219,4 +173,4 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
     );
 }
 
-export default ProcessingConfiguration;
+export default BooleanAccordion;

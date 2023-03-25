@@ -13,7 +13,7 @@ interface Props {
 }
 
 function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }: Props) {
-    const tableSx = limitHeight ? { height: 400, overflowY: 'scroll' } : {};
+    const tableSx = limitHeight ? { height: 350, overflowY: 'scroll' } : {};
 
     const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
         {
