@@ -77,24 +77,27 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                 accessor: 'column',
                 tipText: 'Name of the field.',
                 editable: false,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const suggestions = _.get(row, 'suggestions');
-                    const hasCriticalConflicts = checkForCriticalSuggestion(suggestions || []);
-                    const isResolved = _.get(row, 'resolved') || false;
-                    return (
-                        <Box display="flex" alignItems="center">
-                            <Typography variant="body1">
-                                {value}
-                            </Typography>
-                            {hasCriticalConflicts && isResolved && <Tooltip title={"Resolved"}>
-                                <Stack direction="column" spacing={1} m={1}>
-                                    <Chip size='small' label={'Resolved'} color="success" variant='outlined' />
-                                </Stack>
-                            </Tooltip>}
-                        </Box>
-                    );
-                }
+                Cell: ({ value, cell }: any) => (
+                    <Box display="flex" alignItems="center">
+                        <Typography variant="body1">
+                            {value}
+                        </Typography>
+                    </Box>
+                )
+            },
+            {
+                Header: 'Data Type',
+                accessor: 'type',
+                tipText: 'Data type of the field.',
+                editable: false,
+                disableFilters: true,
+                Cell: ({ value }: any) => (
+                    <Box display="flex" alignItems="center">
+                        <Typography variant="body1">
+                            {value}
+                        </Typography>
+                    </Box>
+                )
             },
             {
                 Header: 'Index',

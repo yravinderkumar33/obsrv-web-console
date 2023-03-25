@@ -195,7 +195,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         setEdit((prevState) => !prevState);
                     }
 
-
                     return <Box display="flex" alignItems="center">
                         <Dialog open={edit} onClose={editDescription}>
                             <DialogTitle id="dialog-title">
