@@ -3,7 +3,7 @@ import batchConfig from "data/batchConfigurations";
 
 export const pageMeta = { pageId: 'processingConfiguration', title: "Processing Configuration" };
 
-const ProcessingConfigurations = ({ handleBack, handleNext, setErrorIndex, index }: any) => {
+const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index }: any) => {
     return (
         <BooleanAccordion
             handleBack={handleBack}
@@ -16,4 +16,4 @@ const ProcessingConfigurations = ({ handleBack, handleNext, setErrorIndex, index
     );
 }
 
-export default ProcessingConfigurations;
+export default ProcessingConfiguration;

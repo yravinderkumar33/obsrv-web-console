@@ -10,6 +10,7 @@ import Review from './Review';
 import * as _ from 'lodash';
 import SchemaConfiguration from './SchemaConfiguration';
 import ProcessingConfiguration from './ProcessingConfiguration';
+import IngestionConfiguration from './IngestionConfiguration';
 
 //'Ingestion Config',
 const steps = ['Derive Schema', 'Configure Data Schema', 'Processing Configuration', 'Ingestion Configuration', 'Review'];
@@ -28,7 +29,9 @@ const getStepContent = (
         case 2:
             return <ProcessingConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
         case 3:
-            return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} />
+            return <IngestionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} />
+        case 4:
+            return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} />
         default:
             throw new Error('Unknown step');
     }

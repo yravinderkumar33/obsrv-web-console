@@ -23,10 +23,12 @@ const batchConfig: Record<stepQuestion, questionSteps> = {
             extractionKey: {
                 required: true,
                 value: '',
+                validationSchema: yup.string().required("Value is required for the field"),
             },
             idForTheBatch: {
                 required: true,
                 value: '',
+                validationSchema: yup.string().required("Value is required for the field"),
             },
             dedupeEvents: {
                 required: false,
