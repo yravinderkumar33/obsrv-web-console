@@ -43,7 +43,7 @@ const DatasetOnboarding = () => {
     const [errorIndex, setErrorIndex] = useState<number | null>(null);
 
     const dispatch = useDispatch();
-    const wizardState = useSelector((state: any) => _.get(state, 'wizard'))
+    const wizardState = useSelector((state: any) => _.get(state, 'wizard'));
 
     const handleNext = () => {
         setActiveStep(activeStep + 1);
@@ -64,12 +64,12 @@ const DatasetOnboarding = () => {
             dispatch(setConfig({ key: 'showClusterMenu', value: true }));
             dispatch(reset({}));
         }
-    }, [])
+    }, []);
 
     const resetState = () => {
         dispatch(reset({}));
         setActiveStep(0);
-    }
+    };
 
     const stepper = () => (
         <Stepper activeStep={activeStep} sx={{ py: 2 }}>
@@ -95,7 +95,7 @@ const DatasetOnboarding = () => {
     const getDatasetName = () => {
         const name = _.get(wizardState, 'pages.datasetConfiguration.state.config.name');
         return name ? name : '';
-    }
+    };
 
     return (
         <Box>

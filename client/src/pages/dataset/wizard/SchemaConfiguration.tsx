@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import {
     Button, Grid, ToggleButtonGroup, Box,
-    Stack, Tooltip, Typography, FormControl,
+    Stack, Typography, FormControl,
     ToggleButton, Chip, Alert, FormControlLabel
 } from '@mui/material';
 import MainCard from 'components/MainCard';
@@ -15,7 +15,7 @@ import AnimateButton from 'components/@extended/AnimateButton';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import { error } from 'services/toaster';
-import { areConflictsResolved, checkForCriticalSuggestion, flattenSchema } from 'services/json-schema';
+import { areConflictsResolved, flattenSchema } from 'services/json-schema';
 import RequiredSwitch from 'components/RequiredSwitch';
 import { connect } from 'react-redux';
 
@@ -206,6 +206,7 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                     );
                 }
             },
+
         ],
         []
     );
