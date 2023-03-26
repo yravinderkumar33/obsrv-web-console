@@ -140,7 +140,7 @@ const Breadcrumbs = ({
             breadcrumbContent = (
                 <MainCard
                     border={card}
-                    sx={card === false ? { mb: 2, bgcolor: 'transparent', ...sx } : { mb: 2, ...sx }}
+                    sx={card === false ? { bgcolor: 'transparent', ...sx } : { ...sx }}
                     {...others}
                     content={card}
                     shadow="none"

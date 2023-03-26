@@ -9,17 +9,17 @@ export default {
         {
             label: 'Last 7 Days',
             value: 10080,
-            step: '30m'
+            step: '15m'
         },
         {
             label: 'Last 15 Days',
             value: 21600,
-            step: '1h'
+            step: '30m'
         },
         {
             label: 'Last 30 Days',
             value: 43200,
-            step: '2h'
+            step: '1h'
         }
     ],
     variant1: [
