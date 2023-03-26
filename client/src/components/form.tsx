@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
 }));
 
-const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, size = {}, enableReinitialize = false }: any) => {
+const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, size = {}, enableReinitialize = false, subscribe }: any) => {
     const classes: any = useStyles;
     const { xs = 12, sm = 12, lg = 12 } = size;
 
@@ -37,6 +37,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
             enableReinitialize={enableReinitialize}
         >
             {({ handleChange, values, handleBlur, errors, touched }) => {
+                subscribe && subscribe(values);
                 return (
                     <Form>
                         <Grid container spacing={3} alignItems="baseline">
@@ -79,6 +80,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                         disabled={disabled}
                                                         control={<Field as={Checkbox} name={name} />}
                                                         label={label}
+                                                        onChange={handleChange}
                                                     />
                                                 </FormControl>
                                             </Grid>

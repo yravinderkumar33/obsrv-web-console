@@ -59,9 +59,7 @@ const DatasetOnboarding = () => {
     };
 
     useEffect(() => {
-        dispatch(setConfig({ key: 'showClusterMenu', value: false }));
         return () => {
-            dispatch(setConfig({ key: 'showClusterMenu', value: true }));
             dispatch(reset({}));
         }
     }, []);

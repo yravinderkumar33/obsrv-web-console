@@ -1,4 +1,4 @@
-import { BarChartOutlined, DotChartOutlined } from "@ant-design/icons";
+import { AreaChartOutlined, BarChartOutlined, DotChartOutlined, StockOutlined, LineChartOutlined } from "@ant-design/icons";
 import * as _ from 'lodash';
 import ApexChart from "sections/dashboard/analytics/apex";
 import chartMeta from 'data/charts';
@@ -18,6 +18,7 @@ export const metricsMetadata = [
         secondaryLabel: "Metrics",
         description: "This page shows the essential metrics of your cluster. With this information, you can easily monitor the health of your cluster and make informed decisions about scaling and resource allocation.",
         icon: DotChartOutlined,
+        menuIcon: AreaChartOutlined,
         links: {
             grafana: {
                 link: "http://localhost:9000/d/efa86fd1d0c121a26444b636a3f509a8/kubernetes-compute-resources-cluster?orgId=1&refresh=10s"
@@ -110,6 +111,7 @@ export const metricsMetadata = [
         secondaryLabel: "Metrics",
         description: "This page shows the metrics of http requests. Here you'll find real-time data on our API performance, including the number of requests received, the average response time, failed api calls etc. With this information, you can easily track how your API is performing, identify any bottlenecks or issues, and make data-driven decisions to optimize your API's performance",
         icon: DotChartOutlined,
+        menuIcon: BarChartOutlined,
         color: 'main',
         charts: {
             small: {
@@ -188,6 +190,7 @@ export const metricsMetadata = [
         secondaryLabel: "Metrics",
         description: "This page shows the metrics of datasets ingestions",
         icon: DotChartOutlined,
+        menuIcon: DotChartOutlined,
         color: 'main',
         charts: {
             small: {
@@ -245,6 +248,7 @@ export const metricsMetadata = [
         secondaryLabel: "Metrics",
         description: "This page shows the metrics of datasets processing",
         icon: DotChartOutlined,
+        menuIcon: LineChartOutlined,
         color: 'main',
         charts: {
             small: {
@@ -316,6 +320,7 @@ export const metricsMetadata = [
         secondaryLabel: "Metrics",
         description: "This page shows the metrics of storage",
         icon: DotChartOutlined,
+        menuIcon: StockOutlined,
         color: 'main',
         charts: {
             small: {
