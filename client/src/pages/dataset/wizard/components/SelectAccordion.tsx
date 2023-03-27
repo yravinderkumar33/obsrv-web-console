@@ -67,16 +67,10 @@ const SelectAccordion = ({ index, configuration, updatedConfig, setUpdatedConfig
             if (stepItem.form[value] === null)
                 data[stepItem.id].completed = true;
             else data[stepItem.id].completed = false;
+            if (value && value !== '' && data[stepItem.id].form[stepItem.rootQValue])
+                setManageStep(stepItem.id);
             return data;
         });
-        if (value && value !== '' && stepItem.form[stepItem.rootQValue])
-            setManageStep(stepItem.id);
-    }
-
-    const checkExpansion = (stepItem: any): boolean => {
-        if (manageStep === stepItem.id && stepItem.form[stepItem.rootQValue])
-            return true;
-        else return false;
     }
 
     const handleStepComplete = (values: any, stepItem: any) => {
@@ -97,9 +91,16 @@ const SelectAccordion = ({ index, configuration, updatedConfig, setUpdatedConfig
             {Object.values(updatedConfig).map((stepItem: any) => {
                 return (
                     <Grid item xs={12} key={stepItem.id}>
-                        <Accordion expanded={checkExpansion(stepItem)} onChange={
-                            () => stepItem.completed ? handleStepChange(stepItem.id) : null
-                        }>
+                        <Accordion
+                            expanded={
+                                stepItem.form[stepItem.rootQValue] !== null &&
+                                manageStep === stepItem.id
+                            }
+                            onChange={() =>
+                                stepItem.completed ?
+                                    handleStepChange(stepItem.id)
+                                    : null
+                            }>
                             <AccordionSummary
                                 expandIcon={null}
                                 aria-controls="config-content"
@@ -137,17 +138,19 @@ const SelectAccordion = ({ index, configuration, updatedConfig, setUpdatedConfig
                                     size={{ xs: 12, sm: 6, lg: 6 }}
                                     subscribe={subscribe}
                                 >
-                                    <Grid item xs={12}>
-                                        <Box display="flex" justifyContent="flex-end" mb={2}>
-                                            <Button
-                                                variant="contained"
-                                                type="submit"
-                                                sx={{ mt: 1, mr: 1 }}
-                                            >
-                                                {'Finish'}
-                                            </Button>
-                                        </Box>
-                                    </Grid>
+                                    {stepItem.form[stepItem.rootQValue] !== null &&
+                                        <Grid item xs={12}>
+                                            <Box display="flex" justifyContent="flex-end" mb={2}>
+                                                <Button
+                                                    variant="contained"
+                                                    type="submit"
+                                                    sx={{ mt: 1, mr: 1 }}
+                                                >
+                                                    {'Finish'}
+                                                </Button>
+                                            </Box>
+                                        </Grid>
+                                    }
                                 </MUIForm>
                             </AccordionDetails>
                         </Accordion>

@@ -276,8 +276,18 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                                 </Box>
                             </Dialog>
                             {!edit && <Typography onClick={editTransform}>{value}</Typography>}
-                            {!edit && !value && <Box onClick={editTransform}>... <EditOutlined /></Box>}
-                            <Link sx={{ position: 'absolute', right: 0 }} href="https://try.jsonata.org/" target="_blank" rel="nofollow noreferrer">Try...</Link>
+                            {!edit && !value &&
+                                <Box onClick={editTransform}>... <EditOutlined />
+                                    <Link
+                                        sx={{ position: 'absolute', right: 0 }}
+                                        href="https://try.jsonata.org/"
+                                        target="_blank"
+                                        rel="nofollow noreferrer"
+                                    >
+                                        Try
+                                    </Link>
+                                </Box>
+                            }
                         </Box>
                     );
                 }
