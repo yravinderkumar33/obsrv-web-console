@@ -112,5 +112,23 @@ export default {
     },
     "throughput": {
         "query": 'sum(rate(container_network_receive_bytes_total{namespace="obsrv-api-service-dev"}[1m])) + sum(rate(container_network_transmit_bytes_total{namespace="obsrv-api-service-dev"}[1m]))'
+    },
+    "node_query_response_time": {
+        "query": "node_query_response_time"
+    },
+    "node_total_api_call": {
+        "query": "node_total_api_calls"
+    },
+    "node_total_failed_api_call": {
+        "query": "node_failed_api_calls"
+    },
+    "node_query_response_time_min": {
+        "query": "min_over_time(node_query_response_time[1d])"
+    },
+    "node_query_response_time_max": {
+        "query": "max_over_time(node_query_response_time[1d])"
+    },
+    "node_query_response_time_avg": {
+        "query": "avg_over_time(node_query_response_time[1d])"
     }
 }

@@ -41,7 +41,7 @@ const MainRoutes = {
           element: <SystemMetrics />
         },
         {
-          path: 'metrics/details',
+          path: 'metrics/details/:metricId',
           element: <MetricsDetails />
         },
         {

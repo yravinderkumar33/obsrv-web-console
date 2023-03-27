@@ -9,5 +9,6 @@ export interface IChartFetchRequest {
     params: object;
     parse: (response: object) => Array<object>
     setConfig: (options: any, setOptions: any, response: any) => void;
-    error: () => Array<any>
+    error: () => Array<any>;
+    context?: (payload: Record<string, any>) => Record<string, any>
 }

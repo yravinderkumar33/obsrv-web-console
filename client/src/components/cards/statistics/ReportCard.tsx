@@ -3,6 +3,7 @@ import MainCard from 'components/MainCard';
 import { useEffect, useState } from 'react';
 import { fetchChartData } from 'services/clusterMetrics';
 import { GenericCardProps } from 'types/root';
+import globalConfig from 'data/initialConfig';
 
 interface ReportCardProps extends GenericCardProps { }
 
@@ -22,9 +23,22 @@ const ReportCard = ({ primary, suffix, secondary, iconPrimary, color, query }: R
     }
   }
 
+  const configureMetricFetcher = () => {
+    const frequency = globalConfig.clusterMenu.frequency;
+    fetchData();
+    return setInterval(() => {
+      fetchData();
+    }, frequency * 1000)
+  }
+
   useEffect(() => {
-    query && fetchData();
-  }, [])
+    const interval = query && configureMetricFetcher();
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    }
+  }, [query])
 
   return (
     <MainCard>

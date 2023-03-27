@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchChartData, fetchMultipleMetrics } from "services/clusterMetrics";
+import { fetchMultipleMetrics } from "services/clusterMetrics";
 import globalConfig from 'data/initialConfig';
 
 const AsyncLabel = (props: any) => {

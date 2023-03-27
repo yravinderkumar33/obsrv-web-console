@@ -29,7 +29,7 @@ const other: NavItemType = {
           id: metric.id,
           title: <FormattedMessage id={metric.primaryLabel} />,
           type: 'item',
-          url: `/metrics/details?id=${metric.id}`,
+          url: `/metrics/details/${metric.id}`,
           icon: metric.menuIcon || icons.HomeOutlined
         })))
       ]

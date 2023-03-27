@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import MainCard from 'components/MainCard';
 import { metricsMetadata } from 'data/metrics';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { error } from 'services/toaster';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { Avatar } from '@mui/material';
@@ -19,9 +19,9 @@ const MetricsDetails = (props: any) => {
     const { id } = props;
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    let [searchParams] = useSearchParams();
+    const params = useParams();
     const [metadata, setmetadata] = useState<Record<string, any>>();
-    const metricId = id || searchParams.get('id')
+    const metricId = id || _.get(params, 'metricId')
 
     const navigateToHome = ({ errMsg }: any) => {
         navigate('/');

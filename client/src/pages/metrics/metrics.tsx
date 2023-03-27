@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 const MetricsDashboard = () => {
     const theme = useTheme();
     const navigate = useNavigate();
-    const navigateToMetrics = (metric: Record<string, any>) => navigate(`/metrics/details?id=${metric?.id}`);
+    const navigateToMetrics = (metric: Record<string, any>) => navigate(`/metrics/details/${metric?.id}`);
 
     return (
         <>

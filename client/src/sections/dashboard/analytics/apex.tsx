@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 import _ from 'lodash'
-
 import { useTheme } from '@mui/material/styles';
 import useConfig from 'hooks/useConfig';
 import ReactApexChart, { Props as ChartProps } from 'react-apexcharts';
@@ -25,17 +24,21 @@ const ApexChart = (props: any) => {
   const fetchMetric = async (query: Record<string, any>) => {
     const interval = rest.interval || globalConfig.clusterMenu.interval;
     const step = rest.step || '1m';
-    const { type, params = {} } = query;
+    const { type, params = {}, noParams = false } = query;
 
     if (type === 'api') {
       try {
         setLoading(true);
-        params.start = dayjs().subtract(interval, 'minutes').unix();
-        params.end = dayjs().unix();
-        if (step) {
-          params.step = step;
+        if (!noParams) {
+          params.start = dayjs().subtract(interval, 'minutes').unix();
+          params.end = dayjs().unix();
+          if (step) {
+            params.step = step;
+          }
         }
-        const seriesData = await fetchChartData(query, options, setOptions);
+
+        const metadata = { ...(interval && { interval }) };
+        const seriesData = await fetchChartData(query, metadata);
         setSeries(seriesData);
       } catch (error) {
         setSeries([])
@@ -71,7 +74,7 @@ const ApexChart = (props: any) => {
       interval && clearInterval(interval)
     }
 
-  }, [mode, primary, secondary, line, theme, step, interval]);
+  }, [mode, primary, secondary, line, theme, step, interval, query]);
 
   return <>
     {loading && <Loader />}
