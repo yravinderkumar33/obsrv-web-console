@@ -4,6 +4,7 @@ import infra from './infra'
 import alerts from './alerts'
 import ingestion from './ingestion'
 import api from './api'
+import processing from './processing'
 
 export default {
     ...kafka,
@@ -11,5 +12,6 @@ export default {
     ...infra,
     ...alerts,
     ...ingestion,
-    ...api
+    ...api,
+    ...processing
 }

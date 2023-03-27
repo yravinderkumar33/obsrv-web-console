@@ -1,10 +1,11 @@
 import { FormattedMessage } from 'react-intl';
-import { HomeOutlined } from '@ant-design/icons';
+import { HomeOutlined, DashboardOutlined } from '@ant-design/icons';
 import { NavItemType } from 'types/menu';
 import { metricsMetadata } from 'data/metrics'
 
 const icons = {
-  HomeOutlined
+  HomeOutlined,
+  DashboardOutlined
 };
 
 const other: NavItemType = {
@@ -16,11 +17,11 @@ const other: NavItemType = {
       id: 'dashboard',
       title: <FormattedMessage id="dashboard" />,
       type: 'collapse',
-      icon: icons.HomeOutlined,
+      icon: icons.DashboardOutlined,
       children: [
         {
-          id: 'All',
-          title: <FormattedMessage id="All" />,
+          id: 'Home',
+          title: <FormattedMessage id="Home" />,
           type: 'item',
           url: '/',
           icon: icons.HomeOutlined

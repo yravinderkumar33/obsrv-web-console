@@ -1,9 +1,9 @@
 import { FormattedMessage } from 'react-intl';
-import { DashboardOutlined, PlusCircleOutlined } from '@ant-design/icons';
+import { OrderedListOutlined, PlusCircleOutlined } from '@ant-design/icons';
 import { NavItemType } from 'types/menu';
 
 const icons = {
-  DashboardOutlined,
+  OrderedListOutlined,
   PlusCircleOutlined
 };
 
@@ -18,7 +18,7 @@ const other: NavItemType = {
       title: <FormattedMessage id="Datasets" />,
       type: 'item',
       url: '/datasets',
-      icon: icons.DashboardOutlined
+      icon: icons.OrderedListOutlined
     },
     {
       id: 'newDatasets',
