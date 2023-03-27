@@ -3,12 +3,12 @@ import {
     Button, Grid, ToggleButtonGroup, Box,
     Stack, Typography, FormControl,
     ToggleButton, Chip, Alert, FormControlLabel,
-    TextField, Autocomplete
+    TextField, Dialog, DialogTitle, Link
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
-import { DeleteFilled } from '@ant-design/icons';
+import { DeleteFilled, EditOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -46,17 +46,15 @@ const columnFilters: columnFilter[] = [
 ];
 
 const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState }: any) => {
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
-    const [timestampField, setTimestampField] = useState<Record<string, string>>({ label: 'Sync TS', value: 'arrival_time' });
-    const [timestampOptions, setTimestampOptions] = useState<any>([]);
     const [filterByChip, setFilterByChip] = useState<columnFilter | null>(null);
 
-    const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData, timestampField: timestampField } }));
-    const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values, timestampField: timestampField } }));
+    const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
+    const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
 
     const gotoNextSection = () => {
         if (areConflictsResolved(flattenedData)) {
@@ -217,12 +215,23 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
+                    const [edit, setEdit] = useState(false);
+                    const [text, setText] = useState('');
+                    const editTransform = () => {
+                        setEdit((prevState) => !prevState);
+                        updateState();
+                    }
+
                     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                        setText(e.target.value);
+                    }
+
+                    const updateState = () => {
                         setFlattenedData((preState: Array<Record<string, any>>) => {
                             const updatedValues = { ...row };
                             const values = _.map(preState, state => {
                                 if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, transformation: e.target.value };
+                                    return { ...state, ...updatedValues, isModified: true, transformation: text };
                                 else return state
                             });
                             pushStateToStore(values);
@@ -230,16 +239,45 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                         });
                     }
 
+                    const handleCancel = () => {
+                        setText('');
+                        setEdit((prevState) => !prevState);
+                    }
+
                     return (
-                        <Box alignItems="center" display="flex">
-                            <TextField
-                                type="text"
-                                label="Expression"
-                                value={value}
-                                onChange={handleChange}
-                                variant="outlined"
-                                fullWidth
-                            />
+                        <Box display="flex" alignItems="center" justifyContent="center" position="relative">
+                            <Dialog open={edit} onClose={editTransform}>
+                                <DialogTitle id="dialog-title">
+                                    {`Edit Expression for field - ${row.column}`}
+                                </DialogTitle>
+                                <Box p={2}>
+                                    <Box m={1}>
+                                        <TextField
+                                            InputLabelProps={{
+                                                shrink: true
+                                            }}
+                                            fullWidth
+                                            defaultValue={value}
+                                            onChange={handleChange}
+                                            label='Expression'
+                                        />
+                                    </Box>
+                                    <Stack direction="row"
+                                        justifyContent="flex-end"
+                                        alignItems="center"
+                                        spacing={2} >
+                                        <Button color="error" size="small" onClick={handleCancel}>
+                                            Cancel
+                                        </Button>
+                                        <Button variant="contained" size="small" onClick={editTransform}>
+                                            Save
+                                        </Button>
+                                    </Stack>
+                                </Box>
+                            </Dialog>
+                            {!edit && <Typography onClick={editTransform}>{value}</Typography>}
+                            {!edit && !value && <Box onClick={editTransform}>... <EditOutlined /></Box>}
+                            <Link sx={{ position: 'absolute', right: 0 }} href="https://try.jsonata.org/" target="_blank" rel="nofollow noreferrer">Try...</Link>
                         </Box>
                     );
                 }
@@ -265,23 +303,6 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
         })
     }
 
-    const formatOptions = () => {
-        let data = _.get(apiResponse?.data?.configurations?.indexConfiguration, 'index');
-        data = data.map((item: any) => {
-            if (item === 'arrival_time')
-                return { label: 'Sync TS', 'value': item };
-            else return { label: item, value: item };
-        });
-        setTimestampOptions(data);
-    }
-
-    const handleTimeFieldChange = (value: any) => {
-        if (value)
-            setTimestampField(value);
-        else setTimestampField({ label: 'Sync TS', value: 'arrival_time' });
-        persistState();
-    }
-
     const deleteFilter = () => {
         setFilterByChip(null);
         const data = wizardStoreState.pages[pageMeta.pageId].state.schema;
@@ -296,7 +317,6 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
             setFlattenedData(existingState || flattenedSchema);
             pushStateToStore(existingState || flattenedSchema);
             setSkipPageReset(false);
-            formatOptions();
         }
     }, [apiResponse?.status]);
 
@@ -348,25 +368,6 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                                 />
                             </ScrollX>
                         </MainCard >
-                    </Grid>
-                    <Grid item xs={12}>
-                        {timestampOptions.length > 1 && <Box my={1} display="flex" alignItems="center">
-                            <Typography>Default Timestamp Column -</Typography>
-                            <FormControl sx={{ mx: 2, width: '20%' }}>
-                                <Autocomplete
-                                    options={timestampOptions}
-                                    getOptionLabel={(option: any) => option.label}
-                                    value={timestampField}
-                                    disablePortal
-                                    disableClearable
-                                    renderInput={(params) => <TextField {...params} label="Column Name.." />}
-                                    isOptionEqualToValue={(option: any, value: any) => option.value === value.value}
-                                    onChange={(event: any, newValue: Record<string, string> | null) => {
-                                        handleTimeFieldChange(newValue);
-                                    }}
-                                />
-                            </FormControl>
-                        </Box>}
                     </Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" justifyContent="space-between">

@@ -1,63 +1,23 @@
 import {
     Accordion, AccordionDetails, AccordionSummary,
     Typography, Grid, Box, Button, FormControl, FormControlLabel,
-    Stack
 } from "@mui/material";
 import { CheckCircleOutlined } from "@ant-design/icons";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import MUIForm from "components/form";
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
-import { addState } from 'store/reducers/wizard';
 import * as yup from "yup";
 import * as _ from 'lodash'
 import RequiredSwitch from "components/RequiredSwitch";
-import AnimateButton from "components/@extended/AnimateButton";
 import { camelCaseToString } from "utils/stringUtils";
 
-const BooleanAccordion = ({ handleBack, handleNext, setErrorIndex, index, configuration, pageMeta }: any) => {
+const BooleanAccordion = ({ index, configuration, pageMeta, formValues, subscribe, updatedConfig, setUpdatedConfig }: any) => {
     const dispatch = useDispatch();
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [manageStep, setManageStep] = useState<string>('');
-    const [updatedConfig, setUpdatedConfig] = useState(configuration);
-    const [formValues, subscribe] = useState<any>({});
-
-    const persistState = () => dispatch(addState(
-        {
-            id: pageMeta.pageId,
-            index,
-            state: { configurations: stateToRedux() }
-        }));
-
-    useEffect(() => {
-        persistState();
-    }, [formValues]);
-
-    const stateToRedux = () => {
-        let data = _.cloneDeep(updatedConfig);
-        _.mapKeys(data, (item) => {
-            if (_.has(item, 'state'))
-                Object.keys(formValues).map((k) => {
-                    if (_.has(item.state, k))
-                        item.state[k] = formValues[k];
-                    return;
-                })
-            return;
-        });
-        return data;
-    }
-
-    const gotoNextSection = () => {
-        persistState();
-        handleNext();
-    }
-
-    const gotoPreviousSection = () => {
-        persistState();
-        handleBack();
-    }
 
     const getFields = (stepItem: any) => {
         const pairs = _.toPairs(configuration[stepItem.id].form);
@@ -180,20 +140,6 @@ const BooleanAccordion = ({ handleBack, handleNext, setErrorIndex, index, config
                     </Grid>
                 );
             })}
-            <Grid item xs={12}>
-                <Stack direction="row" justifyContent="space-between">
-                    <AnimateButton>
-                        <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
-                            Previous
-                        </Button>
-                    </AnimateButton>
-                    <AnimateButton>
-                        <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoNextSection}>
-                            Next
-                        </Button>
-                    </AnimateButton>
-                </Stack>
-            </Grid>
         </Grid>
     );
 }

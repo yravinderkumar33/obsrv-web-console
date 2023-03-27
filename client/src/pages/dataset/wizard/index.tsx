@@ -3,7 +3,6 @@ import { Button, Step, Stepper, StepLabel, Typography, Box } from '@mui/material
 import MainCard from 'components/MainCard';
 import DatasetConfiguration from './DatasetConfiguration';
 import { useDispatch, useSelector } from 'react-redux';
-import { setConfig } from 'store/reducers/config';
 import { reset } from 'store/reducers/wizard';
 import ListColumns from './ListColumns';
 import Review from './Review';
