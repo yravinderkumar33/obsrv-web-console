@@ -3,7 +3,7 @@ import {
     Button, Grid, ToggleButtonGroup, Box,
     Stack, Typography, FormControl,
     ToggleButton, Chip, Alert, FormControlLabel,
-    TextField
+    TextField, Autocomplete
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
@@ -51,10 +51,11 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
+    const [timestampField, setTimestampField] = useState<string>('');
     const [filterByChip, setFilterByChip] = useState<columnFilter | null>(null);
 
-    const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
-    const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
+    const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData, timestampField: timestampField } }));
+    const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values, timestampField: timestampField } }));
 
     const gotoNextSection = () => {
         if (areConflictsResolved(flattenedData)) {
@@ -232,7 +233,7 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                         <Box alignItems="center" display="flex">
                             <TextField
                                 type="text"
-                                label="JSONata Expression"
+                                label="Expression"
                                 value={value}
                                 onChange={handleChange}
                                 variant="outlined"
@@ -261,6 +262,11 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
             const data = wizardStoreState.pages[pageMeta.pageId].state.schema;
             return _.filter(data, [filter.lookup, filter.id])
         })
+    }
+
+    const handleTimeFieldChange = (value: string) => {
+        setTimestampField(value);
+        persistState();
     }
 
     const deleteFilter = () => {
@@ -328,6 +334,21 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                                 />
                             </ScrollX>
                         </MainCard >
+                    </Grid>
+                    <Grid item xs={12}>
+                        <Box my={1} display="flex" alignItems="center">
+                            <Typography>Default Timestamp Column -</Typography>
+                            <FormControl sx={{ mx: 2, width: '20%' }}>
+                                <Autocomplete
+                                    value={timestampField}
+                                    fullWidth
+                                    disablePortal
+                                    options={_.map(wizardStoreState.pages[pageMeta.pageId].state.schema, 'column')}
+                                    renderInput={(params) => <TextField {...params} label="Column Name.." />}
+                                    onChange={(e, value, reason) => handleTimeFieldChange(value)}
+                                />
+                            </FormControl>
+                        </Box>
                     </Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" justifyContent="space-between">

@@ -22,7 +22,7 @@ const BooleanAccordion = ({ handleBack, handleNext, setErrorIndex, index, config
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [manageStep, setManageStep] = useState<string>('');
     const [updatedConfig, setUpdatedConfig] = useState(configuration);
-    const [formValues, subscribe] = useState({});
+    const [formValues, subscribe] = useState<any>({});
 
     const persistState = () => dispatch(addState(
         {
@@ -36,12 +36,16 @@ const BooleanAccordion = ({ handleBack, handleNext, setErrorIndex, index, config
     }, [formValues]);
 
     const stateToRedux = () => {
-        let data = Object.entries(updatedConfig).map(([key, value]: any) => {
-            value = delete value.form;
-            return {
-                [key]: value
-            }
-        })
+        let data = _.cloneDeep(updatedConfig);
+        _.mapKeys(data, (item) => {
+            if (_.has(item, 'state'))
+                Object.keys(formValues).map((k) => {
+                    if (_.has(item.state, k))
+                        item.state[k] = formValues[k];
+                    return;
+                })
+            return;
+        });
         return data;
     }
 

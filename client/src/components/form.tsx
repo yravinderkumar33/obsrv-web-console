@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: any) => ({
     },
 }));
 
-const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, size = {}, enableReinitialize = false, subscribe }: any) => {
+const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, size = {}, enableReinitialize = false, }: any) => {
     const classes: any = useStyles;
     const { xs = 12, sm = 12, lg = 12 } = size;
 
