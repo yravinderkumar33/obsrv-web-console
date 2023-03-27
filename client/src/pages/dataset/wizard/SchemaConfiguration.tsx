@@ -51,7 +51,8 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
-    const [timestampField, setTimestampField] = useState<string>('');
+    const [timestampField, setTimestampField] = useState<Record<string, string>>({ label: 'Sync TS', value: 'arrival_time' });
+    const [timestampOptions, setTimestampOptions] = useState<any>([]);
     const [filterByChip, setFilterByChip] = useState<columnFilter | null>(null);
 
     const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData, timestampField: timestampField } }));
@@ -264,8 +265,20 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
         })
     }
 
-    const handleTimeFieldChange = (value: string) => {
-        setTimestampField(value);
+    const formatOptions = () => {
+        let data = _.get(apiResponse?.data?.configurations?.indexConfiguration, 'index');
+        data = data.map((item: any) => {
+            if (item === 'arrival_time')
+                return { label: 'Sync TS', 'value': item };
+            else return { label: item, value: item };
+        });
+        setTimestampOptions(data);
+    }
+
+    const handleTimeFieldChange = (value: any) => {
+        if (value)
+            setTimestampField(value);
+        else setTimestampField({ label: 'Sync TS', value: 'arrival_time' });
         persistState();
     }
 
@@ -283,6 +296,7 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
             setFlattenedData(existingState || flattenedSchema);
             pushStateToStore(existingState || flattenedSchema);
             setSkipPageReset(false);
+            formatOptions();
         }
     }, [apiResponse?.status]);
 
@@ -336,19 +350,23 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                         </MainCard >
                     </Grid>
                     <Grid item xs={12}>
-                        <Box my={1} display="flex" alignItems="center">
+                        {timestampOptions.length > 1 && <Box my={1} display="flex" alignItems="center">
                             <Typography>Default Timestamp Column -</Typography>
                             <FormControl sx={{ mx: 2, width: '20%' }}>
                                 <Autocomplete
+                                    options={timestampOptions}
+                                    getOptionLabel={(option: any) => option.label}
                                     value={timestampField}
-                                    fullWidth
                                     disablePortal
-                                    options={_.map(wizardStoreState.pages[pageMeta.pageId].state.schema, 'column')}
+                                    disableClearable
                                     renderInput={(params) => <TextField {...params} label="Column Name.." />}
-                                    onChange={(e, value, reason) => handleTimeFieldChange(value)}
+                                    isOptionEqualToValue={(option: any, value: any) => option.value === value.value}
+                                    onChange={(event: any, newValue: Record<string, string> | null) => {
+                                        handleTimeFieldChange(newValue);
+                                    }}
                                 />
                             </FormControl>
-                        </Box>
+                        </Box>}
                     </Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" justifyContent="space-between">
