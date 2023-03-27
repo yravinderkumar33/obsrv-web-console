@@ -4,7 +4,7 @@ import {
     Stack, MenuItem, InputLabel
 } from "@mui/material";
 import { CheckCircleOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MUIForm from "components/form";
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
@@ -21,6 +21,7 @@ const SelectAccordion = ({ handleBack, handleNext, setErrorIndex, index, configu
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [manageStep, setManageStep] = useState<string>('');
     const [updatedConfig, setUpdatedConfig] = useState(configuration);
+    const [formValues, subscribe] = useState({});
 
     const persistState = () => dispatch(addState(
         {
@@ -28,6 +29,10 @@ const SelectAccordion = ({ handleBack, handleNext, setErrorIndex, index, configu
             index,
             state: { configurations: stateToRedux() }
         }));
+
+    useEffect(() => {
+        persistState();
+    }, [formValues])
 
     const stateToRedux = () => {
         let data = Object.entries(updatedConfig).map(([key, value]: any) => {
@@ -166,6 +171,7 @@ const SelectAccordion = ({ handleBack, handleNext, setErrorIndex, index, configu
                                     validationSchema={getValidationSchemas(stepItem.id)}
                                     fields={getFields(stepItem, stepItem.rootQValue)}
                                     size={{ xs: 12, sm: 6, lg: 6 }}
+                                    subscribe={subscribe}
                                 >
                                     <Grid item xs={12}>
                                         <Box display="flex" justifyContent="flex-end" mb={2}>

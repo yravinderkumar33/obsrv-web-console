@@ -4,7 +4,7 @@ import {
     Stack
 } from "@mui/material";
 import { CheckCircleOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MUIForm from "components/form";
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
@@ -22,6 +22,7 @@ const BooleanAccordion = ({ handleBack, handleNext, setErrorIndex, index, config
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [manageStep, setManageStep] = useState<string>('');
     const [updatedConfig, setUpdatedConfig] = useState(configuration);
+    const [formValues, subscribe] = useState({});
 
     const persistState = () => dispatch(addState(
         {
@@ -29,6 +30,10 @@ const BooleanAccordion = ({ handleBack, handleNext, setErrorIndex, index, config
             index,
             state: { configurations: stateToRedux() }
         }));
+
+    useEffect(() => {
+        persistState();
+    }, [formValues]);
 
     const stateToRedux = () => {
         let data = Object.entries(updatedConfig).map(([key, value]: any) => {
@@ -152,6 +157,7 @@ const BooleanAccordion = ({ handleBack, handleNext, setErrorIndex, index, config
                                     validationSchema={getValidationSchemas(stepItem.id)}
                                     fields={getFields(stepItem)}
                                     size={{ xs: 12, sm: 6, lg: 6 }}
+                                    subscribe={subscribe}
                                 >
                                     <Grid item xs={12}>
                                         <Box display="flex" justifyContent="flex-end" mb={2}>
