@@ -21,7 +21,7 @@ const MetricsDetails = (props: any) => {
     const navigate = useNavigate();
     const params = useParams();
     const [metadata, setmetadata] = useState<Record<string, any>>();
-    const metricId = id || _.get(params, 'metricId')
+    const metricId = id || _.get(params, 'metricId');
 
     const navigateToHome = ({ errMsg }: any) => {
         navigate('/');
@@ -39,22 +39,21 @@ const MetricsDetails = (props: any) => {
         fetchMetadata();
     }, [metricId]);
 
-    const renderCharts = () => {
+    const renderCharts = (metadata: any) => {
         if (metadata) {
             const { charts } = metadata as { charts: Record<string, any> };
-            return _.flatten(_.map(charts, (value, key) => {
+            return _.flatten(_.map(charts, (value) => {
                 const { size, metadata = [] } = value;
                 const { xs, sm, lg, md } = size;
                 return <Grid container rowSpacing={2} columnSpacing={2} marginBottom={2}>
                     {
-                        _.map(metadata, meta => {
+                        _.map(metadata, (meta, index) => {
                             const { chart } = meta;
-                            return <Grid item xs={xs} sm={sm} md={md} lg={lg}>
+                            return <Grid item xs={xs} sm={sm} md={md} lg={lg} key={`${index}-${Math.random()}`}>
                                 {chart}
                             </Grid>
                         })
                     }
-
                 </Grid>
             }))
         }
@@ -84,7 +83,7 @@ const MetricsDetails = (props: any) => {
                         </Grid>
                     }
                 </Grid>
-                {renderCharts()}
+                {renderCharts(metadata)}
             </MainCard >
         </>
     )
