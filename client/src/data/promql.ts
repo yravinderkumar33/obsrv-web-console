@@ -79,5 +79,8 @@ export default {
     },
     "deep_storage_total": {
         "query": 'topk(1, sum(minio_cluster_capacity_usable_free_bytes{job="loki-minio"}) by (instance)) '
+    },
+    "api_failure_percentage": {
+        "query": "(node_failed_api_calls / node_total_api_calls) * 100"
     }
 }

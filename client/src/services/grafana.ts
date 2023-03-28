@@ -1,5 +1,9 @@
-import { NavigateFunction } from "react-router";
+import * as _ from 'lodash';
 
 export const navigateToGrafana = (dashboardLink: string) => {
-    window.open(dashboardLink);
+    const graphanaUrl = process.env.REACT_APP_GRAFANA_URL;
+    if (graphanaUrl) {
+        const url = `${graphanaUrl}/${dashboardLink}`
+        window.open(url);
+    }
 } 

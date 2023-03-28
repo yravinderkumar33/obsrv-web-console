@@ -15,6 +15,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -128,6 +129,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -365,6 +367,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -469,6 +472,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -577,6 +581,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -1016,6 +1021,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             legend: {
                 show: true
             },

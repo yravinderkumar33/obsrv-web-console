@@ -161,6 +161,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             plotOptions: {
                 bar: {
                     horizontal: false,

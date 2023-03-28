@@ -64,6 +64,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             stroke: {
                 width: 2,
                 curve: 'smooth'

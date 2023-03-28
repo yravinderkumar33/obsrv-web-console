@@ -45,7 +45,7 @@ const MetricsDetails = (props: any) => {
             return _.flatten(_.map(charts, (value, index) => {
                 const { size, metadata = [] } = value;
                 const { xs, sm, lg, md } = size;
-                return <Grid container rowSpacing={1} columnSpacing={1} key={`chart-${index}`} marginBottom={2}>
+                return <Grid container rowSpacing={1} columnSpacing={1} key={`chart-${index}`} marginBottom={1}>
                     {
                         _.map(metadata, (meta, index) => {
                             const { chart } = meta;
@@ -59,21 +59,19 @@ const MetricsDetails = (props: any) => {
         }
     }
 
-    const navigateToGrafanaDashboard = (e: any) => {
-        const link = _.get(metadata, 'links.grafana.link');
-        link && navigateToGrafana(link);
+    const renderGrafanaIcon = () => {
+        const link = _.get(metadata, 'links.grafana.link')
+        if (!link) return null;
+        return <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
+            <IconButton color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
+                <Avatar alt="Gradana" src={grafanaIcon} />
+            </IconButton>
+        </Tooltip>
     }
 
     return (
         <>
-            <MainCard title={`${metadata?.primaryLabel || ""} Metrics`} secondary={
-                <Tooltip title="Navigate to Grafana Dashboard" onClick={navigateToGrafanaDashboard}>
-                    <IconButton color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
-                        <Avatar alt="Gradana" src={grafanaIcon} />
-                    </IconButton>
-                </Tooltip>
-            }
-            >
+            <MainCard title={`${metadata?.primaryLabel || ""} Metrics`} secondary={renderGrafanaIcon()}>
                 <Grid container rowSpacing={1} columnSpacing={1} marginBottom={2}>
                     {metadata?.description &&
                         <Grid item xs={12}>

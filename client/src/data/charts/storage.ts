@@ -16,6 +16,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             legend: {
                 show: true
             },

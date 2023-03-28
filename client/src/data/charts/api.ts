@@ -16,6 +16,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             legend: {
                 show: false
             },
@@ -87,7 +88,6 @@ export default {
             body: {},
             params: {
                 query: promql.node_query_response_time_min.query,
-                step: '1h'
             },
             parse: (response: any) => {
                 const value = _.get(response, 'result.data.result[0].value[1]') || 0;
@@ -95,14 +95,6 @@ export default {
             },
             error() {
                 return [0, "error"];
-            },
-            context: (query: any) => {
-                const start = dayjs().subtract(1, 'day').unix()
-                const end = dayjs().unix();
-                query.params = {
-                    ...query.params, start, end
-                }
-                return query;
             }
         }
     },
@@ -115,23 +107,15 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: promql.node_query_response_time_max.query,
-                step: '1h'
+                query: promql.node_query_response_time_max.query
             },
             parse: (response: any) => {
                 const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                if (!value) throw new Error();
                 return _.floor(value, 1)
             },
             error() {
                 return [0, "error"];
-            },
-            context: (query: any) => {
-                const start = dayjs().subtract(1, 'day').unix()
-                const end = dayjs().unix();
-                query.params = {
-                    ...query.params, start, end
-                }
-                return query;
             }
         }
     },
@@ -144,23 +128,15 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: promql.node_query_response_time_avg.query,
-                step: '1h'
+                query: promql.node_query_response_time_avg.query
             },
             parse: (response: any) => {
                 const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                if (!value) throw new Error();
                 return _.floor(value, 1)
             },
             error() {
                 return [0, "error"];
-            },
-            context: (query: any) => {
-                const start = dayjs().subtract(1, 'day').unix()
-                const end = dayjs().unix();
-                query.params = {
-                    ...query.params, start, end
-                }
-                return query;
             }
         }
     },
@@ -175,6 +151,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             legend: {
                 show: false
             },
@@ -247,6 +224,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             legend: {
                 show: false
             },
@@ -305,6 +283,29 @@ export default {
             },
             error() {
                 return 0;
+            }
+        }
+    },
+    api_failure_percentage: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.api_failure_percentage.query
+            },
+            parse: (response: any) => {
+                const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                if (!value) throw new Error();
+                if (value > 1) return ["UNHEALTHY", "error"]
+                if (value > 0.1 && value <= 1) return ["HEALTHY", "warning"]
+                return ["HEALTHY", "primary"];
+            },
+            error() {
+                return [0, "error"];
             }
         }
     },

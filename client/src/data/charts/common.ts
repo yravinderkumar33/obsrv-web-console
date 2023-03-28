@@ -11,5 +11,18 @@ export default {
             enabled: true,
             speed: 3000
         }
-    }
+    },
+    grid: {
+        show: true,
+        xaxis: {
+            lines: {
+                show: true
+            }
+        },
+        yaxis: {
+            lines: {
+                show: true
+            }
+        }
+    },
 }

@@ -119,6 +119,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             dataLabels: {
                 enabled: false
             },
@@ -200,6 +201,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             dataLabels: {
                 enabled: false
             },

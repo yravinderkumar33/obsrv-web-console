@@ -21,7 +21,7 @@ export const metricsMetadata = [
         menuIcon: AreaChartOutlined,
         links: {
             grafana: {
-                link: "http://localhost:9000/d/efa86fd1d0c121a26444b636a3f509a8/kubernetes-compute-resources-cluster?orgId=1&refresh=10s"
+                link: "d/efa86fd1d0c121a26444b636a3f509a8/kubernetes-compute-resources-cluster?orgId=1&refresh=10s"
             }
         },
         color: 'main',

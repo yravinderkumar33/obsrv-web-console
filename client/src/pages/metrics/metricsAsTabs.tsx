@@ -20,8 +20,7 @@ function Panel(props: any) {
 
 const MetricsPanel = () => {
     const [value, setValue] = useState(0);
-
-
+    
     const scrollToTabSection = () => {
         const element = document.getElementById("tabSectionStart");
         if (element) {
