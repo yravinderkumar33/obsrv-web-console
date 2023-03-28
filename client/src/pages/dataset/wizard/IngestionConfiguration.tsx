@@ -14,7 +14,7 @@ export const pageMeta = { pageId: 'ingestionConfiguration', title: "Ingestion Co
 
 const IngestionConfiguration = ({ handleBack, handleNext, setErrorIndex, index }: any) => {
     const [timestampOptions, setTimestampOptions] = useState<any>([]);
-    const [timestampField, setTimestampField] = useState<Record<string, string>>({ label: 'Sync TS', value: 'arrival_time' });
+    const [timestampField, setTimestampField] = useState<Record<string, string>>({ label: 'Time of Arrival', value: 'arrival_time' });
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const dispatch = useDispatch();
     const [updatedConfig, setUpdatedConfig] = useState(ingestionConfig);
@@ -49,7 +49,7 @@ const IngestionConfiguration = ({ handleBack, handleNext, setErrorIndex, index }
         let data = _.get(apiResponse?.data?.configurations?.indexConfiguration, 'index');
         data = data.map((item: any) => {
             if (item === 'arrival_time')
-                return { label: 'Sync TS', 'value': item };
+                return { label: 'Time of Arrival', 'value': item };
             else return { label: item, value: item };
         });
         setTimestampOptions(data);

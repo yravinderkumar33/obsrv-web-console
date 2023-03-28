@@ -345,7 +345,6 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
                     color={filterByChip?.label === filter.label ? filter.color : undefined}
                     size="small"
                     onClick={() => handleFilterChange(filter)}
-                    deleteIcon={filterByChip?.label === filter.label ? <DeleteFilled /> : undefined}
                     onDelete={filterByChip?.label === filter.label ? () => deleteFilter() : undefined}
                 />
                 )}

@@ -12,45 +12,49 @@ const MetricsDetails = Loadable(lazy(() => import('pages/metrics/details')));
 const DatasetCreateEvents = Loadable(lazy(() => import('pages/dashboard/createEvents')))
 
 const MainRoutes = {
-  path: '/',
-  children: [
-    {
-      path: '/',
-      element: (
-        <MainLayout />
-      ),
-      children: [
+    path: '/',
+    children: [
         {
-          path: '/',
-          element: <HomePage />
-        },
-        {
-          path: 'datasets',
-          element: <ClusterHealth />
-        },
-        {
-          path: 'datasets/:datasetId',
-          element: <DatasetDetails />
-        },
-        {
-          path: 'datasets/addEvents/:datasetId/:datasetName',
-          element: <DatasetCreateEvents />
-        },
-        {
-          path: 'metrics',
-          element: <SystemMetrics />
-        },
-        {
-          path: 'metrics/details',
-          element: <MetricsDetails />
-        },
-        {
-          path: 'dataset/new',
-          element: <NewDataset />
+            path: '/',
+            element: (
+                <MainLayout />
+            ),
+            children: [
+                {
+                    path: '/',
+                    element: <HomePage />
+                },
+                {
+                    path: 'datasets',
+                    element: <ClusterHealth />
+                },
+                {
+                    path: 'datasets/:datasetId',
+                    element: <DatasetDetails />
+                },
+                {
+                    path: 'datasets/addEvents/:datasetId/:datasetName',
+                    element: <DatasetCreateEvents />
+                },
+                {
+                    path: 'metrics',
+                    element: <SystemMetrics />
+                },
+                {
+                    path: 'metrics/details',
+                    element: <MetricsDetails />
+                },
+                {
+                    path: 'dataset/new',
+                    element: <NewDataset />
+                },
+                {
+                    path: 'dataset/new/master',
+                    element: <NewDataset master={true} />
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 };
 
 export default MainRoutes;

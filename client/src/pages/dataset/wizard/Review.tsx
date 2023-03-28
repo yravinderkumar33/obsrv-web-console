@@ -66,15 +66,6 @@ const Final = ({ handleNext, handleBack, index }: any) => {
                 <Grid item xs={4}>
                     <Button variant="contained" onClick={publish}>Save Dataset</Button>
                 </Grid>
-                <Grid item xs={12}>
-                    <Stack direction="row" justifyContent="space-between">
-                        <AnimateButton>
-                            <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={handleBack}>
-                                Previous
-                            </Button>
-                        </AnimateButton>
-                    </Stack>
-                </Grid>
             </Grid>
         </>
     );

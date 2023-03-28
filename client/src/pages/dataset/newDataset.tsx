@@ -3,11 +3,11 @@ import {
 } from '@mui/material';
 import NewDatasetOnboardingWizard from './wizard';
 
-const NewDataset = () => {
+const NewDataset = ({ master = false }) => {
     return (
         <Grid container rowSpacing={4.5} columnSpacing={3}>
             <Grid item xs={12}>
-                <NewDatasetOnboardingWizard />
+                <NewDatasetOnboardingWizard master={master} />
             </Grid>
         </Grid>
     )

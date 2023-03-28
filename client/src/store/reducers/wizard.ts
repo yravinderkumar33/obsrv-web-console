@@ -39,8 +39,14 @@ const wizard = createSlice({
         },
         reset: (state, action) => {
             const { payload } = action;
-            const { omit = [] } = payload;
-            if (!omit?.length) {
+            const { omit = [], preserve = [] } = payload;
+            if (preserve?.length) {
+                const pages = Object.keys(state.pages);
+                _.forEach(_.difference(pages, preserve), pageId => {
+                    delete state.pages[pageId]
+                })
+            }
+            else if (!omit?.length) {
                 return initialState
             } else {
                 const pages = Object.keys(state.pages);

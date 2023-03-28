@@ -15,7 +15,7 @@ import { camelCaseToString } from "utils/stringUtils";
 const SelectAccordion = ({ index, configuration, updatedConfig, setUpdatedConfig, subscribe, formValues, pageMeta }: any) => {
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
-    const [manageStep, setManageStep] = useState<string>('');
+    const [openAccordion, setOpenAccordion] = useState<boolean>(false);
 
     const getFields = (stepItem: any, selectedValue: string) => {
         const pairs = _.toPairs(configuration[stepItem.id].form[selectedValue]);
@@ -56,19 +56,24 @@ const SelectAccordion = ({ index, configuration, updatedConfig, setUpdatedConfig
         });
     }
 
-    const handleStepChange = (id: string) => {
-        setManageStep((prevState) => id === prevState ? '' : id);
+    const handleStepChange = (stepItem: any) => {
+        if (!stepItem.completed && stepItem.form[stepItem.rootQValue])
+            setOpenAccordion(true);
     }
 
     const handleChange = (stepItem: any, value: string) => {
         setUpdatedConfig((prevState: any) => {
             let data = _.cloneDeep(prevState);
             data[stepItem.id].rootQValue = value;
-            if (stepItem.form[value] === null)
+            if (stepItem.form[value] === null) {
                 data[stepItem.id].completed = true;
-            else data[stepItem.id].completed = false;
-            if (value && value !== '' && data[stepItem.id].form[stepItem.rootQValue])
-                setManageStep(stepItem.id);
+                setOpenAccordion(false);
+            }
+            else {
+                data[stepItem.id].completed = false;
+                if (value && value !== '' && data[stepItem.id].form[value])
+                    setOpenAccordion(true);
+            }
             return data;
         });
     }
@@ -78,11 +83,8 @@ const SelectAccordion = ({ index, configuration, updatedConfig, setUpdatedConfig
             const data = prevState;
             data[stepItem.id].completed = true;
             data[stepItem.id].state = { ...values };
+            setOpenAccordion(false);
             return data;
-        });
-        setManageStep((prevState: string) => {
-            if (stepItem.id === prevState) return '';
-            else return prevState;
         });
     }
 
@@ -92,13 +94,10 @@ const SelectAccordion = ({ index, configuration, updatedConfig, setUpdatedConfig
                 return (
                     <Grid item xs={12} key={stepItem.id}>
                         <Accordion
-                            expanded={
-                                stepItem.form[stepItem.rootQValue] !== null &&
-                                manageStep === stepItem.id
-                            }
+                            expanded={openAccordion}
                             onChange={() =>
                                 stepItem.completed ?
-                                    handleStepChange(stepItem.id)
+                                    handleStepChange(stepItem)
                                     : null
                             }>
                             <AccordionSummary
