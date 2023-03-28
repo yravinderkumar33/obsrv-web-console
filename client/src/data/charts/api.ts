@@ -62,8 +62,6 @@ export default {
             body: {},
             params: {
                 query: promql.node_query_response_time.query,
-                start: '1676015290.967',
-                end: '1676015590.967',
                 step: '1m'
             },
             parse: (response: any) => {
@@ -197,8 +195,6 @@ export default {
             body: {},
             params: {
                 query: promql.node_total_api_call.query,
-                start: '1676015290.967',
-                end: '1676015590.967',
                 step: '1m'
             },
             parse: (response: any) => {
@@ -270,8 +266,6 @@ export default {
             body: {},
             params: {
                 query: promql.node_total_failed_api_call.query,
-                start: '1676015290.967',
-                end: '1676015590.967',
                 step: '1m'
             },
             parse: (response: any) => {

@@ -102,8 +102,6 @@ export default {
             body: {},
             params: {
                 query: promql.node_memory.query,
-                start: '1676015290.967',
-                end: '1676015590.967',
                 step: '30s'
             },
             parse: (response: any) => {
@@ -216,8 +214,6 @@ export default {
             body: {},
             params: {
                 query: promql.node_cpu.query,
-                end: 1676457179.487,
-                start: 1676456879.487,
                 step: '30s'
             },
             parse: (response: any) => {
