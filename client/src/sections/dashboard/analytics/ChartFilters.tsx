@@ -2,13 +2,14 @@ import { Box, Chip, Grid, MenuItem, Select, Stack, Typography } from "@mui/mater
 import React, { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
 import * as _ from 'lodash';
+import { InfoCircleOutlined } from "@ant-design/icons";
 
 
 const ApexWithFilters = (props: any) => {
     const { title = '', filters = [], children, type = 'chip' } = props;
     const defaultFilter = _.find(filters, ['default', true]);
     const [filter, setFilter] = useState<any>(_.get(defaultFilter, 'value'));
-    const [step, setStep] = useState<string>('1h');
+    const [step, setStep] = useState<string>('5m');
 
     const getFilterMeta = (value: number) => _.find(filters, ['value', value]);
 
@@ -30,8 +31,8 @@ const ApexWithFilters = (props: any) => {
     }
 
     const renderFilters = () => {
-        const menuItems = _.map(filters, (filter: Record<string, any>) => {
-            return <MenuItem value={filter.value}>{filter.label}</MenuItem>
+        const menuItems = _.map(filters, (filter: Record<string, any>, index) => {
+            return <MenuItem value={filter.value} key={`filter-${index}`}>{filter.label}</MenuItem>
         })
 
         return <Select value={filter} size="small" onChange={handlechange}>
@@ -41,9 +42,9 @@ const ApexWithFilters = (props: any) => {
     }
 
     const renderChipFilters = () => {
-        const menuItems = _.map(filters, (filterMeta: Record<string, any>) => {
+        const menuItems = _.map(filters, (filterMeta: Record<string, any>, index) => {
             const variant = (_.get(filterMeta, 'value') === filter) ? "filled" : "outlined";
-            return <Chip label={filterMeta.label} variant={variant} color="primary" onClick={_ => onClickHandler(filterMeta)} />
+            return <Chip label={filterMeta.label} variant={variant} color="primary" onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
         })
 
         return <Stack direction="row" spacing={2}>
@@ -63,20 +64,21 @@ const ApexWithFilters = (props: any) => {
         <MainCard content={false} sx={{ mt: 1.5 }}>
             <Grid item>
                 <Grid container>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={12}>
                         <Stack sx={{ ml: 2, mt: 3 }} alignItems={{ xs: 'center', sm: 'flex-start' }}>
-                            <Stack direction="row" alignItems="center">
+                            <Stack direction="row" alignItems="center" spacing={1}>
                                 <Typography color="textSecondary">{title}</Typography>
+                                <InfoCircleOutlined />
                             </Stack>
                         </Stack>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={12}>
                         <Stack
                             direction="row"
                             spacing={1}
                             alignItems="center"
-                            justifyContent={{ xs: 'center', sm: 'flex-end' }}
-                            sx={{ mt: 3, mr: 2 }}
+                            justifyContent={{ xs: 'center', sm: 'flex-start' }}
+                            sx={{ mt: 1, ml: 2 }}
                         >
 
                             {(filters.length && type === 'chip') ? renderChipFilters() : null}

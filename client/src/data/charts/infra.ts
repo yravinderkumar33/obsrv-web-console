@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
-import { Theme } from '@mui/material';
 import promql from '../promql';
 import defaultConf from './common'
 
@@ -104,7 +103,7 @@ export default {
                 query: promql.node_memory.query,
                 start: '1676015290.967',
                 end: '1676015590.967',
-                step: 1
+                step: '30s'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -217,7 +216,7 @@ export default {
                 query: promql.node_cpu.query,
                 end: 1676457179.487,
                 start: 1676456879.487,
-                step: 1
+                step: '30s'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -229,10 +228,6 @@ export default {
             error() {
                 return [0]
             }
-        },
-        getColor: (theme: Theme, series: Array<any>) => {
-            const threshHold = 10;
-
         }
     },
     cpu_percentage: {
@@ -561,7 +556,7 @@ export default {
             body: {},
             params: {
                 query: promql.instance_cpu.query,
-                step: 2419
+                step: '5m'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -669,7 +664,7 @@ export default {
             body: {},
             params: {
                 query: promql.instance_disk.query,
-                step: 2419
+                step: '5m'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -1076,7 +1071,7 @@ export default {
             body: {},
             params: {
                 query: promql.throughput.query,
-                step: '2m30s'
+                step: '5m'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');

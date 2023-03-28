@@ -70,7 +70,21 @@ export const metricsMetadata = [
                     lg: 6
                 },
                 metadata: [
-
+                    {
+                        chart: <ApexWithFilters title="CPU Usage" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <ApexWithFilters title="Memory Usage" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_disk')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    }
                 ]
             },
             large: {
@@ -81,21 +95,6 @@ export const metricsMetadata = [
                     lg: 12
                 },
                 metadata: [
-                    {
-                        chart: <ApexWithFilters title="CPU Usage" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} height={250} interval={11520}></ApexChart>
-                        </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Memory Usage" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={11520}></ApexChart>
-                        </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_disk')} height={250} interval={11520}></ApexChart>
-                        </ApexWithFilters>
-                    },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={_.get(filters, 'default')}>
                             <AlertsMessages />
@@ -144,6 +143,21 @@ export const metricsMetadata = [
                     lg: 6
                 },
                 metadata: [
+                    {
+                        chart: <ApexWithFilters title="Query Response Time (Min, Max, Avg)" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'node_query_response_time')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <ApexWithFilters title="Number of API Calls" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'node_total_api_call')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <ApexWithFilters title="Number of Failed API Calls" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'node_total_failed_api_call')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
 
                 ]
             },
@@ -155,21 +169,6 @@ export const metricsMetadata = [
                     lg: 12
                 },
                 metadata: [
-                    {
-                        chart: <ApexWithFilters title="Query Response Time (Min, Max, Avg)" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'node_query_response_time')} height={250} interval={11520}></ApexChart>
-                        </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Number of API Calls" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'node_total_api_call')} height={250} interval={11520}></ApexChart>
-                        </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Number of Failed API Calls" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'node_total_failed_api_call')} height={250} interval={11520}></ApexChart>
-                        </ApexWithFilters>
-                    },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={_.get(filters, 'variant1')}>
                             <AlertsMessages />
@@ -224,12 +223,12 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ApexWithFilters title="Total Events Received" filters={_.get(filters, 'variant1')}>
-                            <ApexChart metadata={_.get(chartMeta, 'totalEventsProcessedTimeSeries')} height={250} interval={11520}></ApexChart>
+                        chart: <ApexWithFilters title="Total Events Received" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'totalEventsProcessedTimeSeries')} height={250} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
-                        chart: <ApexWithFilters title="Incidents/Alerts" filters={_.get(filters, 'variant1')}>
+                        chart: <ApexWithFilters title="Incidents/Alerts" filters={_.get(filters, 'default')}>
                             <AlertsMessages />
                         </ApexWithFilters>
                     }
@@ -264,7 +263,7 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="0" secondary="Processing Time (Max)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'maxProcessingTime.query')} suffix={'ms'} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Processing Time (Avg)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'avgProcessingTime.query')}  suffix={'ms'}/>
+                        chart: <ReportCard primary="0" secondary="Processing Time (Avg)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'avgProcessingTime.query')} suffix={'ms'} />
                     }
                 ]
             },
@@ -276,7 +275,16 @@ export const metricsMetadata = [
                     lg: 6
                 },
                 metadata: [
-
+                    {
+                        chart: <ApexWithFilters title="Processing Time (Min)" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'minProcessingTimeSeries')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <ApexWithFilters title="Throughput" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
                 ]
             },
             large: {
@@ -287,16 +295,7 @@ export const metricsMetadata = [
                     lg: 12
                 },
                 metadata: [
-                    {
-                        chart: <ApexWithFilters title="Processing Time (Min, Max, Avg)" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} height={250} interval={11520}></ApexChart>
-                        </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Throughput" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={11520}></ApexChart>
-                        </ApexWithFilters>
-                    },
+
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={_.get(filters, 'variant1')}>
                             <AlertsMessages />
@@ -366,17 +365,17 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         chart: <ApexWithFilters title="Query Response Time (Min, Max, Avg)" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} height={250} interval={11520}></ApexChart>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} height={250} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
                         chart: <ApexWithFilters title="Query Throughput" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={11520}></ApexChart>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} height={250} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
                         chart: <ApexWithFilters title="Number of API Calls" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_disk')} height={250} interval={11520}></ApexChart>
+                            <ApexChart metadata={_.get(chartMeta, 'instance_disk')} height={250} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {

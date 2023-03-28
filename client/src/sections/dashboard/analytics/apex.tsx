@@ -23,7 +23,7 @@ const ApexChart = (props: any) => {
 
   const fetchMetric = async (query: Record<string, any>) => {
     const interval = rest.interval || globalConfig.clusterMenu.interval;
-    const step = rest.step || '1m';
+    const step = rest.step || '5m';
     const { type, params = {}, noParams = false } = query;
 
     if (type === 'api') {
@@ -73,8 +73,7 @@ const ApexChart = (props: any) => {
     return () => {
       interval && clearInterval(interval)
     }
-
-  }, [mode, primary, secondary, line, theme, step, interval, query]);
+  }, [mode, primary, secondary, line, theme, step, interval]);
 
   return <>
     {loading && <Loader />}

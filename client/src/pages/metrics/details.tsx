@@ -7,7 +7,7 @@ import MainCard from 'components/MainCard';
 import { metricsMetadata } from 'data/metrics';
 import { useNavigate, useParams } from 'react-router-dom';
 import { error } from 'services/toaster';
-import { QuestionCircleFilled } from '@ant-design/icons';
+import { InfoCircleOutlined, QuestionCircleFilled } from '@ant-design/icons';
 import { Avatar } from '@mui/material';
 import { navigateToGrafana } from 'services/grafana';
 import { useTheme } from '@mui/material';
@@ -42,10 +42,10 @@ const MetricsDetails = (props: any) => {
     const renderCharts = (metadata: any) => {
         if (metadata) {
             const { charts } = metadata as { charts: Record<string, any> };
-            return _.flatten(_.map(charts, (value) => {
+            return _.flatten(_.map(charts, (value, index) => {
                 const { size, metadata = [] } = value;
                 const { xs, sm, lg, md } = size;
-                return <Grid container rowSpacing={2} columnSpacing={2} marginBottom={2}>
+                return <Grid container rowSpacing={2} columnSpacing={2} marginBottom={2} key={`chart-${index}`}>
                     {
                         _.map(metadata, (meta, index) => {
                             const { chart } = meta;
@@ -77,7 +77,7 @@ const MetricsDetails = (props: any) => {
                 <Grid container rowSpacing={2} columnSpacing={2} marginBottom={2}>
                     {metadata?.description &&
                         <Grid item xs={12}>
-                            <Alert color="info" icon={<QuestionCircleFilled />}>
+                            <Alert color="info" icon={<InfoCircleOutlined />}>
                                 {metadata?.description}
                             </Alert>
                         </Grid>

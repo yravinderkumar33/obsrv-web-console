@@ -24,8 +24,8 @@ const MegaMenuSection = () => {
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75 }}>
       {
-        buttons.map(button => {
-          return <Tooltip title={button.tooltip} >
+        buttons.map((button, index) => {
+          return <Tooltip title={button.tooltip} key={index}>
             <IconButton color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
               <Avatar sx={{ width: 30, height: 30 }} src={button.icon}></Avatar>
             </IconButton>

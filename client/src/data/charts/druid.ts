@@ -30,32 +30,6 @@ export default {
             }
         }
     },
-    druid_total_datasources: {
-        query: {
-            type: 'api',
-            timeout: 3000,
-            url: '/api/report/v1/query',
-            method: 'GET',
-            headers: {},
-            body: {},
-            params: {
-                query: promql.druid_total_datasources.query
-            },
-            parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
-                const sum = _.sumBy(result, (payload: any) => {
-                    const { value } = payload;
-                    const [_, percentage = 0] = value;
-                    return +percentage
-                })
-
-                return result?.length ? _.floor(sum / result?.length) : 0;
-            },
-            error() {
-                return 0
-            }
-        }
-    },
     druid_avg_processing_time: {
         query: {
             type: 'api',
