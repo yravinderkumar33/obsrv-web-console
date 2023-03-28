@@ -289,19 +289,15 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: promql.disk_percentage.query
+                query: promql.instance_disk.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
-                const sum = _.sumBy(result, (payload: any) => {
-                    const { value } = payload;
-                    const [_, percentage = 0] = value;
-                    return +percentage
-                })
-                return _.floor(sum / result?.length);
+                const result = _.get(response, 'result.data.result[0].value[1]');
+                if (!result) throw new Error()
+                return _.floor(result);
             },
             error() {
-                return 0
+                return [0, "error"]
             }
         }
     },
@@ -760,16 +756,12 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: promql.disk_usage_radial.query
+                query: promql.instance_disk.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
-                const sum = _.sumBy(result, (payload: any) => {
-                    const { value } = payload;
-                    const [_, percentage = 0] = value;
-                    return +percentage
-                })
-                return [_.floor(sum / result?.length)];
+                const result = _.get(response, 'result.data.result[0].value[1]');
+                if (!result) throw new Error()
+                return _.floor(result);
             },
             error() {
                 return []

@@ -20,8 +20,18 @@ function Panel(props: any) {
 
 const MetricsPanel = () => {
     const [value, setValue] = useState(0);
+
+
+    const scrollToTabSection = () => {
+        const element = document.getElementById("tabSectionStart");
+        if (element) {
+            element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+        }
+    }
+
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
+        scrollToTabSection();
     };
 
     return (
@@ -30,7 +40,7 @@ const MetricsPanel = () => {
                 <Grid item xs={12}>
                     <ClusterStatus />
                 </Grid>
-                <Grid item xs={12}>
+                <Grid item xs={12} id="tabSectionStart">
                     <Box sx={{ width: '100%' }}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="metrics tabs">

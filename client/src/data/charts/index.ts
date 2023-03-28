@@ -4,6 +4,7 @@ import alerts from './alerts'
 import ingestion from './ingestion'
 import api from './api'
 import processing from './processing'
+import storage from './storage'
 
 export default {
     ...druid,
@@ -11,5 +12,6 @@ export default {
     ...alerts,
     ...ingestion,
     ...api,
-    ...processing
+    ...processing,
+    ...storage
 }

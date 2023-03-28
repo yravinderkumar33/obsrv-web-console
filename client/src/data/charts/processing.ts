@@ -39,7 +39,7 @@ export default {
                 })
             },
             error() {
-                return 0;
+                return [0, "error"];
             },
             context: (query: any) => {
                 const strPayload = JSON.stringify(query.body);
@@ -87,7 +87,7 @@ export default {
                 })
             },
             error() {
-                return 0;
+                return [0, "error"];
             },
             context: (query: any) => {
                 const strPayload = JSON.stringify(query.body);
@@ -133,11 +133,10 @@ export default {
                 const sum = _.sumBy(payload, value => {
                     return _.get(value, 'event.total_processing_time') || 0;
                 })
-
                 return _.floor(sum)
             },
             error() {
-                return 0;
+                return [0, "error"];
             },
             context: (query: any) => {
                 const strPayload = JSON.stringify(query.body);
@@ -189,7 +188,7 @@ export default {
             yaxis: {
                 labels: {
                     formatter: function (value: number) {
-                        return _.floor(value);
+                        return `${_.floor(value)} ms`;
                     }
                 }
             },

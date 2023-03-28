@@ -23,10 +23,10 @@ export default {
                     return +percentage
                 })
 
-                return sum === 1 ? "HEALTHY" : "UNHEALTHY";
+                return sum === 1 ? "HEALTHY" : ["UNHEALTHY", "error"];
             },
             error() {
-                return "UNHEALTHY"
+                return ["UNHEALTHY", "error"]
             }
         }
     },

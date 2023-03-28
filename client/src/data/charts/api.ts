@@ -94,7 +94,7 @@ export default {
                 return _.floor(value, 1)
             },
             error() {
-                return 0;
+                return [0, "error"];
             },
             context: (query: any) => {
                 const start = dayjs().subtract(1, 'day').unix()
@@ -123,7 +123,7 @@ export default {
                 return _.floor(value, 1)
             },
             error() {
-                return 0;
+                return [0, "error"];
             },
             context: (query: any) => {
                 const start = dayjs().subtract(1, 'day').unix()
@@ -152,7 +152,7 @@ export default {
                 return _.floor(value, 1)
             },
             error() {
-                return 2;
+                return [0, "error"];
             },
             context: (query: any) => {
                 const start = dayjs().subtract(1, 'day').unix()

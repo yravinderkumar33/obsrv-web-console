@@ -39,7 +39,7 @@ export default {
                 })
             },
             error() {
-                return 0;
+                return [0, "error"];
             },
             context: (query: any) => {
                 const strPayload = JSON.stringify(query.body);

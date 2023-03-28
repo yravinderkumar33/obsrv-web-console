@@ -36,6 +36,7 @@ const GaugeChart = (props: any) => {
             colors={colors}
             percent={percent}
             textColor={textColor}
+            needleColor={'#6a727a'}
         />
     </>
 }

@@ -70,5 +70,14 @@ export default {
     },
     "node_query_response_time_avg": {
         "query": "avg_over_time(node_query_response_time[1d])"
+    },
+    "data_usage_growth": {
+        "query": 'max(sum(minio_bucket_usage_total_bytes{job="loki-minio"}) by (instance,server))'
+    },
+    "deep_storage_used": {
+        "query": 'topk(1, sum(minio_cluster_capacity_usable_total_bytes{job="loki-minio"}) by (instance)) - topk(1, sum(minio_cluster_capacity_usable_free_bytes{job="loki-minio"}) by (instance))'
+    },
+    "deep_storage_total": {
+        "query": 'topk(1, sum(minio_cluster_capacity_usable_free_bytes{job="loki-minio"}) by (instance)) '
     }
 }
