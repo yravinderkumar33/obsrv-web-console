@@ -10,8 +10,6 @@ export default function InputLabel(theme: Theme) {
                 root: {
                     color: theme.palette.grey[600],
                     overflow: 'unset',
-                    overflowY: 'unset',
-                    overflowX: 'hidden',
                 },
                 outlined: {
                     lineHeight: '0.8em',

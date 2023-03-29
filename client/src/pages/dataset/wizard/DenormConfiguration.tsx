@@ -83,7 +83,14 @@ const DenormConfiguration = ({ handleBack, handleNext, setErrorIndex, index }: a
                                 options={['master']}
                                 value={item.fieldSource}
                                 disableClearable
-                                renderInput={(params) => <TextField {...params} fullWidth variant="outlined" label="Master datasource" />}
+                                renderInput={(params) =>
+                                    <TextField
+                                        {...params}
+                                        fullWidth
+                                        variant="outlined"
+                                        label="Master datasource"
+                                        sx={{ '& .MuiInputLabel-root': { overflowX: 'hidden' } }}
+                                    />}
                                 onChange={(event: any, newValue: string) => {
                                     handleUpdateItemSource(item.id, newValue);
                                 }}

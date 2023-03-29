@@ -67,7 +67,7 @@ const Final = ({ handleNext, handleBack, index }: any) => {
                         />
                     }
                 </Grid>
-                <Grid item xs={4} textAlign="right">
+                <Grid item xs={12} textAlign="right">
                     <Button variant="contained" onClick={publish}>Save Dataset</Button>
                 </Grid>
                 <Grid item xs={12}>
