@@ -13,6 +13,7 @@ const DatasetCreateEvents = Loadable(lazy(() => import('pages/dashboard/createEv
 
 const MainRoutes = {
     path: '/',
+    element: <MainLayout />,
     children: [
         {
             path: '/',
