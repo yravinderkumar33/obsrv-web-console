@@ -21,5 +21,8 @@ export default {
   },
   GRAFANA: {
     URL: env.ALERT_MANAGER_URL || "http://localhost:8000"
+  },
+  SUPERSET: {
+    URL: env.SUPERSET_URL || "http://localhost:8088"
   }
 };

@@ -16,43 +16,35 @@ const MainRoutes = {
     children: [
         {
             path: '/',
-            element: (
-                <MainLayout />
-            ),
-            children: [
-                {
-                    path: '/',
-                    element: <HomePage />
-                },
-                {
-                    path: 'datasets',
-                    element: <ClusterHealth />
-                },
-                {
-                    path: 'datasets/:datasetId',
-                    element: <DatasetDetails />
-                },
-                {
-                    path: 'datasets/addEvents/:datasetId/:datasetName',
-                    element: <DatasetCreateEvents />
-                },
-                {
-                    path: 'metrics',
-                    element: <SystemMetrics />
-                },
-                {
-                    path: 'metrics/details',
-                    element: <MetricsDetails />
-                },
-                {
-                    path: 'dataset/new',
-                    element: <NewDataset />
-                },
-                {
-                    path: 'dataset/new/master',
-                    element: <NewDataset master={true} />
-                }
-            ]
+            element: <HomePage />
+        },
+        {
+            path: 'datasets',
+            element: <ClusterHealth />
+        },
+        {
+            path: 'datasets/:datasetId',
+            element: <DatasetDetails />
+        },
+        {
+            path: 'datasets/addEvents/:datasetId/:datasetName',
+            element: <DatasetCreateEvents />
+        },
+        {
+            path: 'metrics',
+            element: <SystemMetrics />
+        },
+        {
+            path: 'metrics/details/:metricId',
+            element: <MetricsDetails />
+        },
+        {
+            path: 'dataset/new',
+            element: <NewDataset />
+        },
+        {
+            path: 'dataset/new/master',
+            element: <NewDataset master={true} />
         }
     ]
 };

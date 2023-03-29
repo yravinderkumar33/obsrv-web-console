@@ -1,10 +1,9 @@
 
+import * as _ from 'lodash';
+
 export default {
     showClusterMenu: false,
-    clusterMenu: {
-        frequency: 100,
-        interval: 10
-    },
+    clusterMenu: { frequency: 100, interval: 10 },
     severityToColorMapping: {
         "HIGH": {
             "color": "error"

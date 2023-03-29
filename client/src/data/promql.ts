@@ -20,68 +20,8 @@ export default {
     "nodes_Radial": {
         "query": "100 * count(up == 1) by (instance) / count(up) by (instance)"
     },
-    "number_of_kafka_brokers": {
-        "query": "kafka_brokers"
-    },
-    "kafka_broker_upTime": {
-        "query": "kafka_brokers"
-    },
-    "druid_running_tasks": {
-        "query": "count(druid_tasks_duration{task_status=\"RUNNING\"}) by (task_status)"
-    },
-    "druid_completed_tasks": {
-        "query": "count(druid_tasks_duration{task_status=\"SUCCESS\"}) by (task_status)"
-    },
-    "druid_failed_tasks": {
-        "query": "count(druid_tasks_duration{task_status=\"FAILED\"}) by (task_status)"
-    },
     "druid_health_status": {
         "query": "druid_health_status"
-    },
-    "druid_total_datasources": {
-        "query": "count(druid_datasource{})"
-    },
-    "druid_total_segments": {
-        "query": "count(druid_datasource{})"
-    },
-    "druid_unloaded_segments": {
-        "query": "count(druid_datasource{})"
-    },
-    "druid_cpu_usage": {
-        "query": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"\"}) by (druid)"
-    },
-    "kafka_cpu_usage": {
-        "query": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{namespace=\"kafka\"}) by (namespace)"
-    },
-    "kafka_memory_usage": {
-        "query": "sum(container_memory_rss{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"\", container!=\"\", namespace=\"kafka\"}) by (namespace)"
-    },
-    "postgres_cpu_usage": {
-        "query": "sum(node_namespace_pod_container:container_cpu_usage_seconds_total:sum_irate{cluster=\"\"}) by (postgresql)"
-    },
-    "kafka_messages_read_in_five_min": {
-        "query": "sum(rate(kafka_topic_partition_current_offset{topic!=\"__consumer_offsets\"}[5m])) by (topic)"
-    },
-    "kafka_messages_consume_in_five_min": {
-        "query": "sum(rate(kafka_consumergroup_current_offset{topic!=\"__consumer_offsets\"}[5m])) by (topic)"
-    },
-    "kafka_total_in_messages": {
-        "query": "sum(rate(kafka_topic_partition_current_offset{topic!=\"__consumer_offsets\"}[5m])) by (topic)"
-    },
-    "kafka_total_out_messages": {
-        "query": "sum(rate(kafka_consumergroup_current_offset{topic!=\"__consumer_offsets\"}[5m])) by (topic)"
-    },
-    "postgres_memory_usage": {
-        "query": "sum(container_memory_rss{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"\", container!=\"\", namespace=\"postgresql\"}) by (namespace)"
-    },
-    "kafka_partitions_per_topic": {
-        "query": "sum by(topic) (kafka_topic_partitions{instance=\"10.10.1.149:9308\",topic=~\"(dev\\.denorm|dev\\.denorm\\.failed|dev\\.druid\\.events\\.summary|dev\\.druid\\.events\\.telemetry|dev\\.duplicate|dev\\.extractor\\.duplicate|dev\\.extractor\\.failed|dev\\.failed|dev\\.ingest|dev\\.invalid|dev\\.raw|dev\\.stats|dev\\.system\\.events|dev\\.telemetry\\.denorm|dev\\.telemetry\\.duplicate|dev\\.telemetry\\.failed|dev\\.transform|dev\\.unique|local\\.ingest|obs20-events)\"})"
-    },
-    "druid_memory_usage": {
-        "query": "sum(container_memory_rss{job=\"kubelet\", metrics_path=\"/metrics/cadvisor\", cluster=\"\", container!=\"\", namespace=\"druid-raw\"}) by (namespace)"
-    },
-    "postgres_fds": {
-        "query": "process_max_fds{namespace=\"postgresql\"}"
     },
     "instance_memory": {
         "query": "(1 - sum(:node_memory_MemAvailable_bytes:sum{cluster=\"\"}) / sum(node_memory_MemTotal_bytes{job=\"node-exporter\",cluster=\"\"})) * 100"
@@ -112,5 +52,35 @@ export default {
     },
     "throughput": {
         "query": 'sum(rate(container_network_receive_bytes_total{namespace="obsrv-api-service-dev"}[1m])) + sum(rate(container_network_transmit_bytes_total{namespace="obsrv-api-service-dev"}[1m]))'
+    },
+    "node_query_response_time": {
+        "query": "node_query_response_time"
+    },
+    "node_total_api_call": {
+        "query": "node_total_api_calls"
+    },
+    "node_total_failed_api_call": {
+        "query": "node_failed_api_calls"
+    },
+    "node_query_response_time_min": {
+        "query": "min_over_time(node_query_response_time[1d])"
+    },
+    "node_query_response_time_max": {
+        "query": "max_over_time(node_query_response_time[1d])"
+    },
+    "node_query_response_time_avg": {
+        "query": "avg_over_time(node_query_response_time[1d])"
+    },
+    "data_usage_growth": {
+        "query": 'max(sum(minio_bucket_usage_total_bytes{job="loki-minio"}) by (instance,server))'
+    },
+    "deep_storage_used": {
+        "query": 'topk(1, sum(minio_cluster_capacity_usable_total_bytes{job="loki-minio"}) by (instance)) - topk(1, sum(minio_cluster_capacity_usable_free_bytes{job="loki-minio"}) by (instance))'
+    },
+    "deep_storage_total": {
+        "query": 'topk(1, sum(minio_cluster_capacity_usable_free_bytes{job="loki-minio"}) by (instance)) '
+    },
+    "api_failure_percentage": {
+        "query": "(node_failed_api_calls / node_total_api_calls) * 100"
     }
 }

@@ -1,4 +1,4 @@
-import { CardContent, Grid, Link, Typography } from '@mui/material';
+import { Button, CardContent, Grid, Link, Typography } from '@mui/material';
 import Avatar from 'components/@extended/Avatar';
 import { AlertOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs'
@@ -38,12 +38,12 @@ const AlertsMessages = (props: any) => {
 
     return <><Grid item xs={12}>
       <Grid container spacing={2}>
-        <Grid item>
+        <Grid item xs={1}>
           <Avatar type="filled" color={color} size="sm" sx={{ top: 10 }}>
             <AlertOutlined />
           </Avatar>
         </Grid>
-        <Grid item xs zeroMinWidth>
+        <Grid item xs={10}>
           <Grid container spacing={0}>
             <Grid item xs={12}>
               <Typography align="left" variant="caption" color="secondary">
@@ -61,6 +61,9 @@ const AlertsMessages = (props: any) => {
               </Typography>
             </Grid>
           </Grid>
+        </Grid>
+        <Grid item xs={1}>
+          <Button variant="outlined">Resolve</Button>
         </Grid>
       </Grid>
     </Grid>

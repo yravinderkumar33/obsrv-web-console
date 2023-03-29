@@ -1,6 +1,5 @@
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
-import { Theme } from '@mui/material';
 import promql from '../promql';
 import defaultConf from './common'
 
@@ -16,6 +15,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -102,9 +102,7 @@ export default {
             body: {},
             params: {
                 query: promql.node_memory.query,
-                start: '1676015290.967',
-                end: '1676015590.967',
-                step: 1
+                step: '30s'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -129,6 +127,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -215,9 +214,7 @@ export default {
             body: {},
             params: {
                 query: promql.node_cpu.query,
-                end: 1676457179.487,
-                start: 1676456879.487,
-                step: 1
+                step: '30s'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -229,10 +226,6 @@ export default {
             error() {
                 return [0]
             }
-        },
-        getColor: (theme: Theme, series: Array<any>) => {
-            const threshHold = 10;
-
         }
     },
     cpu_percentage: {
@@ -294,19 +287,15 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: promql.disk_percentage.query
+                query: promql.instance_disk.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
-                const sum = _.sumBy(result, (payload: any) => {
-                    const { value } = payload;
-                    const [_, percentage = 0] = value;
-                    return +percentage
-                })
-                return _.floor(sum / result?.length);
+                const result = _.get(response, 'result.data.result[0].value[1]');
+                if (!result) throw new Error()
+                return _.floor(result);
             },
             error() {
-                return 0
+                return [0, "error"]
             }
         }
     },
@@ -374,6 +363,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -478,6 +468,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -561,7 +552,7 @@ export default {
             body: {},
             params: {
                 query: promql.instance_cpu.query,
-                step: 2419
+                step: '5m'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -586,6 +577,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             annotations: {
                 yaxis: [
                     {
@@ -669,7 +661,7 @@ export default {
             body: {},
             params: {
                 query: promql.instance_disk.query,
-                step: 2419
+                step: '5m'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
@@ -765,16 +757,12 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: promql.disk_usage_radial.query
+                query: promql.instance_disk.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
-                const sum = _.sumBy(result, (payload: any) => {
-                    const { value } = payload;
-                    const [_, percentage = 0] = value;
-                    return +percentage
-                })
-                return [_.floor(sum / result?.length)];
+                const result = _.get(response, 'result.data.result[0].value[1]');
+                if (!result) throw new Error()
+                return _.floor(result);
             },
             error() {
                 return []
@@ -1029,6 +1017,7 @@ export default {
                     show: false
                 }
             },
+            grid: defaultConf.grid,
             legend: {
                 show: true
             },
@@ -1076,7 +1065,7 @@ export default {
             body: {},
             params: {
                 query: promql.throughput.query,
-                step: '2m30s'
+                step: '5m'
             },
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
