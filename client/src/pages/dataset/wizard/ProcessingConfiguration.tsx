@@ -21,7 +21,8 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
             id: pageMeta.pageId,
             index,
             state: { configurations: stateToRedux() }
-        }));
+        }
+    ));
 
     useEffect(() => {
         persistState();

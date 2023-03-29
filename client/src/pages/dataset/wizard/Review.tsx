@@ -44,6 +44,10 @@ const Final = ({ handleNext, handleBack, index }: any) => {
         } else setNoTransform('No sample data provided for transformations')
     }
 
+    const gotoPreviousSection = () => {
+        handleBack();
+    }
+
     useEffect(() => {
         preview();
     }, []);
@@ -63,8 +67,17 @@ const Final = ({ handleNext, handleBack, index }: any) => {
                         />
                     }
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} textAlign="right">
                     <Button variant="contained" onClick={publish}>Save Dataset</Button>
+                </Grid>
+                <Grid item xs={12}>
+                    <Stack direction="row" justifyContent="space-between">
+                        <AnimateButton>
+                            <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                                Previous
+                            </Button>
+                        </AnimateButton>
+                    </Stack>
                 </Grid>
             </Grid>
         </>

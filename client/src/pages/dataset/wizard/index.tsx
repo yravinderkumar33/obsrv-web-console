@@ -11,6 +11,7 @@ import SchemaConfiguration from './SchemaConfiguration';
 import ProcessingConfiguration from './ProcessingConfiguration';
 import IngestionConfiguration from './IngestionConfiguration';
 import DenormConfiguration from './DenormConfiguration';
+import AdvancedConfiguration from './AdvancedConfiguration';
 
 //'Ingestion Config',
 const steps = ['Derive Schema', 'Configure Data Schema', 'Processing Configuration', 'Ingestion Configuration', 'Denorm Configuration', 'Advanced Configuration', 'Review'];
@@ -47,7 +48,9 @@ const getStepContent = (
             case 4:
                 return <DenormConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} />
             case 5:
-                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={5} />
+                return <AdvancedConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={5} />
+            case 6:
+                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={6} />
             default:
                 throw new Error('Unknown step');
         }
