@@ -111,6 +111,11 @@ export const metricsMetadata = [
         icon: DotChartOutlined,
         menuIcon: BarChartOutlined,
         color: 'main',
+        links: {
+            grafana: {
+                link: "d/mini-dashboard/minio-dashboard?orgId=1"
+            }
+        },
         charts: {
             small: {
                 size: {
@@ -143,8 +148,18 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ApexWithFilters title="Query Response Time (Min, Max, Avg)" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'node_query_response_time')} height={250} interval={1140}></ApexChart>
+                        chart: <ApexWithFilters title="Query Response Time (Min)" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'node_query_response_min_timeseries')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <ApexWithFilters title="Query Response Time (Max)" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'node_query_response_max_timeseries')} height={250} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
+                    {
+                        chart: <ApexWithFilters title="Query Response Time (Avg)" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'node_query_response_avg_timeseries')} height={250} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
