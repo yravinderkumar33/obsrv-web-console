@@ -1,9 +1,9 @@
-import { Box, Chip, Grid, MenuItem, Select, Stack, Typography } from "@mui/material"
+import { Box, Chip, Grid, MenuItem, Select, Stack, Typography, Paper } from "@mui/material"
 import React, { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
 import * as _ from 'lodash';
 import { InfoCircleOutlined } from "@ant-design/icons";
-
+import globalConfig from 'data/initialConfig';
 
 const ApexWithFilters = (props: any) => {
     const { title = '', filters = [], children, type = 'chip' } = props;
@@ -44,7 +44,8 @@ const ApexWithFilters = (props: any) => {
     const renderChipFilters = () => {
         const menuItems = _.map(filters, (filterMeta: Record<string, any>, index) => {
             const variant = (_.get(filterMeta, 'value') === filter) ? "filled" : "outlined";
-            return <Chip label={filterMeta.label} variant={variant} color="primary" onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
+            const color = _.get(filterMeta, 'color') || "primary"
+            return <Chip label={filterMeta.label} variant={variant} color={color} onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
         })
 
         return <Stack direction="row" spacing={2}>
@@ -61,36 +62,38 @@ const ApexWithFilters = (props: any) => {
     });
 
     return <>
-        <MainCard content={false} sx={{ mt: 1.5 }}>
-            <Grid item>
-                <Grid container>
-                    <Grid item xs={12} sm={12}>
-                        <Stack sx={{ ml: 2, mt: 3 }} alignItems={{ xs: 'center', sm: 'flex-start' }}>
-                            <Stack direction="row" alignItems="center" spacing={1}>
-                                <Typography color="textSecondary">{title}</Typography>
-                                <InfoCircleOutlined />
+        <Paper elevation={globalConfig.elevation}>
+            <MainCard content={false} sx={{ mt: 1.5 }}>
+                <Grid item>
+                    <Grid container>
+                        <Grid item xs={12} sm={12}>
+                            <Stack sx={{ ml: 2, mt: 3 }} alignItems={{ xs: 'center', sm: 'flex-start' }}>
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                    <Typography color="textSecondary">{title}</Typography>
+                                    <InfoCircleOutlined />
+                                </Stack>
                             </Stack>
-                        </Stack>
-                    </Grid>
-                    <Grid item xs={12} sm={12}>
-                        <Stack
-                            direction="row"
-                            spacing={1}
-                            alignItems="center"
-                            justifyContent={{ xs: 'center', sm: 'flex-start' }}
-                            sx={{ mt: 1, ml: 2 }}
-                        >
+                        </Grid>
+                        <Grid item xs={12} sm={12}>
+                            <Stack
+                                direction="row"
+                                spacing={1}
+                                alignItems="center"
+                                justifyContent={{ xs: 'center', sm: 'flex-start' }}
+                                sx={{ mt: 1, ml: 2 }}
+                            >
 
-                            {(filters.length && type === 'chip') ? renderChipFilters() : null}
-                            {(filters.length && type === 'select') ? renderFilters() : null}
-                        </Stack>
+                                {(filters.length && type === 'chip') ? renderChipFilters() : null}
+                                {(filters.length && type === 'select') ? renderFilters() : null}
+                            </Stack>
+                        </Grid>
                     </Grid>
                 </Grid>
-            </Grid>
-            <Box sx={{ pt: 1 }}>
-                {childrenWithProps}
-            </Box>
-        </MainCard>
+                <Box sx={{ pt: 1 }}>
+                    {childrenWithProps}
+                </Box>
+            </MainCard>
+        </Paper>
     </>
 }
 

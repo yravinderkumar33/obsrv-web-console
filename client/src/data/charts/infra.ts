@@ -1078,6 +1078,89 @@ export default {
                 return [0]
             }
         }
+    },
+    network_bytes_received: {
+        type: 'line',
+        series: [],
+        options: {
+            chart: {
+                type: 'line',
+                animations: defaultConf.animations,
+                toolbar: {
+                    show: false
+                }
+            },
+            grid: defaultConf.grid,
+            legend: {
+                show: true
+            },
+            zoom: {
+                enabled: false
+            },
+            stroke: {
+                width: 2,
+                curve: 'smooth'
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return `${_.round(value / 1024, 1)} kB/s`;
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                labels: {
+                    formatter: function (value: any, timestamp: any) {
+                        return dayjs.unix(timestamp).format('HH:mm');
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query/range',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.network_bytes_received.query,
+                step: '5m'
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.namespace'),
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return [0]
+            },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params, metadata = {} } = clonedPayload;
+                const { step } = metadata;
+                const query = _.get(params, 'query');
+                if (step && query) {
+                    _.set(params, 'query', _.replace(query, '$interval', step));
+                }
+                return clonedPayload;
+            },
+        }
     }
 
 }

@@ -19,7 +19,7 @@ const authRouteHandler = sharedMiddlewares.get('auth');
 app.set('port', port);
 app.set('logger', logger);
 app.disable('x-powered-by');
-app.use(helmet());
+// app.use(helmet());
 app.use(cors());
 authRouteHandler && app.use('*', authRouteHandler?.handler({}));
 

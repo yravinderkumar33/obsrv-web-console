@@ -82,5 +82,8 @@ export default {
     },
     "api_failure_percentage": {
         "query": "(node_failed_api_calls / node_total_api_calls) * 100"
+    },
+    "network_bytes_received": {
+        "query": 'sum(irate(container_network_receive_packets_total{job="kubelet", metrics_path="/metrics/cadvisor", cluster="", namespace=~".+"}[$interval])) by (namespace)'
     }
 }

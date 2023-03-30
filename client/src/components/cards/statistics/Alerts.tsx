@@ -1,4 +1,4 @@
-import { Button, CardContent, Grid, Link, Typography } from '@mui/material';
+import { Button, CardContent, Grid, Typography } from '@mui/material';
 import Avatar from 'components/@extended/Avatar';
 import { AlertOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs'
@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { fetchChartData } from 'services/clusterMetrics';
 import chartMeta from 'data/charts'
 import * as _ from 'lodash';
+import { Stack } from '@mui/material';
 
 const AlertsMessages = (props: any) => {
   const { interval } = props;
@@ -43,7 +44,7 @@ const AlertsMessages = (props: any) => {
             <AlertOutlined />
           </Avatar>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={9}>
           <Grid container spacing={0}>
             <Grid item xs={12}>
               <Typography align="left" variant="caption" color="secondary">
@@ -62,8 +63,11 @@ const AlertsMessages = (props: any) => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={1}>
-          <Button variant="outlined">Resolve</Button>
+        <Grid item xs={2}>
+          <Stack direction="row" spacing={1}>
+            <Button size='small' variant="contained">Resolve</Button>
+            <Button size='small' variant="contained" color="info">Support</Button>
+          </Stack>
         </Grid>
       </Grid>
     </Grid>

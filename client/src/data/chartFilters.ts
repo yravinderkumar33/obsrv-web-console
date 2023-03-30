@@ -34,5 +34,17 @@ export default {
             value: 10080,
             step: '30m'
         }
+    ],
+    alertsSeverity: [
+        {
+            label: 'Warning',
+            color: 'warning',
+            value: 'warning'
+        },
+        {
+            label: 'Critical',
+            color: 'error',
+            value: 'error'
+        },
     ]
 }

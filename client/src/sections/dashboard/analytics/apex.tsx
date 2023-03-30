@@ -13,7 +13,7 @@ const ApexChart = (props: any) => {
   const { metadata, ...rest } = props;
   const theme = useTheme();
   const { mode } = useConfig();
-  const { type, options: meta, series: chartSeries, query = {} } = metadata;
+  const { type, options: meta, series: chartSeries, query = {}, queries } = metadata;
   const { primary, secondary } = theme.palette.text;
   const line = theme.palette.divider;
   const [options, setOptions] = useState<ChartProps>(meta);
@@ -21,39 +21,35 @@ const ApexChart = (props: any) => {
   const { step, interval } = rest;
   const [loading, setLoading] = useState(false);
 
-  const fetchMetric = async (query: Record<string, any>) => {
+  const fetchMetric = async () => {
     const interval = rest.interval || globalConfig.clusterMenu.interval;
     const step = rest.step || '5m';
-    const { type, params = {}, noParams = false } = query;
-
-    if (type === 'api') {
-      try {
-        setLoading(true);
-        if (!noParams) {
-          params.start = dayjs().subtract(interval, 'minutes').unix();
-          params.end = dayjs().unix();
-          if (step) {
-            params.step = step;
-          }
+    const { params = {}, noParams = false } = query;
+    try {
+      setLoading(true);
+      if (!noParams) {
+        params.start = dayjs().subtract(interval, 'minutes').unix();
+        params.end = dayjs().unix();
+        if (step) {
+          params.step = step;
         }
-
-        const metadata = { ...(interval && { interval }) };
-        const seriesData = await fetchChartData(query, metadata);
-        setSeries(seriesData);
-      } catch (error) {
-        setSeries([])
-      } finally {
-        setLoading(false);
       }
 
+      const metadata = { interval, step };
+      const seriesData = await fetchChartData(query, metadata);
+      setSeries(seriesData);
+    } catch (error) {
+      setSeries([])
+    } finally {
+      setLoading(false);
     }
   }
 
-  const configureMetricFetcher = (query: Record<string, any>) => {
+  const configureMetricFetcher = () => {
     const frequency = rest?.frequency || globalConfig.clusterMenu.frequency;
-    fetchMetric(query);
+    fetchMetric();
     return setInterval(() => {
-      fetchMetric(query);
+      fetchMetric();
     }, frequency * 1000)
   }
 
@@ -68,7 +64,7 @@ const ApexChart = (props: any) => {
       })
     }));
 
-    const interval = configureMetricFetcher(query);
+    const interval = configureMetricFetcher();
 
     return () => {
       interval && clearInterval(interval)

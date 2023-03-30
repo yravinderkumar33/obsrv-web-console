@@ -158,5 +158,113 @@ export default {
             },
             noParams: true
         }
+    },
+    totalEventsProcessedTimeSeriesPerDataset: {
+        type: 'line',
+        series: [],
+        options: {
+            chart: {
+                type: 'line',
+                animations: defaultConf.animations,
+                toolbar: {
+                    show: false
+                }
+            },
+            grid: defaultConf.grid,
+            stroke: {
+                width: 2,
+                curve: 'smooth'
+            },
+            legend: {
+                show: false
+            },
+            zoom: {
+                enabled: false
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return value;
+                    }
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return dayjs(value).format('DD MMM HH:mm')
+                    }
+                }
+            },
+            xaxis: {
+                type: 'datetime',
+                labels: {
+                    formatter: function (value: any, timestamp: any) {
+                        return dayjs(timestamp).format('DD MMM HH:mm');
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        queries: [
+            {
+                type: 'api',
+                timeout: 3000,
+                url: '/obsrv/v1/query',
+                method: 'POST',
+                headers: {},
+                body: {
+                    "context": {
+                        "dataSource": "system-stats"
+                    },
+                    "query": {
+                        "queryType": "timeseries",
+                        "dataSource": "system-stats",
+                        "intervals": "$interval",
+                        "granularity": "five_minute",
+                        "aggregations": [
+                            {
+                                "type": "longSum",
+                                "name": "count",
+                                "fieldName": "count"
+                            }
+                        ]
+                    }
+                },
+                params: {},
+                parse: (response: any) => {
+                    const payload = _.get(response, 'result') || [];
+                    const series = _.map(payload, value => {
+                        const timestamp = Date.parse(_.get(value, 'timestamp'));
+                        const count = _.get(value, 'result.count')
+                        return [timestamp, count];
+                    });
+
+                    return [{
+                        name: 'Total Events Processed',
+                        data: series
+                    }]
+                },
+                error() {
+                    return [];
+                },
+                context: (payload: any) => {
+                    const { body, metadata = {} } = payload;
+                    const { interval = 1140 } = metadata;
+                    const strPayload = JSON.stringify(body);
+                    const start = dayjs().subtract(interval - 1140, 'minutes').format(dateFormat);
+                    const end = dayjs().add(1, 'day').format(dateFormat);
+                    const rangeInterval = `${start}/${end}`;
+                    const updatedStrPayload = _.replace(strPayload, '$interval', rangeInterval);
+                    const updatedPayload = JSON.parse(updatedStrPayload);
+                    payload.body = updatedPayload;
+                    return payload;
+                },
+                noParams: true
+            }
+        ]
     }
 }
