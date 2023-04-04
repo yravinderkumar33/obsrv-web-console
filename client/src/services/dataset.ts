@@ -62,7 +62,7 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
         schema,
         config: {
             "dataset": _.get(wizardState, 'pages.datasetConfiguration.state.config.name'),
-            "indexCol": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.ingestion.index'),
+            "indexCol": _.get(wizardState, 'pages.transformations.state.indeCol'),
             "granularitySpec": {
                 "segmentGranularity": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.segmentGranularity'),
                 "queryGranularity": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.queryGranularity'),

@@ -1,383 +1,84 @@
-import { useEffect, useMemo, useState } from 'react';
-import {
-    Button, Grid, ToggleButtonGroup, Box,
-    Stack, Typography, FormControl,
-    ToggleButton, Chip, Alert, FormControlLabel,
-    TextField, Dialog, DialogTitle, Link
-} from '@mui/material';
-import MainCard from 'components/MainCard';
-import ScrollX from 'components/ScrollX';
+import { useState } from 'react';
+import { Grid, Box, Typography, Alert, useTheme } from '@mui/material';
 import * as _ from 'lodash';
-import { DeleteFilled, EditOutlined } from '@ant-design/icons';
-import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
-import AnimateButton from 'components/@extended/AnimateButton';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
-import { error } from 'services/toaster';
-import { areConflictsResolved, flattenSchema } from 'services/json-schema';
-import RequiredSwitch from 'components/RequiredSwitch';
-import { connect } from 'react-redux';
+import AccordionSection from './components/AccordionSection';
+import AddPIIDialog from './components/transformationDialogs/AddPII';
+import AddTransformationExpression from './components/transformationDialogs/AddTransformationExpression';
+import TimestampSelection from './components/TimestampSelection';
+import { Stack } from '@mui/material';
+import AnimateButton from 'components/@extended/AnimateButton';
+import { Button } from '@mui/material';
 
-const validOpTypes = ['mask', 'encrypt'];
-const pageMeta = { pageId: 'dataSchemaConfig', title: "Configure Data Schema" };
+const pageMeta = { pageId: 'transformations', title: "Configure Data Transformations" };
+const actions = [{ label: 'Mask', component: '', value: 'mask' }, { label: 'Encrypt', component: '', value: 'encrypt' }, { label: 'Custom', component: '', value: 'custom' }];
 
-interface columnFilter {
-    label: string,
-    id: string | boolean,
-    lookup: string,
-    color: "default" | "error" | "warning" | "success" | "primary" | "secondary" | "info"
-}
-
-const columnFilters: columnFilter[] = [
+const sections = [
     {
-        'label': 'Index',
-        'id': true,
-        'lookup': 'index',
-        'color': "info"
+        id: 'timestamp',
+        title: 'Timestamp Field',
+        description: 'Timestamp Field specifies the column or field that contains the timestamp for each data record being ingested. This enabled our platform to effectively partition, index, and query data based on the timestamps.',
+        data: [],
+        component: <TimestampSelection />,
+        alwaysExpanded: true,
+        navigation: {
+            next: 'pii'
+        }
     },
     {
-        'label': 'PII',
-        'id': true,
-        'lookup': 'pii',
-        'color': "warning"
+        id: 'pii',
+        title: 'PII Fields',
+        description: 'PII is sensitive information that needs to be protected and kept secure to prevent identity theft, fraud, or other types of harm.  PII fields are often identified and tagged to ensure that appropriate controls are in place to protect the data',
+        data: [],
+        actions: [{ label: 'Mask', component: '', value: 'mask' }, { label: 'Encrypt', component: '', value: 'encrypt' }],
+        submitButton: {
+            label: 'Add PII',
+            dialog: <AddPIIDialog />
+        },
+        navigation: {
+            previous: 'timestamp',
+            next: 'transformation'
+        }
     },
+    {
+        id: 'transformation',
+        title: 'Fields Transformation',
+        description: 'Field transformations allows users to manipulate and transform data during ingestion or query time',
+        data: [],
+        actions,
+        submitButton: {
+            label: 'Add Transformation',
+            dialog: < AddTransformationExpression />
+        },
+        navigation: {
+            previous: 'pii'
+        }
+    }
 ];
 
-const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState }: any) => {
+const SchemaConfiguration = ({ handleNext, handleBack, index }: any) => {
     const dispatch = useDispatch();
-    const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
     const apiResponse = useSelector((state: any) => state.jsonSchema);
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
-    const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
-    const [filterByChip, setFilterByChip] = useState<columnFilter | null>(null);
-
-    const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
-    const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
-
-    const gotoNextSection = () => {
-        if (areConflictsResolved(flattenedData)) {
-            persistState();
-            handleNext();
-        } else {
-            dispatch(error({ message: 'Please resolve conflicts to proceed further' }));
-            setErrorIndex(index)
-        }
+    const jsonSchemaData = _.get(wizardState, 'pages.columns.state.schema') || [];
+    const gotoNextSection = () => handleNext();
+    const gotoPreviousSection = () => handleBack();
+    const [expanded, setExpanded] = useState<string | false>('timestamp');
+    const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => { setExpanded(isExpanded ? panel : false) };
+    const renderSection = (section: Record<string, any>) => {
+        return <AccordionSection expanded={expanded} setExpanded={setExpanded} handleChange={handleChange} {...section} data={jsonSchemaData} />
     }
-
-    const gotoPreviousSection = () => {
-        persistState();
-        handleBack();
-    }
-
-    const columns = useMemo(
-        () => [
-            {
-                Header: 'Field',
-                accessor: 'column',
-                tipText: 'Name of the field.',
-                editable: false,
-                Cell: ({ value, cell }: any) => (
-                    <Box display="flex" alignItems="center">
-                        <Typography variant="body1">
-                            {value}
-                        </Typography>
-                    </Box>
-                )
-            },
-            {
-                Header: 'Data Type',
-                accessor: 'type',
-                tipText: 'Data type of the field.',
-                editable: false,
-                disableFilters: true,
-                Cell: ({ value }: any) => (
-                    <Box display="flex" alignItems="center">
-                        <Typography variant="body1">
-                            {value}
-                        </Typography>
-                    </Box>
-                )
-            },
-            {
-                Header: 'Index',
-                accessor: 'index',
-                tipText: 'Field to be indexed, default indexed on time',
-                editable: true,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, index: e.target.checked };
-                                else return state
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-
-                    return (
-                        <Box display="flex" alignItems="center">
-                            <FormControl sx={{ alignItems: 'center', display: 'block' }}>
-                                <FormControlLabel
-                                    control={<RequiredSwitch defaultChecked onChange={handleChange} />}
-                                    label={''}
-                                />
-                            </FormControl>
-                        </Box>
-                    );
-                }
-            },
-            {
-                Header: 'PII',
-                accessor: 'pii',
-                tipText: 'PII Data operations',
-                editable: true,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, pii: { "value": e.target.checked, "op": "" } };
-                                else return state
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-
-                    return (
-                        <Box alignItems="center" display="flex">
-                            <FormControl sx={{ alignItems: 'left', }}>
-                                <FormControlLabel
-                                    control={<RequiredSwitch onChange={handleChange} />}
-                                    label={''}
-                                    labelPlacement="bottom"
-                                />
-                            </FormControl>
-                        </Box>
-                    );
-                }
-            },
-            {
-                Header: 'Actions',
-                accessor: 'actions',
-                tipText: 'Actions to perform',
-                editable: true,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-
-                    const handleOpChange = (e: React.MouseEvent<HTMLElement, MouseEvent>, val: string) => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, pii: { "value": row?.pii?.value, "op": val } };
-                                else return state;
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-
-                    return (
-                        <Box alignItems="center" display="flex">
-                            <ToggleButtonGroup
-                                color="info"
-                                defaultValue={''}
-                                value={row?.pii?.op}
-                                exclusive
-                                aria-required={'true'}
-                                onChange={handleOpChange}
-                                aria-label="pii operations"
-                            >
-                                {validOpTypes.map((opType) => <ToggleButton value={opType}>{_.capitalize(opType)}</ToggleButton>)}
-                            </ToggleButtonGroup>
-
-                        </Box>
-                    );
-                }
-            },
-            {
-                Header: 'Transformations',
-                accessor: 'transformation',
-                tipText: 'Data Transformations (JSONata Expressions)',
-                editable: true,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const [edit, setEdit] = useState(false);
-                    const [text, setText] = useState('');
-                    const editTransform = () => {
-                        setEdit((prevState) => !prevState);
-                        updateState();
-                    }
-
-                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                        setText(e.target.value);
-                    }
-
-                    const updateState = () => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, transformation: text };
-                                else return state
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-
-                    const handleCancel = () => {
-                        setText('');
-                        setEdit((prevState) => !prevState);
-                    }
-
-                    return (
-                        <Box display="flex" alignItems="center" justifyContent="center" position="relative">
-                            <Dialog open={edit} onClose={editTransform}>
-                                <DialogTitle id="dialog-title">
-                                    {`Edit Expression for field - ${row.column}`}
-                                </DialogTitle>
-                                <Box p={2}>
-                                    <Box m={1}>
-                                        <TextField
-                                            InputLabelProps={{
-                                                shrink: true
-                                            }}
-                                            fullWidth
-                                            defaultValue={value}
-                                            onChange={handleChange}
-                                            label='Expression'
-                                        />
-                                    </Box>
-                                    <Stack direction="row"
-                                        justifyContent="flex-end"
-                                        alignItems="center"
-                                        spacing={2} >
-                                        <Button color="error" size="small" onClick={handleCancel}>
-                                            Cancel
-                                        </Button>
-                                        <Button variant="contained" size="small" onClick={editTransform}>
-                                            Save
-                                        </Button>
-                                    </Stack>
-                                </Box>
-                            </Dialog>
-                            {!edit && <Typography onClick={editTransform}>{value}</Typography>}
-                            {!edit && !value &&
-                                <Box onClick={editTransform}>... <EditOutlined />
-                                    <Link
-                                        sx={{ position: 'absolute', right: 0 }}
-                                        href="https://try.jsonata.org/"
-                                        target="_blank"
-                                        rel="nofollow noreferrer"
-                                    >
-                                        Try
-                                    </Link>
-                                </Box>
-                            }
-                        </Box>
-                    );
-                }
-            },
-        ],
-        []
-    );
-
-    const [skipPageReset, setSkipPageReset] = useState(false);
-
-    const fetchNonDeletedData = (flattenedData: Array<any>) => _.filter(flattenedData, payload => !_.has(payload, 'isDeleted'));
-    const sortBySuggestions = (payload: Array<any>) => _.sortBy(payload, value => value?.suggestions);
-
-    const updateMyData = (rowIndex: number, columnId: any, value: any) => {
-        setSkipPageReset(true);
-    };
-
-    const handleFilterChange = (filter: columnFilter) => {
-        setFilterByChip(filter);
-        setFlattenedData(() => {
-            const data = wizardStoreState.pages[pageMeta.pageId].state.schema;
-            return _.filter(data, [filter.lookup, filter.id])
-        })
-    }
-
-    const deleteFilter = () => {
-        setFilterByChip(null);
-        const data = wizardStoreState.pages[pageMeta.pageId].state.schema;
-        setFlattenedData(data);
-        setSkipPageReset(false);
-    }
-
-    useEffect(() => {
-        if (apiResponse?.status === 'success' && apiResponse?.data?.schema) {
-            const flattenedSchema = flattenSchema(apiResponse.data.schema) as any;
-            const existingState = pageData?.state?.schema;
-            setFlattenedData(existingState || flattenedSchema);
-            pushStateToStore(existingState || flattenedSchema);
-            setSkipPageReset(false);
-        }
-    }, [apiResponse?.status]);
 
     return <>
-        <Box display="flex" justifyContent={"space-between"}>
-            <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
-                {pageMeta.title}
-            </Typography>
-            <Stack direction="row" spacing={1}>
-                {columnFilters.map((filter) => <Chip
-                    key={filter.label}
-                    aria-label='filter-issues'
-                    clickable
-                    label={filter.label}
-                    sx={{ mx: 0.5 }}
-                    color={filterByChip?.label === filter.label ? filter.color : undefined}
-                    size="small"
-                    onClick={() => handleFilterChange(filter)}
-                    onDelete={filterByChip?.label === filter.label ? () => deleteFilter() : undefined}
-                />
-                )}
-            </Stack>
-        </Box>
         <Grid container spacing={2}>
-            {apiResponse?.status !== 'success' &&
-                <Grid item xs={12} sm={12}>
-                    <Loader />
-                </Grid>
-            }
-
-            {apiResponse?.status === 'error' &&
-                <Grid item xs={12} sm={12}>
-                    <Alert severity="error">{apiResponse?.error}</Alert>
-                </Grid>
-            }
-
+            {apiResponse?.status !== 'success' && <Grid item xs={12} sm={12}> <Loader /></Grid>}
+            {apiResponse?.status === 'error' && <Grid item xs={12} sm={12}> <Alert severity="error">{apiResponse?.error}</Alert></Grid>}
             {apiResponse?.status === 'success' &&
                 <>
-                    <Grid item xs={12} sm={12}>
-                        <MainCard content={false}>
-                            <ScrollX>
-                                <ReactTable
-                                    columns={columns}
-                                    data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []}
-                                    updateMyData={updateMyData}
-                                    skipPageReset={skipPageReset}
-                                    limitHeight
-                                />
-                            </ScrollX>
-                        </MainCard >
-                    </Grid>
+                    <Grid item xs={12}>{sections.map(renderSection)}</Grid>
                     <Grid item xs={12}>
                         <Stack direction="row" justifyContent="space-between">
                             <AnimateButton>
@@ -398,10 +99,4 @@ const SchemaConfiguration = ({ handleNext, setErrorIndex, handleBack, index, wiz
     </>;
 };
 
-const mapStateToProps = (state: any) => {
-    return {
-        wizardStoreState: state?.wizard
-    }
-}
-
-export default connect(mapStateToProps, {})(SchemaConfiguration);
+export default SchemaConfiguration

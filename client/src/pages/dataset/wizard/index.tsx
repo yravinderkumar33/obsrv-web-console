@@ -14,8 +14,8 @@ import DenormConfiguration from './DenormConfiguration';
 import AdvancedConfiguration from './AdvancedConfiguration';
 
 //'Ingestion Config',
-const steps = ['Derive Schema', 'Configure Data Schema', 'Processing Configuration', 'Ingestion Configuration', 'Denorm Configuration', 'Advanced Configuration', 'Review'];
-const masterSteps = ['Derive Schema', 'Ingestion Configuration', 'Review'];
+const steps = ['Schema', 'Inputs', 'Processing', 'Ingestion', 'Denorm', 'Advanced', 'Review'];
+const masterSteps = ['Schema', 'Ingestion', 'Review'];
 
 const getStepContent = (
     step: number,

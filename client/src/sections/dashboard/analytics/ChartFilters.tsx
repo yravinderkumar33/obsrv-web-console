@@ -35,10 +35,7 @@ const ApexWithFilters = (props: any) => {
             return <MenuItem value={filter.value} key={`filter-${index}`}>{filter.label}</MenuItem>
         })
 
-        return <Select value={filter} size="small" onChange={handlechange}>
-            {menuItems}
-        </ Select>
-
+        return <Select value={filter} size="small" onChange={handlechange}>{menuItems}</ Select>
     }
 
     const renderChipFilters = () => {

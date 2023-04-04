@@ -12,8 +12,10 @@ import {
     RadioGroup,
     Select,
     TextField,
+    ToggleButtonGroup,
 } from '@mui/material';
 import { Formik, Field, Form } from 'formik';
+import { ToggleButton } from '@mui/material';
 
 const useStyles = makeStyles((theme: any) => ({
     formControl: {
@@ -112,6 +114,23 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     <Select name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
                                                         {selectOptions.map((option: any) => (<MenuItem value={option.value}>{option.label}</MenuItem>))}
                                                     </Select>
+                                                </FormControl>
+                                            </Grid>
+                                        );
+                                    case 'buttonGroup':
+                                        return (
+                                            <Grid item xs={xs} sm={sm} lg={lg} key={name}>
+                                                <FormControl fullWidth component="fieldset" required={required} disabled={disabled}>
+                                                    <FormLabel component="legend">{label}</FormLabel>
+                                                    <ToggleButtonGroup exclusive color="info" aria-label="text alignment" onChange={handleChange}>
+                                                        {
+                                                            selectOptions.map((option: any, index: number) => {
+                                                                return <ToggleButton key={index} id={name} value={option.value} aria-label="first">
+                                                                    {option?.label}
+                                                                </ToggleButton>
+                                                            })
+                                                        }
+                                                    </ToggleButtonGroup>
                                                 </FormControl>
                                             </Grid>
                                         );

@@ -83,20 +83,12 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }
 
     const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
-    const setNextStepStore = () => {
-        if (!wizardStoreState.pages.hasOwnProperty('dataSchemaConfig')) {
-            const values = _.map(flattenedData, state => {
-                return { ...state, index: true, pii: { value: false, op: '' }, transformation: '' };
-            });
-            dispatch(addState({ id: 'dataSchemaConfig', index, state: { schema: values } }));
-        }
-    }
+
     const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
 
     const gotoNextSection = () => {
         if (areConflictsResolved(flattenedData)) {
             persistState();
-            setNextStepStore();
             handleNext();
         } else {
             dispatch(error({ message: 'Please resolve conflicts to proceed further' }));
@@ -411,10 +403,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
 
     return <>
         <Box display="flex" justifyContent={"space-between"}>
-            <Typography variant="h5" gutterBottom sx={{ mb: 2 }}>
-                {pageMeta.title}
-            </Typography>
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row" spacing={1} marginBottom={2}>
                 {columnFilters.map((filter) => <Chip
                     key={filter.label}
                     aria-label='filter-issues'

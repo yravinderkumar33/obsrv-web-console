@@ -10,6 +10,7 @@ import ApexWithFilters from "sections/dashboard/analytics/ChartFilters";
 import filters from 'data/chartFilters';
 import AsyncLabel from "components/cards/statistics/AsyncLabel";
 import { totalVsRunningNodes, percentageUsage, cpuPercentageUsage } from 'services/transformers';
+import { Stack } from "@mui/material";
 
 export const metricsMetadata = [
     {
@@ -36,8 +37,10 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         chart: <AnalyticsDataCard title="Nodes Status">
-                            <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
-                            <AsyncLabel align="center" variant="caption" color="textSecondary" suffix='Nodes Running'></AsyncLabel>
+                            <Stack spacing={4} direction="column" justifyContent="space-around" height={'auto'}>
+                                <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
+                                <AsyncLabel align="center" variant="caption" color="textSecondary" suffix='Nodes Running'></AsyncLabel>
+                            </Stack>
                         </AnalyticsDataCard>
                     },
                     {

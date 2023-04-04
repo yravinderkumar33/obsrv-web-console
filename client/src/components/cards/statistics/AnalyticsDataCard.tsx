@@ -14,8 +14,8 @@ interface Props {
 
 const AnalyticsDataCard = ({ color = 'primary', title, count, percentage, isLoss, children }: Props) => {
 
-  return <Paper elevation={globalConfig.elevation}>
-    <MainCard content={false}>
+  return <Paper elevation={globalConfig.elevation} sx={{ height: '100%' }}>
+    <MainCard content={false} style={{height: '100%'}}>
       <Box sx={{ p: 2.25 }}>
         <Stack spacing={0.5}>
           <Typography align='center' variant="h6" color="textSecondary">
