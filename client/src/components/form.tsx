@@ -13,6 +13,7 @@ import {
     Select,
     TextField,
     ToggleButtonGroup,
+    Tooltip,
 } from '@mui/material';
 import { Formik, Field, Form } from 'formik';
 import { ToggleButton } from '@mui/material';
@@ -43,7 +44,8 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                 return (
                     <Form>
                         <Grid container spacing={3} alignItems="baseline">
-                            {fields.map(({ name, label, type, selectOptions, required = false, dependsOn = null, disabled = false, ...rest }: any) => {
+                            {fields.map(({ name, tooltip = '', label, type, selectOptions, required = false, dependsOn = null, disabled = false, ...rest }: any) => {
+
                                 if (dependsOn) {
                                     const { key, value } = dependsOn;
                                     if (!(_.get(values, [key]) === value)) {
@@ -57,81 +59,90 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                             <Grid item xs={xs} sm={sm} lg={lg} key={name}>
                                                 <Field
                                                     key={name}
-                                                    render={() => <TextField
-                                                        name={name}
-                                                        label={label}
-                                                        onBlur={handleBlur}
-                                                        onChange={handleChange}
-                                                        required={required}
-                                                        disabled={disabled}
-                                                        variant="outlined"
-                                                        fullWidth
-                                                        error={touched[name] && Boolean(errors[name])}
-                                                        helperText={touched[name] && errors[name] && String(errors[name])}
-                                                        {...rest}
-                                                    />}
+                                                    render={() => <>
+                                                        <Tooltip title={tooltip}>
+                                                            <TextField
+                                                                name={name}
+                                                                label={label}
+                                                                onChange={handleChange}
+                                                                required={required}
+                                                                disabled={disabled}
+                                                                variant="outlined"
+                                                                fullWidth
+                                                                {...rest}
+                                                            />
+                                                        </Tooltip>
+                                                    </>}
                                                 />
                                             </Grid>
                                         );
                                     case 'checkbox':
                                         return (
                                             <Grid item xs={xs} sm={sm} lg={lg} key={name}>
-                                                <FormControl fullWidth required={required}>
-                                                    <FormControlLabel
-                                                        key={name}
-                                                        disabled={disabled}
-                                                        control={<Field as={Checkbox} name={name} />}
-                                                        label={label}
-                                                        onChange={handleChange}
-                                                    />
-                                                </FormControl>
+                                                <Tooltip title={tooltip}>
+                                                    <FormControl fullWidth required={required}>
+                                                        <FormControlLabel
+                                                            key={name}
+                                                            disabled={disabled}
+                                                            control={<Field as={Checkbox} name={name} />}
+                                                            label={label}
+                                                            onChange={handleChange}
+                                                        />
+                                                    </FormControl>
+                                                </Tooltip>
                                             </Grid>
                                         );
                                     case 'radio':
                                         return (
                                             <Grid item xs={xs} sm={sm} lg={lg} key={name}>
-                                                <FormControl fullWidth component="fieldset" required={required} disabled={disabled}>
-                                                    <FormLabel component="legend">{label}</FormLabel>
-                                                    <RadioGroup name={name} id={name} row onChange={handleChange} value={_.get(values, name)}>
-                                                        {selectOptions.map((option: any) => (
-                                                            <FormControlLabel
-                                                                key={option.value}
-                                                                value={option.value}
-                                                                name={name}
-                                                                control={<Field as={Radio} />}
-                                                                label={option.label}
-                                                            />
-                                                        ))}
-                                                    </RadioGroup>
-                                                </FormControl>
+                                                <Tooltip title={tooltip}>
+                                                    <FormControl fullWidth component="fieldset" required={required} disabled={disabled}>
+                                                        <FormLabel component="legend">{label}</FormLabel>
+                                                        <RadioGroup name={name} id={name} row onChange={handleChange} value={_.get(values, name)}>
+                                                            {selectOptions.map((option: any) => (
+                                                                <FormControlLabel
+                                                                    key={option.value}
+                                                                    value={option.value}
+                                                                    name={name}
+                                                                    control={<Field as={Radio} />}
+                                                                    label={option.label}
+                                                                />
+                                                            ))}
+                                                        </RadioGroup>
+                                                    </FormControl>
+                                                </Tooltip>
                                             </Grid>
                                         );
                                     case 'select':
                                         return (
                                             <Grid item xs={xs} sm={sm} lg={lg} key={name}>
-                                                <FormControl fullWidth key={name} className={classes.formControl} required={required} disabled={disabled}>
-                                                    <InputLabel >{label}</InputLabel>
-                                                    <Select name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
-                                                        {selectOptions.map((option: any) => (<MenuItem value={option.value}>{option.label}</MenuItem>))}
-                                                    </Select>
-                                                </FormControl>
+                                                <Tooltip title={tooltip}>
+                                                    <FormControl fullWidth key={name} className={classes.formControl} required={required} disabled={disabled}>
+                                                        <InputLabel >{label}</InputLabel>
+                                                        <Select name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
+                                                            {selectOptions.map((option: any) => (<MenuItem value={option.value}>{option.label}</MenuItem>))}
+                                                        </Select>
+                                                    </FormControl>
+                                                </Tooltip>
                                             </Grid>
                                         );
                                     case 'buttonGroup':
                                         return (
                                             <Grid item xs={xs} sm={sm} lg={lg} key={name}>
-                                                <FormControl fullWidth component="fieldset" required={required} disabled={disabled}>
-                                                    <FormLabel component="legend">{label}</FormLabel>
-                                                    <ToggleButtonGroup exclusive color="info" aria-label="text alignment" onChange={handleChange}>
-                                                        {
-                                                            selectOptions.map((option: any, index: number) => {
-                                                                return <ToggleButton key={index} id={name} value={option.value} aria-label="first">
-                                                                    {option?.label}
-                                                                </ToggleButton>
-                                                            })
-                                                        }
-                                                    </ToggleButtonGroup>
-                                                </FormControl>
+                                                <Tooltip title={tooltip}>
+                                                    <FormControl fullWidth component="fieldset" required={required} disabled={disabled}>
+                                                        <FormLabel component="legend">{label}</FormLabel>
+                                                        <ToggleButtonGroup exclusive color="info" aria-label="text alignment" onChange={handleChange}>
+                                                            {
+                                                                selectOptions.map((option: any, index: number) => {
+                                                                    return <ToggleButton key={index} id={name} value={option.value} aria-label="first">
+                                                                        {option?.label}
+                                                                    </ToggleButton>
+                                                                })
+                                                            }
+                                                        </ToggleButtonGroup>
+                                                    </FormControl>
+                                                </Tooltip>
                                             </Grid>
                                         );
                                     default:
@@ -143,7 +154,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                     </Form>
                 )
             }}
-        </Formik>
+        </Formik >
     );
 };
 

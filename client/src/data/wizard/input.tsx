@@ -18,7 +18,7 @@ const dataFormatQues = {
         },
         no: {
             form: null,
-            description: null
+            description: "Individual event mode is always enabled."
         }
     }
 }
@@ -43,11 +43,11 @@ const datasourceQues = {
     options: {
         kafka: {
             form: forms.input_kafka,
-            description: "Load streaming data in real-time from Apache Kafka. Configure topic name and A list of Kafka brokers in the form: <BROKER_1>:<PORT_1>,<BROKER_2>:<PORT_2>,..."
+            description: "Load streaming data in real-time from Apache Kafka. Configure topic name and list of Kafka brokers in the form: <BROKER_1>:<PORT_1>,<BROKER_2>:<PORT_2>,..."
         },
         api: {
             form: null,
-            description: null
+            description: "API input is by enabled for all the datasets."
         }
     }
 }
@@ -56,7 +56,7 @@ export const sections = [
     {
         id: 'dataSource',
         title: 'Input Data Sources',
-        description: 'Please specify where your raw data is located.',
+        description: 'Read data from a wide variety of data sources. Batch and Real time data integration.',
         component: <ConditionalForm  {...datasourceQues} />,
         navigation: {
             next: 'dataFormat'
@@ -65,7 +65,7 @@ export const sections = [
     {
         id: 'dataFormat',
         title: 'Input Data Formats',
-        description: 'Please specify how the data is ingested into your system.',
+        description: 'Decide how the data is ingested into the system.',
         component: <ConditionalForm  {...dataFormatQues} />
     }
 ];

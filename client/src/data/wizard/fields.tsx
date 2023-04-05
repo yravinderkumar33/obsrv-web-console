@@ -1,6 +1,7 @@
 import { FieldTimeOutlined } from "@ant-design/icons";
 import InputAccordion from "pages/dataset/wizard/components/InputAccordion";
 import TimestampSelection from "pages/dataset/wizard/components/TimestampSelection";
+import AddNewField from "pages/dataset/wizard/components/transformationDialogs/AddNewField";
 import AddPIIDialog from "pages/dataset/wizard/components/transformationDialogs/AddPII";
 import AddTransformationExpression from "pages/dataset/wizard/components/transformationDialogs/AddTransformationExpression";
 
@@ -12,7 +13,6 @@ export const sections = [
         title: 'Timestamp Field',
         description: 'Timestamp Field specifies the column or field that contains the timestamp for each data record being ingested. This enabled our platform to effectively partition, index, and query data based on the timestamps.',
         componentType: 'box',
-        icon: FieldTimeOutlined,
         component: <TimestampSelection />,
         navigation: {
             next: 'pii'
@@ -23,18 +23,27 @@ export const sections = [
         title: 'PII Fields',
         description: 'PII is sensitive information that needs to be protected and kept secure to prevent identity theft, fraud, or other types of harm.  PII fields are often identified and tagged to ensure that appropriate controls are in place to protect the data',
         component: <InputAccordion actions={actions} label={'Add PII'} dialog={< AddPIIDialog />} />,
+        icon: FieldTimeOutlined,
         navigation: {
-            previous: 'timestamp',
             next: 'transformation'
         }
     },
     {
         id: 'transformation',
         title: 'Fields Transformation',
-        description: 'Field transformations allows users to manipulate and transform data during ingestion or query time',
+        description: 'Field transformations allows users to manipulate and transform data during ingestion or query time. Custom Expressions specify a set of column transformations to be performed on input data',
         component: <InputAccordion actions={[...actions, { label: 'Custom', component: '', value: 'custom' }]} label={'Add Transformation'} dialog={< AddTransformationExpression />} />,
         navigation: {
-            previous: 'pii'
+            next: 'additionalFields'
+        }
+    },
+    {
+        id: 'additionalFields',
+        title: 'Additional Fields',
+        description: 'Create New Columns by applying custom transformation expressions',
+        component: <InputAccordion actions={[{ label: 'Custom', component: '', value: 'custom' }]} label={'Add New Field'} dialog={< AddNewField />} />,
+        navigation: {
+
         }
     }
 ];

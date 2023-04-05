@@ -3,6 +3,7 @@ export const validateDataForm = [
         name: "validateType",
         label: "Validation Type",
         type: 'select',
+        tooltip: "Select Appropriate validate type",
         selectOptions: [
             {
                 label: 'Strict',
@@ -25,6 +26,7 @@ export const dedupeForm = [
         name: "dedupeKey",
         label: "Dedupe Key",
         type: 'text',
+        tooltip: "Column based on which you want to enable the dedupe",
         required: true
     },
     {

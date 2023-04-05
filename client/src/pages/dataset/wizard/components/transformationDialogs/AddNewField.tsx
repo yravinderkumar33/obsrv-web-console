@@ -8,40 +8,13 @@ import { useDispatch } from "react-redux";
 import { updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
 
-const AddTransformationExpression = (props: any) => {
-    const { data, onClose, setSelection, actions } = props;
-    const dispatch = useDispatch();
+const AddNewField = (props: any) => {
+    const { data, onClose, setSelection } = props;
     const [value, subscribe] = useState<any>({});
+    const dispatch = useDispatch();
     const columns = useMemo(() => _.map(data, payload => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') })), [data]);
-    const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id: 'columns', state: { ...values } }));
     const onSubmission = (value: any) => { console.log({ value }) }
-
-    const fields = [
-        {
-            name: "column",
-            label: "Select Field",
-            type: 'select',
-            required: true,
-            selectOptions: columns
-        },
-        {
-            name: "transformation",
-            label: "Select Transformation",
-            type: 'radio',
-            required: true,
-            selectOptions: actions
-        },
-        {
-            name: "expression",
-            label: "Add Custom Expression",
-            type: 'text',
-            dependsOn: {
-                key: "transformation",
-                value: "custom"
-            },
-            required: true
-        }
-    ];
+    const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id: 'columns', state: { ...values } }));
 
     const updateColumns = (updatedCol: Record<string, any>) => {
         const updatedColumnData = _.map(data, payload => {
@@ -49,31 +22,41 @@ const AddTransformationExpression = (props: any) => {
                 return updatedCol
             }
             return payload;
-        });
+        })
         pushStateToStore({ schema: updatedColumnData });
     }
 
-    const updateTransformation = () => {
-        const { column, transformation, expression } = value;
+    const updatePIIMeta = () => {
+        const { column, transformation } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
-            let updatedMeta: Record<string, any> = { ...targetColumn, isModified: true, _transformationType: transformation };
-            if (transformation === "custom" && expression) {
-                updatedMeta = { ...updatedMeta, transformation: expression };
-            } else {
-                updatedMeta = { ...updatedMeta, pii: { "value": true, "op": transformation } };
-            }
-            updateColumns(updatedMeta);
-            const meta = { ...targetColumn, ...updatedMeta };
-            setSelection((preState: Array<any>) => ([...preState, meta]));
+            const updatedColumnMetadata = { ...targetColumn, isModified: true, pii: { "value": true, "op": transformation }, _transformationType: transformation }
+            updateColumns(updatedColumnMetadata)
+            setSelection((preState: Array<any>) => ([...preState, updatedColumnMetadata]));
             onClose();
         }
     }
 
+    const fields = [
+        {
+            name: "column",
+            label: "Field Name",
+            type: 'text',
+            required: true,
+            selectOptions: columns
+        },
+        {
+            name: "transformation",
+            label: "Transformation Expression",
+            type: 'text',
+            required: true
+        }
+    ]
+
     return <>
-        <Box sx={{ p: 1, py: 1.5, width: '50vw', height: 'auto' }}>
+        <Box sx={{ p: 1, py: 1.5, width: '50vw' }}>
             <DialogTitle id="alert-dialog-title">
-                Add Field Transformation
+                Add New Field
                 {onClose ? (
                     <IconButton
                         aria-label="close"
@@ -92,16 +75,15 @@ const AddTransformationExpression = (props: any) => {
             <DialogContent>
                 <Stack spacing={2}>
                     <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
-                    {_.get(value, 'transformation') === 'custom' && <Button variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>}
-                </Stack>
+                    <Button variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
+                </ Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" autoFocus onClick={_ => updateTransformation()}>
+                <Button variant="contained" onClick={_ => updatePIIMeta()}>
                     Add
                 </Button>
             </DialogActions>
-        </Box>
-    </>
+        </Box></>
 }
 
-export default AddTransformationExpression;
+export default AddNewField;

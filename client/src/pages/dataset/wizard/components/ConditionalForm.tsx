@@ -14,7 +14,6 @@ const ConditionalForm = (props: any) => {
     const [config, setConfig] = useState<any>({});
     const redux = useSelector((state: any) => state);
 
-
     const selectForm = (optionMeta: Record<string, any>) => {
         if (optionMeta) {
             const { form, description, size = { sm: 6, xs: 6, lg: 6 } } = optionMeta;
@@ -30,7 +29,7 @@ const ConditionalForm = (props: any) => {
 
     return <>
         <Grid container rowSpacing={2}>
-            {description && <Grid item xs={12}> <Alert variant="outlined" color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
+            {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             <Grid item xs={6}>
                 <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={[question]} />
             </Grid>
