@@ -7,14 +7,15 @@ import { reset } from 'store/reducers/wizard';
 import ListColumns from './ListColumns';
 import Review from './Review';
 import * as _ from 'lodash';
-import SchemaConfiguration from './SchemaConfiguration';
+import FieldsConfiguration from './FieldsConfiguration';
 import ProcessingConfiguration from './ProcessingConfiguration';
 import IngestionConfiguration from './IngestionConfiguration';
 import DenormConfiguration from './DenormConfiguration';
 import AdvancedConfiguration from './AdvancedConfiguration';
+import InputConfiguration from './InputConfiguration';
 
 //'Ingestion Config',
-const steps = ['Schema', 'Inputs', 'Processing', 'Ingestion', 'Denorm', 'Advanced', 'Review'];
+const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Denorm', 'Advanced', 'Review'];
 const masterSteps = ['Schema', 'Ingestion', 'Review'];
 
 const getStepContent = (
@@ -40,11 +41,11 @@ const getStepContent = (
             case 0:
                 return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} />;
             case 1:
-                return <SchemaConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} />
+                return <InputConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} />
             case 2:
-                return <ProcessingConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
+                return <FieldsConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
             case 3:
-                return <IngestionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} />
+                return <ProcessingConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} />
             case 4:
                 return <DenormConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} />
             case 5:
@@ -126,15 +127,10 @@ const DatasetOnboarding = ({ master = false }) => {
         </Stepper>
     );
 
-    const getDatasetName = () => {
-        const name = _.get(wizardState, 'pages.datasetConfiguration.state.config.name');
-        return name ? name : '';
-    };
-
     return (
         <Box>
             {showWizard && stepper()}
-            <MainCard title={getDatasetName()}
+            <MainCard title={null}
                 secondary={
                     showWizard && <Box display="flex" justifyContent="space-between">
                         <Button onClick={(_) => resetState()}>

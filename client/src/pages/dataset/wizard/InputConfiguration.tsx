@@ -2,13 +2,13 @@ import { Grid, Stack, Button } from "@mui/material";
 import { useDispatch } from 'react-redux';
 import * as _ from 'lodash';
 import AnimateButton from "components/@extended/AnimateButton";
-import { sections as inputSections } from 'data/wizard/processing';
+import { sections as inputSections } from 'data/wizard/input';
 import FieldSection from "./components/FieldSection";
 import { useState } from "react";
 
 const sections = inputSections;
 
-const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index }: any) => {
+const InputConfiguration = ({ handleBack, handleNext, setErrorIndex, index }: any) => {
     const [expanded, setExpanded] = useState<string | false>(false);
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => { setExpanded(isExpanded ? panel : false) };
 
@@ -45,4 +45,4 @@ const ProcessingConfiguration = ({ handleBack, handleNext, setErrorIndex, index 
     );
 }
 
-export default ProcessingConfiguration;
+export default InputConfiguration;

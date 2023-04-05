@@ -37,7 +37,7 @@ const columnFilters: columnFilter[] = [
         'label': 'Critical',
         'id': 'CRITICAL',
         'lookup': 'severity',
-        'color': "error"
+        'color': "warning"
     },
     {
         'label': 'High',
@@ -402,22 +402,20 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }, [apiResponse?.status]);
 
     return <>
-        <Box display="flex" justifyContent={"space-between"}>
-            <Stack direction="row" spacing={1} marginBottom={2}>
-                {columnFilters.map((filter) => <Chip
-                    key={filter.label}
-                    aria-label='filter-issues'
-                    clickable
-                    label={filter.label}
-                    sx={{ mx: 0.5 }}
-                    color={filterByChip?.label === filter.label ? filter.color : undefined}
-                    size="small"
-                    onClick={() => handleFilterChange(filter)}
-                    onDelete={filterByChip?.label === filter.label ? () => deleteFilter() : undefined}
-                />
-                )}
-            </Stack>
-        </Box>
+        <Stack direction="row" spacing={1} marginBottom={2} justifyContent="flex-end">
+            {columnFilters.map((filter) => <Chip
+                key={filter.label}
+                aria-label='filter-issues'
+                clickable
+                label={filter.label}
+                sx={{ mx: 0.5 }}
+                color={filter.color}
+                size="small"
+                onClick={() => handleFilterChange(filter)}
+                onDelete={filterByChip?.label === filter.label ? () => deleteFilter() : undefined}
+            />
+            )}
+        </Stack>
         <Grid container spacing={2}>
             {apiResponse?.status !== 'success' &&
                 <Grid item xs={12} sm={12}>

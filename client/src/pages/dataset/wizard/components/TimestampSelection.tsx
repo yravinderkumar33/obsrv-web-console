@@ -35,7 +35,7 @@ const TimestampSelection = (props: any) => {
     return <>
         <Grid container rowSpacing={2} columnSpacing={2}>
             <Grid item xs={12}>
-                <Alert color="info" icon={<InfoCircleOutlined />}>
+                <Alert color="primary" icon={<InfoCircleOutlined />}>
                     {description}
                 </Alert>
             </Grid>

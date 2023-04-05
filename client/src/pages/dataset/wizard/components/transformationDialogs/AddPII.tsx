@@ -5,7 +5,7 @@ import MUIForm from "components/form";
 import { useMemo, useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
-import { addState, updateState } from "store/reducers/wizard";
+import { updateState } from "store/reducers/wizard";
 
 const AddPIIDialog = (props: any) => {
     const { data, onClose, setSelection, actions } = props;

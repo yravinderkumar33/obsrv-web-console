@@ -3,12 +3,12 @@ import { Alert, Button, Dialog, Grid, ToggleButtonGroup, ToggleButton } from "@m
 import MainCard from "components/MainCard"
 import BasicReactTable from "components/BasicReactTable";
 import ScrollX from "components/ScrollX";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import _ from "lodash";
 import IconButton from "components/@extended/IconButton";
 
 const InputAccordion = (props: any) => {
-    const { title, description, actions, data, submitButton: { label, dialog } } = props;
+    const { title, description, actions, data, label, dialog } = props;
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selection, setSelection] = useState<Array<any>>([]);
 
@@ -17,13 +17,6 @@ const InputAccordion = (props: any) => {
             return preState.filter(payload => _.get(payload, 'column') !== _.get(record, 'column'));
         })
     }
-
-
-    useEffect(() => {
-        if (_.get(selection, 'length')) {
-
-        }
-    }, [selection]);
 
     const columns = [
         {
@@ -60,20 +53,21 @@ const InputAccordion = (props: any) => {
         return React.cloneElement(dialog, { actions, setSelection, data, onClose: () => setDialogOpen(false) });
     }
 
+    const renderTable = () => {
+        if (!_.get(selection, 'length')) return null;
+        return <Grid item xs={12}>
+            <MainCard content={false}>
+                <ScrollX>
+                    <BasicReactTable columns={columns} data={selection} striped={true} />
+                </ScrollX>
+            </MainCard >
+        </Grid>
+    }
+
     return <>
         <Grid container rowSpacing={2} columnSpacing={2}>
-            <Grid item xs={12}>
-                <Alert color="info" icon={<InfoCircleOutlined />}>
-                    {description}
-                </Alert>
-            </Grid>
-            <Grid item xs={12}>
-                <MainCard content={false}>
-                    <ScrollX>
-                        <BasicReactTable columns={columns} data={selection} striped={true} />
-                    </ScrollX>
-                </MainCard >
-            </Grid>
+            <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>
+            {renderTable()}
             <Grid item xs={12}>
                 <Button variant="contained" onClick={_ => setDialogOpen(true)} >{label}</Button>
             </Grid>

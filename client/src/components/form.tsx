@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: any) => ({
 
 const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, size = {}, enableReinitialize = false, }: any) => {
     const classes: any = useStyles;
-    const { xs = 12, sm = 12, lg = 12 } = size;
+    let { xs = 12, sm = 12, lg = 12 } = size;
 
     return (
         <Formik
@@ -43,8 +43,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                 return (
                     <Form>
                         <Grid container spacing={3} alignItems="baseline">
-                            {fields.map(({ name, label, type, selectOptions, required = false, dependsOn = null, disabled = false, updateField = null, }: any) => {
-
+                            {fields.map(({ name, label, type, selectOptions, required = false, dependsOn = null, disabled = false, ...rest }: any) => {
                                 if (dependsOn) {
                                     const { key, value } = dependsOn;
                                     if (!(_.get(values, [key]) === value)) {
@@ -69,6 +68,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                         fullWidth
                                                         error={touched[name] && Boolean(errors[name])}
                                                         helperText={touched[name] && errors[name] && String(errors[name])}
+                                                        {...rest}
                                                     />}
                                                 />
                                             </Grid>
