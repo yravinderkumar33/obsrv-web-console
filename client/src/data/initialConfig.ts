@@ -18,5 +18,6 @@ export default {
         "MEDIUM": {
             "color": "warning"
         }
-    }
+    },
+    maxFileSize: '5242880',
 }

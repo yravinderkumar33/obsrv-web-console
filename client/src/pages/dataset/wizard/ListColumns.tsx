@@ -1,14 +1,14 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
     Button, Grid, IconButton,
     Stack, TextField, Tooltip, Typography,
     FormControl, Select, MenuItem, Dialog,
-    FormControlLabel, Chip, Alert, DialogTitle, Box
+    FormControlLabel, Chip, Alert, DialogTitle, Box, Popover
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -110,17 +110,73 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 editable: false,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
-                    const { severityToColorMapping } = globalConfig;
-                    const suggestions = _.get(row, 'suggestions');
-                    const hasCriticalConflicts = checkForCriticalSuggestion(suggestions || []);
-                    const isResolved = _.get(row, 'resolved') || false;
+                    const [edit, setEdit] = useState(false);
+                    const [text, setText] = useState('');
+                    const editDescription = () => {
+                        setEdit((prevState) => !prevState);
+                        updateState();
+                    }
+
+                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                        setText(e.target.value);
+                    }
+
+                    const handleCancel = () => {
+                        updateState();
+                        setEdit((prevState) => !prevState);
+                    }
+
+                    const updateState = () => {
+                        setFlattenedData((preState: Array<Record<string, any>>) => {
+                            const updatedValues = { ...row };
+                            const values = _.map(preState, state => {
+                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
+                                    return { ...state, ...updatedValues, isModified: true, description: text };
+                                else return state
+                            });
+                            pushStateToStore(values);
+                            return values;
+                        });
+                    }
+
                     return (
                         <>
-                            <Box display="flex" alignItems="baseline">
-                                <Typography variant="body1">
+                            <Box alignItems="baseline">
+                                <Typography variant="body1" m={1}>
                                     {value}
                                 </Typography>
-                                {hasCriticalConflicts && !isResolved && <Tooltip title={"Unresolved"}>
+                                {edit &&
+                                    <Box my={1} mx={1}>
+                                        <TextField
+                                            InputLabelProps={{
+                                                shrink: true
+                                            }}
+                                            autoFocus
+                                            defaultValue={row.description}
+                                            onBlur={handleCancel}
+                                            onChange={handleChange}
+                                            label='Description'
+                                        />
+                                    </Box>
+                                }
+                                {!edit &&
+                                    <Typography
+                                        onClick={editDescription}
+                                        m={1}
+                                        sx={{
+                                            overflow: 'hidden',
+                                            maxWidth: 230,
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap',
+                                        }}
+                                        variant="subtitle1"
+                                        color="secondary"
+                                    >{row.description}
+                                    </Typography>
+                                }
+                                {!edit && !row.description && <Box onClick={editDescription} my={1} mx={1}>Add description.. <EditOutlined /></Box>}
+                            </Box>
+                            {/* {hasCriticalConflicts && !isResolved && <Tooltip title={"Unresolved"}>
                                     <Stack direction="row" spacing={1} m={1}>
                                         {suggestions.map((payload: any, index: number) => {
                                             if (['HIGH', 'CRITICAL'].includes(payload?.severity))
@@ -147,118 +203,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                                         return null;
                                     })
                                 }
-                            </Box>
+                            </Box> */}
                         </>
-                    );
-                }
-            },
-            {
-                Header: 'Description',
-                accessor: 'description',
-                tipText: 'Description for the field',
-                editable: true,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const [edit, setEdit] = useState(false);
-                    const [text, setText] = useState('');
-                    const editDescription = () => {
-                        setEdit((prevState) => !prevState);
-                        updateState();
-                    }
-
-                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                        setText(e.target.value);
-                    }
-
-                    const updateState = () => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, description: text };
-                                else return state
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-
-                    const handleCancel = () => {
-                        setText('');
-                        setEdit((prevState) => !prevState);
-                    }
-
-                    return <Box display="flex" alignItems="center">
-                        <Dialog open={edit} onClose={editDescription}>
-                            <DialogTitle id="dialog-title">
-                                {`Edit description for field - ${row.column}`}
-                            </DialogTitle>
-                            <Box p={2}>
-                                <Box m={1}>
-                                    <TextField
-                                        InputLabelProps={{
-                                            shrink: true
-                                        }}
-                                        fullWidth
-                                        defaultValue={value}
-                                        onChange={handleChange}
-                                        label='Description'
-                                    />
-                                </Box>
-                                <Stack direction="row"
-                                    justifyContent="flex-end"
-                                    alignItems="center"
-                                    spacing={2} >
-                                    <Button color="error" size="small" onClick={handleCancel}>
-                                        Cancel
-                                    </Button>
-                                    <Button variant="contained" size="small" onClick={editDescription}>
-                                        Save
-                                    </Button>
-                                </Stack>
-                            </Box>
-                        </Dialog>
-                        {!edit && <Typography onClick={editDescription}>{value}</Typography>}
-                        {!edit && !value && <Box onClick={editDescription}>... <EditOutlined /></Box>}
-                    </Box>;
-                }
-            },
-            {
-                Header: 'Suggestions',
-                accessor: 'suggestions',
-                tipText: 'Suggestions provided for the field',
-                editable: false,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const hasConflicts = _.get(row, 'suggestions.length');
-                    const updateValue = (val: string) => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, type: val, ...(hasConflicts && { resolved: true }) };
-                                else return state
-                            });
-                            pushStateToStore(values);
-                            return values;
-                        });
-                    }
-
-                    return (
-                        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                            {row?.oneof?.map((suggestion: any) => <Chip
-                                key={suggestion.type}
-                                aria-label='fix-data-type'
-                                clickable
-                                label={`Convert to ${_.capitalize(suggestion.type)}`}
-                                sx={{ m: 1 }}
-                                color='success'
-                                onClick={() => updateValue(suggestion.type)}
-                                size="small"
-                            />)}
-                        </FormControl>
                     );
                 }
             },
@@ -271,7 +217,10 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     const hasConflicts = _.get(row, 'suggestions.length');
+                    const isResolved = _.get(row, 'resolved') || false;
+                    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
                     const updateValue = (val: string) => {
+                        setAnchorEl(null);
                         setFlattenedData((preState: Array<Record<string, any>>) => {
                             const updatedValues = { ...row };
                             const values = _.map(preState, state => {
@@ -283,18 +232,92 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                             return values;
                         });
                     }
+                    const open = Boolean(anchorEl);
+
+                    const handleSuggestions = (e: React.MouseEvent<HTMLButtonElement>) => {
+                        setAnchorEl(e.currentTarget);
+                    }
+
+                    const handleClose = () => {
+                        setAnchorEl(null);
+                    }
+
+                    const renderSuggestions = () => {
+                        return row?.oneof?.map((suggestion: any) => {
+                            if (suggestion.type !== value) return (
+                                <Chip
+                                    key={suggestion.type}
+                                    aria-label='fix-data-type'
+                                    clickable
+                                    label={`Convert to ${_.capitalize(suggestion.type)}`}
+                                    sx={{ m: 1 }}
+                                    color='success'
+                                    onClick={() => updateValue(suggestion.type)}
+                                />
+                            );
+                            else return null;
+                        })
+                    }
 
                     return (
-                        <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                            <Select
-                                value={value}
+                        <Box position="relative" maxWidth={190} bgcolor={row?.oneof && !isResolved ? "error.light" : ""}>
+                            {row?.oneof && !isResolved &&
+                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 1, mx: 1 }} onClick={handleSuggestions}>
+                                    <ExclamationCircleOutlined />
+                                </IconButton>
+                            }
+                            {row?.oneof && isResolved &&
+                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 1, mx: 1 }} onClick={handleSuggestions}>
+                                    <CheckOutlined />
+                                </IconButton>
+                            }
+                            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
+                                <Select
+                                    value={value}
+                                    variant="standard"
+                                >
+                                    {
+                                        validDatatypes.map((option: any) =>
+                                            (<MenuItem onClick={() => updateValue(option)} value={option} key={option}>{option}</MenuItem>))
+                                    }
+                                </Select>
+                            </FormControl>
+                            <Popover
+                                open={open}
+                                anchorEl={anchorEl}
+                                onClose={handleClose}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+
                             >
-                                {
-                                    validDatatypes.map((option: any) =>
-                                        (<MenuItem onClick={() => updateValue(option)} value={option} key={option}>{option}</MenuItem>))
-                                }
-                            </Select>
-                        </FormControl>
+                                <Box sx={{ p: 2 }}>
+                                    {isResolved && (
+                                        <>
+                                            <Typography variant="h6">
+                                                Resolved
+                                                <Typography variant="body1">
+                                                    Data type of field {row?.column} is resolved to "{value}"
+                                                </Typography>
+                                            </Typography>
+                                            {renderSuggestions()}
+                                        </>
+                                    )}
+                                    {!isResolved && (
+                                        <>
+                                            <Typography variant="h6">
+                                                Must-fix
+                                                <Typography variant="body1">
+                                                    The field {row?.column} has multiple data type values available
+                                                </Typography>
+                                            </Typography>
+                                            {renderSuggestions()}
+                                        </>
+                                    )}
+                                </Box>
+                            </Popover>
+                        </Box>
                     );
                 }
             },
