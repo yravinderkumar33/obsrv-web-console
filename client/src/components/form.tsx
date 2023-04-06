@@ -69,6 +69,31 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                                 disabled={disabled}
                                                                 variant="outlined"
                                                                 fullWidth
+                                                                autoComplete="off"
+                                                                {...rest}
+                                                            />
+                                                        </Tooltip>
+                                                    </>}
+                                                />
+                                            </Grid>
+                                        );
+                                    case 'number':
+                                        return (
+                                            <Grid item xs={xs} sm={sm} lg={lg} key={name}>
+                                                <Field
+                                                    key={name}
+                                                    render={() => <>
+                                                        <Tooltip title={tooltip}>
+                                                            <TextField
+                                                                name={name}
+                                                                label={label}
+                                                                onChange={handleChange}
+                                                                required={required}
+                                                                disabled={disabled}
+                                                                variant="outlined"
+                                                                fullWidth
+                                                                autoComplete="off"
+                                                                type='number'
                                                                 {...rest}
                                                             />
                                                         </Tooltip>

@@ -7,32 +7,16 @@ import { reset } from 'store/reducers/wizard';
 import ListColumns from './ListColumns';
 import Review from './Review';
 import * as _ from 'lodash';
-import FieldsConfiguration from './FieldsConfiguration';
-import ProcessingConfiguration from './ProcessingConfiguration';
-import IngestionConfiguration from './IngestionConfiguration';
-import DenormConfiguration from './DenormConfiguration';
-import AdvancedConfiguration from './AdvancedConfiguration';
-import InputConfiguration from './InputConfiguration';
+import SectionConfiguration from './components/SectionConfiguration';
 
-//'Ingestion Config',
-const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Denorm', 'Advanced', 'Review'];
+const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Advanced', 'Review'];
 const masterSteps = ['Schema', 'Ingestion', 'Review'];
 
-const getStepContent = (
-    step: number,
-    handleNext: () => void,
-    handleBack: () => void,
-    setErrorIndex: (i: number | null) => void,
-    master: boolean,
-) => {
+const getStepContent = (step: number, handleNext: () => void, handleBack: () => void, setErrorIndex: (i: number | null) => void, master: boolean) => {
     if (master) {
         switch (step) {
             case 0:
                 return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} />;
-            case 1:
-                return <IngestionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} />
-            case 2:
-                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
             default:
                 throw new Error('Unknown step');
         }
@@ -41,16 +25,14 @@ const getStepContent = (
             case 0:
                 return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} />;
             case 1:
-                return <InputConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} />
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} section="input" />
             case 2:
-                return <FieldsConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} section="field" />
             case 3:
-                return <ProcessingConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} />
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} section="processing" />
             case 4:
-                return <DenormConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} />
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} section="advanced" />
             case 5:
-                return <AdvancedConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={5} />
-            case 6:
                 return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={6} />
             default:
                 throw new Error('Unknown step');

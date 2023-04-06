@@ -12,7 +12,7 @@ const FieldSection = (props: any) => {
     const open = (id === expanded);
 
     const renderNavigation = () => {
-        if (navigation && componentType !== 'accordion') return null;
+        if (!navigation) return null;
         return <Grid item xs={12}>
             <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
                 {navigation?.next && <Button variant="outlined" endIcon={<ArrowRightOutlined />} onClick={_ => setExpanded(navigation.next)}>{_.startCase(navigation.next)}</Button>}

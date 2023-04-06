@@ -3,20 +3,19 @@ import { Grid, Alert } from '@mui/material';
 import * as _ from 'lodash';
 import { useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
-import FieldSection from './components/FieldSection';
+import FieldSection from './FieldSection';
 import { Stack } from '@mui/material';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { Button } from '@mui/material';
-import { sections as fieldsSections } from 'data/wizard/fields';
+import { sections as allSections } from 'data/wizard';
 
-const sections = fieldsSections;
-
-const SchemaConfiguration = ({ handleNext, handleBack, index }: any) => {
+const SectionsConfiguration = ({ handleNext, handleBack, index, section }: any) => {
+    const sections = _.get(allSections, section) || [];
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const jsonSchemaData = _.get(wizardState, 'pages.columns.state.schema') || [];
     const gotoNextSection = () => handleNext();
     const gotoPreviousSection = () => handleBack();
-    const [expanded, setExpanded] = useState<string | false>('timestamp');
+    const [expanded, setExpanded] = useState<string | false>(false);
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => { setExpanded(isExpanded ? panel : false) };
 
     const renderSection = (section: Record<string, any>) => {
@@ -44,4 +43,4 @@ const SchemaConfiguration = ({ handleNext, handleBack, index }: any) => {
     </>;
 };
 
-export default SchemaConfiguration
+export default SectionsConfiguration
