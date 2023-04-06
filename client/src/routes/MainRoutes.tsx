@@ -44,8 +44,8 @@ const MainRoutes = {
             element: <NewDataset />
         },
         {
-            path: 'dataset/new/master',
-            element: <NewDataset master={true} />
+            path: 'dataset/new/:id',
+            element: <NewDataset master />
         }
     ]
 };

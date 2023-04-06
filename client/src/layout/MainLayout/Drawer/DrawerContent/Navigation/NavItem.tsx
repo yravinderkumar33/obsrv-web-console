@@ -18,9 +18,10 @@ import { RootStateProps } from 'types/root';
 interface Props {
     item: NavItemType;
     level: number;
+    handleDrawerToggle: () => void;
 }
 
-const NavItem = ({ item, level }: Props) => {
+const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
     const theme = useTheme();
     const dispatch = useDispatch();
     const menu = useSelector((state: RootStateProps) => state.menu);
@@ -35,7 +36,11 @@ const NavItem = ({ item, level }: Props) => {
         component: ForwardRefExoticComponent<RefAttributes<HTMLAnchorElement>> | string;
         href?: string;
         target?: LinkTarget;
-    } = { component: forwardRef((props, ref) => <Link {...props} to={item.url!} target={itemTarget} />) };
+        onClick?: () => void;
+    } = {
+        component: forwardRef((props, ref) => <Link {...props} to={item.url!} target={itemTarget} />),
+        onClick: () => handleDrawerToggle()
+    };
     if (item?.external) {
         listItemProps = { component: 'a', href: item.url, target: itemTarget };
     }

@@ -17,68 +17,69 @@ import { useSelector } from 'react-redux';
 // ==============================|| MAIN LAYOUT - HEADER ||============================== //
 
 interface Props {
-  open: boolean;
-  handleDrawerToggle?: () => void;
+    open: boolean;
+    handleDrawerToggle?: () => void;
+    wizard?: boolean;
 }
 
-const Header = ({ open, handleDrawerToggle }: Props) => {
-  const theme = useTheme();
-  const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
-  const globalConfigState: Record<string, any> = useSelector((state: any) => state.config);
+const Header = ({ open, handleDrawerToggle, wizard = false }: Props) => {
+    const theme = useTheme();
+    const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
+    const globalConfigState: Record<string, any> = useSelector((state: any) => state.config);
 
-  // header content
-  const headerContent = useMemo(() => <HeaderContent />, []);
+    // header content
+    const headerContent = useMemo(() => <HeaderContent wizard={wizard} />, []);
 
-  const iconBackColorOpen = theme.palette.mode === 'dark' ? 'grey.200' : 'grey.300';
-  const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
+    const iconBackColorOpen = theme.palette.mode === 'dark' ? 'grey.200' : 'grey.300';
+    const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
 
-  // common header
-  const mainHeader: ReactNode = (
-    <div id='rootHeader'>
-      <Toolbar>
-        <IconButton
-          aria-label="open drawer"
-          onClick={handleDrawerToggle}
-          edge="start"
-          color="secondary"
-          variant="light"
-          sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor, ml: { xs: 0, lg: -2 } }}
-        >
-          {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-        </IconButton>
-        {headerContent}
-      </Toolbar>
-      {/* {globalConfigState?.showClusterMenu && <Toolbar>
+    // common header
+    const mainHeader: ReactNode = (
+        <div id='rootHeader'>
+            <Toolbar>
+                <IconButton
+                    aria-label="open drawer"
+                    onClick={handleDrawerToggle}
+                    edge="start"
+                    color="secondary"
+                    variant="light"
+                    sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor, ml: { xs: 0, lg: -2 } }}
+                >
+                    {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                </IconButton>
+                {headerContent}
+            </Toolbar>
+            {/* {globalConfigState?.showClusterMenu && <Toolbar>
         <ClusterStatus />
       </Toolbar>} */}
-    </div>
-  );
+        </div>
+    );
 
-  // app-bar params
-  const appBar: AppBarProps = {
-    position: 'fixed',
-    color: 'inherit',
-    elevation: 0,
-    sx: {
-      borderBottom: `1px solid ${theme.palette.divider}`,
-      zIndex: 1200
-      // boxShadow: theme.customShadows.z1
-    }
-  };
+    // app-bar params
+    const appBar: AppBarProps = {
+        position: 'fixed',
+        color: 'inherit',
+        elevation: 0,
+        sx: {
+            borderBottom: `1px solid ${theme.palette.divider}`,
+            zIndex: 1200
+            // boxShadow: theme.customShadows.z1
+        }
+    };
 
-  return (
-    <>
-      {!matchDownMD ? (
-        <AppBarStyled open={open} {...appBar}>
-          {mainHeader}
-        </AppBarStyled>
-      ) : (
-        <AppBar {...appBar}>
-          {mainHeader}
-        </AppBar>
-      )}
-    </>
-  );
+    return (
+        <>
+            {!matchDownMD ? (
+                <AppBarStyled open={open} {...appBar}>
+                    {mainHeader}
+                </AppBarStyled>
+            ) : (
+                <AppBar {...appBar}>
+                    {mainHeader}
+                </AppBar>
+            )}
+        </>
+    );
 };
 
 export default Header;

@@ -6,26 +6,18 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addState } from 'store/reducers/wizard';
 import { IWizard } from 'types/formWizard';
 import UploadFiles from './UploadFiles';
-import { v4 } from 'uuid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { error } from 'services/toaster';
 import { fetchJsonSchemaThunk } from 'store/middlewares';
 import { Formik, Form } from 'formik';
 import { generateSlug } from 'utils/stringUtils';
 
-const initialValues = {
-    name: '',
-    id: v4(),
-    slug: ''
-};
-
 const validationSchema = yup.object()
     .shape({
         name: yup.string().required('Dataset Name is required')
             .min(4, 'Minimum of 4 characters are required').max(30, 'Maximum of 30 characters are allowed'),
-        slug: yup.string().required('Dataset ID is Required')
+        id: yup.string().required('Dataset ID is Required')
             .min(4, 'Minimum of 4 characters are required').max(30, 'Maximum of 30 characters are allowed'),
-        id: yup.string().uuid().required(),
     });
 
 export const pageMeta = { pageId: 'datasetConfiguration' };
@@ -39,6 +31,16 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
     const { data: dataState, files: filesState, config: configState } = pageData?.state || {};
     const [data, setData] = useState(dataState);
     const [files, setFiles] = useState(filesState);
+    const [initialValues, setInitialValues] = useState({
+        name: '',
+        id: ''
+    });
+
+    useEffect(() => {
+        if (pageData?.state?.config) {
+            setInitialValues({ ...pageData.state.config })
+        }
+    }, [wizardState]);
 
     const generateJSONSchema = (data: Array<any>, config: Record<string, any>) => {
         const dataset = _.get(config, 'name')
@@ -73,6 +75,7 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
                         initialValues={configState || initialValues}
                         validationSchema={validationSchema}
                         onSubmit={onSubmit}
+                        enableReinitialize
                     >
                         {({ setFieldValue, touched, errors, values, handleBlur, handleChange }) => (
                             <Form>
@@ -85,19 +88,19 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
                                             onBlur={handleBlur}
                                             onChange={(
                                                 e: React.ChangeEvent<HTMLInputElement>) =>
-                                                handleNameChange(e, setFieldValue, 'slug', 'name')
+                                                handleNameChange(e, setFieldValue, 'id', 'name')
                                             }
                                             required
-                                            value={values['name']}
+                                            value={values.name}
                                             variant="outlined"
                                             fullWidth
-                                            error={Boolean(errors['name'])}
-                                            helperText={touched['name'] && errors['name'] && String(errors['name'])}
+                                            error={Boolean(errors.name)}
+                                            helperText={touched.name && errors.name && String(errors.name)}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={6} lg={6}>
                                         <TextField
-                                            name={'slug'}
+                                            name={'id'}
                                             label={'Dataset ID'}
                                             onBlur={handleBlur}
                                             onChange={(
@@ -105,11 +108,11 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
                                                 handleChange(e)
                                             }
                                             required
-                                            value={values['slug']}
+                                            value={values.id}
                                             variant="outlined"
                                             fullWidth
-                                            error={Boolean(errors['slug'])}
-                                            helperText={touched['slug'] && errors['slug'] && String(errors['slug'])}
+                                            error={Boolean(errors.id)}
+                                            helperText={touched.id && errors.id && String(errors.id)}
                                         />
                                     </Grid>
                                 </Grid>

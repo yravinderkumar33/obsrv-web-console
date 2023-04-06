@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 // material-ui
@@ -12,7 +12,6 @@ import Header from './Header';
 import Footer from './Footer';
 import navigation from 'menu-items';
 import useConfig from 'hooks/useConfig';
-import Breadcrumbs from 'components/@extended/Breadcrumbs';
 
 // types
 import { RootStateProps } from 'types/root';
@@ -21,8 +20,11 @@ import ScrollButton from 'components/ScrollButton';
 
 // ==============================|| MAIN LAYOUT ||============================== //
 
+const wizardPages = ['/dataset/new', '/dataset/new/master']
+
 const MainLayout = () => {
     const theme = useTheme();
+    const location = useLocation();
     const [mainContainerHeight, setMainContainerHeight] = useState(0)
     const globalConfig = useSelector((state: any) => state.config)
     const matchDownLG = useMediaQuery(theme.breakpoints.down('xl'));
@@ -59,7 +61,7 @@ const MainLayout = () => {
     return (
         <>
             <Box sx={{ display: 'flex', width: '100%', }} position="relative">
-                <Header open={open} handleDrawerToggle={handleDrawerToggle} />
+                <Header open={open} handleDrawerToggle={handleDrawerToggle} wizard={wizardPages.includes(location.pathname)} />
                 <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
                 <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, py: { xs: 2, sm: 2 }, px: { xs: 2, sm: 1 } }}>
                     <Toolbar style={{ 'height': `${mainContainerHeight}px` }} />
@@ -69,7 +71,6 @@ const MainLayout = () => {
                                 maxWidth="xl"
                                 sx={{ px: { xs: 0, sm: 2 }, position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 'calc(110vh - 220px)' }}
                             >
-                                {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
                                 <Outlet />
                             </Container>
                             <Footer />
@@ -78,7 +79,6 @@ const MainLayout = () => {
                     {!container && (
                         <>
                             <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 'calc(110vh - 220px)' }}>
-                                {/* <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} /> */}
                                 <Outlet />
                             </Box>
                             <Footer />
