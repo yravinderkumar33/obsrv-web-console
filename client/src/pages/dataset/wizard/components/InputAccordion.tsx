@@ -6,6 +6,8 @@ import ScrollX from "components/ScrollX";
 import React, { useState } from "react";
 import _ from "lodash";
 import IconButton from "components/@extended/IconButton";
+import config from 'data/initialConfig';
+const { spacing } = config;
 
 const InputAccordion = (props: any) => {
     const { title, description, actions, data, label, dialog } = props;
@@ -65,7 +67,7 @@ const InputAccordion = (props: any) => {
     }
 
     return <>
-        <Grid container rowSpacing={2} columnSpacing={2}>
+        <Grid container rowSpacing={spacing} columnSpacing={spacing}>
             <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>
             {renderTable()}
             <Grid item xs={12}>

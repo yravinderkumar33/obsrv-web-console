@@ -5,20 +5,16 @@ export const sections = [
     {
         id: 'dataRention',
         title: 'Data Retention And Archival',
-        description: 'Configure Data Retention And Archival Policy',
-        componentType: 'box',
+        description: 'Data Retention & Archival policy is a set of guidelines that outline how long an organization must keep its data before it can be deleted. Archival policy refers to the process of moving data to a separate storage system or medium for long-term retention and access.',
         component: <div>Data Retension</div>,
         navigation: {
-            next: 'dedupe'
+            next: 'rollup'
         }
     },
     {
         id: 'rollup',
         title: 'Rollup Configurations',
-        description: 'Dedupe refers to the process of identifying and removing duplicate or redundant data entries within a dataset',
+        description: 'Rollup configurations are used to define the pre-aggregation of data for faster queries and reduced storage costs. Rollup configurations are defined at the ingestion time and involve specifying how to group data by certain dimensions and aggregate metrics.',
         component: <div>Rollup Configuration</div>,
-        navigation: {
-            next: 'denorm'
-        }
     }
 ];

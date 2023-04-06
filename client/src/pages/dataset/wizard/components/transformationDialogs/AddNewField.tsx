@@ -73,7 +73,7 @@ const AddNewField = (props: any) => {
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2}>
+                <Stack spacing={2} margin={1}>
                     <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
                     <Button variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
                 </ Stack>

@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 
 export default {
     showClusterMenu: false,
+    spacing: 1,
     clusterMenu: { frequency: 100, interval: 10 },
     elevation: 2,
     severityToColorMapping: {

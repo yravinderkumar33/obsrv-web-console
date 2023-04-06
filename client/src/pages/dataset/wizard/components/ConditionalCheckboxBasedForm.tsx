@@ -1,12 +1,14 @@
 import MUIForm from "components/form";
-import { useEffect } from "react";
 import * as _ from 'lodash';
 import { Checkbox, FormControlLabel, FormGroup, Grid, Radio, Stack } from "@mui/material";
 import { Alert } from "@mui/material";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
+import config from 'data/initialConfig';
+const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
+
     const { type = "checkbox", justifyContents = 'flex-start', fields, name } = props;
     const onSubmission = (value: any) => { console.log({ value }) };
 
@@ -21,11 +23,7 @@ const ConditionalCheckboxForm = (props: any) => {
         }
     }
 
-    const formik = useFormik({
-        initialValues: getInitialValues(),
-        onSubmit: values => console.log(values),
-    });
-
+    const formik = useFormik({ initialValues: getInitialValues(), onSubmit: values => console.log(values) });
     const formValues = formik.values;
 
     const getFormType = (metadata: Record<string, any>) => {
@@ -40,15 +38,15 @@ const ConditionalCheckboxForm = (props: any) => {
         }
     }
 
-    const renderSubSection = (option: Record<string, any>) => {
+    const renderFormControl = (option: Record<string, any>) => {
         const { name, value, label, disabled = false } = option;
         return <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={getFormType(option)} label={label} />
     }
 
     const renderForm = () => <form onSubmit={formik.handleSubmit}>
         <FormGroup>
-            <Stack direction="row" spacing={2} justifyContent={justifyContents}>
-                {fields.map(renderSubSection)}
+            <Stack direction="row" spacing={spacing} justifyContent={justifyContents}>
+                {fields.map(renderFormControl)}
             </Stack>
         </FormGroup>
     </form>
@@ -68,7 +66,7 @@ const ConditionalCheckboxForm = (props: any) => {
     }
 
     return <>
-        <Grid container rowSpacing={2}>
+        <Grid container rowSpacing={spacing}>
             <Grid item xs={12}>
                 {renderForm()}
             </Grid>
