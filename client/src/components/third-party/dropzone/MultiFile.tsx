@@ -9,11 +9,9 @@ import { useDropzone } from 'react-dropzone';
 import RejectionFiles from './RejectionFiles';
 import PlaceholderContent from './PlaceholderContent';
 import FilesPreview from './FilesPreview';
-import { error as errToast } from 'services/toaster';
 
 // types
 import { CustomFile, DropzopType, UploadMultiFileProps } from 'types/dropzone';
-import { useDispatch } from 'react-redux';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
     outline: 'none',
@@ -27,44 +25,37 @@ const DropzoneWrapper = styled('div')(({ theme }) => ({
 // ==============================|| UPLOAD - MULTIPLE FILE ||============================== //
 
 const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, sx, onUpload, maxFileSize = 5242880, ...other }: UploadMultiFileProps) => {
-    const dispatch = useDispatch();
     const { onFileRemove } = other || {};
     const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
         multiple: true,
         onDrop: (acceptedFiles: CustomFile[]) => {
             if (files) {
-                setFieldValue('files', [
+                const data = [
                     ...files,
                     ...acceptedFiles.map((file: CustomFile) => {
-                        // if (file.size > maxFileSize) {
-                        //     dispatch(errToast({ message: 'Max file size allowed is 5mb' }));
-                        //     return;
-                        // }
                         return Object.assign(file, {
                             preview: URL.createObjectURL(file)
                         })
                     }
                     )
-                ]);
+                ];
+                setFieldValue('files', data);
+                onUpload(data);
             } else {
-                setFieldValue(
-                    'files',
-                    acceptedFiles.map((file: CustomFile) => {
-                        // if (file.size > maxFileSize) {
-                        //     dispatch(errToast({ message: 'Max file size allowed is 5mb' }));
-                        //     return;
-                        // }
-                        return Object.assign(file, {
-                            preview: URL.createObjectURL(file)
-                        })
+                const data = acceptedFiles.map((file: CustomFile) => {
+                    return Object.assign(file, {
+                        preview: URL.createObjectURL(file)
                     })
-                );
+                });
+                setFieldValue('files', data);
+                onUpload(data);
             }
         },
         accept: {
             'application/json': ['.json'],
             'application/gzip': ['.gz'],
-        }
+        },
+        maxSize: maxFileSize,
     });
 
     const onRemoveAll = () => {
@@ -105,7 +96,6 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                             })
                         }}
                     >
-                        <input {...getInputProps()} />
                         <PlaceholderContent type={type} />
                     </DropzoneWrapper>
                     {type === DropzopType.standard && files && files.length > 1 && (
@@ -123,7 +113,7 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                     <Button color="inherit" size="small" onClick={onRemoveAll}>
                         Remove all
                     </Button>
-                    <Button size="small" variant="contained" onClick={onUpload}>
+                    <Button size="small" variant="contained" onClick={() => onUpload(files)}>
                         Upload files
                     </Button>
                 </Stack>

@@ -19,5 +19,5 @@ export default {
             "color": "warning"
         }
     },
-    maxFileSize: '5242880',
+    maxFileSize: 5242880,
 }

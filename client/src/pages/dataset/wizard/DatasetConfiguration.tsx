@@ -34,6 +34,7 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
 
     const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
+    const maxFileSizeConfig: Number = useSelector((state: any) => state?.config?.maxFileSize || 5242880)
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const { data: dataState, files: filesState, config: configState } = pageData?.state || {};
     const [data, setData] = useState(dataState);
@@ -114,7 +115,7 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
                                 </Grid>
                                 <Grid container spacing={3} justifyContent="center" alignItems="center">
                                     <Grid item xs={12}>
-                                        <UploadFiles data={data} setData={setData} files={files} setFiles={setFiles} />
+                                        <UploadFiles data={data} setData={setData} files={files} setFiles={setFiles} maxFileSize={maxFileSizeConfig} />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Stack direction="row" justifyContent="flex-end">
