@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { updateState } from "store/reducers/wizard";
+import { Stack } from "@mui/material";
 
 const AddPIIDialog = (props: any) => {
     const { data, onClose, setSelection, actions } = props;
@@ -73,7 +74,9 @@ const AddPIIDialog = (props: any) => {
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                <Stack spacing={2} margin={1}>
+                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                </Stack>
             </DialogContent>
             <DialogActions>
                 <Button variant="contained" onClick={_ => updatePIIMeta()}>
