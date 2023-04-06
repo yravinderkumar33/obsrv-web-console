@@ -6,18 +6,18 @@ import Notification from './Notification';
 import MegaMenuSection from './MegaMenuSection'
 
 
-const HeaderContent = () => {
-  const matchesXs = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
+const HeaderContent = ({ wizard = false }) => {
+    const matchesXs = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
-  return (
-    <>
-      {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-      {!matchesXs && <Search />}
-      <MegaMenuSection />
-      <Notification />
-      {matchesXs && <MobileSection />}
-    </>
-  );
+    return (
+        <>
+            {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
+            {!matchesXs && <Search wizard={wizard} />}
+            <MegaMenuSection />
+            <Notification />
+            {matchesXs && <MobileSection />}
+        </>
+    );
 };
 
 export default HeaderContent;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FormHelperText, Grid, Stack } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -36,7 +36,7 @@ function TabPanel(props: any) {
     );
 }
 
-const UploadFiles = ({ data, setData, files, setFiles }: any) => {
+const UploadFiles = ({ data, setData, files, setFiles, maxFileSize }: any) => {
     const dispatch = useDispatch();
     const [tabIndex, setTabIndex] = useState(0);
 
@@ -109,8 +109,9 @@ const UploadFiles = ({ data, setData, files, setFiles }: any) => {
                                                         setFieldValue={setFieldValue}
                                                         files={values.files}
                                                         error={touched.files && !!errors.files}
-                                                        onUpload={() => onUpload(values.files)}
+                                                        onUpload={onUpload}
                                                         onFileRemove={onFileRemove}
+                                                        maxFileSize={maxFileSize}
                                                     />
                                                     {touched.files && errors.files && (
                                                         <FormHelperText error>
