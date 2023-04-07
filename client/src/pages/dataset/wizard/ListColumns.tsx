@@ -8,7 +8,7 @@ import {
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
-import { CheckOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, ExclamationCircleOutlined, FolderViewOutlined, UploadOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -20,6 +20,7 @@ import { error } from 'services/toaster';
 import { areConflictsResolved, checkForCriticalSuggestion, flattenSchema } from 'services/json-schema';
 import RequiredSwitch from 'components/RequiredSwitch';
 import { connect } from 'react-redux';
+import IconButtonWithTips from 'components/IconButtonWithTips';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -87,6 +88,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
 
     const gotoNextSection = () => {
+        deleteFilter();
         if (areConflictsResolved(flattenedData)) {
             persistState();
             handleNext();
@@ -97,6 +99,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }
 
     const gotoPreviousSection = () => {
+        deleteFilter();
         persistState();
         handleBack();
     }
@@ -252,6 +255,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                                     label={`Convert to ${_.capitalize(suggestion.type)}`}
                                     sx={{ m: 1 }}
                                     color='success'
+                                    size="medium"
+                                    variant="outlined"
                                     onClick={() => updateValue(suggestion.type)}
                                 />
                             );
@@ -295,7 +300,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                                 <Box sx={{ p: 2 }}>
                                     {isResolved && (
                                         <>
-                                            <Typography variant="h6">
+                                            <Typography variant="h6" fontWeight="bold">
                                                 Resolved
                                                 <Typography variant="body1">
                                                     Data type of field {row?.column} is resolved to "{value}"
@@ -306,13 +311,26 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                                     )}
                                     {!isResolved && (
                                         <>
-                                            <Typography variant="h6">
+                                            <Typography variant="h6" fontWeight="bold">
                                                 Must-fix
                                                 <Typography variant="body1">
                                                     The field {row?.column} has multiple data type values available
                                                 </Typography>
                                             </Typography>
                                             {renderSuggestions()}
+                                            <Box>
+                                                <Chip
+                                                    key={`${value}-mark-resolved`}
+                                                    aria-label='resolve-data-type'
+                                                    clickable
+                                                    label={`Mark as resolved`}
+                                                    sx={{ m: 1 }}
+                                                    color='success'
+                                                    variant="outlined"
+                                                    size="medium"
+                                                    onClick={() => updateValue(value)}
+                                                />
+                                            </Box>
                                         </>
                                     )}
                                 </Box>
@@ -425,19 +443,48 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }, [apiResponse?.status]);
 
     return <>
-        <Stack direction="row" spacing={1} marginBottom={2} justifyContent="flex-end">
-            {columnFilters.map((filter) => <Chip
-                key={filter.label}
-                aria-label='filter-issues'
-                clickable
-                label={filter.label}
-                sx={{ mx: 0.5 }}
-                color={filter.color}
-                size="small"
-                onClick={() => handleFilterChange(filter)}
-                onDelete={filterByChip?.label === filter.label ? () => deleteFilter() : undefined}
-            />
-            )}
+        <Stack direction="row" spacing={1} marginBottom={2} alignItems="center" justifyContent="space-between">
+            <Box display="flex" justifyContent="space-evenly" alignItems="center">
+                <Typography>
+                    Filter by suggestions:
+                </Typography>
+                {columnFilters.map((filter) => <Chip
+                    key={filter.label}
+                    aria-label='filter-issues'
+                    clickable
+                    label={filter.label}
+                    sx={{ mx: 0.5 }}
+                    color={filter.color}
+                    size="medium"
+                    variant="outlined"
+                    onClick={() => handleFilterChange(filter)}
+                    onDelete={filterByChip?.label === filter.label ? () => deleteFilter() : undefined}
+                />
+                )}
+            </Box>
+            <Box display="flex" justifyContent="space-evenly" alignItems="center">
+                <IconButtonWithTips
+                    tooltipText="Download Schema"
+                    icon={<DownloadOutlined />}
+                    handleClick={() => { }}
+                    buttonProps={{ size: "large" }}
+                    tooltipProps={{ arrow: true }}
+                />
+                <IconButtonWithTips
+                    tooltipText="Re-upload Schema"
+                    icon={<UploadOutlined />}
+                    handleClick={() => { }}
+                    buttonProps={{ size: "large" }}
+                    tooltipProps={{ arrow: true }}
+                />
+                <IconButtonWithTips
+                    tooltipText="View all suggestions"
+                    icon={<FolderViewOutlined />}
+                    handleClick={() => { }}
+                    buttonProps={{ size: "large" }}
+                    tooltipProps={{ arrow: true }}
+                />
+            </Box>
         </Stack>
         <Grid container spacing={2}>
             {apiResponse?.status !== 'success' &&

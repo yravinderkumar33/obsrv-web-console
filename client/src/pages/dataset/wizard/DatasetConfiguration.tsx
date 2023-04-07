@@ -11,6 +11,7 @@ import { error } from 'services/toaster';
 import { fetchJsonSchemaThunk } from 'store/middlewares';
 import { Formik, Form } from 'formik';
 import { generateSlug } from 'utils/stringUtils';
+import HtmlTooltip from 'components/HtmlTooltip';
 
 const validationSchema = yup.object()
     .shape({
@@ -82,38 +83,42 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
                                 <Grid container spacing={3} justifyContent="center"
                                     alignItems="baseline" display="flex">
                                     <Grid item xs={12} sm={6} lg={6}>
-                                        <TextField
-                                            name={'name'}
-                                            label={'Dataset Name'}
-                                            onBlur={handleBlur}
-                                            onChange={(
-                                                e: React.ChangeEvent<HTMLInputElement>) =>
-                                                handleNameChange(e, setFieldValue, 'id', 'name')
-                                            }
-                                            required
-                                            value={values.name}
-                                            variant="outlined"
-                                            fullWidth
-                                            error={Boolean(errors.name)}
-                                            helperText={touched.name && errors.name && String(errors.name)}
-                                        />
+                                        <HtmlTooltip title="Name of the dataset" arrow placement='top-start'>
+                                            <TextField
+                                                name={'name'}
+                                                label={'Dataset Name'}
+                                                onBlur={handleBlur}
+                                                onChange={(
+                                                    e: React.ChangeEvent<HTMLInputElement>) =>
+                                                    handleNameChange(e, setFieldValue, 'id', 'name')
+                                                }
+                                                required
+                                                value={values.name}
+                                                variant="outlined"
+                                                fullWidth
+                                                error={Boolean(errors.name)}
+                                                helperText={touched.name && errors.name && String(errors.name)}
+                                            />
+                                        </HtmlTooltip>
                                     </Grid>
                                     <Grid item xs={12} sm={6} lg={6}>
-                                        <TextField
-                                            name={'id'}
-                                            label={'Dataset ID'}
-                                            onBlur={handleBlur}
-                                            onChange={(
-                                                e: React.ChangeEvent<HTMLInputElement>) =>
-                                                handleChange(e)
-                                            }
-                                            required
-                                            value={values.id}
-                                            variant="outlined"
-                                            fullWidth
-                                            error={Boolean(errors.id)}
-                                            helperText={touched.id && errors.id && String(errors.id)}
-                                        />
+                                        <HtmlTooltip title="ID for the dataset - for querying" arrow placement='top-start'>
+                                            <TextField
+                                                name={'id'}
+                                                label={'Dataset ID'}
+                                                onBlur={handleBlur}
+                                                onChange={(
+                                                    e: React.ChangeEvent<HTMLInputElement>) =>
+                                                    handleChange(e)
+                                                }
+                                                required
+                                                value={values.id}
+                                                variant="outlined"
+                                                fullWidth
+                                                error={Boolean(errors.id)}
+                                                helperText={touched.id && errors.id && String(errors.id)}
+                                            />
+                                        </HtmlTooltip>
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={3} justifyContent="center" alignItems="center">

@@ -43,6 +43,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
                                         </>
                                     }
                                     placement="top-start"
+                                    arrow
                                 >
                                     <TableCell sx={{ p: 0.5 }} {...column.getHeaderProps()}>
                                         {column.render('Header')}{`﹖`}

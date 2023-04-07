@@ -46,7 +46,7 @@ const DatasetOnboarding = ({ master = false }) => {
     const [errorIndex, setErrorIndex] = useState<number | null>(null);
 
     const dispatch = useDispatch();
-    const wizardState = useSelector((state: any) => _.get(state, 'wizard'));
+    const wizardState = useSelector((state: any) => _.get(state, 'masterWizard'));
 
     const handleNext = () => {
         setActiveStep(activeStep + 1);
