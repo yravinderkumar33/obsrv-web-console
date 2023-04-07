@@ -56,9 +56,17 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
                 <TableBody {...getTableBodyProps()}>
                     {rows.map((row: any, i: number) => {
                         prepareRow(row);
+                        const suggestions = _.get(row, 'original.suggestions');
+                        const isResolved = _.get(row, 'original.resolved') || false;
+                        const isCritical = checkForCriticalSuggestion(suggestions);
+                        const bgColor = () => {
+                            if (isCritical && !isResolved) return { border: `2px solid #F04134` };
+                            else if (isResolved) return { border: `2px solid #00a854` };
+                            else return {};
+                        }
 
                         return (
-                            <TableRow {...row.getRowProps()}>
+                            <TableRow {...row.getRowProps()} sx={{ ...bgColor() }}>
                                 {
                                     row.cells.map((cell: any) =>
                                         <TableCell sx={{ p: 0.5 }} {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>

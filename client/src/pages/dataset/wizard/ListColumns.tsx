@@ -1,14 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
     Button, Grid, IconButton,
-    Stack, TextField, Tooltip, Typography,
+    Stack, Typography, DialogContent,
     FormControl, Select, MenuItem, Dialog,
-    FormControlLabel, Chip, Alert, DialogTitle, Box, Popover
+    FormControlLabel, Chip, Alert, DialogTitle, Box,
+    Popover, TextareaAutosize,
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
-import { CheckOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, ExclamationCircleOutlined, FolderViewOutlined, UploadOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, ExclamationCircleOutlined, FolderViewOutlined, InfoCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -120,13 +121,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         updateState();
                     }
 
-                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
                         setText(e.target.value);
-                    }
-
-                    const handleCancel = () => {
-                        updateState();
-                        setEdit((prevState) => !prevState);
                     }
 
                     const updateState = () => {
@@ -143,71 +139,51 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     }
 
                     return (
-                        <>
-                            <Box alignItems="baseline">
-                                <Typography variant="body1" m={1}>
-                                    {value}
-                                </Typography>
-                                {edit &&
-                                    <Box my={1} mx={1}>
-                                        <TextField
-                                            InputLabelProps={{
-                                                shrink: true
-                                            }}
+                        <Box alignItems="baseline">
+                            <Typography variant="body1" m={1} onClick={editDescription}>
+                                {value} {
+                                    row.description ?
+                                        <IconButtonWithTips
+                                            icon={<InfoCircleOutlined />}
+                                            tooltipProps={{ arrow: true }}
+                                            buttonProps={{ size: "small" }}
+                                            tooltipText={row.description}
+                                        /> :
+                                        <IconButtonWithTips
+                                            icon={<EditOutlined />}
+                                            tooltipProps={{ arrow: true }}
+                                            buttonProps={{ size: "small" }}
+                                            tooltipText={"Click to edit description"}
+                                        />
+
+                                }
+                            </Typography>
+                            <Dialog open={edit} onClose={editDescription}>
+                                <DialogTitle
+                                    display="flex"
+                                    justifyContent="space-between"
+                                    alignItems="center"
+                                >
+                                    <Typography mx={2}>
+                                        Add description for {value} field
+                                    </Typography>
+                                    <CloseCircleOutlined onClick={editDescription} />
+                                </DialogTitle>
+                                <DialogContent>
+                                    <Box m={2}>
+                                        <TextareaAutosize
+                                            minRows={3}
+                                            style={{ width: 250 }}
                                             autoFocus
                                             defaultValue={row.description}
-                                            onBlur={handleCancel}
+                                            aria-label="description of field"
                                             onChange={handleChange}
-                                            label='Description'
+                                            placeholder="Add description here..."
                                         />
                                     </Box>
-                                }
-                                {!edit &&
-                                    <Typography
-                                        onClick={editDescription}
-                                        m={1}
-                                        sx={{
-                                            overflow: 'hidden',
-                                            maxWidth: 230,
-                                            textOverflow: 'ellipsis',
-                                            whiteSpace: 'nowrap',
-                                        }}
-                                        variant="subtitle1"
-                                        color="secondary"
-                                    >{row.description}
-                                    </Typography>
-                                }
-                                {!edit && !row.description && <Box onClick={editDescription} my={1} mx={1}>Add description.. <EditOutlined /></Box>}
-                            </Box>
-                            {/* {hasCriticalConflicts && !isResolved && <Tooltip title={"Unresolved"}>
-                                    <Stack direction="row" spacing={1} m={1}>
-                                        {suggestions.map((payload: any, index: number) => {
-                                            if (['HIGH', 'CRITICAL'].includes(payload?.severity))
-                                                return (<div key={index}>
-                                                    {payload?.severity && <Chip size='small' label={payload?.severity} color={_.get(severityToColorMapping, [payload?.severity || "LOW", "color"])} variant='outlined' />}
-                                                </div>);
-                                            return null;
-                                        })}
-                                    </Stack>
-                                </Tooltip>}
-                                {hasCriticalConflicts && isResolved && <Tooltip title={"Resolved"}>
-                                    <Stack direction="column" spacing={1} m={1}>
-                                        <Chip size='small' label={'Resolved'} color="success" variant='outlined' />
-                                    </Stack>
-                                </Tooltip>}
-                            </Box>
-                            <Box alignItems="baseline">
-                                {hasCriticalConflicts && !isResolved &&
-                                    suggestions.map((payload: any, index: number) => {
-                                        if (['HIGH', 'CRITICAL'].includes(payload?.severity))
-                                            return (<div key={index}>
-                                                <Typography maxWidth={'310px'} color="info.main">{payload?.message}</Typography>
-                                            </div>);
-                                        return null;
-                                    })
-                                }
-                            </Box> */}
-                        </>
+                                </DialogContent>
+                            </Dialog>
+                        </Box>
                     );
                 }
             },
@@ -265,14 +241,14 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     }
 
                     return (
-                        <Box position="relative" maxWidth={190} bgcolor={row?.oneof && !isResolved ? "error.light" : ""}>
+                        <Box position="relative" maxWidth={180} display="flex" alignItems="center">
                             {row?.oneof && !isResolved &&
-                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 1, mx: 1 }} onClick={handleSuggestions}>
+                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} onClick={handleSuggestions}>
                                     <ExclamationCircleOutlined />
                                 </IconButton>
                             }
                             {row?.oneof && isResolved &&
-                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 1, mx: 1 }} onClick={handleSuggestions}>
+                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} onClick={handleSuggestions}>
                                     <CheckOutlined />
                                 </IconButton>
                             }
@@ -295,7 +271,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                                     vertical: 'top',
                                     horizontal: 'right',
                                 }}
-
                             >
                                 <Box sx={{ p: 2 }}>
                                     {isResolved && (
