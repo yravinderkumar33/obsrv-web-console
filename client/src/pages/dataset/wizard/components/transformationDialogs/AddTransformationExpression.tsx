@@ -22,7 +22,7 @@ const AddTransformationExpression = (props: any) => {
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
 
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
-    const onSubmission = (value: any) => { console.log({ value }) }
+    const onSubmission = (value: any) => { };
 
     const fields = [
         {

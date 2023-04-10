@@ -18,7 +18,7 @@ const TimestampSelection = (props: any) => {
     const [value, subscribe] = useState<any>({});
 
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
-    const onSubmission = (value: any) => { console.log({ value }) }
+    const onSubmission = (value: any) => { };
 
     useEffect(() => {
         const indexCol = _.get(value, 'indexCol')

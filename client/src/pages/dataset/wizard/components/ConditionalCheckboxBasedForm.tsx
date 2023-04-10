@@ -14,7 +14,7 @@ const ConditionalCheckboxForm = (props: any) => {
 
     const dispatch = useDispatch();
     const { id, type = "checkbox", justifyContents = 'flex-start', fields, name } = props;
-    const onSubmission = (value: any) => { console.log({ value }) };
+    const onSubmission = (value: any) => { };
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || ({}));
     const [childFormValue, setChildFormValues] = useState<any>({});
 
@@ -36,7 +36,7 @@ const ConditionalCheckboxForm = (props: any) => {
     }
 
     const persistState = (state: Record<string, any>) => dispatch(addState({ id, ...state }));
-    const formik = useFormik({ initialValues: getInitialValues(), onSubmit: values => console.log(values) });
+    const formik = useFormik({ initialValues: getInitialValues(), onSubmit: values => { } });
     const formValues = formik.values;
 
     useEffect(() => {

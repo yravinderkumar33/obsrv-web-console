@@ -21,7 +21,7 @@ const AddPIIDialog = (props: any) => {
     const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
 
-    const onSubmission = (value: any) => { console.log({ value }) }
+    const onSubmission = (value: any) => { };
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
     const updatePIIMeta = () => {

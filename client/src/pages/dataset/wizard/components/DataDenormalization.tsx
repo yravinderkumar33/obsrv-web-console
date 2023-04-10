@@ -11,7 +11,7 @@ import { Dialog } from "@mui/material"
 import AddDenormField from "./transformationDialogs/AddDenormFields"
 import IconButton from "components/@extended/IconButton";
 import * as _ from 'lodash';
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { updateState } from "store/reducers/wizard"
 
 const { spacing } = config;
@@ -21,20 +21,23 @@ const DataDenorm = (props: any) => {
     const { description, pageId, index } = props;
     const [masterDatasetsExists, setIfMasterDatasetsExists] = useState<boolean>(true);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-    const [selection, setSelection] = useState<Array<any>>([]);
-    const pushStateToStore = (values?: any) => {
-        dispatch(updateState({ id: pageId, index: index, state: { denormFields: [...selection] } }));
-    }
-
+    const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', pageId, 'state', 'denormFields']));
+    const [selection, setSelection] = useState<Array<any>>(existingState || []);
     const deleteSelection = (metadata: Record<string, any>) => {
         setSelection((preState: Array<any>) => {
-            return preState.filter(payload => _.get(payload, 'datasetField') !== _.get(metadata, 'datasetField'));
+            const data = preState.filter(payload => _.get(payload, 'datasetField') !== _.get(metadata, 'datasetField'));
+            pushStateToStore(data);
+            return data;
         })
     }
+    const pushStateToStore = (values: Array<any>) => {
+        dispatch(updateState({ id: pageId, index: index, state: { denormFields: [...values] } }));
+    }
+    console.log(existingState);
 
     useEffect(() => {
-        pushStateToStore();
-    }, [selection]);
+        existingState && setSelection(existingState);
+    }, [existingState]);
 
     const columns = [
         {
@@ -95,7 +98,11 @@ const DataDenorm = (props: any) => {
             </Grid>
             <Grid item xs={12}>
                 <Dialog open={dialogOpen} onClose={_ => setDialogOpen(false)}>
-                    <AddDenormField setSelection={setSelection} onClose={() => setDialogOpen(false)}></AddDenormField>
+                    <AddDenormField
+                        setSelection={setSelection}
+                        onClose={() => setDialogOpen(false)}
+                        persistState={pushStateToStore}
+                    />
                 </Dialog>
             </Grid >
         </>

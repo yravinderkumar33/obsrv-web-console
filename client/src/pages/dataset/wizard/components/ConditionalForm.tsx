@@ -12,7 +12,7 @@ const ConditionalForm = (props: any) => {
     const { question, options, description, transform } = props;
     const [response, subscribe] = useState<any>({});
     const selectedOption = _.get(response, _.get(question, 'name'));
-    const onSubmission = (value: any) => { console.log({ value }) };
+    const onSubmission = (value: any) => { };
     const [config, setConfig] = useState<any>({});
     const [initialValue, setInitialValue] = useState<Record<string, any>>({});
     const redux = useSelector((state: any) => state);

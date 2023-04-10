@@ -7,9 +7,9 @@ import * as _ from 'lodash';
 import { Stack } from "@mui/material";
 
 const AddDenormField = (props: any) => {
-    const { data, onClose, setSelection } = props;
+    const { data, onClose, setSelection, persistState } = props;
     const [value, subscribe] = useState<any>({});
-    const onSubmission = (value: any) => { console.log({ value }) }
+    const onSubmission = (value: any) => { };
 
     const fields = [
         {
@@ -34,7 +34,11 @@ const AddDenormField = (props: any) => {
 
     const addField = () => {
         if (_.size(value) === fields.length) {
-            setSelection((preState: any) => ([...preState, value]))
+            setSelection((preState: any) => {
+                const data = [...preState, value];
+                persistState(data);
+                return data;
+            });
             onClose();
         }
     }

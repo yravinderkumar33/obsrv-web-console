@@ -9,7 +9,7 @@ import { Stack } from "@mui/material";
 const AddRollup = (props: any) => {
     const { data, onClose, setSelection } = props;
     const [value, subscribe] = useState<any>({});
-    const onSubmission = (value: any) => { console.log({ value }) }
+    const onSubmission = (value: any) => { };
 
     const fields = [
         {

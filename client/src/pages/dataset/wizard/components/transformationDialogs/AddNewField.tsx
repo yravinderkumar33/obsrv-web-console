@@ -16,10 +16,10 @@ const AddNewField = (props: any) => {
     const { id, data, onClose, selection, setSelection } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
-    const onSubmission = (value: any) => { console.log({ value }) }
+    const onSubmission = (value: any) => { };
     const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id, ...values }));
 
-    
+
     const updatePIIMeta = () => {
         const { column, transformation } = value;
         if (column && transformation) {
