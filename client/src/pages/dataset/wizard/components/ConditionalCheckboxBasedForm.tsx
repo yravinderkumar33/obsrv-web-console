@@ -5,6 +5,7 @@ import { Alert } from "@mui/material";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
 import config from 'data/initialConfig';
+import { useEffect } from "react";
 const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
@@ -25,6 +26,10 @@ const ConditionalCheckboxForm = (props: any) => {
 
     const formik = useFormik({ initialValues: getInitialValues(), onSubmit: values => console.log(values) });
     const formValues = formik.values;
+
+    useEffect(() => {
+        console.log({ formValues });
+    }, [formValues]);
 
     const getFormType = (metadata: Record<string, any>) => {
         const { name, value } = metadata;
@@ -57,10 +62,11 @@ const ConditionalCheckboxForm = (props: any) => {
         return _.map(values, (value: any) => {
             const metadata = _.find(fields, ['value', value]);
             if (!metadata) return null;
-            const { form, description } = metadata;
+            const { form, description, component } = metadata;
             return <>
                 {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
                 {form && <Grid item sm={12}> <MUIForm initialValues={{}} onSubmit={(value: any) => onSubmission(value)} fields={form} size={{ sm: 6, xs: 6, lg: 6 }} /></Grid>}
+                {component && <Grid item sm={12}> {component}</Grid>}
             </>
         })
     }

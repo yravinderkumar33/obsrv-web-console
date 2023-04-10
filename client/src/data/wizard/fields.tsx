@@ -41,9 +41,6 @@ export const sections = [
         id: 'additionalFields',
         title: 'Additional Fields',
         description: 'Create New Columns by applying custom transformation expressions',
-        component: <InputAccordion actions={[{ label: 'Custom', component: '', value: 'custom' }]} label={'Add New Field'} dialog={< AddNewField />} />,
-        navigation: {
-
-        }
+        component: <InputAccordion actions={[{ label: 'Custom', component: '', value: 'custom' }]} label={'Add New Field'} dialog={< AddNewField />} />
     }
 ];

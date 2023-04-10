@@ -9,10 +9,18 @@ import { updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
 
 const AddPIIDialog = (props: any) => {
-    const { data, onClose, setSelection, actions } = props;
+    const { data, onClose, selection, setSelection, actions } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
-    const columns = useMemo(() => _.map(data, payload => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') })), [data]);
+
+    const filteredData = _.filter(data, payload => {
+        if (_.find(selection, ['column', _.get(payload, 'column')])) return false;
+        return true
+    });
+
+    const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
+    const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
+
     const onSubmission = (value: any) => { console.log({ value }) }
     const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id: 'columns', state: { ...values } }));
 

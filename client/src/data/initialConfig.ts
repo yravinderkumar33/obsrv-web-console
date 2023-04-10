@@ -21,4 +21,15 @@ export default {
         }
     },
     maxFileSize: 5242880,
+    rollupGranularityTypes: [
+        "none",
+        "all",
+        "day",
+        "second",
+        "minute",
+        "week",
+        "month",
+        "quarter",
+        "year"
+    ]
 }

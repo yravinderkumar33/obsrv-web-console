@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { Alert, Button, Dialog, Grid, ToggleButtonGroup, ToggleButton } from "@mui/material";
+import { Alert, Button, Dialog, Grid, ToggleButtonGroup, ToggleButton, Typography, Tooltip } from "@mui/material";
 import MainCard from "components/MainCard"
 import BasicReactTable from "components/BasicReactTable";
 import ScrollX from "components/ScrollX";
@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import _ from "lodash";
 import IconButton from "components/@extended/IconButton";
 import config from 'data/initialConfig';
+import { ButtonGroup } from "@mui/material";
 const { spacing } = config;
 
 const InputAccordion = (props: any) => {
@@ -20,25 +21,32 @@ const InputAccordion = (props: any) => {
         })
     }
 
+    const renderExpression = (row: Record<string, any>) => {
+        const transformation = row?.transformation;
+        if (!transformation) return null;
+        return <Typography variant="body1" gutterBottom>
+            {transformation}
+        </Typography>
+    }
+
     const columns = [
         {
             Header: 'Column Name', accessor: 'column'
         },
         {
-            Header: 'Actions',
+            Header: 'Transformation',
             accessor: 'age',
             Cell: ({ value, cell }: any) => {
                 const row = cell?.row?.original || {};
                 const _transformationType = row?._transformationType;
-                return <ToggleButtonGroup value='one' exclusive aria-label="text alignment">
+                if (_.get(actions, 'length') < 2 && _transformationType === 'custom') return renderExpression(row);
+                return <ButtonGroup variant="outlined" aria-label="outlined button group">
                     {
                         actions.map((action: any) => {
-                            return <ToggleButton value="one" aria-label="first" color={_transformationType === action?.value ? 'primary' : 'secondary'}>
-                                {action?.label}
-                            </ToggleButton>
+                            return <Button key="one" variant={_transformationType === action?.value ? 'contained' : 'outlined'}>{action?.label}</Button>
                         })
                     }
-                </ToggleButtonGroup>
+                </ButtonGroup>
             }
         },
         {
@@ -52,7 +60,7 @@ const InputAccordion = (props: any) => {
     ]
 
     const updateDialogProps = () => {
-        return React.cloneElement(dialog, { actions, setSelection, data, onClose: () => setDialogOpen(false) });
+        return React.cloneElement(dialog, { actions, selection, setSelection, data, onClose: () => setDialogOpen(false) });
     }
 
     const renderTable = () => {
@@ -80,7 +88,6 @@ const InputAccordion = (props: any) => {
             </Grid>
         </Grid>
     </>
-
 }
 
 export default InputAccordion

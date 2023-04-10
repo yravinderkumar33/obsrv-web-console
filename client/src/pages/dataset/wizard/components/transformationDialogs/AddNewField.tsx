@@ -8,29 +8,33 @@ import { useDispatch } from "react-redux";
 import { updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
 
+export const openJsonAtaEditor = () => {
+    window.open('https://try.jsonata.org/', '__blank');
+}
+
 const AddNewField = (props: any) => {
-    const { data, onClose, setSelection } = props;
+    const { data, onClose, selection, setSelection } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
-    const columns = useMemo(() => _.map(data, payload => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') })), [data]);
+
     const onSubmission = (value: any) => { console.log({ value }) }
+
     const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id: 'columns', state: { ...values } }));
 
     const updateColumns = (updatedCol: Record<string, any>) => {
-        const updatedColumnData = _.map(data, payload => {
-            if (_.get(payload, 'column') === _.get(updatedCol, 'column')) {
-                return updatedCol
-            }
-            return payload;
-        })
-        pushStateToStore({ schema: updatedColumnData });
+        // const updatedColumnData = _.map(data, payload => {
+        //     if (_.get(payload, 'column') === _.get(updatedCol, 'column')) {
+        //         return updatedCol
+        //     }
+        //     return payload;
+        // })
+        // pushStateToStore({ schema: updatedColumnData });
     }
 
     const updatePIIMeta = () => {
         const { column, transformation } = value;
-        const targetColumn = _.find(data, ['column', column]);
-        if (targetColumn) {
-            const updatedColumnMetadata = { ...targetColumn, isModified: true, pii: { "value": true, "op": transformation }, _transformationType: transformation }
+        if (column && transformation) {
+            const updatedColumnMetadata = { column, transformation, isModified: true, _transformationType: "custom" }
             updateColumns(updatedColumnMetadata)
             setSelection((preState: Array<any>) => ([...preState, updatedColumnMetadata]));
             onClose();
@@ -42,8 +46,7 @@ const AddNewField = (props: any) => {
             name: "column",
             label: "Field Name",
             type: 'text',
-            required: true,
-            selectOptions: columns
+            required: true
         },
         {
             name: "transformation",
@@ -75,7 +78,9 @@ const AddNewField = (props: any) => {
             <DialogContent>
                 <Stack spacing={2} margin={1}>
                     <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
-                    <Button variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
+                    <Box>
+                        <Button onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
+                    </ Box>
                 </ Stack>
             </DialogContent>
             <DialogActions>

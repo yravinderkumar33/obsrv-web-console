@@ -7,12 +7,20 @@ import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
+import { openJsonAtaEditor } from "./AddNewField";
 
 const AddTransformationExpression = (props: any) => {
-    const { data, onClose, setSelection, actions } = props;
+    const { data, onClose, selection, setSelection, actions } = props;
     const dispatch = useDispatch();
     const [value, subscribe] = useState<any>({});
-    const columns = useMemo(() => _.map(data, payload => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') })), [data]);
+    const filteredData = _.filter(data, payload => {
+        if (_.find(selection, ['column', _.get(payload, 'column')])) return false;
+        return true
+    });
+
+    const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
+    const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
+
     const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id: 'columns', state: { ...values } }));
     const onSubmission = (value: any) => { console.log({ value }) }
 
@@ -92,7 +100,7 @@ const AddTransformationExpression = (props: any) => {
             <DialogContent>
                 <Stack spacing={2} margin={1}>
                     <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
-                    {_.get(value, 'transformation') === 'custom' && <Button variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>}
+                    {_.get(value, 'transformation') === 'custom' && <Box><Button onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button></Box>}
                 </Stack>
             </DialogContent>
             <DialogActions>
