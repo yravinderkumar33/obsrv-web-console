@@ -3,7 +3,6 @@ import axios from 'axios';
 import { updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
-import { v4 } from 'uuid';
 
 
 export const searchDatasets = ({ data = { filters: {} }, config }: any) => {
@@ -103,4 +102,6 @@ export const sendEvents = ({ datasetId, datasetName, events, config }: any) => {
     return axios.post(`${apiEndpoints.sendEvents}/${datasetName}`, payload, config);
 }
 
-
+export const checkUniqueId = async (id: string | undefined) => {
+    return axios.get(`${apiEndpoints.uniqueId}/${id}`);
+}

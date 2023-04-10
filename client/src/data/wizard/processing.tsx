@@ -9,7 +9,7 @@ import DataDenorm from "pages/dataset/wizard/components/DataDenormalization";
 
 const dedupeQues = {
     question: {
-        name: "question",
+        name: "dedupeEvents",
         label: "Dedupe Events ?",
         type: 'select',
         required: true,
@@ -81,7 +81,7 @@ export const sections = [
         title: 'Data Validation',
         description: 'Data Validation Type',
         componentType: 'box',
-        component: <ConditionalCheckboxForm  {...dataValidation} />,
+        component: <ConditionalCheckboxForm pageId="processing"  {...dataValidation} />,
         navigation: {
             next: 'dedupe'
         }
@@ -90,7 +90,7 @@ export const sections = [
         id: 'dedupe',
         title: 'Dedupe Events',
         description: 'Dedupe refers to the process of identifying and removing duplicate or redundant data entries within a dataset',
-        component: <ConditionalForm transform={transformer} {...dedupeQues} />,
+        component: <ConditionalForm pageId="processing" transform={transformer} {...dedupeQues} />,
         navigation: {
             next: 'denorm'
         }
@@ -99,6 +99,6 @@ export const sections = [
         id: 'denorm',
         title: 'Data Denormalization',
         description: 'Data denormalization is a technique used in database design where the data in a database is intentionally made less normalized. In other words, instead of having data organized into many separate tables that are related to each other by keys, the data is combined into fewer tables.',
-        component: <DataDenorm />
+        component: <DataDenorm pageId="processing" />
     }
 ];

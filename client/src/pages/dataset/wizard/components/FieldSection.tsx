@@ -8,8 +8,7 @@ import config from 'data/initialConfig';
 const { spacing } = config;
 
 const FieldSection = (props: any) => {
-    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, ...rest } = props;
-
+    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, ...rest } = props;
     const theme = useTheme();
     const open = (id === expanded);
 

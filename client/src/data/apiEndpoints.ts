@@ -8,5 +8,6 @@ export default {
     listDatasets: "/obsrv/v1/datasets/list",
     sendEvents: "/obsrv/v1/data",
     publishDataset: "/system/dataset/command",
-    druidNativeQuery: "/obsrv/v1/query"
+    druidNativeQuery: "/obsrv/v1/query",
+    uniqueId: "/config/obsrv/v1/datasets/slug/identification"
 }

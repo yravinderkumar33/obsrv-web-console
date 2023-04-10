@@ -18,8 +18,18 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section }: any) 
     const [expanded, setExpanded] = useState<string | false>(false);
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => { setExpanded(isExpanded ? panel : false) };
 
-    const renderSection = (section: Record<string, any>) => {
-        return <FieldSection expanded={expanded} setExpanded={setExpanded} handleChange={handleChange} {...section} data={jsonSchemaData} />
+    const renderSection = (sectionData: Record<string, any>, section: any) => {
+        return (
+            <FieldSection
+                expanded={expanded}
+                setExpanded={setExpanded}
+                handleChange={handleChange}
+                {...sectionData}
+                data={jsonSchemaData}
+                section={section}
+                index={index}
+            />
+        );
     }
 
     return <>

@@ -25,8 +25,12 @@ const wizard = createSlice({
             if (!id) return state;
             if (id in _.get(state, 'pages')) {
                 for (const [key, value] of Object.entries(rest as object)) {
-                    const preState = _.get(state, ['pages', id, key]);
-                    state.pages[id][key] = { ...preState, ...value }
+                    if (key === 'index') {
+                        state.pages[id][key] = value;
+                    } else {
+                        const preState = _.get(state, ['pages', id, key]);
+                        state.pages[id][key] = { ...preState, ...value }
+                    }
                 }
             } else {
                 state.pages[id] = rest;

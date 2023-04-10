@@ -12,15 +12,28 @@ import { fetchJsonSchemaThunk } from 'store/middlewares';
 import { Formik, Form } from 'formik';
 import { generateSlug } from 'utils/stringUtils';
 import HtmlTooltip from 'components/HtmlTooltip';
+import { checkUniqueId } from 'services/dataset';
+
+const idCheck = async (value: any, resolve: any) => {
+    const data = await checkUniqueId(value);
+    if (data?.data?.responseCode === 'OK' && data?.data?.result?.isUnique)
+        resolve(true);
+    resolve(false);
+};
+
+const validationDebounced = _.debounce(idCheck, 1000);
 
 const validationSchema = yup.object()
     .shape({
         name: yup.string().required('Dataset Name is required')
             .min(4, 'Minimum of 4 characters are required').max(30, 'Maximum of 30 characters are allowed'),
         id: yup.string().required('Dataset ID is Required')
-            .min(4, 'Minimum of 4 characters are required').max(30, 'Maximum of 30 characters are allowed'),
+            .min(4, 'Minimum of 4 characters are required')
+            .max(30, 'Maximum of 30 characters are allowed')
+            .test('checkDuplID', 'ID is already taken', async (value: any) =>
+                new Promise(resolve => validationDebounced(value, resolve))
+            )
     });
-
 export const pageMeta = { pageId: 'datasetConfiguration' };
 
 const DatasetConfiguration = ({ setShowWizard }: any) => {

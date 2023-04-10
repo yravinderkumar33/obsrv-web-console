@@ -5,26 +5,36 @@ import { Stack } from "@mui/system"
 import BasicReactTable from "components/BasicReactTable"
 import MainCard from "components/MainCard"
 import ScrollX from "components/ScrollX"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import config from 'data/initialConfig';
 import { Dialog } from "@mui/material"
 import IconButton from "components/@extended/IconButton";
 import * as _ from 'lodash';
 import initialConfig from 'data/initialConfig'
 import AddRollup from "./transformationDialogs/AddRollup"
+import { useDispatch } from "react-redux"
+import { updateState } from "store/reducers/wizard"
 
 const { spacing } = config;
 
 const RollupConfiguration = (props: any) => {
-    const { description } = props;
+    const dispatch = useDispatch();
+    const { description, pageId, index } = props;
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [selection, setSelection] = useState<Array<any>>([]);
+    const pushStateToStore = (values?: any) => {
+        dispatch(updateState({ id: pageId, index: index, state: { rollupConfig: [...selection] } }));
+    }
 
     const deleteSelection = (metadata: Record<string, any>) => {
         setSelection((preState: Array<any>) => {
             return preState.filter(payload => _.get(payload, 'datasetField') !== _.get(metadata, 'datasetField'));
         })
     }
+
+    useEffect(() => {
+        pushStateToStore();
+    }, [selection]);
 
     const columns = [
         {
