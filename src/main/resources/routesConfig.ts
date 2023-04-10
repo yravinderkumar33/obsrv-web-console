@@ -4,6 +4,19 @@ import controllers from '../controllers';
 
 export default [
   {
+    path: 'oauth',
+    routes: [
+      {
+        path: 'authorize',
+        method: 'POST',
+        middlewares: [
+          commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.post' }),
+          controllers.get('auth:read')?.handler({}),
+        ],
+      }
+    ]
+  },
+  {
     path: 'report',
     routes: [
       {
@@ -36,5 +49,6 @@ export default [
         ],
       },
     ],
+    
   }
 ];
