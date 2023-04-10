@@ -5,43 +5,55 @@ import { InputLabel } from "@mui/material";
 import { Alert, Checkbox, FormControl, FormControlLabel, Grid, RadioGroup, TextField, Tooltip } from "@mui/material";
 import config from 'data/initialConfig';
 import { useFormik } from "formik";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { updateState } from "store/reducers/wizard";
+import * as _ from "lodash";
 const { spacing } = config;
 
 
 const DataRetentionAndArchival = (props: any) => {
     const dispatch = useDispatch();
-    const { description, pageId, index } = props;
+    const { description, id } = props;
+    const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]));
+    const [initialValues, setInitialValues] = useState({
+        configureRetention: false,
+        retentionPeriod: 0,
+        archivalPolicy: "coldStorage"
+    });
 
     const formik = useFormik({
-        initialValues: {
-            configureRetention: false,
-            retentionPeriod: 0,
-            archivalPolicy: "coldStorage"
-        }, onSubmit: values => console.log(values)
+        initialValues: existingState && { ...existingState.values } || initialValues,
+        onSubmit: values => pushStateToStore(values),
     });
-    const formValues = formik.values;
+
     const pushStateToStore = (values: any) => {
-        dispatch(updateState({ id: pageId, index: index, state: { ...values } }));
+        dispatch(updateState({ id, values }));
     }
 
     useEffect(() => {
-        pushStateToStore(formValues);
-    }, [formValues]);
+        existingState && setInitialValues(existingState);
+    }, [existingState]);
 
     const renderArchivalForm = () => {
         return <Stack spacing={1}>
             <InputLabel htmlFor="email">Archival Policy</InputLabel>
             <FormControl component="fieldset">
-                <RadioGroup aria-label="gender" value={formik.values.archivalPolicy} name="archivalPolicy" row onChange={formik.handleChange}>
+                <RadioGroup aria-label="gender" value={formik.values.archivalPolicy} name="archivalPolicy" row onChange={handleChange}>
                     <FormControlLabel value="purge" control={<Radio />} label="Purge Data" />
                     <FormControlLabel value="coldStorage" control={<Radio />} label="Move to Cold Storage" />
                 </RadioGroup>
             </FormControl>
         </Stack>
+    }
 
+    const handleChange = (e: any) => {
+        formik.setFieldValue(e.target.name, e.target.value);
+        const data = {
+            ...formik.values,
+            [e.target.name]: e.target.value,
+        };
+        pushStateToStore(data);
     }
 
     const renderRetentionForm = () => {
@@ -56,7 +68,7 @@ const DataRetentionAndArchival = (props: any) => {
                     <Tooltip title={'Configure Retention Period in Days'}>
                         <TextField
                             label="Duration in Days"
-                            onChange={formik.handleChange}
+                            onChange={handleChange}
                             type="number"
                             name="retentionPeriod"
                             value={formik.values.retentionPeriod}

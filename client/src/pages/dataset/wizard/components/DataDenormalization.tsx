@@ -18,10 +18,10 @@ const { spacing } = config;
 
 const DataDenorm = (props: any) => {
     const dispatch = useDispatch();
-    const { description, pageId, index } = props;
+    const { description, id } = props;
     const [masterDatasetsExists, setIfMasterDatasetsExists] = useState<boolean>(true);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-    const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', pageId, 'state', 'denormFields']));
+    const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id, 'values']));
     const [selection, setSelection] = useState<Array<any>>(existingState || []);
     const deleteSelection = (metadata: Record<string, any>) => {
         setSelection((preState: Array<any>) => {
@@ -31,9 +31,8 @@ const DataDenorm = (props: any) => {
         })
     }
     const pushStateToStore = (values: Array<any>) => {
-        dispatch(updateState({ id: pageId, index: index, state: { denormFields: [...values] } }));
+        dispatch(updateState({ id, values }));
     }
-    console.log(existingState);
 
     useEffect(() => {
         existingState && setSelection(existingState);
