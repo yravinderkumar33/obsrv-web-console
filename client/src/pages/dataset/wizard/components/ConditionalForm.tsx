@@ -5,6 +5,8 @@ import { Grid } from "@mui/material";
 import { Alert } from "@mui/material";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
+import config from 'data/initialConfig';
+const { spacing } = config;
 
 const ConditionalForm = (props: any) => {
     const { question, options, description, transform } = props;
@@ -17,18 +19,18 @@ const ConditionalForm = (props: any) => {
     const selectForm = (optionMeta: Record<string, any>) => {
         if (optionMeta) {
             const { form, description, size = { sm: 6, xs: 6, lg: 6 } } = optionMeta;
-            setConfig({ form, description, size })
+            setConfig({ form, description, size });
         }
     }
 
     useEffect(() => {
-        const optionMeta = _.get(options, [selectedOption])
-        const updatedMeta = optionMeta && transform && transform(optionMeta, { ...props, redux })
-        selectForm(optionMeta)
+        const optionMeta = _.get(options, [selectedOption]);
+        const updatedMeta = optionMeta && transform && transform(optionMeta, { ...props, redux });
+        selectForm(optionMeta);
     }, [selectedOption]);
 
     return <>
-        <Grid container rowSpacing={2}>
+        <Grid container rowSpacing={spacing}>
             {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             <Grid item xs={6}>
                 <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={[question]} />

@@ -6,6 +6,8 @@ import BasicReactTable from "components/BasicReactTable"
 import MainCard from "components/MainCard"
 import ScrollX from "components/ScrollX"
 import { useState } from "react"
+import config from 'data/initialConfig';
+const { spacing } = config;
 
 const DataDenorm = (props: any) => {
 
@@ -26,7 +28,7 @@ const DataDenorm = (props: any) => {
     const masterDatasetNotFound = () => {
         return <>
             <Grid item xs={12}>
-                <Stack spacing={2} direction="column" justifyContent="center" alignItems="center">
+                <Stack spacing={spacing} direction="column" justifyContent="center" alignItems="center">
                     <Alert color="error" icon={<BugFilled />}>
                         There are no master datasets configured in the system. Please create one to setup data denormalization for the dataset.
                     </Alert>
@@ -52,7 +54,7 @@ const DataDenorm = (props: any) => {
                 {renderSelectionTable()}
             </Grid>
             <Grid item xs={12}>
-                <Stack spacing={2} direction="row">
+                <Stack spacing={spacing} direction="row">
                     <Box><Button variant="contained">Add Denorm Field</Button> </Box>
                     <Box>  <Button variant="contained">Create New Master Dataset</Button></Box>
                 </Stack>
@@ -61,7 +63,7 @@ const DataDenorm = (props: any) => {
     }
 
     return <>
-        <Grid container rowSpacing={2}>
+        <Grid container rowSpacing={spacing}>
             {masterDatasetsExists ? masterDatasetFound() : masterDatasetNotFound()}
         </Grid>
     </>

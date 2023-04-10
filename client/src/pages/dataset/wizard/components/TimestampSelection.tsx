@@ -5,6 +5,8 @@ import { Alert, Grid } from "@mui/material";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
+import config from 'data/initialConfig';
+const { spacing } = config;
 
 const TimestampSelection = (props: any) => {
     const { data, description } = props;
@@ -33,7 +35,7 @@ const TimestampSelection = (props: any) => {
     ]
 
     return <>
-        <Grid container rowSpacing={2} columnSpacing={2}>
+        <Grid container rowSpacing={spacing} columnSpacing={spacing}>
             <Grid item xs={12}>
                 <Alert color="info" icon={<InfoCircleOutlined />}>
                     {description}
@@ -45,6 +47,5 @@ const TimestampSelection = (props: any) => {
         </Grid>
     </>
 }
-
 
 export default TimestampSelection

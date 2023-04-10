@@ -4,6 +4,8 @@ import * as _ from 'lodash';
 import React from 'react';
 import { Stack } from '@mui/material';
 import MainCard from 'components/MainCard';
+import config from 'data/initialConfig';
+const { spacing } = config;
 
 const FieldSection = (props: any) => {
     const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, ...rest } = props;
@@ -14,14 +16,14 @@ const FieldSection = (props: any) => {
     const renderNavigation = () => {
         if (!navigation) return null;
         return <Grid item xs={12}>
-            <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
+            <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
                 {navigation?.next && <Button variant="outlined" endIcon={<ArrowRightOutlined />} onClick={_ => setExpanded(navigation.next)}>{_.startCase(navigation.next)}</Button>}
             </Stack>
         </Grid>
     }
 
     const sectionDetails = () => {
-        return <Grid container rowSpacing={2} columnSpacing={2}>
+        return <Grid container rowSpacing={spacing} columnSpacing={spacing}>
             <Grid item xs={12}>
                 {_.has(rest, 'component') && React.cloneElement(rest.component, { ...props })}
             </Grid>
@@ -32,7 +34,7 @@ const FieldSection = (props: any) => {
     const renderAccordion = () => {
         return <Accordion expanded={open} onChange={handleChange(id)} square={false}>
             <AccordionSummary aria-controls="panel1bh-content" id="panel1bh-header">
-                <Stack direction="column" spacing={1.5} alignItems="center">
+                <Stack direction="column" spacing={spacing} alignItems="center">
                     <Typography sx={{ width: '100%', flexShrink: 0 }}> {title}</Typography>
                     {!open && <Typography variant='caption' sx={{ color: 'text.secondary' }}>{description}</Typography>}
                 </Stack>
