@@ -1,15 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-    Button, Grid, IconButton,
-    Stack, Typography, DialogContent,
-    FormControl, Select, MenuItem, Dialog,
-    FormControlLabel, Chip, Alert, DialogTitle, Box,
-    Popover, TextareaAutosize,
+    Button, Grid, IconButton, DialogTitle, Box,
+    Stack, Typography, DialogContent, Dialog,
+    FormControl, Select, MenuItem, TextareaAutosize,
+    FormControlLabel, Chip, Alert, Popover,
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
-import { CheckOutlined, CloseCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, ExclamationCircleOutlined, FolderViewOutlined, InfoCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, FolderViewOutlined, InfoCircleOutlined, UploadOutlined, WarningOutlined, } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from 'components/Loader';
@@ -18,10 +17,13 @@ import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import AlertDialog from 'components/AlertDialog';
 import { error } from 'services/toaster';
-import { areConflictsResolved, checkForCriticalSuggestion, flattenSchema } from 'services/json-schema';
+import { areConflictsResolved, flattenSchema, updateJSONSchema } from 'services/json-schema';
 import RequiredSwitch from 'components/RequiredSwitch';
 import { connect } from 'react-redux';
 import IconButtonWithTips from 'components/IconButtonWithTips';
+import { DefaultColumnFilter, SelectBooleanFilter, SelectColumnFilter } from 'utils/react-table';
+import CollapsibleSuggestions from './components/CollapsibleSuggestions';
+import { downloadJsonFile } from 'utils/downloadUtils';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -36,14 +38,8 @@ interface columnFilter {
 
 const columnFilters: columnFilter[] = [
     {
-        'label': 'Critical',
-        'id': 'CRITICAL',
-        'lookup': 'severity',
-        'color': "warning"
-    },
-    {
-        'label': 'High',
-        'id': 'HIGH',
+        'label': 'Must-Fix',
+        'id': 'MUST-FIX',
         'lookup': 'severity',
         'color': "error"
     },
@@ -60,11 +56,14 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const [selection, setSelection] = useState<Record<string, any>>({});
     const dispatch = useDispatch()
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
+    const jsonSchema: any = useSelector((state: any) => state?.jsonSchema);
     const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const globalConfig = useSelector((state: any) => state?.config);
     const [filterByChip, setFilterByChip] = useState<columnFilter | null>(null);
+    const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
+    const [requiredFieldFilters, setRequiredFieldFilters] = useState<string>('');
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
         const column = cellValue?.column
@@ -112,6 +111,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 accessor: 'column',
                 tipText: 'Name of the field.',
                 editable: false,
+                Filter: DefaultColumnFilter,
+                filter: 'includes',
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     const [edit, setEdit] = useState(false);
@@ -192,12 +193,13 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 accessor: 'type',
                 tipText: 'Data type of the field',
                 editable: true,
-                disableFilters: true,
+                Filter: DefaultColumnFilter,
+                filter: 'includes',
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     const hasConflicts = _.get(row, 'suggestions.length');
                     const isResolved = _.get(row, 'resolved') || false;
-                    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+                    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | HTMLElement | null>(null);
                     const updateValue = (val: string) => {
                         setAnchorEl(null);
                         setFlattenedData((preState: Array<Record<string, any>>) => {
@@ -213,7 +215,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     }
                     const open = Boolean(anchorEl);
 
-                    const handleSuggestions = (e: React.MouseEvent<HTMLButtonElement>) => {
+                    const handleSuggestions = (e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLElement>) => {
                         setAnchorEl(e.currentTarget);
                     }
 
@@ -244,7 +246,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         <Box position="relative" maxWidth={180} display="flex" alignItems="center">
                             {row?.oneof && !isResolved &&
                                 <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} onClick={handleSuggestions}>
-                                    <ExclamationCircleOutlined />
+                                    <WarningOutlined />
                                 </IconButton>
                             }
                             {row?.oneof && isResolved &&
@@ -319,8 +321,10 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 accessor: 'required',
                 tipText: 'Field is required',
                 editable: true,
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => {
+                Filter: SelectBooleanFilter,
+                filter: 'equals',
+                customValue: requiredFieldFilters,
+                Cell: ({ value, cell, updateMyData }: any) => {
                     const row = cell?.row?.original || {};
                     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
                         setFlattenedData((preState: Array<Record<string, any>>) => {
@@ -334,18 +338,18 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                             return values;
                         });
                     }
-
-                    return (
-                        <Box display="flex" alignItems="center">
-                            <FormControl fullWidth sx={{ alignItems: 'center' }}>
-                                <FormControlLabel
-                                    sx={{ m: 'auto' }}
-                                    control={<RequiredSwitch defaultChecked onChange={handleChange} />}
-                                    label={''}
-                                />
-                            </FormControl>
-                        </Box>
-                    );
+                    switch (value) {
+                        default:
+                            return <Box display="flex" alignItems="center">
+                                <FormControl fullWidth sx={{ alignItems: 'center' }}>
+                                    <FormControlLabel
+                                        sx={{ m: 'auto' }}
+                                        control={<RequiredSwitch checked={value} onChange={handleChange} />}
+                                        label={''}
+                                    />
+                                </FormControl>
+                            </Box>;
+                    }
                 }
             },
             {
@@ -353,6 +357,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 tipText: 'Perform actions on the field',
                 editable: false,
                 disableFilters: true,
+                Filter: SelectColumnFilter,
+                filter: 'equals',
                 Cell: ({ value: initialValue, updateMyData, ...rest }: any) =>
                     <Stack direction="row">
                         <IconButton color="primary" size="large" sx={{ m: 'auto' }} onClick={e => {
@@ -364,8 +370,23 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     </Stack>
             },
         ],
-        []
+        [requiredFieldFilters]
     );
+
+    const handleDownloadButton = () => {
+        const data = updateJSONSchema(jsonSchema, flattenedData);
+        downloadJsonFile(data, `${wizardStoreState.pages?.datasetConfiguration?.state?.config?.id}-schema` || 'schema');
+    }
+
+    // const handleUploadButton = () => {
+    //         if ((data || files) && config) {
+    //             generateJSONSchema(data, config);
+    //             dispatch(addState({ id: pageMeta.pageId, state: { data, files, config } }));
+    //             setShowWizard(true);
+    //         } else {
+    //             dispatch(error({ message: "Please fill the required fields" }));
+    //         }
+    // }
 
     const [skipPageReset, setSkipPageReset] = useState(false);
 
@@ -407,6 +428,10 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         setSkipPageReset(false);
     }
 
+    const handleSuggestionsView = () => {
+        setShowSuggestions((prevState) => !prevState);
+    }
+
     useEffect(() => {
         if (apiResponse?.status === 'success' && apiResponse?.data?.schema) {
             const flattenedSchema = flattenSchema(apiResponse.data.schema) as any;
@@ -418,7 +443,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }, [apiResponse?.status]);
 
     return <>
-        <Stack direction="row" spacing={1} marginBottom={2} alignItems="center" justifyContent="space-between">
+        <Stack direction="row" spacing={1} marginBottom={1} alignItems="center" justifyContent="space-between">
             <Box display="flex" justifyContent="space-evenly" alignItems="center">
                 <Typography>
                     Filter by suggestions:
@@ -441,7 +466,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 <IconButtonWithTips
                     tooltipText="Download Schema"
                     icon={<DownloadOutlined />}
-                    handleClick={() => { }}
+                    handleClick={handleDownloadButton}
                     buttonProps={{ size: "large" }}
                     tooltipProps={{ arrow: true }}
                 />
@@ -455,12 +480,18 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 <IconButtonWithTips
                     tooltipText="View all suggestions"
                     icon={<FolderViewOutlined />}
-                    handleClick={() => { }}
+                    handleClick={handleSuggestionsView}
                     buttonProps={{ size: "large" }}
                     tooltipProps={{ arrow: true }}
                 />
             </Box>
         </Stack>
+        {/* Collapsible suggestions viewer */}
+        <CollapsibleSuggestions
+            flattenedData={flattenedData}
+            showSuggestions={showSuggestions}
+            setRequiredFilter={setRequiredFieldFilters}
+        />
         <Grid container spacing={2}>
             {apiResponse?.status !== 'success' &&
                 <Grid item xs={12} sm={12}>

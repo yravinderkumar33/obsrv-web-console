@@ -52,7 +52,7 @@ const FieldSection = (props: any) => {
     const renderSection = () => {
         switch (componentType) {
             case 'box':
-                return renderBox()
+                return renderBox();
                 break;
             default:
                 return renderAccordion();

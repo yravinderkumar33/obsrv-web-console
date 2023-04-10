@@ -7,11 +7,30 @@ export const fetchJsonSchema = (data: Record<string, any>) => {
         .then(response => response.data?.result);
 }
 
+const addRequiredFields = (
+    type: string,
+    result: Record<string, any>,
+    schemaObject: Record<string, any>,
+    required: string[],
+) => {
+    const requiredFields = schemaObject.required || [];
+    _.map(result, (item) => {
+        if (type === 'array' || type === 'object') {
+            if (required && required.includes(item.key.replace('properties.', ''))) item.required = true;
+            else if (requiredFields.includes(item.key.replace('properties.', ''))) item.required = true;
+            else item.required = false;
+        }
+        else if (requiredFields.includes(item.key.replace('properties.', ''))) item.required = true;
+        else item.required = false;
+    })
+}
+
 const flatten = (schemaObject: Record<string, any>) => {
+    let schemaObjectData = schemaObject;
     const result: Record<string, any> = {};
     const getKeyName = (prefix: string, key: string) => prefix ? `${prefix}.${key}` : key;
     const flattenHelperFn = (propertySchema: Record<string, any>, prefix: string, ref: string) => {
-        const { type, properties, items, ...rest } = propertySchema;
+        const { type, properties, items, required, ...rest } = propertySchema;
         if (type === 'object' && properties) {
             for (let [key, value] of Object.entries(properties)) {
                 flattenHelperFn(value as Record<string, any>, getKeyName(prefix, key), getKeyName(ref, `properties.${key}`));
@@ -23,16 +42,17 @@ const flatten = (schemaObject: Record<string, any>) => {
                 flattenHelperFn(items, prefix, ref)
             }
         } else {
-            result[prefix] = { type, key: ref, ref, ...rest };
+            result[prefix] = { type, key: ref, ref, properties, items, ...rest };
         }
+        addRequiredFields(type, result, schemaObjectData, required);
     }
 
-    flattenHelperFn(schemaObject, "", "");
+    flattenHelperFn(schemaObjectData, "", "");
     return result;
 }
 
 export const flattenSchema = (schema: Record<string, any>) => {
-    const flattend = flatten(schema)
+    const flattend = flatten(schema);
     return _.map(flattend, (value, key) => ({ column: key, ...value }))
 }
 
@@ -86,7 +106,7 @@ export const updateJSONSchema = (original: any, updatePayload: any) => {
 }
 
 export const checkForCriticalSuggestion = (suggestions: any) => _.some(suggestions, suggestion => {
-    return _.includes(['critical', 'high'], suggestion?.severity?.toLowerCase())
+    return _.includes(['must-fix'], suggestion?.severity?.toLowerCase())
 })
 
 export const isResolved = (payload: Record<string, any>) => {

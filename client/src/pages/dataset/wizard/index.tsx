@@ -33,7 +33,7 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
             case 4:
                 return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} section="advanced" />
             case 5:
-                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={6} />
+                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={5} />
             default:
                 throw new Error('Unknown step');
         }
@@ -85,7 +85,7 @@ const DatasetOnboarding = ({ master = false }) => {
                     labelProps.error = true;
                 }
                 return (
-                    <Step key={label}>
+                    <Step key={label} onClick={() => setActiveStep(index)}>
                         <StepLabel {...labelProps}>{label}</StepLabel>
                     </Step>
                 );
@@ -101,7 +101,7 @@ const DatasetOnboarding = ({ master = false }) => {
                     labelProps.error = true;
                 }
                 return (
-                    <Step key={label}>
+                    <Step key={label} onClick={() => setActiveStep(index)}>
                         <StepLabel {...labelProps}>{label}</StepLabel>
                     </Step>
                 );

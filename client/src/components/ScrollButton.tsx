@@ -12,7 +12,7 @@ const ScrollButton = () => {
 
     useEffect(() => {
         const onScroll = () => setScrollDirection(() => {
-            if (window.scrollY > 50) {
+            if (window.scrollY > 100) {
                 setIcon(<ArrowUpOutlined />);
                 return "top";
             } else {

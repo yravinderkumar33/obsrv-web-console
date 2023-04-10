@@ -28,7 +28,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
 
     return (
         <TableContainer sx={tableSx}>
-            <Table stickyHeader sx={{ borderCollapse: 'collapse' }} {...getTableProps()}>
+            <Table stickyHeader sx={{ borderCollapse: 'collapse' }} size="small" {...getTableProps()}>
                 <TableHead>
                     {headerGroups.map((headerGroup) => (
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
@@ -54,6 +54,15 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
                     ))}
                 </TableHead>
                 <TableBody {...getTableBodyProps()}>
+                    {headerGroups.map((group: any) => (
+                        <TableRow {...group.getHeaderGroupProps()}>
+                            {group.headers.map((column: any) => (
+                                <TableCell {...column.getHeaderProps([{ className: column.className }])}>
+                                    {column.canFilter ? column.render('Filter') : null}
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
                     {rows.map((row: any, i: number) => {
                         prepareRow(row);
                         const suggestions = _.get(row, 'original.suggestions');
