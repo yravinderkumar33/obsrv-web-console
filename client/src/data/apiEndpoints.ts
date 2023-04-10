@@ -9,5 +9,6 @@ export default {
     sendEvents: "/obsrv/v1/data",
     publishDataset: "/system/dataset/command",
     druidNativeQuery: "/obsrv/v1/query",
-    uniqueId: "/config/obsrv/v1/datasets/slug/identification"
+    uniqueId: "/config/obsrv/v1/datasets/slug/identification",
+    s3Upload: "/config/obsrv/v1/file/upload"
 }

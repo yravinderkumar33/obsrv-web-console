@@ -17,6 +17,10 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
         switch (step) {
             case 0:
                 return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} />;
+            case 1:
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} section="input" />
+            case 2:
+                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
             default:
                 throw new Error('Unknown step');
         }
@@ -66,6 +70,11 @@ const DatasetOnboarding = ({ master = false }) => {
             dispatch(reset({}));
         }
     }, []);
+
+    window.addEventListener("beforeunload", (ev) => {
+        ev.preventDefault();
+        return ev.returnValue = 'Are you sure you want to close?';
+    });
 
     const resetState = () => {
         dispatch(reset({ preserve: ['datasetConfiguration'] }));

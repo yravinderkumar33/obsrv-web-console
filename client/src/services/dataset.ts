@@ -44,7 +44,8 @@ export const saveDataset = ({ data = {}, config }: any) => {
             "drop_duplicates": _.lowerCase(_.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.processing.dropDuplicates')) === 'yes',
             "dedup_key": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.processing.dedupKeys'),
         },
-        "data_schema": schema
+        "data_schema": schema,
+        "router_config": _.get(wizardState, 'pages.datasetConfiguration.state.config.id'),
     }
     return axios.post(apiEndpoints.saveDatset, payload, config);
 }
@@ -91,17 +92,31 @@ export const publishDataset = async (jsonSchema: Record<string, any>, wizardStat
 
 
 export const sendEvents = ({ datasetId, datasetName, events, config }: any) => {
-
     const payload = {
         data: {
             id: datasetId,
             events
         }
     }
-
     return axios.post(`${apiEndpoints.sendEvents}/${datasetName}`, payload, config);
 }
 
 export const checkUniqueId = async (id: string | undefined) => {
     return axios.get(`${apiEndpoints.uniqueId}/${id}`);
+}
+
+export const getUrls = async (files: any) => {
+    const payload = {
+        files: _.map(files, 'path'),
+    };
+    return axios.post(`${apiEndpoints.s3Upload}`, payload);
+}
+
+export const uploadToUrl = async (url: string, file: any) => {
+    const formData = new FormData();
+    formData.append('Content-Type', _.get(file, 'type'));
+    formData.append('file', file);
+    return axios.put(url, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
 }

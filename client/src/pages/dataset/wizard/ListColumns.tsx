@@ -57,7 +57,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const dispatch = useDispatch()
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const jsonSchema: any = useSelector((state: any) => state?.jsonSchema);
-    const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const globalConfig = useSelector((state: any) => state?.config);
@@ -85,8 +84,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
 
     const persistState = (data?: any) =>
         dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData } }));
-
-    const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
 
     const gotoNextSection = () => {
         const data = deleteFilter();
@@ -135,7 +132,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                                     return { ...state, ...updatedValues, isModified: true, description: text };
                                 else return state
                             });
-                            pushStateToStore(values);
+                            persistState(values);
                             return values;
                         });
                     }
@@ -200,19 +197,26 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     const row = cell?.row?.original || {};
                     const hasConflicts = _.get(row, 'suggestions.length');
                     const isResolved = _.get(row, 'resolved') || false;
+                    const pageData: any = useSelector((state: any) => state?.wizard?.pages[pageMeta.pageId].state?.schema);
                     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | HTMLElement | null>(null);
                     const updateValue = (val: string) => {
-                        setAnchorEl(null);
+                        const updatedValues = { ...row };
+                        const storeState = _.cloneDeep(pageData);
+                        const data = _.map(storeState, state => {
+                            if (_.get(state, 'column') === _.get(updatedValues, 'column'))
+                                return { ...state, ...updatedValues, isModified: true, type: val, ...(hasConflicts && { resolved: true }) };
+                            else return state
+                        });
+                        persistState(data);
                         setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
+                            const filteredData = _.map(preState, state => {
                                 if (_.get(state, 'column') === _.get(updatedValues, 'column'))
                                     return { ...state, ...updatedValues, isModified: true, type: val, ...(hasConflicts && { resolved: true }) };
-                                else return state
+                                else return state;
                             });
-                            pushStateToStore(values);
-                            return values;
+                            return filteredData;
                         });
+                        setAnchorEl(null);
                     }
                     const open = Boolean(anchorEl);
 
@@ -335,7 +339,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                                     return { ...state, ...updatedValues, isModified: true, required: e.target.checked };
                                 else return state
                             });
-                            pushStateToStore(values);
+                            persistState(values);
                             return values;
                         });
                     }
@@ -425,7 +429,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const deleteFilter = () => {
         setFilterByChip(null);
         const data = wizardStoreState.pages[pageMeta.pageId].state.schema;
-        pushStateToStore(data);
+        persistState(data);
         setFlattenedData(data);
         return data;
     }
@@ -437,9 +441,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     useEffect(() => {
         if (apiResponse?.status === 'success' && apiResponse?.data?.schema) {
             const flattenedSchema = flattenSchema(apiResponse.data.schema) as any;
-            const existingState = pageData?.state?.schema;
+            const existingState = wizardStoreState.pages[pageMeta.pageId]?.state?.schema;
             setFlattenedData(existingState || flattenedSchema);
-            pushStateToStore(existingState || flattenedSchema);
+            persistState(existingState || flattenedSchema);
             setSkipPageReset(false);
         }
     }, [apiResponse?.status]);

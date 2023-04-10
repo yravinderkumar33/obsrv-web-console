@@ -12,7 +12,7 @@ import { fetchJsonSchemaThunk } from 'store/middlewares';
 import { Formik, Form } from 'formik';
 import { generateSlug } from 'utils/stringUtils';
 import HtmlTooltip from 'components/HtmlTooltip';
-import { checkUniqueId } from 'services/dataset';
+import { checkUniqueId, getUrls, uploadToUrl } from 'services/dataset';
 
 const idCheck = async (value: any, resolve: any) => {
     const data = await checkUniqueId(value);
@@ -35,6 +35,7 @@ const validationSchema = yup.object()
             )
     });
 export const pageMeta = { pageId: 'datasetConfiguration' };
+export const s3Urls = { pageId: 'cloudFiles' };
 
 const DatasetConfiguration = ({ setShowWizard }: any) => {
 
@@ -61,10 +62,16 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
         dispatch(fetchJsonSchemaThunk({ data: Array.isArray(data) ? data : [data], config: { dataset } }));
     };
 
-    const onSubmit = (config: any) => {
+    const onSubmit = async (config: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
             dispatch(addState({ id: pageMeta.pageId, state: { data, files, config } }));
+            const uploadUrl = await getUrls(files);
+            if (uploadUrl.data && uploadUrl.data?.result) {
+                _.map(uploadUrl.data.result, (item, index) => {
+                    uploadToUrl(item.presignedURL, files[index])
+                });
+            }
             setShowWizard(true);
         } else {
             dispatch(error({ message: "Please fill the required fields" }));
