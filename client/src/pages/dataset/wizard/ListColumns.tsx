@@ -83,14 +83,15 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         }
     }
 
-    const persistState = () => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: flattenedData } }));
+    const persistState = (data?: any) =>
+        dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData } }));
 
     const pushStateToStore = (values: Array<Record<string, any>>) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: values } }));
 
     const gotoNextSection = () => {
-        deleteFilter();
+        const data = deleteFilter();
         if (areConflictsResolved(flattenedData)) {
-            persistState();
+            persistState(data);
             handleNext();
         } else {
             dispatch(error({ message: 'Please resolve conflicts to proceed further' }));
@@ -99,8 +100,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }
 
     const gotoPreviousSection = () => {
-        deleteFilter();
-        persistState();
+        const data = deleteFilter();
+        persistState(data);
         handleBack();
     }
 
@@ -424,8 +425,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const deleteFilter = () => {
         setFilterByChip(null);
         const data = wizardStoreState.pages[pageMeta.pageId].state.schema;
+        pushStateToStore(data);
         setFlattenedData(data);
-        setSkipPageReset(false);
+        return data;
     }
 
     const handleSuggestionsView = () => {
