@@ -2,14 +2,14 @@ import { confirmationOptions } from "./common"
 
 export const kafkaForm = [
     {
-        name: "topicName",
+        name: "topic",
         label: "Kafka Topic Name",
         tooltip: "Name of the kafka topic where raw data is stored",
         type: 'text',
         required: true
     },
     {
-        name: "brokersList",
+        name: "kafkaBrokers",
         label: "Comma Seprated List of Broker Urls",
         tooltip: "The list of brokers seprated by comma that we want to send the messages to",
         type: 'text',
@@ -26,14 +26,14 @@ export const batchForm = [
         required: true
     },
     {
-        name: "id",
+        name: "batchId",
         label: "Batch Id",
         type: 'text',
         required: true,
         tooltip: 'Provide a unique batch identifier',
     },
     {
-        name: "dedupe",
+        name: "dedupeRequired",
         label: "Dedupe Batch ?",
         type: 'select',
         tooltip: 'Select if you want to dedupe batch or not ?',
@@ -43,10 +43,9 @@ export const batchForm = [
         name: "dedupePeriod",
         label: "Dedupe Period in Minutes",
         type: 'number',
-        default: '7',
         required: true,
         dependsOn: {
-            key: "dedupe",
+            key: "dedupeRequired",
             value: 'yes'
         }
     }

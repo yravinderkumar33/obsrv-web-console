@@ -2,14 +2,14 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import { Button, IconButton } from "@mui/material";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MUIForm from "components/form";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import * as _ from 'lodash';
-import { useDispatch } from "react-redux";
-import { updateState } from "store/reducers/wizard";
+import { useDispatch, useSelector } from "react-redux";
+import { addState, updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
 
 const AddPIIDialog = (props: any) => {
-    const { data, onClose, selection, setSelection, actions } = props;
+    const { id, data, onClose, selection, setSelection, actions } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
 
@@ -22,25 +22,18 @@ const AddPIIDialog = (props: any) => {
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
 
     const onSubmission = (value: any) => { console.log({ value }) }
-    const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id: 'columns', state: { ...values } }));
-
-    const updateColumns = (updatedCol: Record<string, any>) => {
-        const updatedColumnData = _.map(data, payload => {
-            if (_.get(payload, 'column') === _.get(updatedCol, 'column')) {
-                return updatedCol
-            }
-            return payload;
-        })
-        pushStateToStore({ schema: updatedColumnData });
-    }
+    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
     const updatePIIMeta = () => {
         const { column, transformation } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
-            const updatedColumnMetadata = { ...targetColumn, isModified: true, pii: { "value": true, "op": transformation }, _transformationType: transformation }
-            updateColumns(updatedColumnMetadata)
-            setSelection((preState: Array<any>) => ([...preState, updatedColumnMetadata]));
+            const updatedColumnMetadata = { ...targetColumn, isModified: true, _transformationType: transformation }
+            setSelection((preState: Array<any>) => {
+                const updatedState = [...preState, updatedColumnMetadata];
+                pushStateToStore({ selection: updatedState });
+                return updatedState;
+            });
             onClose();
         }
     }

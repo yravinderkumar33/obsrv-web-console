@@ -14,6 +14,7 @@ const ConditionalForm = (props: any) => {
     const selectedOption = _.get(response, _.get(question, 'name'));
     const onSubmission = (value: any) => { console.log({ value }) };
     const [config, setConfig] = useState<any>({});
+    const [initialValue, setInitialValue] = useState<Record<string, any>>({});
     const redux = useSelector((state: any) => state);
 
     const selectForm = (optionMeta: Record<string, any>) => {
@@ -25,7 +26,6 @@ const ConditionalForm = (props: any) => {
 
     useEffect(() => {
         const optionMeta = _.get(options, [selectedOption]);
-        const updatedMeta = optionMeta && transform && transform(optionMeta, { ...props, redux });
         selectForm(optionMeta);
     }, [selectedOption]);
 

@@ -44,6 +44,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     render={() => <>
                                                         <Tooltip title={tooltip}>
                                                             <TextField
+                                                                value={_.get(values, [name])}
                                                                 onChange={handleChange}
                                                                 variant="outlined"
                                                                 fullWidth
@@ -63,6 +64,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     render={() => <>
                                                         <Tooltip title={tooltip}>
                                                             <TextField
+                                                                value={_.get(values, [name])}
                                                                 onChange={handleChange}
                                                                 variant="outlined"
                                                                 fullWidth
