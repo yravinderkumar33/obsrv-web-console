@@ -5,12 +5,12 @@ import MUIForm from "components/form";
 import { useMemo, useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
-import { updateState } from "store/reducers/wizard";
+import { addState, updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
 import { openJsonAtaEditor } from "./AddNewField";
 
 const AddTransformationExpression = (props: any) => {
-    const { data, onClose, selection, setSelection, actions } = props;
+    const { id, data, onClose, selection, setSelection, actions } = props;
     const dispatch = useDispatch();
     const [value, subscribe] = useState<any>({});
     const filteredData = _.filter(data, payload => {
@@ -21,7 +21,7 @@ const AddTransformationExpression = (props: any) => {
     const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
 
-    const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id: 'columns', state: { ...values } }));
+    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
     const onSubmission = (value: any) => { console.log({ value }) }
 
     const fields = [
@@ -51,16 +51,6 @@ const AddTransformationExpression = (props: any) => {
         }
     ];
 
-    const updateColumns = (updatedCol: Record<string, any>) => {
-        const updatedColumnData = _.map(data, payload => {
-            if (_.get(payload, 'column') === _.get(updatedCol, 'column')) {
-                return updatedCol
-            }
-            return payload;
-        });
-        pushStateToStore({ schema: updatedColumnData });
-    }
-
     const updateTransformation = () => {
         const { column, transformation, expression } = value;
         const targetColumn = _.find(data, ['column', column]);
@@ -68,12 +58,13 @@ const AddTransformationExpression = (props: any) => {
             let updatedMeta: Record<string, any> = { ...targetColumn, isModified: true, _transformationType: transformation };
             if (transformation === "custom" && expression) {
                 updatedMeta = { ...updatedMeta, transformation: expression };
-            } else {
-                updatedMeta = { ...updatedMeta, pii: { "value": true, "op": transformation } };
             }
-            updateColumns(updatedMeta);
             const meta = { ...targetColumn, ...updatedMeta };
-            setSelection((preState: Array<any>) => ([...preState, meta]));
+            setSelection((preState: Array<any>) => {
+                const updatedState = [...preState, meta];
+                pushStateToStore({ selection: updatedState });
+                return updatedState;
+            });
             onClose();
         }
     }

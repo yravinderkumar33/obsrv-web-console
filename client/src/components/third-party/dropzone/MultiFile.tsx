@@ -96,6 +96,7 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                             })
                         }}
                     >
+                        <input {...getInputProps()} />
                         <PlaceholderContent type={type} />
                     </DropzoneWrapper>
                     {type === DropzopType.standard && files && files.length > 1 && (

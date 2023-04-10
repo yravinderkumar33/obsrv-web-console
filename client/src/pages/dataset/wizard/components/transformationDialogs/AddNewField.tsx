@@ -13,30 +13,22 @@ export const openJsonAtaEditor = () => {
 }
 
 const AddNewField = (props: any) => {
-    const { data, onClose, selection, setSelection } = props;
+    const { id, data, onClose, selection, setSelection } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
-
     const onSubmission = (value: any) => { console.log({ value }) }
+    const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id, ...values }));
 
-    const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id: 'columns', state: { ...values } }));
-
-    const updateColumns = (updatedCol: Record<string, any>) => {
-        // const updatedColumnData = _.map(data, payload => {
-        //     if (_.get(payload, 'column') === _.get(updatedCol, 'column')) {
-        //         return updatedCol
-        //     }
-        //     return payload;
-        // })
-        // pushStateToStore({ schema: updatedColumnData });
-    }
-
+    
     const updatePIIMeta = () => {
         const { column, transformation } = value;
         if (column && transformation) {
             const updatedColumnMetadata = { column, transformation, isModified: true, _transformationType: "custom" }
-            updateColumns(updatedColumnMetadata)
-            setSelection((preState: Array<any>) => ([...preState, updatedColumnMetadata]));
+            setSelection((preState: Array<any>) => {
+                const updatedState = [...preState, updatedColumnMetadata];
+                pushStateToStore({ selection: updatedState });
+                return updateState;
+            });
             onClose();
         }
     }

@@ -3,23 +3,29 @@ import { Alert, Button, Dialog, Grid, ToggleButtonGroup, ToggleButton, Typograph
 import MainCard from "components/MainCard"
 import BasicReactTable from "components/BasicReactTable";
 import ScrollX from "components/ScrollX";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import IconButton from "components/@extended/IconButton";
 import config from 'data/initialConfig';
 import { ButtonGroup } from "@mui/material";
+import { useSelector } from "react-redux";
 const { spacing } = config;
 
 const InputAccordion = (props: any) => {
-    const { title, description, actions, data, label, dialog } = props;
+    const { id, title, description, actions, data, label, dialog } = props;
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selection, setSelection] = useState<Array<any>>([]);
+    const existingState = useSelector((state: any) => _.get(state, ['wizard', 'pages', id, 'selection']));
 
     const deleteSelection = (record: Record<string, any>) => {
         setSelection((preState: Array<any>) => {
             return preState.filter(payload => _.get(payload, 'column') !== _.get(record, 'column'));
         })
     }
+
+    useEffect(() => {
+        existingState && setSelection(existingState);
+    }, [existingState])
 
     const renderExpression = (row: Record<string, any>) => {
         const transformation = row?.transformation;
@@ -60,7 +66,7 @@ const InputAccordion = (props: any) => {
     ]
 
     const updateDialogProps = () => {
-        return React.cloneElement(dialog, { actions, selection, setSelection, data, onClose: () => setDialogOpen(false) });
+        return React.cloneElement(dialog, { id, actions, selection, setSelection, data, onClose: () => setDialogOpen(false) });
     }
 
     const renderTable = () => {

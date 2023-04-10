@@ -9,19 +9,20 @@ import config from 'data/initialConfig';
 const { spacing } = config;
 
 const TimestampSelection = (props: any) => {
-    const { data, description } = props;
+    const { id = "timestamp", description } = props;
     const dispatch = useDispatch();
     const jsonSchema = useSelector((state: any) => state.jsonSchema);
+    const existingState = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]));
+
     const indexColumns = _.map(_.get(jsonSchema, 'data.configurations.indexConfiguration.index'), col => ({ label: col, value: col }));
     const [value, subscribe] = useState<any>({});
 
-    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id: 'transformations', index: 1, state: { ...values } }));
+    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
     const onSubmission = (value: any) => { console.log({ value }) }
 
     useEffect(() => {
-        if (_.get(value, 'indexCol')) {
-            pushStateToStore(value);
-        }
+        const indexCol = _.get(value, 'indexCol')
+        indexCol && pushStateToStore({ indexCol });
     }, [value]);
 
     const fields = [
@@ -42,7 +43,7 @@ const TimestampSelection = (props: any) => {
                 </Alert>
             </Grid>
             <Grid item xs={4}>
-                <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 6 }} />
+                <MUIForm initialValues={existingState || {}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 6 }} />
             </Grid>
         </Grid>
     </>
