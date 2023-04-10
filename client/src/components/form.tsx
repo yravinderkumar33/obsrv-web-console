@@ -1,31 +1,12 @@
 import { makeStyles } from '@mui/styles';
 import * as _ from 'lodash';
-import {
-    Checkbox,
-    FormControl,
-    FormControlLabel,
-    FormLabel,
-    Grid,
-    InputLabel,
-    MenuItem,
-    Radio,
-    RadioGroup,
-    Select,
-    TextField,
-    ToggleButtonGroup,
-    Tooltip,
-} from '@mui/material';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Radio, Select, Stack, TextField, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { Formik, Field, Form } from 'formik';
 import { ToggleButton } from '@mui/material';
 
 const useStyles = makeStyles((theme: any) => ({
-    formControl: {
-        margin: theme.spacing(1),
-        minWidth: 120,
-    },
-    selectEmpty: {
-        marginTop: theme.spacing(2),
-    },
+    formControl: { margin: theme.spacing(1), minWidth: 120 },
+    selectEmpty: { marginTop: theme.spacing(2) },
 }));
 
 const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, size = {}, enableReinitialize = false, }: any) => {
@@ -44,7 +25,8 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                 return (
                     <Form>
                         <Grid container spacing={3} alignItems="baseline">
-                            {fields.map(({ name, tooltip = '', label, type, selectOptions, required = false, dependsOn = null, disabled = false, ...rest }: any) => {
+                            {fields.map((field: any) => {
+                                const { name, tooltip = '', label, type, selectOptions, required = false, dependsOn = null, disabled = false } = field;
 
                                 if (dependsOn) {
                                     const { key, value } = dependsOn;
@@ -62,15 +44,11 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     render={() => <>
                                                         <Tooltip title={tooltip}>
                                                             <TextField
-                                                                name={name}
-                                                                label={label}
                                                                 onChange={handleChange}
-                                                                required={required}
-                                                                disabled={disabled}
                                                                 variant="outlined"
                                                                 fullWidth
                                                                 autoComplete="off"
-                                                                {...rest}
+                                                                {...field}
                                                             />
                                                         </Tooltip>
                                                     </>}
@@ -85,16 +63,12 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     render={() => <>
                                                         <Tooltip title={tooltip}>
                                                             <TextField
-                                                                name={name}
-                                                                label={label}
                                                                 onChange={handleChange}
-                                                                required={required}
-                                                                disabled={disabled}
                                                                 variant="outlined"
                                                                 fullWidth
                                                                 autoComplete="off"
                                                                 type='number'
-                                                                {...rest}
+                                                                {...field}
                                                             />
                                                         </Tooltip>
                                                     </>}
@@ -105,15 +79,14 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                         return (
                                             <Grid item xs={xs} sm={sm} lg={lg} key={name}>
                                                 <Tooltip title={tooltip}>
-                                                    <FormControl fullWidth required={required}>
-                                                        <FormControlLabel
-                                                            key={name}
-                                                            disabled={disabled}
-                                                            control={<Field as={Checkbox} name={name} />}
-                                                            label={label}
-                                                            onChange={handleChange}
-                                                        />
-                                                    </FormControl>
+                                                    <FormGroup>
+                                                        <Stack direction="row" spacing={1}>
+                                                            {selectOptions.map((option: any) => {
+                                                                const { value, label } = option;
+                                                                return <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={<Checkbox name={name} className="size-medium" checked={_.includes(_.get(values, name), value)} value={value} onChange={handleChange} />} label={label} />
+                                                            })}
+                                                        </Stack>
+                                                    </FormGroup>
                                                 </Tooltip>
                                             </Grid>
                                         );
@@ -121,20 +94,14 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                         return (
                                             <Grid item xs={xs} sm={sm} lg={lg} key={name}>
                                                 <Tooltip title={tooltip}>
-                                                    <FormControl fullWidth component="fieldset" required={required} disabled={disabled}>
-                                                        <FormLabel component="legend">{label}</FormLabel>
-                                                        <RadioGroup name={name} id={name} row onChange={handleChange} value={_.get(values, name)}>
-                                                            {selectOptions.map((option: any) => (
-                                                                <FormControlLabel
-                                                                    key={option.value}
-                                                                    value={option.value}
-                                                                    name={name}
-                                                                    control={<Field as={Radio} />}
-                                                                    label={option.label}
-                                                                />
-                                                            ))}
-                                                        </RadioGroup>
-                                                    </FormControl>
+                                                    <FormGroup>
+                                                        <Stack direction="row" spacing={1}>
+                                                            {selectOptions.map((option: any) => {
+                                                                const { value, label } = option;
+                                                                return <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={<Radio name={name} className="size-medium" checked={value === _.get(values, name)} value={value} onChange={handleChange} />} label={label} />
+                                                            })}
+                                                        </Stack>
+                                                    </FormGroup>
                                                 </Tooltip>
                                             </Grid>
                                         );

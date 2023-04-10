@@ -1,4 +1,4 @@
-import { BugFilled } from "@ant-design/icons"
+import { BugFilled, DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons"
 import { Box, Grid } from "@mui/material"
 import { Alert, Button } from "@mui/material"
 import { Stack } from "@mui/system"
@@ -7,21 +7,45 @@ import MainCard from "components/MainCard"
 import ScrollX from "components/ScrollX"
 import { useState } from "react"
 import config from 'data/initialConfig';
+import { Dialog } from "@mui/material"
+import AddDenormField from "./transformationDialogs/AddDenormFields"
+import IconButton from "components/@extended/IconButton";
+import * as _ from 'lodash';
+
 const { spacing } = config;
 
 const DataDenorm = (props: any) => {
-
+    const { description } = props;
     const [masterDatasetsExists, setIfMasterDatasetsExists] = useState<boolean>(true);
+    const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+    const [selection, setSelection] = useState<Array<any>>([]);
+
+    const deleteSelection = (metadata: Record<string, any>) => {
+        setSelection((preState: Array<any>) => {
+            return preState.filter(payload => _.get(payload, 'datasetField') !== _.get(metadata, 'datasetField'));
+        })
+    }
 
     const columns = [
         {
-            Header: 'Dataset Field'
+            Header: 'Dataset Field',
+            accessor: 'datasetField'
         },
         {
-            Header: 'Master Dataset'
+            Header: 'Master Dataset',
+            accessor: 'masterDataset'
         },
         {
-            Header: 'Master Datset Field'
+            Header: 'Master Datset Field',
+            accessor: 'masterDatasetField'
+        },
+        {
+            Header: 'Delete',
+            Cell: ({ value, cell }: any) => {
+                return <IconButton variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
+                    <DeleteOutlined />
+                </IconButton>
+            }
         }
     ];
 
@@ -42,7 +66,7 @@ const DataDenorm = (props: any) => {
         return <>
             <MainCard content={false}>
                 <ScrollX>
-                    <BasicReactTable columns={columns} data={[]} striped={true} />
+                    <BasicReactTable columns={columns} data={selection} striped={true} />
                 </ScrollX>
             </MainCard >
         </>
@@ -55,15 +79,21 @@ const DataDenorm = (props: any) => {
             </Grid>
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="row">
-                    <Box><Button variant="contained">Add Denorm Field</Button> </Box>
+                    <Box><Button variant="contained" onClick={_ => setDialogOpen(true)}>Add Denorm Field</Button> </Box>
                     <Box>  <Button variant="contained">Create New Master Dataset</Button></Box>
                 </Stack>
             </Grid>
+            <Grid item xs={12}>
+                <Dialog open={dialogOpen} onClose={_ => setDialogOpen(false)}>
+                    <AddDenormField setSelection={setSelection} onClose={() => setDialogOpen(false)}></AddDenormField>
+                </Dialog>
+            </Grid >
         </>
     }
 
     return <>
         <Grid container rowSpacing={spacing}>
+            {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             {masterDatasetsExists ? masterDatasetFound() : masterDatasetNotFound()}
         </Grid>
     </>

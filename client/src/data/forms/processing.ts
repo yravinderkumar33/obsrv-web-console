@@ -24,7 +24,7 @@ export const validateDataForm = [
 export const dedupeForm = [
     {
         name: "dedupeKey",
-        label: "Dedupe Key",
+        label: "Dedupe Field",
         type: 'text',
         tooltip: "Column based on which you want to enable the dedupe",
         required: true
