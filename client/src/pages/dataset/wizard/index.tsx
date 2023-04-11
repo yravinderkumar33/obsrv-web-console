@@ -16,7 +16,9 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
     if (master) {
         switch (step) {
             case 0:
-                return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} />;
+                return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} edit={edit} master={master} />;
+            case 1:
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} section="input" edit={edit} master={master} />
             default:
                 throw new Error('Unknown step');
         }

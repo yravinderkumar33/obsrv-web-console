@@ -78,7 +78,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
             createDraft(config);
-            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config } }));
+            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
         } else {
             dispatch(error({ message: "Please fill the required fields" }));
         }
