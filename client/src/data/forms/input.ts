@@ -40,6 +40,16 @@ export const batchForm = [
         selectOptions: confirmationOptions
     },
     {
+        name: "dedupeKey",
+        label: "Dedupe Key",
+        type: 'text',
+        required: true,
+        dependsOn: {
+            key: "dedupeRequired",
+            value: 'yes'
+        }
+    },
+    {
         name: "dedupePeriod",
         label: "Dedupe Period in Minutes",
         type: 'number',

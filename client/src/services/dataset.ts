@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 import axios from 'axios';
-import { updateJSONSchema } from './json-schema';
+import { flattenSchema, updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
 
@@ -39,22 +39,50 @@ export const prepareConfigurationsBySection = (payload: Record<string, any>[], m
 }
 
 export const saveDataset = ({ data = {}, config }: any) => {
-    const { schema, wizardState } = data;
-    const payload = {
-        "id": _.get(wizardState, 'pages.datasetConfiguration.state.config.id'),
-        "dataset_name": _.get(wizardState, 'pages.datasetConfiguration.state.config.name'),
-        "extraction_config": {
-            "is_batch_event": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.isBatch') || true,
-            "extraction_key": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.extractionKey') || ""
-        },
-        "dedup_config": {
-            "drop_duplicates": _.lowerCase(_.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.processing.dropDuplicates')) === 'yes',
-            "dedup_key": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.processing.dedupKeys'),
-        },
-        "data_schema": schema,
-        "router_config": _.get(wizardState, 'pages.datasetConfiguration.state.config.id'),
+    const { schema, state } = data;
+    const validate = _.get(state, 'pages.dataValidation.formFieldSelection') || {};
+    const extractionConfig = _.get(state, 'pages.dataFormat.value');
+    const datasourceConfig = _.get(state, 'pages.dataSource.value');
+    const timestampCol = _.get(state, 'pages.timestamp.indexCol');
+
+    const validation_config = {
+        validate: validate !== "none",
+        validation_mode: validate
+    };
+
+    const extraction_config = {
+        is_batch_event: _.get(extractionConfig, 'type') === 'yes',
+        batch_id: _.get(extractionConfig, 'batchId'),
+        extraction_key: _.get(extractionConfig, 'extractionKey'),
+        dedup_config: {
+            dedup_key: _.get(extractionConfig, 'dedupeKey'),
+            dedup_period: _.get(extractionConfig, 'dedupePeriod'),
+            drop_duplicates: true
+        }
+    };
+
+    const dedup_config = {
+        dedup_key: _.get(extractionConfig, 'dedupeKey'),
+        dedup_period: _.get(extractionConfig, 'dedupePeriod'),
+        drop_duplicates: true
     }
-    return axios.post(apiEndpoints.saveDatset, payload, config);
+
+    const router_config = datasourceConfig;
+    const dataset_config = {}
+    const denorm_config = {}
+
+    const payload = {
+        "id": _.get(state, 'pages.datasetConfiguration.state.config.id'),
+        "name": _.get(state, 'pages.datasetConfiguration.state.config.name'),
+        "data_schema": schema,
+        validation_config,
+        extraction_config,
+        router_config,
+        dedup_config,
+        denorm_config,
+        dataset_config
+    }
+    return axios.patch(apiEndpoints.updateDataset, payload, config);
 }
 
 export const datasetRead = ({ datasetId, config = {} }: any) => {
@@ -64,23 +92,23 @@ export const datasetRead = ({ datasetId, config = {} }: any) => {
 }
 
 export const generateIngestionSpec = ({ data = {}, config }: any) => {
-    const { schema, wizardState } = data;
+    const { schema, state } = data;
     const payload = {
         schema,
         config: {
-            "dataset": _.get(wizardState, 'pages.datasetConfiguration.state.config.name'),
-            "indexCol": _.get(wizardState, 'pages.transformations.state.indeCol'),
+            "dataset": _.get(state, 'pages.datasetConfiguration.state.config.name'),
+            "indexCol": _.get(state, 'pages.timestamp.indexCol'),
             "granularitySpec": {
-                "segmentGranularity": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.segmentGranularity'),
-                "queryGranularity": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.queryGranularity'),
-                "rollup": _.get(wizardState, 'pages.listDatasetConfigurations.state.configurations.advanced.rollup')
+                "segmentGranularity": 'DAY',
+                "queryGranularity": 'HOUR',
+                "rollup": false
             },
             "tuningConfig": {
                 "maxRowPerSegment": 50000,
                 "taskCount": 1
             },
             "ioConfig": {
-                "topic": "obs20-events",
+                "topic": "dev.transform",
                 "bootstrap": "kafka-headless.kafka.svc.cluster.local:9092",
                 "taskDuration": "PT8H"
             }
@@ -105,12 +133,13 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
 //     else dispatch(error({ message: "Error occured saving the connector config" }));
 // }
 
-export const publishDataset = async (jsonSchema: Record<string, any>, wizardState: Record<string, any>) => {
-    const updatePayload = { schema: wizardState?.pages?.columns?.state?.schema };
-    const schema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
-    const ingestionSpec = await generateIngestionSpec({ data: { schema, wizardState }, config: {} });
-    const saveDatasetResponse = await saveDataset({ data: { schema, wizardState } });
-    const saveDatasourceResponse = await saveDatasource({ data: { wizardState, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
+export const publishDataset = async (state: Record<string, any>) => {
+    const jsonSchema = _.get(state, 'pages.jsonSchema');
+    const updatePayload = { schema: _.get(state, 'pages.columns.state.schema') };
+    const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
+    const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedJsonSchema, state }, config: {} });
+    const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state } });
+    return saveDatasource({ data: { state, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
 }
 
 

@@ -43,7 +43,7 @@ const dataValidation = {
         {
             name: "validateType",
             label: "Strict",
-            value: "strict",
+            value: "Strict",
             selected: true,
             required: true,
             description: "Enable strict validation for the incoming events.",
@@ -52,7 +52,7 @@ const dataValidation = {
         {
             name: "validateType",
             label: "Ignore New Fields",
-            value: "ignoreNewFields",
+            value: "IgnoreNewFields",
             required: true,
             form: null,
             description: "Skip validation for the new fields added.",
@@ -60,7 +60,7 @@ const dataValidation = {
         {
             name: "validateType",
             label: "Auto Index New Fields",
-            value: "autoIndexNewFields",
+            value: "DiscardNewFields",
             required: true,
             form: null,
             description: "Auto index new fields added",
