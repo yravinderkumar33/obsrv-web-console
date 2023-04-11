@@ -2,11 +2,14 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import { Button, IconButton } from "@mui/material";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MUIForm from "components/form";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import * as _ from 'lodash';
-import { useDispatch, useSelector } from "react-redux";
-import { addState, updateState } from "store/reducers/wizard";
+import { useDispatch } from "react-redux";
+import { addState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
+import { v4 } from "uuid";
+import { saveTransformations } from "services/dataset";
+import { error } from "services/toaster";
 
 const AddPIIDialog = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions } = props;
@@ -24,11 +27,23 @@ const AddPIIDialog = (props: any) => {
     const onSubmission = (value: any) => { };
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
+    const saveTransformation = async (payload: any) => {
+        const data = await saveTransformations(payload);
+        if (data.data) return null;
+        else dispatch(error({ message: "Error occured saving the PII config" }));
+    }
+
     const updatePIIMeta = () => {
         const { column, transformation } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
-            const updatedColumnMetadata = { ...targetColumn, isModified: true, _transformationType: transformation }
+            const uuid = v4();
+            const updatedColumnMetadata = { ...targetColumn, isModified: true, _transformationType: transformation, id: uuid };
+            saveTransformation({
+                id: uuid,
+                field_key: column,
+                transformation_function: transformation,
+            });
             setSelection((preState: Array<any>) => {
                 const updatedState = [...preState, updatedColumnMetadata];
                 pushStateToStore({ selection: updatedState });

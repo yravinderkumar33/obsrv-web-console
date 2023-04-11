@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: any) => ({
     selectEmpty: { marginTop: theme.spacing(2) },
 }));
 
-const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, size = {}, enableReinitialize = false, }: any) => {
+const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, subscribeErrors = null, size = {}, enableReinitialize = false, }: any) => {
     const classes: any = useStyles;
     let { xs = 12, sm = 12, lg = 12 } = size;
 
@@ -22,6 +22,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
         >
             {({ handleChange, values, handleBlur, errors, touched }) => {
                 subscribe && subscribe(values);
+                subscribeErrors && subscribeErrors(errors);
                 return (
                     <Form>
                         <Grid container spacing={3} alignItems="baseline">

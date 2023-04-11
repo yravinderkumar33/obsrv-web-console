@@ -10,5 +10,7 @@ export default {
     publishDataset: "/system/dataset/command",
     druidNativeQuery: "/obsrv/v1/query",
     uniqueId: "/config/obsrv/v1/datasets/slug/identification",
-    s3Upload: "/config/obsrv/v1/file/upload"
+    s3Upload: "/config/obsrv/v1/file/upload",
+    datasetSourceConfig: "/config/obsrv/v1/datasets/source/config",
+    transformationsConfig: "/config/obsrv/v1/datasets/transformation",
 }

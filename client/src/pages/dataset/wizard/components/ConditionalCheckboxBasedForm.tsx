@@ -8,6 +8,9 @@ import config from 'data/initialConfig';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
+import { v4 } from "uuid";
+import { saveConnectorDraft } from "services/dataset";
+import { error } from "services/toaster";
 const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
@@ -17,6 +20,8 @@ const ConditionalCheckboxForm = (props: any) => {
     const onSubmission = (value: any) => { };
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || ({}));
     const [childFormValue, setChildFormValues] = useState<any>({});
+    const uuid = v4();
+    const configState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'config']));
 
     const filterPredicate = (field: any) => {
         if (_.includes(_.get(existingState, 'formFieldSelection'), _.get(field, 'value'))) return true;
@@ -42,10 +47,29 @@ const ConditionalCheckboxForm = (props: any) => {
 
     const persist = () => {
         const formFieldSelection = _.get(formValues, [name]);
-        persistState({ formFieldSelection, value: childFormValue });
+        persistState({ formFieldSelection, value: { id: uuid, ...childFormValue } });
     }
 
+    const saveConnectorInfo = async () => {
+        const { id, type, ...rest }: any = { childFormValue };
+        const payload = {
+            id: uuid,
+            dataset_id: configState.id,
+            connector_type: type,
+            connector_config: { ...rest },
+        }
+        const data = await saveConnectorDraft(payload);
+        if (data.data) return null;
+        else dispatch(error({ message: "Error occured saving the connector config" }));
+    }
+
+    const saveDebounced = _.debounce(saveConnectorInfo, 1000);
+
     useEffect(() => {
+        if (_.difference(['type', 'topic', 'kafkaBrokers'], Object.keys(childFormValue)).length === 0 &&
+            _.values(childFormValue).some(x => x !== '')
+        )
+            saveDebounced();
         persist();
     }, [formValues, childFormValue]);
 
@@ -80,10 +104,20 @@ const ConditionalCheckboxForm = (props: any) => {
         return _.map(values, (value: any) => {
             const metadata = _.find(fields, ['value', value]);
             if (!metadata) return null;
-            const { form, description, component, value: type } = metadata;
+            const { form, description, component, value: type, ...rest } = metadata;
             return <>
                 {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
-                {form && <Grid item sm={12}> <MUIForm subscribe={setChildFormValues} initialValues={{ type, ..._.get(existingState, 'value') }} onSubmit={(value: any) => onSubmission(value)} fields={form} size={{ sm: 6, xs: 6, lg: 6 }} /></Grid>}
+                {form && (
+                    <Grid item sm={12}>
+                        <MUIForm
+                            subscribe={setChildFormValues}
+                            initialValues={{ type, ..._.get(existingState, 'value') }}
+                            onSubmit={(value: any) => onSubmission(value)}
+                            fields={form}
+                            size={{ sm: 6, xs: 6, lg: 6 }}
+                        />
+                    </Grid>)
+                }
                 {component && <Grid item sm={12}> {component}</Grid>}
             </>
         })

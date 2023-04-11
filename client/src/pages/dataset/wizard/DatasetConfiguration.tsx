@@ -66,12 +66,12 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
             dispatch(addState({ id: pageMeta.pageId, state: { data, files, config } }));
-            const uploadUrl = await getUrls(files);
-            if (uploadUrl.data && uploadUrl.data?.result) {
-                _.map(uploadUrl.data.result, (item, index) => {
-                    uploadToUrl(item.presignedURL, files[index])
-                });
-            }
+            // const uploadUrl = await getUrls(files);
+            // if (uploadUrl.data && uploadUrl.data?.result) {
+            //     _.map(uploadUrl.data.result, (item, index) => {
+            //         uploadToUrl(item.presignedURL, files[index])
+            //     });
+            // }
             setShowWizard(true);
         } else {
             dispatch(error({ message: "Please fill the required fields" }));

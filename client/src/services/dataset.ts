@@ -120,3 +120,15 @@ export const uploadToUrl = async (url: string, file: any) => {
         headers: { 'Content-Type': 'multipart/form-data' },
     });
 }
+
+export const saveConnectorDraft = async (payload: any) => {
+    return axios.post(`${apiEndpoints.datasetSourceConfig}`, payload);
+}
+
+export const saveTransformations = async (payload: any) => {
+    return axios.post(`${apiEndpoints.transformationsConfig}`, payload);
+}
+
+export const deleteTransformations = async (id: string) => {
+    return axios.delete(`${apiEndpoints.transformationsConfig}/${id}`);
+}

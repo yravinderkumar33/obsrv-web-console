@@ -7,6 +7,9 @@ import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
+import { v4 } from "uuid";
+import { saveTransformations } from "services/dataset";
+import { error } from "services/toaster";
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank');
@@ -19,11 +22,22 @@ const AddNewField = (props: any) => {
     const onSubmission = (value: any) => { };
     const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id, ...values }));
 
+    const saveTransformation = async (payload: any) => {
+        const data = await saveTransformations(payload);
+        if (data.data) return null;
+        else dispatch(error({ message: "Error occured saving the transformation config" }));
+    }
 
     const updatePIIMeta = () => {
         const { column, transformation } = value;
         if (column && transformation) {
-            const updatedColumnMetadata = { column, transformation, isModified: true, _transformationType: "custom" }
+            const uuid = v4();
+            const updatedColumnMetadata = { column, transformation, isModified: true, _transformationType: "custom", id: uuid, }
+            saveTransformation({
+                id: uuid,
+                field_key: column,
+                transformation_function: transformation,
+            });
             setSelection((preState: Array<any>) => {
                 const updatedState = [...preState, updatedColumnMetadata];
                 pushStateToStore({ selection: updatedState });

@@ -16,7 +16,7 @@ const FieldSection = (props: any) => {
         if (!navigation) return null;
         return <Grid item xs={12}>
             <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
-                {navigation?.next && <Button variant="outlined" endIcon={<ArrowRightOutlined />} onClick={_ => setExpanded(navigation.next)}>{_.startCase(navigation.next)}</Button>}
+                {navigation?.next && <Button variant="outlined" type="submit" endIcon={<ArrowRightOutlined />} onClick={_ => setExpanded(navigation.next)}>{_.startCase(navigation.next)}</Button>}
             </Stack>
         </Grid>
     }

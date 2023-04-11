@@ -8,19 +8,26 @@ import _ from "lodash";
 import IconButton from "components/@extended/IconButton";
 import config from 'data/initialConfig';
 import { ButtonGroup } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { deleteTransformations } from "services/dataset";
+import { error } from "services/toaster";
 const { spacing } = config;
 
 const InputAccordion = (props: any) => {
+    const dispatch = useDispatch();
     const { id, title, description, actions, data, label, dialog } = props;
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selection, setSelection] = useState<Array<any>>([]);
     const existingState = useSelector((state: any) => _.get(state, ['wizard', 'pages', id, 'selection']));
 
-    const deleteSelection = (record: Record<string, any>) => {
-        setSelection((preState: Array<any>) => {
-            return preState.filter(payload => _.get(payload, 'column') !== _.get(record, 'column'));
-        })
+    const deleteSelection = async (record: Record<string, any>) => {
+        const data = await deleteTransformations(record.id);
+        if (data.data)
+            setSelection((preState: Array<any>) => {
+                return preState.filter(payload => _.get(payload, 'column') !== _.get(record, 'column'));
+            })
+        else dispatch(error({ message: "Unable to delete the config item" }));
+
     }
 
     useEffect(() => {

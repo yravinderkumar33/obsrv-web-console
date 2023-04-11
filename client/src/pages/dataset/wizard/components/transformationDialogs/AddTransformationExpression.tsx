@@ -8,6 +8,9 @@ import { useDispatch } from "react-redux";
 import { addState, updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
 import { openJsonAtaEditor } from "./AddNewField";
+import { saveTransformations } from "services/dataset";
+import { error } from "services/toaster";
+import { v4 } from "uuid";
 
 const AddTransformationExpression = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions } = props;
@@ -51,13 +54,31 @@ const AddTransformationExpression = (props: any) => {
         }
     ];
 
+    const saveTransformation = async (payload: any) => {
+        const data = await saveTransformations(payload);
+        if (data.data) return null;
+        else dispatch(error({ message: "Error occured saving the transformation config" }));
+    }
+
     const updateTransformation = () => {
         const { column, transformation, expression } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
-            let updatedMeta: Record<string, any> = { ...targetColumn, isModified: true, _transformationType: transformation };
+            const uuid = v4();
+            let updatedMeta: Record<string, any> = { ...targetColumn, isModified: true, _transformationType: transformation, id: uuid, };
             if (transformation === "custom" && expression) {
+                saveTransformation({
+                    id: uuid,
+                    field_key: column,
+                    transformation_function: expression,
+                });
                 updatedMeta = { ...updatedMeta, transformation: expression };
+            } else {
+                saveTransformation({
+                    id: uuid,
+                    field_key: column,
+                    transformation_function: transformation,
+                });
             }
             const meta = { ...targetColumn, ...updatedMeta };
             setSelection((preState: Array<any>) => {
