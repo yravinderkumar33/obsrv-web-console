@@ -46,13 +46,13 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const { data: dataState, files: filesState, config: configState } = pageData?.state || {};
     const [data, setData] = useState(dataState);
     const [files, setFiles] = useState(filesState);
-    const [initialValues, setInitialValues] = useState({ name: '', id: '' });
+    const initialValues = pageData?.state?.config || { name: '', id: '' };
 
     useEffect(() => {
-        if (pageData?.state?.config) {
-            setInitialValues({ ...pageData.state.config })
+        return () => {
+            setFiles(null);
         }
-    }, [wizardState]);
+    })
 
     const generateJSONSchema = async (data: Array<any>, config: Record<string, any>) => {
         const dataset = _.get(config, 'name');
@@ -75,17 +75,23 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
         }
     }
 
-    const onSubmit = async (config: any) => {
-        if ((data || files) && config) {
-            generateJSONSchema(data, config);
-            createDraft(config);
-            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
+    const uploadFiles = async (files: any) => {
+        try {
             const uploadUrl = await getUrls(files);
             if (uploadUrl.data && uploadUrl.data?.result) {
                 _.map(uploadUrl.data.result, (item, index) => {
                     uploadToUrl(item.presignedURL, files[index])
                 });
             }
+        } catch (err) { }
+    }
+
+    const onSubmit = (config: any) => {
+        if ((data || files) && config) {
+            generateJSONSchema(data, config);
+            createDraft(config);
+            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
+            uploadFiles(files);
             setShowWizard(true);
         } else {
             dispatch(error({ message: "Please fill the required fields" }));

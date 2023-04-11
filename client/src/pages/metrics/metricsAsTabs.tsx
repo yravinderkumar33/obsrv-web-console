@@ -20,17 +20,9 @@ function Panel(props: any) {
 
 const MetricsPanel = () => {
     const [value, setValue] = useState(0);
-
-    const scrollToTabSection = () => {
-        const element = document.getElementById("tabSectionStart");
-        if (element) {
-            element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-        }
-    }
-
+    
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
-        // scrollToTabSection();
     };
 
     return (

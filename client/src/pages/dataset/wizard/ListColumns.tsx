@@ -439,6 +439,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
             const existingState = pageData?.state?.schema;
             setFlattenedData(existingState || flattenedSchema);
             persistState(existingState || flattenedSchema);
+            persistClientState();
             setSkipPageReset(false);
         }
     }, [jsonSchema]);
