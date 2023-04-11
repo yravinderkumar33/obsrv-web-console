@@ -80,7 +80,7 @@ export function SelectColumnFilter({ column: { filterValue, setFilter, preFilter
 export function SelectBooleanFilter({ column: { filterValue, setFilter, preFilteredRows, id, customValue } }: any) {
     const filterVal = useMemo(() => {
         if (customValue !== '') {
-            let value = customValue !== '' ? JSON.parse(customValue) : '';
+            let value = customValue !== '' ? JSON.parse(customValue) : null;
             return value;
         }
         else return null;
@@ -100,9 +100,9 @@ export function SelectBooleanFilter({ column: { filterValue, setFilter, preFilte
     return (
         <Select
             value={`${filterValue}`}
-            displayEmpty
             size="small"
             fullWidth
+            displayEmpty
         >
             <MenuItem onClick={() => handleChange("")} value="">All</MenuItem>
             <MenuItem onClick={() => handleChange("true")} value="true">Yes</MenuItem>
