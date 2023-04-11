@@ -1,128 +1,98 @@
-import * as oauthServer from 'oauth2-server';
+import { Client, User, Token, AuthorizationCode } from "oauth2-server";
 
-interface AccessToken {
-  accessToken: string;
-  clientId: string;
-  expires: Date;
-  userId: string;
-  scope: string;
+interface InMemoryDb {
+  clients: Client[];
+  users: User[];
+  accessTokens: Token[];
+  authorizationCodes: AuthorizationCode[];
 }
 
-interface RefreshToken {
-  refreshToken: string;
-  clientId: string;
-  expires: Date;
-  userId: string;
-  scope: string;
-}
+const db: InMemoryDb = {
+  clients: [
+    {
+      id: "1",
+      clientId: "123",
+      clientSecret: "secret",
+      grants: ["authorization_code", "refresh_token"],
+      redirectUris: ["http://app1.example.com:3000/home"],
+    },
+  ],
+  users: [
+    { id: "1", username: "user", password: "password" },
+    { id: "2", username: "admin", password: "password" },
+  ],
+  accessTokens: [],
+  authorizationCodes: [],
+};
 
-interface AuthorizationCode {
-  code: string;
-  clientId: string;
-  expires: Date;
-  redirectUri: string;
-  userId: string;
-  scope: string;
-}
-
-interface User {
-  id: string;
-  username: string;
-  password: string;
-}
-
-interface Client {
-  id: string;
-  name: string;
-  clientId: string;
-  clientSecret: string;
-  grants: string[];
-  redirectUris: string[];
-}
-
-const authorizedClientIds = ['abc123', 'xyz789'];
-
-const users: User[] = [
-  {
-    id: '123',
-    username: 'john',
-    password: 'password',
-  },
-  {
-    id: '456',
-    username: 'jane',
-    password: 'password',
-  },
-];
-
-const clients: Client[] = [
-  {
-    id: '1',
-    name: 'Sample Client',
-    clientId: 'abc123',
-    clientSecret: 'ssh-secret',
-    grants: ['password', 'refresh_token'],
-    redirectUris: [],
-  },
-  {
-    id: '2',
-    name: 'Sample Client 2',
-    clientId: 'xyz789',
-    clientSecret: 'ssh-password',
-    grants: ['authorization_code'],
-    redirectUris: ['http://localhost:3000/callback'],
-  },
-];
-
-const tokens: AccessToken[] = [];
-const refreshTokens: RefreshToken[] = [];
-const authorizationCodes: AuthorizationCode[] = [];
-
-export const model: any = {
+const model = {
   getClient: async (clientId: string, clientSecret: string) => {
-    const client = clients.find(
-      (c) => c.clientId === clientId && c.clientSecret === clientSecret
+    const client = db.clients.find(
+      (c) => c.clientId === clientId 
     );
-
-    if (!client) {
-      return null;
-    }
-
-    return {
-      id: client.clientId,
-      redirectUris: client.redirectUris,
-      grants: client.grants,
-    };
+    if (!client) return null;
+    return { ...client, grants: client.grants ?? [] };
   },
 
   getUser: async (username: string, password: string) => {
-    const user = users.find((u) => u.username === username && u.password === password);
-
-    if (!user) {
-      return null;
-    }
-
-    return {
-      id: user.id,
-    };
+    const user = db.users.find((u) => u.username === username && u.password === password);
+    if (!user) return null;
+    return { id: user.id };
   },
 
-  saveToken: async (
-    token: oauthServer.Token,
-    client: oauthServer.Client,
-    user: oauthServer.User
-  ) => {
-    const tokenConf: any = {
-      accessToken: token.accessToken,
-      expires: token.accessTokenExpiresAt,
-      refreshToken: token.refreshToken, // NOTE this is only needed if you need refresh tokens down the line
-      refreshTokenExpiresAt: token.refreshTokenExpiresAt,
-      client: client,
-      user: user,
-    }
-    tokens.push(tokenConf);
+  saveToken: async (token: Token, client: Client, user: User) => {
+    db.accessTokens.push({ ...token, user, client });
+    return { ...token, user, client };
+  },
 
-    return tokenConf;
-  }
-  
-}
+  saveAuthorizationCode: async (code: AuthorizationCode, client: Client, user: User) => {
+    db.authorizationCodes.push({ ...code, user, client });
+    return { ...code, user, client };
+  },
+
+  getAuthorizationCode: async (authorizationCode: string) => {
+    const authCode = db.authorizationCodes.find((c) => c.code === authorizationCode);
+    if (!authCode) return Promise.resolve(null);
+    const response: AuthorizationCode = {
+      authorizationCode: authCode.authorizationCode,
+      expiresAt: authCode.expiresAt,
+      redirectUri: authCode.redirectUri,
+      client: { id: authCode.client.id, grants:["authorization_code", "refresh_token"] },
+      user:  { id: authCode.user.id }
+  } 
+    return Promise.resolve(response);
+  },
+
+  revokeAuthorizationCode: async (code: AuthorizationCode) => {
+    db.authorizationCodes = db.authorizationCodes.filter((c) => c.code !== code.code);
+    return true;
+  },
+
+  getAccessToken: async (accessToken: string) => {
+    const token = db.accessTokens.find((t) => t.accessToken === accessToken);
+    if (!token) return null;
+    const response: Token  ={
+      ...token,
+      user: { id: token.user.id },
+      client: { id: token.client.id, grants:["authorization_code", "refresh_token"] },
+    };
+    return response;
+  },
+
+  revokeToken: async (token: Token) => {
+    db.accessTokens = db.accessTokens.filter((t) => t.accessToken !== token.accessToken);
+    return true;
+  },
+
+  validateScope: async (user: User, client: Client, scope: string | string[]) => {
+    // For the purpose of this example, we'll allow any scope.
+    return '';
+  },
+
+  verifyScope: async (token: Token, scope: string | string[]) => {
+    // For the purpose of this example, we'll allow any scope.
+    return true;
+  },
+};
+
+export default model;

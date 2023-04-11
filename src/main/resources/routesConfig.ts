@@ -2,6 +2,7 @@ import middlewares from '../middlewares';
 import commonMiddlewares from '../../shared/middlewares';
 import controllers from '../controllers';
 
+
 export default [
   {
     path: 'oauth',
@@ -10,8 +11,16 @@ export default [
         path: 'authorize',
         method: 'POST',
         middlewares: [
-          commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.post' }),
-          controllers.get('auth:read')?.handler({}),
+          commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.read' }),
+          controllers.get('auth:read')?.handler({})
+        ],
+      },
+      {
+        path: 'token',
+        method: 'POST',
+        middlewares: [
+          commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.token' }),
+          controllers.get('auth:token')?.handler({})
         ],
       }
     ]

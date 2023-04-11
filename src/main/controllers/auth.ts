@@ -1,30 +1,30 @@
 import { NextFunction, Request, Response } from 'express';
-import {oauthServer} from './../auth/auth'
+import { oauthServer } from './../auth/auth'
+
+import model from './../auth/model'
 export default {
   name: 'auth:read',
   handler: () => async (request: Request, response: Response, next: NextFunction) => {
     const { username, password } = request.body
-    if (username === 'username' && password === 'password') {
-      request.body.user = { user: 1 }
-       oauthServer.authorize({
-        authenticateHandler: {
-          handle: (request: Request) => {
-            console.log("in handler")
-            return request.body.user
+    const user = await model.getUser(username, password)
+    if (user) {
+      request.body.user = user
+      console.log(user)
+      try {
+        
+      } catch (error) {
+        
+      }
+   return oauthServer.authorize(
+        {
+          authenticateHandler: {
+            handle: (request: Request) => {
+              return request.body.user
+            }
           }
         }
-      })
-    } else {
-      const params = [
-        'client_id',
-        'redirect_uri',
-        'response_type',
-        'grant_type',
-        'state',
-      ]
-        .map(a => `${a}=${request.body[a]}`)
-        .join('&')
-      return response.redirect(`/oauth?success=false&${params}`)
+       )(request, response, next)
     }
+   
   },
 };
