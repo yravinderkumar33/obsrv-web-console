@@ -7,6 +7,7 @@ import {
 import MainCard from 'components/MainCard';
 import { useSelector } from 'react-redux';
 import * as _ from "lodash";
+import { WarningOutlined } from '@ant-design/icons';
 
 const Preview = () => {
     const wizardState: any = useSelector((state: any) => state?.wizard);
@@ -59,7 +60,7 @@ const Preview = () => {
                 {dedupeOptionConfig && dedupeOptionTable()}
             </MainCard >
         );
-    else return (<Alert color="info">No information to display</Alert>);
+    else return (<Alert color="info" icon={<WarningOutlined />}>No information to display</Alert>);
 }
 
 export default Preview;
