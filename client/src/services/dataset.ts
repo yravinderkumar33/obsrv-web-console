@@ -118,23 +118,27 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
     return axios.post(apiEndpoints.generateIngestionSpec, payload, config);
 }
 
-// const saveConnectorInfo = async () => {
-//     const { id, type, ...rest }: any = childFormValue;
-//     const payload = {
-//         id: uuid,
-//         dataset_id: configState.id,
-//         connector_type: type,
-//         connector_config: { ...rest },
-//     }
-//     let data;
-//     if (existingState && existingState.value?.id) data = await updateTransformations(payload);
-//     else data = await saveConnectorDraft(payload);
+export const saveTransformations = async (payload: any) => {
+    return axios.post(`${apiEndpoints.transformationsConfig}`, payload);
+}
 
-//     if (data.data) return null;
-//     else dispatch(error({ message: "Error occured saving the connector config" }));
-// }
+const connectorInfoToDraft = async (state: Record<string, any>) => {
+    const data = _.get(state, ['pages', 'dataSource', 'value']);
+    const datasetId = _.get(state, ['pages', 'datasetConfiguration', 'state', 'config', 'id']);
+    if (datasetId && data && _.has(data, 'type')) {
+        const { id, type, ...rest }: any = data;
+        const payload = {
+            id: id,
+            dataset_id: datasetId,
+            connector_type: type,
+            connector_config: { ...rest },
+        }
+        return saveTransformations(payload);
+    } else return false;
+}
 
 export const publishDataset = async (state: Record<string, any>) => {
+    await connectorInfoToDraft(state);
     const jsonSchema = _.get(state, 'pages.jsonSchema');
     const updatePayload = { schema: _.get(state, 'pages.columns.state.schema') };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
@@ -176,10 +180,6 @@ export const uploadToUrl = async (url: string, file: any) => {
 
 export const saveConnectorDraft = async (payload: any) => {
     return axios.post(`${apiEndpoints.datasetSourceConfig}`, payload);
-}
-
-export const saveTransformations = async (payload: any) => {
-    return axios.post(`${apiEndpoints.transformationsConfig}`, payload);
 }
 
 export const updateTransformations = async (payload: any) => {
