@@ -8,9 +8,6 @@ import config from 'data/initialConfig';
 import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
-import { v4 } from "uuid";
-import { saveConnectorDraft, updateTransformations } from "services/dataset";
-import { error } from "services/toaster";
 const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
@@ -20,7 +17,6 @@ const ConditionalCheckboxForm = (props: any) => {
     const onSubmission = (value: any) => { };
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || ({}));
     const [childFormValue, setChildFormValues] = useState<any>({});
-    const uuid = useMemo(() => existingState && existingState.value?.id || v4(), [existingState]);
     const configState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'config']));
 
     const filterPredicate = (field: any) => {
@@ -47,32 +43,10 @@ const ConditionalCheckboxForm = (props: any) => {
 
     const persist = () => {
         const formFieldSelection = _.get(formValues, [name]);
-        persistState({ formFieldSelection, value: { id: uuid, ...childFormValue } });
+        persistState({ formFieldSelection, value: { ...childFormValue } });
     }
-
-    const saveConnectorInfo = async () => {
-        const { id, type, ...rest }: any = childFormValue;
-        const payload = {
-            id: uuid,
-            dataset_id: configState.id,
-            connector_type: type,
-            connector_config: { ...rest },
-        }
-        let data;
-        if (existingState && existingState.value?.id) data = await updateTransformations(payload);
-        else data = await saveConnectorDraft(payload);
-
-        if (data.data) return null;
-        else dispatch(error({ message: "Error occured saving the connector config" }));
-    }
-
-    const saveDebounced = _.debounce(saveConnectorInfo, 1000);
 
     useEffect(() => {
-        if (_.difference(['type', 'topic', 'kafkaBrokers'], Object.keys(childFormValue)).length === 0 &&
-            _.values(childFormValue).some(x => x !== '')
-        )
-            saveDebounced();
         persist();
     }, [formValues, childFormValue]);
 

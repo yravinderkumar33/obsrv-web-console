@@ -89,6 +89,22 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
     return axios.post(apiEndpoints.generateIngestionSpec, payload, config);
 }
 
+// const saveConnectorInfo = async () => {
+//     const { id, type, ...rest }: any = childFormValue;
+//     const payload = {
+//         id: uuid,
+//         dataset_id: configState.id,
+//         connector_type: type,
+//         connector_config: { ...rest },
+//     }
+//     let data;
+//     if (existingState && existingState.value?.id) data = await updateTransformations(payload);
+//     else data = await saveConnectorDraft(payload);
+
+//     if (data.data) return null;
+//     else dispatch(error({ message: "Error occured saving the connector config" }));
+// }
+
 export const publishDataset = async (jsonSchema: Record<string, any>, wizardState: Record<string, any>) => {
     const updatePayload = { schema: wizardState?.pages?.columns?.state?.schema };
     const schema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
