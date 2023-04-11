@@ -64,7 +64,7 @@ const Preview = () => {
                 {allTransformations.length > 0 && renderTable()}
             </MainCard >
         );
-    else return (<Alert color="info" icon={<WarningOutlined />}>No information to display</Alert>);
+    else return (<Alert color="error" icon={<WarningOutlined />}>No information to display</Alert>);
 }
 
 export default Preview;

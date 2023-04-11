@@ -3,7 +3,6 @@ import MainCard from 'components/MainCard';
 import { useSelector } from 'react-redux';
 import * as _ from "lodash";
 import DataSourcePreview from "./dataSourceConfig";
-import DataFormatPreview from "./dataFormatConfig";
 import FieldsPreview from "./fieldsConfig";
 import ProcessingPreview from "./processingConfig";
 import AdvancedPreview from "./advancedConfig";
@@ -57,9 +56,7 @@ export const sections: any = [
         title: 'Inputs',
         description: 'Details about input configuration',
         master: true,
-        component: <>
-            <DataSourcePreview />
-            <DataFormatPreview /></>,
+        component: <DataSourcePreview />,
         navigation: {
             next: 'fieldsConfig',
         }
