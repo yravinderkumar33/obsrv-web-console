@@ -52,16 +52,16 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails sx={{ p: 1, maxHeight: 270, overflow: 'auto' }}>
-                            {_.map(flattenedData, payload => {
+                            {_.map(flattenedData, (payload, index) => {
                                 let resolved = payload.resolved ? payload.resolved : false;
                                 if (_.has(payload, 'suggestions')) {
                                     return (
-                                        <Stack direction="column" mb={0.5}>
+                                        <Stack key={index} direction="column" mb={0.5}>
                                             {
                                                 _.map(payload.suggestions, suggestion => {
                                                     if (suggestion.severity === 'MUST-FIX' && resolved)
                                                         return (
-                                                            <Grid item xs={12} mx={1} my={0.5}>
+                                                            <Grid key={Math.random()} item xs={12} mx={1} my={0.5}>
                                                                 <Alert color="success" icon={<CheckCircleOutlined />}>
                                                                     <Typography>{suggestion.message}</Typography>
                                                                     <Typography>{suggestion.advice}</Typography>
@@ -69,7 +69,7 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                                             </Grid>
                                                         );
                                                     else if (suggestion.severity === 'MUST-FIX' && !resolved) return (
-                                                        <Grid item xs={12} mx={1} my={0.5}>
+                                                        <Grid key={Math.random()} item xs={12} mx={1} my={0.5}>
                                                             <Alert color="warning" icon={<WarningOutlined />}>
                                                                 <Typography>{suggestion.message}</Typography>
                                                                 <Typography>{suggestion.advice}</Typography>
@@ -77,7 +77,7 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                                         </Grid>
                                                     )
                                                     else return (
-                                                        <Grid item xs={12} mx={1} my={0.5}>
+                                                        <Grid key={Math.random()} item xs={12} mx={1} my={0.5}>
                                                             <Alert color="info" icon={<InfoCircleOutlined />}>
                                                                 <Typography>{suggestion.message}</Typography>
                                                                 <Typography>{suggestion.advice}</Typography>

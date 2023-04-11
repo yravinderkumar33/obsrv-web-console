@@ -83,7 +83,7 @@ const ConditionalCheckboxForm = (props: any) => {
             if (!metadata) return null;
             const { form, description, component, value: type, ...rest } = metadata;
             return <>
-                {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
+                {description && <Grid key={Math.random()} item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
                 {form && (
                     <Grid item sm={12}>
                         <MUIForm

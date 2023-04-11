@@ -51,7 +51,6 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
     const [errorIndex, setErrorIndex] = useState<number | null>(null);
 
     const dispatch = useDispatch();
-    const wizardState = useSelector((state: any) => _.get(state, 'masterWizard'));
 
     const handleNext = () => {
         setActiveStep(activeStep + 1);
@@ -97,7 +96,7 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
                     labelProps.error = true;
                 }
                 return (
-                    <Step key={label} onClick={() => setActiveStep(index)}>
+                    <Step key={Math.random()} onClick={() => setActiveStep(index)}>
                         <StepLabel {...labelProps}>{label}</StepLabel>
                     </Step>
                 );
@@ -113,7 +112,7 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
                     labelProps.error = true;
                 }
                 return (
-                    <Step key={label} onClick={() => setActiveStep(index)}>
+                    <Step key={Math.random()} onClick={() => setActiveStep(index)}>
                         <StepLabel {...labelProps}>{label}</StepLabel>
                     </Step>
                 );
