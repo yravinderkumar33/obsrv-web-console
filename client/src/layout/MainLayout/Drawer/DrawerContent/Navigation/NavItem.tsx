@@ -39,7 +39,7 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
         onClick?: () => void;
     } = {
         component: forwardRef((props, ref) => <Link {...props} to={item.url!} target={itemTarget} />),
-        onClick: () => handleDrawerToggle()
+        onClick: () => {}
     };
     if (item?.external) {
         listItemProps = { component: 'a', href: item.url, target: itemTarget };
