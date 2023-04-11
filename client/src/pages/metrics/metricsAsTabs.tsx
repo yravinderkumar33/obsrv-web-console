@@ -30,7 +30,7 @@ const MetricsPanel = () => {
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
-        scrollToTabSection();
+        // scrollToTabSection();
     };
 
     return (

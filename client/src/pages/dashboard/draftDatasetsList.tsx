@@ -124,7 +124,7 @@ const DraftDatasetsList = ({ datasets }: any) => {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
-                            <IconButton color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}`)}>
+                            <IconButton color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master"}`)}>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

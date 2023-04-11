@@ -8,6 +8,7 @@ import ListColumns from './ListColumns';
 import Review from './Review';
 import * as _ from 'lodash';
 import SectionConfiguration from './components/SectionConfiguration';
+import { fetchDatasetsThunk } from 'store/middlewares';
 
 const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Advanced', 'Review'];
 const masterSteps = ['Schema', 'Ingestion', 'Review'];
@@ -19,6 +20,8 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
                 return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} edit={edit} master={master} />;
             case 1:
                 return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} section="input" edit={edit} master={master} />
+            case 2:
+                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} />
             default:
                 throw new Error('Unknown step');
         }
@@ -42,7 +45,7 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
     }
 };
 
-const DatasetOnboarding = ({ edit = false, master = false }) => {
+const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }) => {
     const [activeStep, setActiveStep] = useState(0);
     const [showWizard, setShowWizard] = useState(false);
     const [errorIndex, setErrorIndex] = useState<number | null>(null);
@@ -64,6 +67,7 @@ const DatasetOnboarding = ({ edit = false, master = false }) => {
     };
 
     useEffect(() => {
+        dispatch(fetchDatasetsThunk({ data: { filters: [] } }));
         if (edit) { setShowWizard(true) }
         return () => {
             dispatch(reset({}));
@@ -131,7 +135,7 @@ const DatasetOnboarding = ({ edit = false, master = false }) => {
                         </Button>
                     </Box>
                 }>
-                {!showWizard && <DatasetConfiguration setShowWizard={setShowWizard} datasetType={master ? "master" : "dataset"} />}
+                {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master" : "dataset"} />}
                 {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
             </MainCard >
         </Box>
