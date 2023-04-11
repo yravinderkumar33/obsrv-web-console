@@ -18,7 +18,6 @@ const displayColumns = [
 const Preview = () => {
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const timestampCol: any = _.get(wizardState, ['pages', 'timestamp', 'indexCol']);
-    console.log(timestampCol);
     const piiFields: any = _.get(wizardState, ['pages', 'pii', 'selection']) || [];
     const transformationFields: any = _.get(wizardState, ['pages', 'transformation', 'selection']) || [];
     const additionalFields: any = _.get(wizardState, ['pages', 'additionalFields', 'selection']) || [];
