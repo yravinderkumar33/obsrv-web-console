@@ -47,6 +47,7 @@ export const sections: any = [
         title: 'Schema',
         description: 'Details about schema configuration',
         component: <DatasetPreview />,
+        master: true,
         navigation: {
             next: 'inputConfig',
         }
@@ -55,6 +56,7 @@ export const sections: any = [
         id: 'inputConfig',
         title: 'Inputs',
         description: 'Details about input configuration',
+        master: true,
         component: <>
             <DataSourcePreview />
             <DataFormatPreview /></>,

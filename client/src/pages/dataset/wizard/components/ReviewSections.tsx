@@ -6,10 +6,16 @@ import { IWizard } from 'types/formWizard';
 import FieldSection from './FieldSection';
 import { reviewSections as allSections } from 'data/review';
 
-const ReviewSections = ({ section }: any) => {
+const ReviewSections = ({ section, master }: any) => {
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const [expanded, setExpanded] = useState<string | false>(false);
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => { setExpanded(isExpanded ? panel : false) };
+    
+    let sections = allSections;
+    
+    if (master) {
+        sections = _.filter(sections, ['master', true]);
+    }
 
     const renderSection = (sectionData: Record<string, any>, section: any) => {
         return (
@@ -25,7 +31,7 @@ const ReviewSections = ({ section }: any) => {
 
     return <>
         <Grid container>
-            <Grid item xs={12}>{allSections.map(renderSection)}</Grid>
+            <Grid item xs={12}>{sections.map(renderSection)}</Grid>
         </Grid>
     </>;
 };

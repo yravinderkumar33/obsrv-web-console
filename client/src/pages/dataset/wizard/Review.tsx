@@ -15,7 +15,7 @@ import ReactDiffViewer from "react-diff-viewer";
 import ReactTable from 'components/react-table';
 import ReviewSections from './components/ReviewSections';
 
-const Final = ({ handleNext, handleBack, index }: any) => {
+const Final = ({ handleNext, handleBack, index, master }: any) => {
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -58,7 +58,7 @@ const Final = ({ handleNext, handleBack, index }: any) => {
         <>
             <Grid container spacing={1}>
                 <Grid item xs={12}>
-                    <ReviewSections section="wizard" />
+                    <ReviewSections section="wizard" master={master} />
                 </Grid>
                 <Grid item xs={12}>
                     {previewJson &&
