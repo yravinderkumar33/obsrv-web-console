@@ -11,7 +11,7 @@ import { error } from 'services/toaster';
 const { spacing } = config;
 
 const FieldSection = (props: any) => {
-    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, ...rest } = props;
+    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, master, noMasterNav, ...rest } = props;
     const theme = useTheme();
     const open = (id === expanded);
     const clientState: any = useSelector((state: any) => state?.wizard);
@@ -32,6 +32,7 @@ const FieldSection = (props: any) => {
 
     const renderNavigation = () => {
         if (!navigation) return null;
+        if (master && noMasterNav) return null;
         return <Grid item xs={12}>
             <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
                 {navigation?.next && <Button variant="outlined" endIcon={<ArrowRightOutlined />} onClick={_ => navigate()}>{_.startCase(navigation.next)}</Button>}

@@ -33,7 +33,11 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                     <Form>
                         <Grid container spacing={3} alignItems="baseline">
                             {fields.map((field: any) => {
-                                const { name, tooltip = '', label, type, selectOptions, required = false, dependsOn = null, disabled = false, multiple = false, } = field;
+                                const {
+                                    name, tooltip = '', label, type, dependsOn = null,
+                                    selectOptions, required = false, helperText = '',
+                                    disabled = false, multiple = false,
+                                } = field;
 
                                 if (dependsOn) {
                                     const { key, value } = dependsOn;
@@ -56,6 +60,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                                 variant="outlined"
                                                                 fullWidth
                                                                 autoComplete="off"
+                                                                helperText={helperText && helperText || field.helperText}
                                                                 {...field}
                                                             />
                                                         </Tooltip>

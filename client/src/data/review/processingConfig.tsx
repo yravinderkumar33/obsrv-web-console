@@ -1,8 +1,7 @@
 import {
-    Box, ToggleButton, Table, TableBody,
+    Box, Chip, Table, TableBody,
     TableCell, TableContainer, TableHead,
-    TableRow, ToggleButtonGroup, Typography,
-    Alert
+    TableRow, Typography, Alert
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { useSelector } from 'react-redux';
@@ -15,18 +14,14 @@ const Preview = () => {
     const dedupeConfig: any = _.get(wizardState, ['pages', 'dedupe', 'questionSelection', 'dedupeEvents']);
     const dedupeOptionConfig: any = _.get(wizardState, ['pages', 'dedupe', 'optionSelection']);
 
-    const dataValidationBox = () => <Box display="flex" alignItems="center">
+    const dataValidationBox = () => <Box display="flex" alignItems="center" p={1}>
         <Typography ml={2}>Data Validation - </Typography>
-        <ToggleButtonGroup sx={{ mx: 1, my: 1 }} color='success' value={dataValidation}>
-            <ToggleButton value={dataValidation} key={dataValidation}>{dataValidation}</ToggleButton>
-        </ToggleButtonGroup>
+        <Chip size='medium' label={_.capitalize(dataValidation)} sx={{ mx: 0.5 }} color="success" variant="filled" />
     </Box>;
 
     const dedupeBox = () => <Box display="flex" alignItems="center">
         <Typography ml={2}>Dedupe Events - </Typography>
-        <ToggleButtonGroup sx={{ mx: 1, my: 1 }} color='success' value={dedupeConfig}>
-            <ToggleButton value={dedupeConfig} key={dedupeConfig}>{dedupeConfig}</ToggleButton>
-        </ToggleButtonGroup>
+        <Chip size='medium' label={_.capitalize(dedupeConfig)} sx={{ mx: 0.5 }} color="success" variant="filled" />
     </Box>;
 
     const dedupeOptionTable = () => <TableContainer>

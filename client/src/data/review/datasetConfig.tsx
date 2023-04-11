@@ -30,7 +30,7 @@ const DatasetPreview = () => {
                                 {datasetConfig.name}
                             </TableCell>
                             <TableCell>
-                                {datasetConfig.id}
+                                {datasetConfig.dataset_id}
                             </TableCell>
                         </TableRow>
                     </TableBody>
@@ -57,6 +57,7 @@ export const sections: any = [
         description: 'Details about input configuration',
         master: true,
         component: <DataSourcePreview />,
+        noMasterNav: true,
         navigation: {
             next: 'fieldsConfig',
         }

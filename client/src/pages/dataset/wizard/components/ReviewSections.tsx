@@ -10,9 +10,9 @@ const ReviewSections = ({ section, master }: any) => {
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const [expanded, setExpanded] = useState<string | false>(false);
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => { setExpanded(isExpanded ? panel : false) };
-    
+
     let sections = allSections;
-    
+
     if (master) {
         sections = _.filter(sections, ['master', true]);
     }
@@ -25,6 +25,7 @@ const ReviewSections = ({ section, master }: any) => {
                 handleChange={handleChange}
                 {...sectionData}
                 section={section}
+                master={master}
             />
         );
     }

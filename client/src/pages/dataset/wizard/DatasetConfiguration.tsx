@@ -27,7 +27,7 @@ const validationSchema = yup.object()
     .shape({
         name: yup.string().required('Dataset Name is required')
             .min(4, 'Minimum of 4 characters are required').max(30, 'Maximum of 30 characters are allowed'),
-        id: yup.string().required('Dataset ID is Required')
+        dataset_id: yup.string().required('Dataset ID is Required')
             .min(4, 'Minimum of 4 characters are required')
             .max(30, 'Maximum of 30 characters are allowed')
             .test('checkDuplID', 'ID is already taken', async (value: any) =>
@@ -46,7 +46,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const { data: dataState, files: filesState, config: configState } = pageData?.state || {};
     const [data, setData] = useState(dataState);
     const [files, setFiles] = useState(filesState);
-    const initialValues = pageData?.state?.config || { name: '', id: '' };
+    const initialValues = pageData?.state?.config || { name: '', dataset_id: '' };
 
     useEffect(() => {
         return () => {
@@ -130,7 +130,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                                 onBlur={handleBlur}
                                                 onChange={(
                                                     e: React.ChangeEvent<HTMLInputElement>) =>
-                                                    handleNameChange(e, setFieldValue, 'id', 'name')
+                                                    handleNameChange(e, setFieldValue, 'dataset_id', 'name')
                                                 }
                                                 required
                                                 value={values.name}
@@ -144,7 +144,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                     <Grid item xs={12} sm={6} lg={6}>
                                         <HtmlTooltip title="ID for the dataset - for querying" arrow placement='top-start'>
                                             <TextField
-                                                name={'id'}
+                                                name={'dataset_id'}
                                                 label={'Dataset ID'}
                                                 onBlur={handleBlur}
                                                 onChange={(
@@ -152,11 +152,11 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                                     handleChange(e)
                                                 }
                                                 required
-                                                value={values.id}
+                                                value={values.dataset_id}
                                                 variant="outlined"
                                                 fullWidth
-                                                error={Boolean(errors.id)}
-                                                helperText={touched.id && errors.id && String(errors.id)}
+                                                error={Boolean(errors.dataset_id)}
+                                                helperText={touched.dataset_id && errors.dataset_id && String(errors.dataset_id)}
                                             />
                                         </HtmlTooltip>
                                     </Grid>

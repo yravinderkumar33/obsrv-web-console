@@ -117,7 +117,7 @@ const RollupConfiguration = (props: any) => {
             <Grid item xs={12}> {_.get(selection, 'length') ? renderSelectionTable() : null}</Grid>
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="row">
-                    <Box><Button variant="contained" onClick={_ => setDialogOpen(true)}>Add New Rollup</Button> </Box>
+                    <Box><Button variant="outlined" onClick={_ => setDialogOpen(true)}>Add New Rollup</Button> </Box>
                 </Stack>
             </Grid>
             <Grid item xs={12}>

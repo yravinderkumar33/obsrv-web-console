@@ -21,7 +21,7 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
             case 1:
                 return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} section="input" edit={edit} master={master} />
             case 2:
-                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} master={master}/>
+                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} master={master} />
             default:
                 throw new Error('Unknown step');
         }
@@ -66,7 +66,7 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
     };
 
     useEffect(() => {
-        dispatch(fetchDatasetsThunk({ data: { filters: [] } }));
+        dispatch(fetchDatasetsThunk({ data: { filters: {} } }));
         if (edit) { setShowWizard(true) }
         return () => {
             dispatch(reset({}));

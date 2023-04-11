@@ -6,7 +6,7 @@ export const kafkaForm = [
         label: "Kafka Topic Name",
         tooltip: "Name of the kafka topic where raw data is stored",
         type: 'text',
-        required: true
+        required: true,
     },
     {
         name: "kafkaBrokers",

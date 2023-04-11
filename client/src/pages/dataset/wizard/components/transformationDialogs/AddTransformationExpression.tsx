@@ -44,7 +44,7 @@ const AddTransformationExpression = (props: any) => {
             label: "Select Transformation",
             type: 'radio',
             required: true,
-            selectOptions: actions
+            selectOptions: actions,
         },
         {
             name: "expression",
@@ -54,7 +54,10 @@ const AddTransformationExpression = (props: any) => {
                 key: "transformation",
                 value: "custom"
             },
-            required: true
+            required: true,
+            helperText: <>
+                Ex: $sum(Product.(Price * Quantity)) <br /> FirstName & " " & Surname
+            </>,
         }
     ];
 

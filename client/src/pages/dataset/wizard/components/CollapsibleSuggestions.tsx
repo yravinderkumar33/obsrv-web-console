@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import {
     Grid, Box, Stack, Typography,
     Accordion, Alert, AccordionDetails,
-    Paper, Collapse, AccordionSummary, Button,
+    Paper, Collapse, AccordionSummary, Chip,
 } from '@mui/material';
 import { CheckCircleOutlined, InfoCircleOutlined, WarningOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
@@ -11,9 +11,10 @@ interface Props {
     flattenedData: Array<Record<string, any>>;
     showSuggestions: boolean;
     setRequiredFilter: React.Dispatch<React.SetStateAction<string>>;
+    requiredFilter: string;
 }
 
-const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setRequiredFilter }: Props) => {
+const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setRequiredFilter, requiredFilter, }: Props) => {
 
     const getSuggestionCount = useMemo(() => {
         let count = 0;
@@ -70,7 +71,7 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                                         );
                                                     else if (suggestion.severity === 'MUST-FIX' && !resolved) return (
                                                         <Grid key={Math.random()} item xs={12} mx={1} my={0.5}>
-                                                            <Alert color="warning" icon={<WarningOutlined />}>
+                                                            <Alert color="error" icon={<WarningOutlined />}>
                                                                 <Typography>{suggestion.message}</Typography>
                                                                 <Typography>{suggestion.advice}</Typography>
                                                             </Alert>
@@ -101,21 +102,31 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                         </AccordionSummary>
                         <AccordionDetails>
                             <Stack direction="column">
-                                <Box display="flex" alignItems="center">
+                                <Box display="flex" alignItems="center" my={1}>
                                     <Typography>
                                         {`${formatNumber(getRequiredFields.requiredCount)}/${formatNumber(getRequiredFields.totalCount)}`} are marked as required
                                     </Typography>
-                                    <Typography mx={6} component={Button} onClick={() => setRequiredFilter("true")} sx={{ textTransform: 'unset' }}>
-                                        Review all fields marked as required
-                                    </Typography>
+                                    <Chip
+                                        onDelete={requiredFilter === "true" ? () => setRequiredFilter('') : undefined}
+                                        onClick={() => setRequiredFilter("true")}
+                                        label={'Review all fields marked as required'}
+                                        sx={{ mx: 2 }}
+                                        variant="outlined"
+                                        color="success"
+                                    />
                                 </Box>
-                                <Box display="flex" alignItems="center">
+                                <Box display="flex" alignItems="center" my={1}>
                                     <Typography>
                                         {`${formatNumber(getRequiredFields.notRequiredCount)}/${formatNumber(getRequiredFields.totalCount)}`} are marked as optional
                                     </Typography>
-                                    <Typography component={Button} onClick={() => setRequiredFilter("false")} mx={6} sx={{ textTransform: 'unset' }}>
-                                        Review all fields marked as optional
-                                    </Typography>
+                                    <Chip
+                                        onDelete={requiredFilter === "false" ? () => setRequiredFilter('') : undefined}
+                                        onClick={() => setRequiredFilter("false")}
+                                        label={'Review all fields marked as optional'}
+                                        sx={{ mx: 2 }}
+                                        variant="outlined"
+                                        color="success"
+                                    />
                                 </Box>
                             </Stack>
                         </AccordionDetails>

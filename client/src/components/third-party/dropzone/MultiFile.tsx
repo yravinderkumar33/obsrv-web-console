@@ -114,9 +114,9 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                     <Button color="inherit" size="small" onClick={onRemoveAll}>
                         Remove all
                     </Button>
-                    <Button size="small" variant="contained" onClick={() => onUpload(files)}>
+                    {/* <Button size="small" variant="contained" onClick={() => onUpload(files)}>
                         Upload files
-                    </Button>
+                    </Button> */}
                 </Stack>
             )}
         </>

@@ -1,8 +1,7 @@
 import {
-    Box, ToggleButton, Table, TableBody,
+    Box, Table, TableBody, Chip,
     TableCell, TableContainer, TableHead,
-    TableRow, ToggleButtonGroup, Typography,
-    Alert
+    TableRow, Typography, Alert
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { useSelector } from 'react-redux';
@@ -23,11 +22,9 @@ const Preview = () => {
     const additionalFields: any = _.get(wizardState, ['pages', 'additionalFields', 'selection']) || [];
     const allTransformations = [...piiFields, ...transformationFields, ...additionalFields];
 
-    const timestampField = () => <Box display="flex" alignItems="center">
+    const timestampField = () => <Box display="flex" alignItems="center" p={1}>
         <Typography ml={2}>Timestamp Column - {' '}</Typography>
-        <ToggleButtonGroup sx={{ mx: 1, my: 1 }} color='success' value={timestampCol}>
-            <ToggleButton value={timestampCol} key={timestampCol}>{timestampCol}</ToggleButton>
-        </ToggleButtonGroup>
+        <Chip size='medium' label={_.capitalize(timestampCol)} sx={{ mx: 0.5 }} color="success" variant="filled" />
     </Box>;
 
     const renderTable = () => <TableContainer>

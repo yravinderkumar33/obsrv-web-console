@@ -1,8 +1,9 @@
 import * as _ from 'lodash';
 import axios from 'axios';
-import { flattenSchema, updateJSONSchema } from './json-schema';
+import { updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
+import { v4 } from "uuid";
 
 export const createDraftDataset = ({ data = {}, config }: any) => {
     return axios.post(apiEndpoints.saveDatset, data, config);
@@ -38,7 +39,7 @@ export const prepareConfigurationsBySection = (payload: Record<string, any>[], m
     }, {})
 }
 
-export const saveDataset = ({ data = {}, config }: any) => {
+export const saveDataset = ({ data = {}, config, master }: any) => {
     const { schema, state } = data;
     const validate = _.get(state, 'pages.dataValidation.formFieldSelection') || {};
     const extractionConfig = _.get(state, 'pages.dataFormat.value');
@@ -67,12 +68,14 @@ export const saveDataset = ({ data = {}, config }: any) => {
         drop_duplicates: true
     }
 
-    const router_config = datasourceConfig;
-    const dataset_config = {}
-    const denorm_config = {}
+    const router_config = {
+        "topic": _.get(state, 'pages.datasetConfiguration.state.config.dataset_id'),
+    };
+    const dataset_config = {};
+    const denorm_config = {};
 
     const payload = {
-        "id": _.get(state, 'pages.datasetConfiguration.state.config.id'),
+        "dataset_id": _.get(state, 'pages.datasetConfiguration.state.config.dataset_id'),
         "name": _.get(state, 'pages.datasetConfiguration.state.config.name'),
         "data_schema": schema,
         "status": "READY_FOR_PUBLISH",
@@ -98,10 +101,9 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
         schema,
         config: {
             "dataset": _.get(state, 'pages.datasetConfiguration.state.config.name'),
-            "indexCol": _.get(state, 'pages.timestamp.indexCol'),
+            "indexCol": _.get(state, 'pages.timestamp.indexCol') || "syncts",
             "granularitySpec": {
                 "segmentGranularity": 'DAY',
-                "queryGranularity": 'HOUR',
                 "rollup": false
             },
             "tuningConfig": {
@@ -109,9 +111,9 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
                 "taskCount": 1
             },
             "ioConfig": {
-                "topic": "dev.transform",
+                "topic": _.get(state, 'pages.datasetConfiguration.state.config.dataset_id'),
                 "bootstrap": "kafka-headless.kafka.svc.cluster.local:9092",
-                "taskDuration": "PT8H"
+                "taskDuration": "PT1H",
             }
         }
     };
@@ -122,29 +124,32 @@ export const saveTransformations = async (payload: any) => {
     return axios.post(`${apiEndpoints.transformationsConfig}`, payload);
 }
 
-const connectorInfoToDraft = async (state: Record<string, any>) => {
+const connectorInfoToDraft = async (state: Record<string, any>, master: any) => {
     const data = _.get(state, ['pages', 'dataSource', 'value']);
-    const datasetId = _.get(state, ['pages', 'datasetConfiguration', 'state', 'config', 'id']);
+    const datasetId = _.get(state, ['pages', 'datasetConfiguration', 'state', 'config', 'dataset_id']);
+    const idData = _.get(state, ['dataset', 'data']);
+    const id = idData.find((obj: any) => obj.dataset_id === datasetId);
     if (datasetId && data && _.has(data, 'type')) {
-        const { id, type, ...rest }: any = data;
+        const { type, ...rest }: any = data;
         const payload = {
-            id: id,
-            dataset_id: datasetId,
+            id: v4(),
+            dataset_id: id.id,
             connector_type: type,
             connector_config: { ...rest },
+            type: master ? 'master' : 'dataset',
         }
-        return saveTransformations(payload);
+        return saveConnectorDraft(payload);
     } else return false;
 }
 
-export const publishDataset = async (state: Record<string, any>) => {
-    await connectorInfoToDraft(state);
+export const publishDataset = async (state: Record<string, any>, storeState: any, master: any) => {
+    await connectorInfoToDraft(storeState, master);
     const jsonSchema = _.get(state, 'pages.jsonSchema');
     const updatePayload = { schema: _.get(state, 'pages.columns.state.schema') };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
     const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedJsonSchema, state }, config: {} });
-    const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state } });
-    return saveDatasource({ data: { state, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
+    const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
+    return saveDatasource({ data: { state, storeState, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
 }
 
 

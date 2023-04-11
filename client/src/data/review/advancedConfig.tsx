@@ -1,6 +1,6 @@
 import {
     Table, TableBody, TableCell, TableContainer,
-    TableHead, TableRow, Alert
+    TableHead, TableRow, Alert, Chip,
 } from '@mui/material'; import MainCard from 'components/MainCard';
 import { useSelector } from 'react-redux';
 import * as _ from "lodash";
@@ -41,7 +41,7 @@ const Preview = () => {
             <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
-                        {rollupConfig.map((item: any) => (
+                        {rollupConfig.slice(0, 1).map((item: any) => (
                             Object.keys(item).map((keyName: any) => (
                                 <TableCell key={keyName}>
                                     {_.capitalize(keyName)}
@@ -52,9 +52,19 @@ const Preview = () => {
                 <TableBody>
                     {rollupConfig.map((item: any) => (
                         <TableRow>
-                            {Object.values(item).map((keyName: any) => (
-                                <TableCell key={keyName}>
-                                    {_.capitalize(keyName)}
+                            {Object.values(item).map((value: any) => (
+                                <TableCell key={value}>
+                                    {Array.isArray(value) ? (
+                                        value.map((child: any) =>
+                                            <Chip
+                                                sx={{ m: 0.5 }}
+                                                label={child.label}
+                                                key={child}
+                                                variant="outlined"
+                                                color="info"
+                                            />
+                                        )
+                                    ) : value}
                                 </TableCell>
                             ))}
                         </TableRow>

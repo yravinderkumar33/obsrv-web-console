@@ -101,7 +101,7 @@ const InputAccordion = (props: any) => {
             <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>
             {renderTable()}
             <Grid item xs={12}>
-                <Button variant="contained" onClick={_ => setDialogOpen(true)} >{label}</Button>
+                <Button variant="outlined" onClick={_ => setDialogOpen(true)} >{label}</Button>
             </Grid>
             <Grid item xs={12}>
                 <Dialog open={dialogOpen} onClose={_ => setDialogOpen(false)} aria-labelledby={title} aria-describedby={title}>

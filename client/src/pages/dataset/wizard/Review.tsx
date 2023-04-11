@@ -1,30 +1,35 @@
 import * as _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    Button, Paper, Grid, Stack, Typography,
-    Accordion, AccordionSummary, AccordionDetails,
+    Button, Box, Grid, Stack, Typography
 } from '@mui/material';
 import { publishDataset } from 'services/dataset';
 import { error, success } from 'services/toaster';
 import { fetchDatasetsThunk } from 'store/middlewares';
 import { useNavigate } from 'react-router';
-import JSONata from 'jsonata';
 import AnimateButton from 'components/@extended/AnimateButton';
-import { useEffect, useState } from 'react';
-import ReactDiffViewer from "react-diff-viewer";
-import ReactTable from 'components/react-table';
 import ReviewSections from './components/ReviewSections';
+import IconButtonWithTips from 'components/IconButtonWithTips';
+import { DownloadOutlined } from '@ant-design/icons';
+import { updateJSONSchema } from 'services/json-schema';
+import { downloadJsonFile } from 'utils/downloadUtils';
 
 const Final = ({ handleNext, handleBack, index, master }: any) => {
+    const storeState: any = useSelector((state: any) => state);
     const wizardState: any = useSelector((state: any) => state?.wizard);
+    const jsonSchema = _.get(wizardState, 'pages.jsonSchema.schema');
+    const flattenedData = _.get(wizardState, ['pages', 'columns', 'state', 'schema']);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [previewJson, setPreviewJson] = useState<any>(null);
-    const [noTransform, setNoTransform] = useState<string>('');
+
+    const handleDownloadButton = () => {
+        const data = updateJSONSchema(jsonSchema, flattenedData);
+        downloadJsonFile(data, 'json-schema');
+    }
 
     const publish = async () => {
         try {
-            await publishDataset(wizardState);
+            await publishDataset(wizardState, storeState, master);
             dispatch(fetchDatasetsThunk({}));
             dispatch(success({ message: 'Dataset Saved.' }));
             navigate('/datasets');
@@ -33,41 +38,27 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
         }
     }
 
-    const preview = async () => {
-        let data = _.cloneDeep(wizardState.pages.datasetConfiguration?.state?.data[0]);
-        if (data) {
-            _.map(wizardState.pages.dataSchemaConfig.state.schema, async (transform) => {
-                if (_.has(transform, 'transformation')) {
-                    const expression = JSONata(transform.transformation);
-                    data[transform.column] = await expression.evaluate(data);
-                }
-            });
-            setPreviewJson(data);
-        } else return null;
-    }
-
     const gotoPreviousSection = () => {
         handleBack();
     }
 
-    useEffect(() => {
-        preview();
-    }, []);
-
     return (
         <>
+            <Box display="flex" justifyContent="space-between" alignItems="center">
+                <Typography variant="h4">
+                    Review
+                </Typography>
+                <IconButtonWithTips
+                    tooltipText="Download Schema"
+                    icon={<DownloadOutlined />}
+                    handleClick={handleDownloadButton}
+                    buttonProps={{ size: "large" }}
+                    tooltipProps={{ arrow: true }}
+                />
+            </Box>
             <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <ReviewSections section="wizard" master={master} />
-                </Grid>
-                <Grid item xs={12}>
-                    {previewJson &&
-                        <ReactDiffViewer
-                            oldValue={JSON.stringify(wizardState.pages.datasetConfiguration.state.data[0], null, 2)}
-                            newValue={JSON.stringify(previewJson, null, 2)}
-                            splitView={true}
-                        />
-                    }
                 </Grid>
                 <Grid item xs={12}>
                     <Stack direction="row" justifyContent="space-between">

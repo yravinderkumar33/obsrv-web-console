@@ -369,15 +369,29 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 disableFilters: true,
                 Filter: SelectColumnFilter,
                 filter: 'equals',
-                Cell: ({ value: initialValue, updateMyData, ...rest }: any) =>
-                    <Stack direction="row">
-                        <IconButton color="primary" size="large" sx={{ m: 'auto' }} onClick={e => {
-                            setOpenAlertDialog(true);
-                            setSelection({ value: initialValue, ...rest });
-                        }}>
-                            <DeleteOutlined style={{ color: "#F04134" }} />
-                        </IconButton>
-                    </Stack>
+                Cell: ({ value, cell, ...rest }: any) => {
+                    const row = cell?.row?.original || {};
+                    const handleDelete = () => {
+                        setFlattenedData((preState: Array<Record<string, any>>) => {
+                            const values = _.filter(preState, state => {
+                                if (_.get(state, 'column') !== _.get(row, 'column'))
+                                    return state;
+                            });
+                            persistState(values);
+                            return values;
+                        });
+                    }
+                    return (
+                        <Stack direction="row">
+                            <IconButton color="primary" size="large" sx={{ m: 'auto' }} onClick={e => {
+                                setOpenAlertDialog(true);
+                                handleDelete();
+                            }}>
+                                <DeleteOutlined style={{ color: "#F04134" }} />
+                            </IconButton>
+                        </Stack>
+                    );
+                }
             },
         ],
         [requiredFieldFilters]
@@ -493,6 +507,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
             flattenedData={flattenedData}
             showSuggestions={showSuggestions}
             setRequiredFilter={setRequiredFieldFilters}
+            requiredFilter={requiredFieldFilters}
         />
         <Grid container spacing={2}>
             <Grid item xs={12} sm={12}>
