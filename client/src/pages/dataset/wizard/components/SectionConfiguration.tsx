@@ -11,7 +11,7 @@ import { sections as allSections } from 'data/wizard';
 import { updateClientState } from 'services/dataset';
 import { error } from 'services/toaster';
 
-const SectionsConfiguration = ({ handleNext, handleBack, index, section }: any) => {
+const SectionsConfiguration = ({ handleNext, handleBack, index, section, defaultExpanded }: any) => {
     const sections = _.get(allSections, section) || [];
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const jsonSchemaData = _.get(wizardState, 'pages.columns.state.schema') || [];
@@ -71,4 +71,4 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section }: any) 
     </>;
 };
 
-export default SectionsConfiguration
+export default SectionsConfiguration;

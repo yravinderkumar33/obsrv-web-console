@@ -1,6 +1,9 @@
 import * as _ from 'lodash'
 import { useDispatch, useSelector } from 'react-redux';
-import { Button, Grid, Stack, Typography } from '@mui/material';
+import {
+    Button, Paper, Grid, Stack, Typography,
+    Accordion, AccordionSummary, AccordionDetails,
+} from '@mui/material';
 import { publishDataset } from 'services/dataset';
 import { error, success } from 'services/toaster';
 import { fetchDatasetsThunk } from 'store/middlewares';
@@ -9,6 +12,8 @@ import JSONata from 'jsonata';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { useEffect, useState } from 'react';
 import ReactDiffViewer from "react-diff-viewer";
+import ReactTable from 'components/react-table';
+import ReviewSections from './components/ReviewSections';
 
 const Final = ({ handleNext, handleBack, index }: any) => {
     const wizardState: any = useSelector((state: any) => state?.wizard);
@@ -38,7 +43,7 @@ const Final = ({ handleNext, handleBack, index }: any) => {
                 }
             });
             setPreviewJson(data);
-        } else setNoTransform('No sample data provided for transformations')
+        } else return null;
     }
 
     const gotoPreviousSection = () => {
@@ -52,9 +57,9 @@ const Final = ({ handleNext, handleBack, index }: any) => {
     return (
         <>
             <Grid container spacing={1}>
-                {noTransform && <Grid item xs={12}>
-                    <Typography variant="h5">{noTransform}</Typography>
-                </Grid>}
+                <Grid item xs={12}>
+                    <ReviewSections section="wizard" />
+                </Grid>
                 <Grid item xs={12}>
                     {previewJson &&
                         <ReactDiffViewer
