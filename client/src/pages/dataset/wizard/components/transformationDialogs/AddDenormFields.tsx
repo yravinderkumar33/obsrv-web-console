@@ -2,33 +2,64 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import { Button, IconButton } from "@mui/material";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MUIForm from "components/form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as _ from 'lodash';
 import { Stack } from "@mui/material";
+import { useSelector } from "react-redux";
 
 const AddDenormField = (props: any) => {
-    const { data, onClose, setSelection, persistState } = props;
+    const { data, onClose, setSelection, persistState, masterDatasets = [] } = props;
     const [value, subscribe] = useState<any>({});
     const onSubmission = (value: any) => { };
+
+    const wizardState: any = useSelector((state: any) => state?.wizard);
+    const jsonSchemaCols = _.get(wizardState, 'pages.columns.state.schema') || [];
+    const [masterDatasetSchema, setMasterDatasetSchema] = useState<any>([]);
+
+    useEffect(() => {
+        const { masterDataset } = value;
+        if (masterDataset) {
+            const dataset = _.find(masterDatasets, ['name', masterDataset]);
+            if (dataset) {
+                const schema = _.get(dataset, 'client_state.pages.columns.state.schema') || [];
+                setMasterDatasetSchema(schema || []);
+            }
+        }
+    }, [value]);
 
     const fields = [
         {
             name: "datasetField",
             label: "Dataset Field",
-            type: 'text',
+            type: 'select',
             required: true,
+            selectOptions: _.map(jsonSchemaCols, (schema: any) => {
+                const name = _.get(schema, 'column');
+                return { label: name, value: name };
+            })
         },
         {
             name: "masterDataset",
             label: "Master Dataset",
-            type: 'text',
+            type: 'select',
             required: true,
+            selectOptions: _.map(masterDatasets, dataset => {
+                const name = _.get(dataset, 'name');
+                return {
+                    label: name,
+                    value: name
+                }
+            })
         },
         {
             name: "masterDatasetField",
             label: "Master Dataset Field",
-            type: 'text',
-            required: true
+            type: 'select',
+            required: true,
+            selectOptions: _.map(masterDatasetSchema, (schema: any) => {
+                const name = _.get(schema, 'column');
+                return { label: name, value: name };
+            })
         }
     ];
 

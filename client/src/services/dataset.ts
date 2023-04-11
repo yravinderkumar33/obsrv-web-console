@@ -75,6 +75,7 @@ export const saveDataset = ({ data = {}, config }: any) => {
         "id": _.get(state, 'pages.datasetConfiguration.state.config.id'),
         "name": _.get(state, 'pages.datasetConfiguration.state.config.name'),
         "data_schema": schema,
+        "status": "READY_FOR_PUBLISH",
         validation_config,
         extraction_config,
         router_config,

@@ -13,16 +13,25 @@ import IconButton from "components/@extended/IconButton";
 import * as _ from 'lodash';
 import { useDispatch, useSelector } from "react-redux"
 import { updateState } from "store/reducers/wizard"
+import { useNavigate } from "react-router"
 
 const { spacing } = config;
+
+const getMasterDatasets = (datasets: Array<any>) => {
+    return _.filter(datasets, dataset => _.get(dataset, 'type') === "master");
+}
 
 const DataDenorm = (props: any) => {
     const dispatch = useDispatch();
     const { description, id } = props;
-    const [masterDatasetsExists, setIfMasterDatasetsExists] = useState<boolean>(true);
+    const datasets: any = useSelector((state: any) => _.get(state, 'dataset.data') || []);
+    const masterDatasets = getMasterDatasets(datasets);
+    const [masterDatasetsExists, setIfMasterDatasetsExists] = useState<boolean>(_.size(masterDatasets) > 0);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id, 'values']));
     const [selection, setSelection] = useState<Array<any>>(existingState || []);
+    const navigate = useNavigate();
+
     const deleteSelection = (metadata: Record<string, any>) => {
         setSelection((preState: Array<any>) => {
             const data = preState.filter(payload => _.get(payload, 'datasetField') !== _.get(metadata, 'datasetField'));
@@ -30,6 +39,7 @@ const DataDenorm = (props: any) => {
             return data;
         })
     }
+
     const pushStateToStore = (values: Array<any>) => {
         dispatch(updateState({ id, values }));
     }
@@ -68,7 +78,7 @@ const DataDenorm = (props: any) => {
                     <Alert color="error" icon={<BugFilled />}>
                         There are no master datasets configured in the system. Please create one to setup data denormalization for the dataset.
                     </Alert>
-                    <Box><Button variant="contained">Create Master Dataset</Button></Box>
+                    <Box><Button variant="contained" onClick={_ => openCreateMasterDataset()}>Create Master Dataset</Button></Box>
                 </Stack>
             </Grid>
         </>
@@ -84,6 +94,10 @@ const DataDenorm = (props: any) => {
         </>
     }
 
+    const openCreateMasterDataset = () => {
+        navigate(`/dataset/new/master`, { replace: true });
+    }
+
     const masterDatasetFound = () => {
         return <>
             <Grid item xs={12}>
@@ -92,7 +106,7 @@ const DataDenorm = (props: any) => {
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="row">
                     <Box><Button variant="contained" onClick={_ => setDialogOpen(true)}>Add Denorm Field</Button> </Box>
-                    <Box>  <Button variant="contained">Create New Master Dataset</Button></Box>
+                    <Box><Button variant="contained" onClick={_ => openCreateMasterDataset()}>Create New Master Dataset</Button></Box>
                 </Stack>
             </Grid>
             <Grid item xs={12}>
@@ -101,6 +115,7 @@ const DataDenorm = (props: any) => {
                         setSelection={setSelection}
                         onClose={() => setDialogOpen(false)}
                         persistState={pushStateToStore}
+                        masterDatasets={masterDatasets}
                     />
                 </Dialog>
             </Grid >
