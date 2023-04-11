@@ -13,7 +13,7 @@ import { error } from "services/toaster";
 import { v4 } from "uuid";
 
 const AddTransformationExpression = (props: any) => {
-    const { id, data, onClose, selection, setSelection, actions } = props;
+    const { id, data, onClose, selection, setSelection, actions, configState } = props;
     const dispatch = useDispatch();
     const [value, subscribe] = useState<any>({});
     const filteredData = _.filter(data, payload => {
@@ -78,6 +78,7 @@ const AddTransformationExpression = (props: any) => {
                     id: uuid,
                     field_key: column,
                     transformation_function: transformation,
+                    dataset_id: configState.id,
                 });
             }
             const meta = { ...targetColumn, ...updatedMeta };

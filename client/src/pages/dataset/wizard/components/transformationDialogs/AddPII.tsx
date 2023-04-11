@@ -12,7 +12,7 @@ import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 
 const AddPIIDialog = (props: any) => {
-    const { id, data, onClose, selection, setSelection, actions } = props;
+    const { id, data, onClose, selection, setSelection, actions, configState } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
 
@@ -43,6 +43,7 @@ const AddPIIDialog = (props: any) => {
                 id: uuid,
                 field_key: column,
                 transformation_function: transformation,
+                dataset_id: configState.id,
             });
             setSelection((preState: Array<any>) => {
                 const updatedState = [...preState, updatedColumnMetadata];

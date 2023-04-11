@@ -11,6 +11,7 @@ import { ButtonGroup } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTransformations } from "services/dataset";
 import { error } from "services/toaster";
+import { addState } from "store/reducers/wizard";
 const { spacing } = config;
 
 const InputAccordion = (props: any) => {
@@ -19,12 +20,16 @@ const InputAccordion = (props: any) => {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selection, setSelection] = useState<Array<any>>([]);
     const existingState = useSelector((state: any) => _.get(state, ['wizard', 'pages', id, 'selection']));
+    const configState = useSelector((state: any) => _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'config']));
+    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
     const deleteSelection = async (record: Record<string, any>) => {
         const data = await deleteTransformations(record.id);
         if (data.data)
             setSelection((preState: Array<any>) => {
-                return preState.filter(payload => _.get(payload, 'column') !== _.get(record, 'column'));
+                const data = preState.filter(payload => _.get(payload, 'column') !== _.get(record, 'column'));
+                pushStateToStore(data);
+                return data;
             })
         else dispatch(error({ message: "Unable to delete the config item" }));
 
@@ -73,7 +78,7 @@ const InputAccordion = (props: any) => {
     ]
 
     const updateDialogProps = () => {
-        return React.cloneElement(dialog, { id, actions, selection, setSelection, data, onClose: () => setDialogOpen(false) });
+        return React.cloneElement(dialog, { id, actions, selection, setSelection, data, onClose: () => setDialogOpen(false), configState, });
     }
 
     const renderTable = () => {

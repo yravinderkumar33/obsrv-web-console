@@ -16,7 +16,7 @@ export const openJsonAtaEditor = () => {
 }
 
 const AddNewField = (props: any) => {
-    const { id, data, onClose, selection, setSelection } = props;
+    const { id, data, onClose, selection, setSelection, configState } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
     const onSubmission = (value: any) => { };
@@ -37,6 +37,7 @@ const AddNewField = (props: any) => {
                 id: uuid,
                 field_key: column,
                 transformation_function: transformation,
+                dataset_id: configState.id,
             });
             setSelection((preState: Array<any>) => {
                 const updatedState = [...preState, updatedColumnMetadata];
