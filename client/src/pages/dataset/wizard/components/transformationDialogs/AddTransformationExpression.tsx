@@ -55,9 +55,14 @@ const AddTransformationExpression = (props: any) => {
     ];
 
     const saveTransformation = async (payload: any) => {
-        const data = await saveTransformations(payload);
-        if (data.data) return null;
-        else dispatch(error({ message: "Error occured saving the transformation config" }));
+        const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
+        try {
+            const data = await saveTransformations(payload);
+            if (data.data) return null;
+            else dispatchError();
+        } catch (err) {
+            dispatchError();
+        }
     }
 
     const updateTransformation = () => {

@@ -28,9 +28,14 @@ const AddPIIDialog = (props: any) => {
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
     const saveTransformation = async (payload: any) => {
-        const data = await saveTransformations(payload);
-        if (data.data) return null;
-        else dispatch(error({ message: "Error occured saving the PII config" }));
+        const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
+        try {
+            const data = await saveTransformations(payload);
+            if (data.data) return null;
+            else dispatchError();
+        } catch (err) {
+            dispatchError();
+        }
     }
 
     const updatePIIMeta = () => {

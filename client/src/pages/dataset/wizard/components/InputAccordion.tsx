@@ -24,15 +24,19 @@ const InputAccordion = (props: any) => {
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
     const deleteSelection = async (record: Record<string, any>) => {
-        const data = await deleteTransformations(record.id);
-        if (data.data)
-            setSelection((preState: Array<any>) => {
-                const data = preState.filter(payload => _.get(payload, 'column') !== _.get(record, 'column'));
-                pushStateToStore(data);
-                return data;
-            })
-        else dispatch(error({ message: "Unable to delete the config item" }));
-
+        const dispatchError = () => dispatch(error({ message: "Unable to delete the config item" }))
+        try {
+            const data = await deleteTransformations(record.id);
+            if (data.data)
+                setSelection((preState: Array<any>) => {
+                    const data = preState.filter(payload => _.get(payload, 'column') !== _.get(record, 'column'));
+                    pushStateToStore(data);
+                    return data;
+                })
+            else dispatchError();
+        } catch (err) {
+            dispatchError();
+        }
     }
 
     useEffect(() => {
