@@ -136,6 +136,10 @@ export const saveTransformations = async (payload: any) => {
     return axios.post(`${apiEndpoints.transformationsConfig}`, payload);
 }
 
+export const updateTransformations = async (payload: any) => {
+    return axios.patch(`${apiEndpoints.transformationsConfig}`, payload);
+}
+
 export const deleteTransformations = async (id: string) => {
     return axios.delete(`${apiEndpoints.transformationsConfig}/${id}`);
 }
