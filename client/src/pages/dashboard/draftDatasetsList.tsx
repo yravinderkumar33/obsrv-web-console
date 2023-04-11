@@ -47,7 +47,7 @@ const DraftDatasetsList = ({ datasets }: any) => {
                     return <Grid container spacing={2} alignItems="center" sx={{ flexWrap: 'nowrap' }}>
                         <Grid item xs zeroMinWidth>
                             <Typography align="left" variant="subtitle1">
-                                {row?.dataset_name}
+                                {row?.name}
                             </Typography>
                             <Stack
                                 direction="row"
@@ -124,7 +124,7 @@ const DraftDatasetsList = ({ datasets }: any) => {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
-                            <IconButton color="primary" size="large" disabled>
+                            <IconButton color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}`)}>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

@@ -4,6 +4,13 @@ import { updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
 
+export const createDraftDataset = ({ data = {}, config }: any) => {
+    return axios.post(apiEndpoints.saveDatset, data, config);
+}
+
+export const updateDataset = ({ data = {}, config }: any) => {
+    return axios.patch(apiEndpoints.updateDataset, data, config);
+}
 
 export const searchDatasets = ({ data = { filters: {} }, config }: any) => {
     return axios.post(apiEndpoints.listDatasets, data, config);
@@ -131,4 +138,11 @@ export const saveTransformations = async (payload: any) => {
 
 export const deleteTransformations = async (id: string) => {
     return axios.delete(`${apiEndpoints.transformationsConfig}/${id}`);
+}
+
+// update the client state table.
+export const updateClientState = async ({ clientState }: any) => {
+    const pagesData = _.get(clientState, 'pages');
+    const datasetConfig = _.get(pagesData, 'datasetConfiguration.state.config');
+    return updateDataset({ data: { ...datasetConfig, client_state: clientState } });
 }

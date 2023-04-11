@@ -54,9 +54,14 @@ const wizard = createSlice({
                     delete state.pages[pageId]
                 })
             }
+        },
+        restore: (state, action) => {
+            const { payload } = action;
+            state = payload;
+            return payload;
         }
     }
 });
 
 export default wizard.reducer;
-export const { setMetadata, deleteState, addState, reset, updateState } = wizard.actions;
+export const { setMetadata, deleteState, addState, reset, updateState, restore } = wizard.actions;

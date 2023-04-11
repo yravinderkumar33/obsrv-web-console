@@ -1,9 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-    Button, Grid, IconButton, DialogTitle, Box,
-    Stack, Typography, DialogContent, Dialog,
-    FormControl, Select, MenuItem, TextareaAutosize,
-    FormControlLabel, Chip, Alert, Popover,
+    Button, Grid, IconButton, DialogTitle, Box, Stack, Typography, DialogContent, Dialog, FormControl, Select, MenuItem, TextareaAutosize, FormControlLabel, Chip, Alert, Popover,
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
@@ -11,7 +8,6 @@ import * as _ from 'lodash';
 import { CheckOutlined, CloseCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, FolderViewOutlined, InfoCircleOutlined, UploadOutlined, WarningOutlined, } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
-import Loader from 'components/Loader';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
@@ -24,6 +20,7 @@ import IconButtonWithTips from 'components/IconButtonWithTips';
 import { DefaultColumnFilter, SelectBooleanFilter, SelectColumnFilter } from 'utils/react-table';
 import CollapsibleSuggestions from './components/CollapsibleSuggestions';
 import { downloadJsonFile } from 'utils/downloadUtils';
+import { updateClientState } from 'services/dataset';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -51,18 +48,17 @@ const columnFilters: columnFilter[] = [
     }
 ];
 
-const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState }: any) => {
-    const apiResponse = useSelector((state: any) => state.jsonSchema);
+const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState, edit }: any) => {
     const [selection, setSelection] = useState<Record<string, any>>({});
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
-    const jsonSchema: any = useSelector((state: any) => state?.jsonSchema);
+    const pageData = _.get(wizardState, ['pages', pageMeta.pageId]);
     const [flattenedData, setFlattenedData] = useState<Array<Record<string, any>>>([]);
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
-    const globalConfig = useSelector((state: any) => state?.config);
     const [filterByChip, setFilterByChip] = useState<columnFilter | null>(null);
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const [requiredFieldFilters, setRequiredFieldFilters] = useState<string>('');
+    const jsonSchema = _.get(wizardState, 'pages.jsonSchema.schema');
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
         const column = cellValue?.column
@@ -82,13 +78,21 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         }
     }
 
-    const persistState = (data?: any) =>
-        dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData } }));
+    const persistClientState = async () => {
+        try {
+            await updateClientState({ clientState: wizardState });
+        } catch (err) {
+            dispatch(error({ message: 'Failed to update state' }));
+        }
+    }
+
+    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData } }));
 
     const gotoNextSection = () => {
         const data = deleteFilter();
         if (areConflictsResolved(flattenedData)) {
             persistState(data);
+            persistClientState();
             handleNext();
         } else {
             dispatch(error({ message: 'Please resolve conflicts to proceed further' }));
@@ -99,6 +103,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const gotoPreviousSection = () => {
         const data = deleteFilter();
         persistState(data);
+        persistClientState();
         handleBack();
     }
 
@@ -380,18 +385,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
 
     const handleDownloadButton = () => {
         const data = updateJSONSchema(jsonSchema, flattenedData);
-        downloadJsonFile(data, `${wizardStoreState.pages?.datasetConfiguration?.state?.config?.id}-schema` || 'schema');
+        downloadJsonFile(data, 'json-schema');
     }
-
-    // const handleUploadButton = () => {
-    //         if ((data || files) && config) {
-    //             generateJSONSchema(data, config);
-    //             dispatch(addState({ id: pageMeta.pageId, state: { data, files, config } }));
-    //             setShowWizard(true);
-    //         } else {
-    //             dispatch(error({ message: "Please fill the required fields" }));
-    //         }
-    // }
 
     const [skipPageReset, setSkipPageReset] = useState(false);
 
@@ -439,14 +434,14 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }
 
     useEffect(() => {
-        if (apiResponse?.status === 'success' && apiResponse?.data?.schema) {
-            const flattenedSchema = flattenSchema(apiResponse.data.schema) as any;
-            const existingState = wizardStoreState.pages[pageMeta.pageId]?.state?.schema;
+        if (jsonSchema) {
+            const flattenedSchema = flattenSchema(jsonSchema) as any;
+            const existingState = pageData?.state?.schema;
             setFlattenedData(existingState || flattenedSchema);
             persistState(existingState || flattenedSchema);
             setSkipPageReset(false);
         }
-    }, [apiResponse?.status]);
+    }, [jsonSchema]);
 
     return <>
         <Stack direction="row" spacing={1} marginBottom={1} alignItems="center" justifyContent="space-between">
@@ -499,50 +494,34 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
             setRequiredFilter={setRequiredFieldFilters}
         />
         <Grid container spacing={2}>
-            {apiResponse?.status !== 'success' &&
-                <Grid item xs={12} sm={12}>
-                    <Loader />
-                </Grid>
-            }
-
-            {apiResponse?.status === 'error' &&
-                <Grid item xs={12} sm={12}>
-                    <Alert severity="error">{apiResponse?.error}</Alert>
-                </Grid>
-            }
-
-            {apiResponse?.status === 'success' &&
-                <>
-                    <Grid item xs={12} sm={12}>
-                        <MainCard content={false}>
-                            <ScrollX>
-                                <ReactTable
-                                    columns={columns}
-                                    data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []}
-                                    updateMyData={updateMyData}
-                                    skipPageReset={skipPageReset}
-                                    limitHeight
-                                />
-                            </ScrollX>
-                        </MainCard >
-                    </Grid>
-                    <Grid item xs={12}>
-                        <Stack direction="row" justifyContent="space-between">
-                            <AnimateButton>
-                                <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
-                                    Previous
-                                </Button>
-                            </AnimateButton>
-                            <AnimateButton>
-                                <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoNextSection}>
-                                    Next
-                                </Button>
-                            </AnimateButton>
-                        </Stack>
-                    </Grid>
-                    <AlertDialog open={openAlertDialog} handleClose={handleAlertDialogClose} context={alertDialogContext}></AlertDialog>
-                </>
-            }
+            <Grid item xs={12} sm={12}>
+                <MainCard content={false}>
+                    <ScrollX>
+                        <ReactTable
+                            columns={columns}
+                            data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []}
+                            updateMyData={updateMyData}
+                            skipPageReset={skipPageReset}
+                            limitHeight
+                        />
+                    </ScrollX>
+                </MainCard >
+            </Grid>
+            <Grid item xs={12}>
+                <Stack direction="row" justifyContent={edit ? 'flex-end' : 'space-between'}>
+                    {!edit && <AnimateButton>
+                        <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                            Previous
+                        </Button>
+                    </AnimateButton>}
+                    <AnimateButton>
+                        <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoNextSection}>
+                            Next
+                        </Button>
+                    </AnimateButton>
+                </Stack>
+            </Grid>
+            <AlertDialog open={openAlertDialog} handleClose={handleAlertDialogClose} context={alertDialogContext}></AlertDialog>
         </Grid>
     </>;
 };
