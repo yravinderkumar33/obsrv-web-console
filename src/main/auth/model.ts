@@ -14,12 +14,12 @@ const db: InMemoryDb = {
       clientId: "123",
       clientSecret: "secret",
       grants: ["authorization_code", "refresh_token", "client_credentials"],
-      redirectUris: ["http://localhost:3001/", "http://localhost:8088/oauth-authorized/Obsrv"],
+      redirectUris: ["http://localhost:3001/", "http://localhost:8088/oauth-authorized/obsrv"],
     },
   ],
   users: [
-    { id: "1", username: "user", password: "password", email: "user@123.com" },
-    { id: "2", username: "admin", password: "password", email: "admin@123.com" },
+    { id: "1", username: "user", password: "password", email: "user@123.com", clientId: "123" },
+    { id: "2", username: "admin", password: "password", email: "admin@123.com",clientId: "123" },
   ],
   accessTokens: [],
   authorizationCodes: [],
@@ -95,13 +95,18 @@ const model = {
     return true;
   },
   getUserFromClient: async (client: Client) => {
+
+    // TODO: implement this method  for a client and users properly
+    console.log(`getUserFromClient`, client)
     const storedClient = db.clients.find(
-      (c) => c.clientId === client.id
+      (c) => c.id === client.id
     );
+    const user = db.users.find((user) => user.id === client.id);
     if (!client) return null;
     return {
-      id: storedClient?.id,
-      name: storedClient?.name,
+      id: user?.id,
+      name: user?.username,
+      email: user?.email,
       clientId: storedClient?.id,
       grants: storedClient?.grants,
       redirectUris: storedClient?.redirectUris,

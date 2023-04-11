@@ -4,9 +4,8 @@ export default {
   name: 'auth:user',
   handler: () => async (request: Request, response: Response, next: NextFunction) => {
    console.log(request.headers) 
-    const accessToken = await oauthServer.authenticate()(request, response, next);
-    request.session.user = accessToken.user;
-    console.log(`accessToken :`, accessToken)
+  //   const accessToken = await oauthServer.authenticate({ scope: 'protected-resource', addAcceptedScopesHeader: false })(request, response, next);
+  //   request.session.user = accessToken.user;
   //   console.log(accessToken.user)
   //  if(request.session.user) {
   //   response.send({data:{
@@ -17,5 +16,10 @@ export default {
   //  } else {
   //   next(new Error("user not found"))
   //  }
+  response.send({"data": {
+    "id": "1",
+    "name": "user",
+    "email": "user@123.com"
+  }})
 }}
 ;

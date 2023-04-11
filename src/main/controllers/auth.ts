@@ -6,12 +6,13 @@ export default {
   name: 'auth:read',
   handler: () => async (request: Request, response: Response, next: NextFunction) => {
     if(request.session.user) {
+      const user = {user: request.session.user.id}
       try {
         return oauthServer.authorize(
           {
             authenticateHandler: {
               handle: (request: Request) => {
-                return request.body.user
+                return user;
               }
             }
           }
