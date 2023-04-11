@@ -84,7 +84,7 @@ const DatasetsList = ({ datasets }: any) => {
                     return <Grid container spacing={2} alignItems="center" sx={{ flexWrap: 'nowrap' }}>
                         <Grid item xs zeroMinWidth>
                             <Typography align="left" variant="subtitle1">
-                                {row?.dataset_name}
+                                {row?.name}
                             </Typography>
                             <Stack
                                 direction="row"

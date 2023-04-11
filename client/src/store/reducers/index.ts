@@ -6,7 +6,6 @@ import menu from './menu';
 import snackbar from './snackbar';
 import config from './config';
 import dataset from './dataset';
-import jsonSchema from './jsonSchema';
 import wizard from './wizard';
 
 const reducers = combineReducers({
@@ -14,7 +13,6 @@ const reducers = combineReducers({
   snackbar,
   config,
   dataset,
-  jsonSchema,
   wizard
 });
 

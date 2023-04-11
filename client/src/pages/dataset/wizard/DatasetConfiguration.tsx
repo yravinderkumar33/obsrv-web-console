@@ -8,11 +8,11 @@ import { IWizard } from 'types/formWizard';
 import UploadFiles from './UploadFiles';
 import { useEffect, useState } from 'react';
 import { error } from 'services/toaster';
-import { fetchJsonSchemaThunk } from 'store/middlewares';
 import { Formik, Form } from 'formik';
 import { generateSlug } from 'utils/stringUtils';
 import HtmlTooltip from 'components/HtmlTooltip';
-import { checkUniqueId } from 'services/dataset';
+import { checkUniqueId, createDraftDataset } from 'services/dataset';
+import { fetchJsonSchema } from 'services/json-schema';
 
 const idCheck = async (value: any, resolve: any) => {
     const data = await checkUniqueId(value);
@@ -34,10 +34,10 @@ const validationSchema = yup.object()
                 new Promise(resolve => validationDebounced(value, resolve))
             )
     });
+
 export const pageMeta = { pageId: 'datasetConfiguration' };
 
-const DatasetConfiguration = ({ setShowWizard }: any) => {
-
+const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const maxFileSizeConfig: Number = useSelector((state: any) => state?.config?.maxFileSize || 5242880)
@@ -45,10 +45,7 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
     const { data: dataState, files: filesState, config: configState } = pageData?.state || {};
     const [data, setData] = useState(dataState);
     const [files, setFiles] = useState(filesState);
-    const [initialValues, setInitialValues] = useState({
-        name: '',
-        id: ''
-    });
+    const [initialValues, setInitialValues] = useState({ name: '', id: '' });
 
     useEffect(() => {
         if (pageData?.state?.config) {
@@ -56,16 +53,32 @@ const DatasetConfiguration = ({ setShowWizard }: any) => {
         }
     }, [wizardState]);
 
-    const generateJSONSchema = (data: Array<any>, config: Record<string, any>) => {
-        const dataset = _.get(config, 'name')
-        dispatch(fetchJsonSchemaThunk({ data: Array.isArray(data) ? data : [data], config: { dataset } }));
+    const generateJSONSchema = async (data: Array<any>, config: Record<string, any>) => {
+        const dataset = _.get(config, 'name');
+        const payload = Array.isArray(data) ? data : [data]
+        try {
+            const response = await fetchJsonSchema({ data: payload, config: { dataset } });
+            dispatch(addState({ id: "jsonSchema", ...response }));
+        } catch (err) {
+            dispatch(error({ message: "Failed to Upload Data" }));
+        }
     };
+
+    const createDraft = async (config: Record<string, any>) => {
+        try {
+            const payload = { ...config, type: datasetType, version: 1, status: "DRAFT" };
+            await createDraftDataset({ data: payload });
+            setShowWizard(true);
+        } catch (err: any) {
+            dispatch(error({ message: "Failed to create dataset. Please try again later." }));
+        }
+    }
 
     const onSubmit = (config: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
+            createDraft(config);
             dispatch(addState({ id: pageMeta.pageId, state: { data, files, config } }));
-            setShowWizard(true);
         } else {
             dispatch(error({ message: "Please fill the required fields" }));
         }

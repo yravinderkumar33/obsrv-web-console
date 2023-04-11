@@ -1,5 +1,5 @@
 import MUIForm from "components/form";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import * as _ from 'lodash';
 import { Alert, Grid } from "@mui/material";
 import { InfoCircleOutlined } from "@ant-design/icons";
@@ -11,10 +11,11 @@ const { spacing } = config;
 const TimestampSelection = (props: any) => {
     const { id = "timestamp", description } = props;
     const dispatch = useDispatch();
-    const jsonSchema = useSelector((state: any) => state.jsonSchema);
     const existingState = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]));
+    const wizardState: any = useSelector((state: any) => state?.wizard);
+    const jsonSchema = _.get(wizardState, 'pages.jsonSchema');
 
-    const indexColumns = _.map(_.get(jsonSchema, 'data.configurations.indexConfiguration.index'), col => ({ label: col, value: col }));
+    const indexColumns = _.map(_.get(jsonSchema, 'configurations.indexConfiguration.index'), col => ({ label: col, value: col }));
     const [value, subscribe] = useState<any>({});
 
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));

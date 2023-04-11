@@ -12,7 +12,7 @@ import SectionConfiguration from './components/SectionConfiguration';
 const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Advanced', 'Review'];
 const masterSteps = ['Schema', 'Ingestion', 'Review'];
 
-const getStepContent = (step: number, handleNext: () => void, handleBack: () => void, setErrorIndex: (i: number | null) => void, master: boolean) => {
+const getStepContent = (step: number, handleNext: () => void, handleBack: () => void, setErrorIndex: (i: number | null) => void, master: boolean, edit: boolean) => {
     if (master) {
         switch (step) {
             case 0:
@@ -23,15 +23,15 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
     } else {
         switch (step) {
             case 0:
-                return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} />;
+                return <ListColumns handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={0} edit={edit} />;
             case 1:
-                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} section="input" />
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} section="input" edit={edit} />
             case 2:
-                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} section="field" />
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} section="field" edit={edit} />
             case 3:
-                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} section="processing" />
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={3} section="processing" edit={edit} />
             case 4:
-                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} section="advanced" />
+                return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} section="advanced" edit={edit} />
             case 5:
                 return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={5} />
             default:
@@ -40,7 +40,7 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
     }
 };
 
-const DatasetOnboarding = ({ master = false }) => {
+const DatasetOnboarding = ({ edit = false, master = false }) => {
     const [activeStep, setActiveStep] = useState(0);
     const [showWizard, setShowWizard] = useState(false);
     const [errorIndex, setErrorIndex] = useState<number | null>(null);
@@ -62,6 +62,7 @@ const DatasetOnboarding = ({ master = false }) => {
     };
 
     useEffect(() => {
+        if (edit) { setShowWizard(true) }
         return () => {
             dispatch(reset({}));
         }
@@ -123,8 +124,8 @@ const DatasetOnboarding = ({ master = false }) => {
                         </Button>
                     </Box>
                 }>
-                {!showWizard && <DatasetConfiguration setShowWizard={setShowWizard} />}
-                {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master)}
+                {!showWizard && <DatasetConfiguration setShowWizard={setShowWizard} datasetType={master ? "master" : "dataset"} />}
+                {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
             </MainCard >
         </Box>
     );

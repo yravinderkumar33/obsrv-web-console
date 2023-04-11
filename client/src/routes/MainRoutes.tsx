@@ -6,6 +6,7 @@ import DatasetDetails from 'pages/dashboard/datasetsDetails';
 
 const ClusterHealth = Loadable(lazy(() => import('pages/dashboard/datasets')));
 const NewDataset = Loadable(lazy(() => import('pages/dataset/newDataset')));
+const EditDataset = Loadable(lazy(() => import('pages/dataset/editDataset')));
 const SystemMetrics = Loadable(lazy(() => import('pages/metrics/metrics')));
 const HomePage = Loadable(lazy(() => import('pages/home')));
 const MetricsDetails = Loadable(lazy(() => import('pages/metrics/details')));
@@ -42,6 +43,10 @@ const MainRoutes = {
         {
             path: 'dataset/new',
             element: <NewDataset key="normal" />
+        },
+        {
+            path: 'dataset/edit/:datasetId',
+            element: <EditDataset key="normal" />
         },
         {
             path: 'dataset/new/master',

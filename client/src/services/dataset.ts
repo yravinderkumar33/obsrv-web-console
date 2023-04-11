@@ -4,6 +4,13 @@ import { updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
 
+export const createDraftDataset = ({ data = {}, config }: any) => {
+    return axios.post(apiEndpoints.saveDatset, data, config);
+}
+
+export const updateDataset = ({ data = {}, config }: any) => {
+    return axios.patch(apiEndpoints.updateDataset, data, config);
+}
 
 export const searchDatasets = ({ data = { filters: {} }, config }: any) => {
     return axios.post(apiEndpoints.listDatasets, data, config);
@@ -104,4 +111,11 @@ export const sendEvents = ({ datasetId, datasetName, events, config }: any) => {
 
 export const checkUniqueId = async (id: string | undefined) => {
     return axios.get(`${apiEndpoints.uniqueId}/${id}`);
+}
+
+// update the client state table.
+export const updateClientState = async ({ clientState }: any) => {
+    const pagesData = _.get(clientState, 'pages');
+    const datasetConfig = _.get(pagesData, 'datasetConfiguration.state.config');
+    return updateDataset({ data: { ...datasetConfig, client_state: clientState } });
 }

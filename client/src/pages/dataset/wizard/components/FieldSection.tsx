@@ -5,18 +5,36 @@ import React from 'react';
 import { Stack } from '@mui/material';
 import MainCard from 'components/MainCard';
 import config from 'data/initialConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateClientState } from 'services/dataset';
+import { error } from 'services/toaster';
 const { spacing } = config;
 
 const FieldSection = (props: any) => {
     const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, ...rest } = props;
     const theme = useTheme();
     const open = (id === expanded);
+    const clientState: any = useSelector((state: any) => state?.wizard);
+    const dispatch = useDispatch()
+
+    const persistClientState = async () => {
+        try {
+            await updateClientState({ clientState })
+        } catch (err) {
+            dispatch(error({ message: 'Failed to update state' }));
+        }
+    }
+
+    const navigate = () => {
+        persistClientState();
+        setExpanded(navigation.next);
+    }
 
     const renderNavigation = () => {
         if (!navigation) return null;
         return <Grid item xs={12}>
             <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
-                {navigation?.next && <Button variant="outlined" endIcon={<ArrowRightOutlined />} onClick={_ => setExpanded(navigation.next)}>{_.startCase(navigation.next)}</Button>}
+                {navigation?.next && <Button variant="outlined" endIcon={<ArrowRightOutlined />} onClick={_ => navigate()}>{_.startCase(navigation.next)}</Button>}
             </Stack>
         </Grid>
     }
