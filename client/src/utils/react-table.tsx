@@ -99,7 +99,7 @@ export function SelectBooleanFilter({ column: { filterValue, setFilter, preFilte
 
     return (
         <Select
-            value={`${filterValue}`}
+            value={`${filterValue === null || filterValue === undefined ? '' : filterVal}`}
             size="small"
             fullWidth
             displayEmpty
