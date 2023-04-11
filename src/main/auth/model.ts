@@ -13,13 +13,13 @@ const db: InMemoryDb = {
       id: "1",
       clientId: "123",
       clientSecret: "secret",
-      grants: ["authorization_code", "refresh_token"],
-      redirectUris: ["http://app1.example.com:3000/home"],
+      grants: ["authorization_code", "refresh_token", "client_credentials"],
+      redirectUris: ["http://localhost:3001/", "http://localhost:8088/oauth-authorized/Obsrv"],
     },
   ],
   users: [
-    { id: "1", username: "user", password: "password" },
-    { id: "2", username: "admin", password: "password" },
+    { id: "1", username: "user", password: "password", email: "user@123.com" },
+    { id: "2", username: "admin", password: "password", email: "admin@123.com" },
   ],
   accessTokens: [],
   authorizationCodes: [],
@@ -28,7 +28,7 @@ const db: InMemoryDb = {
 const model = {
   getClient: async (clientId: string, clientSecret: string) => {
     const client = db.clients.find(
-      (c) => c.clientId === clientId 
+      (c) => c.clientId === clientId
     );
     if (!client) return null;
     return { ...client, grants: client.grants ?? [] };
@@ -41,6 +41,7 @@ const model = {
   },
 
   saveToken: async (token: Token, client: Client, user: User) => {
+    console.log(`save Token`, user, token, client)
     db.accessTokens.push({ ...token, user, client });
     return { ...token, user, client };
   },
@@ -57,9 +58,9 @@ const model = {
       authorizationCode: authCode.authorizationCode,
       expiresAt: authCode.expiresAt,
       redirectUri: authCode.redirectUri,
-      client: { id: authCode.client.id, grants:["authorization_code", "refresh_token"] },
-      user:  { id: authCode.user.id }
-  } 
+      client: { id: authCode.client.id, grants: ["authorization_code", "refresh_token", "client_credentials"] },
+      user: { id: authCode.user.id }
+    }
     return Promise.resolve(response);
   },
 
@@ -71,10 +72,10 @@ const model = {
   getAccessToken: async (accessToken: string) => {
     const token = db.accessTokens.find((t) => t.accessToken === accessToken);
     if (!token) return null;
-    const response: Token  ={
+    const response: Token = {
       ...token,
       user: { id: token.user.id },
-      client: { id: token.client.id, grants:["authorization_code", "refresh_token"] },
+      client: { id: token.client.id, grants: ["authorization_code", "refresh_token", "client_credentials"] },
     };
     return response;
   },
@@ -86,13 +87,26 @@ const model = {
 
   validateScope: async (user: User, client: Client, scope: string | string[]) => {
     // For the purpose of this example, we'll allow any scope.
-    return '';
+    return 'read';
   },
 
   verifyScope: async (token: Token, scope: string | string[]) => {
     // For the purpose of this example, we'll allow any scope.
     return true;
   },
+  getUserFromClient: async (client: Client) => {
+    const storedClient = db.clients.find(
+      (c) => c.clientId === client.id
+    );
+    if (!client) return null;
+    return {
+      id: storedClient?.id,
+      name: storedClient?.name,
+      clientId: storedClient?.id,
+      grants: storedClient?.grants,
+      redirectUris: storedClient?.redirectUris,
+    };
+  }
 };
 
 export default model;

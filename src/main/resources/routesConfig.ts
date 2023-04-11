@@ -16,11 +16,27 @@ export default [
         ],
       },
       {
+        path: 'authorize',
+        method: 'GET',
+        middlewares: [
+          commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.read' }),
+          controllers.get('auth:read')?.handler({})
+        ],
+      },
+      {
         path: 'token',
         method: 'POST',
         middlewares: [
           commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.token' }),
           controllers.get('auth:token')?.handler({})
+        ],
+      },
+      {
+        path: 'user-details',
+        method: 'get',
+        middlewares: [
+          commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.user.read' }),
+          controllers.get('auth:user')?.handler({})
         ],
       }
     ]

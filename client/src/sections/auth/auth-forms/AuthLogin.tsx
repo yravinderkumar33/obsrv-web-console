@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-
+import axios from 'axios';
 // material-ui
 import {
   Button,
@@ -61,29 +61,42 @@ const AuthLogin = () => {
     <>
       <Formik
         initialValues={{
-          email: 'info@codedthemes.com',
-          password: '123456',
+          username: 'user',
+          password: 'password',
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          username: Yup.string().max(255).required('User name is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
           try {
-            await firebaseEmailPasswordSignIn(values.email, values.password).then(
-              () => {
-                // WARNING: do not set any formik state here as formik might be already destroyed here. You may get following error by doing so.
-                // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application.
-                // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-                // github issue: https://github.com/formium/formik/issues/2430
+            let config = {
+              method: 'post',
+              url: 'http://localhost:3000/api/oauth/authorize',
+              headers: { 
+                'Content-Type': 'application/x-www-form-urlencoded'
               },
-              (err: any) => {
-                setStatus({ success: false });
-                setErrors({ submit: err.message });
-                setSubmitting(false);
-              }
-            );
+              params: {
+                'client_id': '123',
+                'redirect_uri': 'http://localhost:3001/',
+                'response_type': 'code',
+                'grant_type': 'authorization_code',
+                'username': 'user',
+                'password': 'password' 
+              },
+            };
+            
+            axios.request(config)
+            .then((response) => {
+              // if(response.status == 302) {
+                console.log(response)
+              // }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+            
           } catch (err: any) {
             console.error(err);
             if (scriptedRef.current) {
@@ -95,25 +108,25 @@ const AuthLogin = () => {
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <form noValidate onSubmit={handleSubmit}>
+          <form noValidate action='/api/oauth/authorize' method='post'>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
-                  <InputLabel htmlFor="email-login">Email Address</InputLabel>
+                  <InputLabel htmlFor="email-login">User Name</InputLabel>
                   <OutlinedInput
                     id="email-login"
-                    type="email"
-                    value={values.email}
-                    name="email"
+                    type="text"
+                    value={values.username}
+                    name="username"
                     onBlur={handleBlur}
                     onChange={handleChange}
-                    placeholder="Enter email address"
+                    placeholder="Enter user name"
                     fullWidth
-                    error={Boolean(touched.email && errors.email)}
+                    error={Boolean(touched.username && errors.username)}
                   />
-                  {touched.email && errors.email && (
+                  {touched.username && errors.username && (
                     <FormHelperText error id="standard-weight-helper-text-email-login">
-                      {errors.email}
+                      {errors.username}
                     </FormHelperText>
                   )}
                 </Stack>
@@ -121,6 +134,10 @@ const AuthLogin = () => {
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="password-login">Password</InputLabel>
+                  <input type="hidden" value="123" name="client_id"/>
+                  <input type="hidden" value="http://localhost:3001/" name="redirect_uri"/>
+                  <input type="hidden" value="code" name="response_type"/>
+                  <input type="hidden" value="authorization_code" name="grant_type"/>
                   <OutlinedInput
                     fullWidth
                     color={capsWarning ? 'warning' : 'primary'}

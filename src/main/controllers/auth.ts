@@ -5,26 +5,46 @@ import model from './../auth/model'
 export default {
   name: 'auth:read',
   handler: () => async (request: Request, response: Response, next: NextFunction) => {
-    const { username, password } = request.body
-    const user = await model.getUser(username, password)
-    if (user) {
-      request.body.user = user
-      console.log(user)
+    if(request.session.user) {
       try {
-        
-      } catch (error) {
-        
-      }
-   return oauthServer.authorize(
-        {
-          authenticateHandler: {
-            handle: (request: Request) => {
-              return request.body.user
+        return oauthServer.authorize(
+          {
+            authenticateHandler: {
+              handle: (request: Request) => {
+                return request.body.user
+              }
             }
           }
+         )(request, response, next)
+      } catch (error) {
+        return next(error)
+      }
+    } 
+    const {username, password}= request.body
+    if (username && password) {
+      const user = await model.getUser(username, password)
+      request.session.user = user;
+      if (user) {
+        request.body.user = {user: user.id}
+        console.log(user)
+        try {
+          return oauthServer.authorize(
+            {
+              authenticateHandler: {
+                handle: (request: Request) => {
+                  return request.body.user
+                }
+              }
+            }
+           )(request, response, next)
+        } catch (error) {
+          return next(error)
         }
-       )(request, response, next)
+     
+    } else {
+      return next(new Error("user name or password missing"))
     }
+  } 
    
   },
 };

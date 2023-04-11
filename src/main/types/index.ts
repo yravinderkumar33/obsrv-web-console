@@ -1,18 +1,3 @@
-export interface ITenant {
-  name: string;
-  airlineCode: string;
-  description?: string;
-  website?: string;
-  logo?: string;
-  email?: string;
-  address?: string;
-  mobileNumbers?: Array<string>;
-  status: string;
-  createdOn: string;
-  createdBy: string;
-  updatedOn?: string;
-  updatedBy?: string;
-}
 
 export interface Filters {
   [key: string]: any;
@@ -93,3 +78,4 @@ export interface IUserLanguageProficiencyCapabilities {
   write: string;
   speak: string;
 }
+
