@@ -4,12 +4,13 @@ import * as _ from 'lodash';
 import apiEndpoints from 'data/apiEndpoints';
 
 export const saveDatasource = ({ data = {}, config }: any) => {
-    const { ingestionSpec, wizardState } = data;
+    const { ingestionSpec, state } = data;
 
     const payload = {
-        "dataset_id": _.get(wizardState, 'pages.datasetConfiguration.state.config.id'),
+        "dataset_id": _.get(state, 'pages.datasetConfiguration.state.config.id'),
         "ingestion_spec": ingestionSpec,
-        "datasource": _.get(wizardState, 'pages.datasetConfiguration.state.config.name')
+        "datasource": _.get(state, 'pages.datasetConfiguration.state.config.name'),
+        "datasource_ref": _.get(state, 'pages.datasetConfiguration.state.config.name')
     };
 
     return axios.post(apiEndpoints.saveDatasource, payload, config);
