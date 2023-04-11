@@ -79,7 +79,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
             createDraft(config);
-            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config } }));
+            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
             const uploadUrl = await getUrls(files);
             if (uploadUrl.data && uploadUrl.data?.result) {
                 _.map(uploadUrl.data.result, (item, index) => {
