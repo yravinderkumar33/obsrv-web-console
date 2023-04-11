@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import * as _ from 'lodash';
-import { Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Radio, Select, Stack, TextField, ToggleButtonGroup, Tooltip } from '@mui/material';
+import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Radio, Select, Stack, TextField, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { Formik, Field, Form } from 'formik';
 import { ToggleButton } from '@mui/material';
 
@@ -13,6 +13,12 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
     const classes: any = useStyles;
     let { xs = 12, sm = 12, lg = 12 } = size;
 
+    const handleAutoComplete = (setFieldValue: any, value: any, multiple: boolean, name: string) => {
+        if (multiple) {
+            setFieldValue(name, value);
+        } else setFieldValue(name, value.value);
+    }
+
     return (
         <Formik
             initialValues={initialValues}
@@ -20,14 +26,14 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
             onSubmit={onSubmit}
             enableReinitialize={enableReinitialize}
         >
-            {({ handleChange, values, handleBlur, errors, touched }) => {
+            {({ handleChange, values, handleBlur, errors, touched, setFieldValue }) => {
                 subscribe && subscribe(values);
                 subscribeErrors && subscribeErrors(errors);
                 return (
                     <Form>
                         <Grid container spacing={3} alignItems="baseline">
                             {fields.map((field: any) => {
-                                const { name, tooltip = '', label, type, selectOptions, required = false, dependsOn = null, disabled = false } = field;
+                                const { name, tooltip = '', label, type, selectOptions, required = false, dependsOn = null, disabled = false, multiple = false, } = field;
 
                                 if (dependsOn) {
                                     const { key, value } = dependsOn;
@@ -117,6 +123,24 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                         <Select name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
                                                             {selectOptions.map((option: any) => (<MenuItem value={option.value}>{option.label}</MenuItem>))}
                                                         </Select>
+                                                    </FormControl>
+                                                </Tooltip>
+                                            </Grid>
+                                        );
+                                    case 'autocomplete':
+                                        return (
+                                            <Grid item xs={xs} sm={sm} lg={lg} key={name}>
+                                                <Tooltip title={tooltip}>
+                                                    <FormControl fullWidth key={name} className={classes.formControl} required={required} disabled={disabled}>
+                                                        <Autocomplete
+                                                            id={name}
+                                                            value={_.get(values, name)}
+                                                            options={selectOptions}
+                                                            getOptionLabel={(option: any) => option.label}
+                                                            multiple={multiple}
+                                                            onChange={(e, value) => handleAutoComplete(setFieldValue, value, multiple, name)}
+                                                            renderInput={(params) => <TextField {...params} name={name} label={label} />}
+                                                        />
                                                     </FormControl>
                                                 </Tooltip>
                                             </Grid>

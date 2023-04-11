@@ -31,7 +31,7 @@ const AddDenormField = (props: any) => {
         {
             name: "datasetField",
             label: "Dataset Field",
-            type: 'select',
+            type: 'autocomplete',
             required: true,
             selectOptions: _.map(jsonSchemaCols, (schema: any) => {
                 const name = _.get(schema, 'column');
@@ -54,7 +54,7 @@ const AddDenormField = (props: any) => {
         {
             name: "masterDatasetField",
             label: "Master Dataset Field",
-            type: 'select',
+            type: 'autocomplete',
             required: true,
             selectOptions: _.map(masterDatasetSchema, (schema: any) => {
                 const name = _.get(schema, 'column');

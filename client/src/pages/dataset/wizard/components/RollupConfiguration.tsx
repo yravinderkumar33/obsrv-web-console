@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons"
-import { Box, FormControl, FormHelperText, Grid, MenuItem, Select, TextField } from "@mui/material"
+import { Box, Chip, FormControl, FormHelperText, Grid, MenuItem, Select, TextField } from "@mui/material"
 import { Alert, Button } from "@mui/material"
 import { Stack } from "@mui/system"
 import BasicReactTable from "components/BasicReactTable"
@@ -29,7 +29,7 @@ const RollupConfiguration = (props: any) => {
 
     const deleteSelection = (metadata: Record<string, any>) => {
         setSelection((preState: Array<any>) => {
-            const data = preState.filter(payload => _.get(payload, 'datasetField') !== _.get(metadata, 'datasetField'));
+            const data = preState.filter(payload => _.get(payload, 'field') !== _.get(metadata, 'field'));
             pushStateToStore(data);
             return data;
         })
@@ -47,6 +47,17 @@ const RollupConfiguration = (props: any) => {
         {
             Header: 'Aggregate Function',
             accessor: 'aggregateFunction'
+        },
+        {
+            Header: 'Rollup Fields',
+            accessor: 'rollupFields',
+            Cell: ({ value, cell }: any) => {
+                if (value) return (
+                    <Box>
+                        {value.map((item: any) => <Chip sx={{ m: 0.5 }} key={item.value} label={item.label} />)}
+                    </Box>);
+                else return null;
+            }
         },
         {
             Header: 'Rollup Field Name',

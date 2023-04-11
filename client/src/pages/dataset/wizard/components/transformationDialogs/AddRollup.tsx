@@ -5,23 +5,65 @@ import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
 import { Stack } from "@mui/material";
+import { useSelector } from "react-redux";
+
+const aggregateFunctions = [
+    {
+        label: 'COUNT',
+        value: 'COUNT',
+    },
+    {
+        label: 'MIN',
+        value: 'MIN',
+    },
+    {
+        label: 'MAX',
+        value: 'MAX',
+    },
+    {
+        label: 'AVG',
+        value: 'AVG',
+    },
+    {
+        label: 'SUM',
+        value: 'AVG',
+    },
+];
 
 const AddRollup = (props: any) => {
     const { data, onClose, setSelection, persistState } = props;
     const [value, subscribe] = useState<any>({});
     const onSubmission = (value: any) => { };
+    const wizardState: any = useSelector((state: any) => state?.wizard);
+    const jsonSchemaCols: any = _.get(wizardState, ['pages', 'columns', 'state', 'schema']) || [];
 
     const fields = [
         {
             name: "field",
             label: "Field",
-            type: 'text',
+            type: 'autocomplete',
             required: true,
+            selectOptions: _.map(jsonSchemaCols, (schema: any) => {
+                const name = _.get(schema, 'column');
+                return { label: name, value: name };
+            }),
         },
         {
             name: "aggregateFunction",
             label: "Aggregate Function",
-            type: 'text',
+            type: 'select',
+            required: true,
+            selectOptions: aggregateFunctions,
+        },
+        {
+            name: "rollupFields",
+            label: "Rollup Fields",
+            type: 'autocomplete',
+            multiple: true,
+            selectOptions: _.map(jsonSchemaCols, (schema: any) => {
+                const name = _.get(schema, 'column');
+                return { label: name, value: name };
+            }),
             required: true,
         },
         {

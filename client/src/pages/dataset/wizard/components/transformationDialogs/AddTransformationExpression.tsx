@@ -31,7 +31,7 @@ const AddTransformationExpression = (props: any) => {
         {
             name: "column",
             label: "Select Field",
-            type: 'select',
+            type: 'autocomplete',
             required: true,
             selectOptions: columns
         },
