@@ -10,6 +10,7 @@ import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
+import PreviewTransformation from "./PreviewTransform";
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank');
@@ -90,6 +91,10 @@ const AddNewField = (props: any) => {
             <DialogContent>
                 <Stack spacing={2} margin={1}>
                     <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                    {
+                        value.column && value.transformation &&
+                        <PreviewTransformation fieldName={value.column} expression={value.transformation} />
+                    }
                     <Box>
                         <Button onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
                     </ Box>
