@@ -23,11 +23,16 @@ const AddNewField = (props: any) => {
     const onSubmission = (value: any) => { };
     const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id, ...values }));
 
-    const saveTransformation = async (payload: any) => {
+    const saveTransformation = async (payload: any, updateStateData: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
         try {
             const data = await saveTransformations(payload);
-            if (data.data) return null;
+            if (data.data)
+                setSelection((preState: Array<any>) => {
+                    const updatedState = [...preState, updateStateData];
+                    pushStateToStore({ selection: updatedState });
+                    return updateState;
+                });
             else dispatchError();
         } catch (err) {
             dispatchError();
@@ -44,12 +49,7 @@ const AddNewField = (props: any) => {
                 field_key: column,
                 transformation_function: transformation,
                 dataset_id: mainDatasetId,
-            });
-            setSelection((preState: Array<any>) => {
-                const updatedState = [...preState, updatedColumnMetadata];
-                pushStateToStore({ selection: updatedState });
-                return updateState;
-            });
+            }, updatedColumnMetadata);
             onClose();
         }
     }

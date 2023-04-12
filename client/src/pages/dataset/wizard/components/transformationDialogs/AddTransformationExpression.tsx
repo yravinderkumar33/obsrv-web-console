@@ -61,11 +61,16 @@ const AddTransformationExpression = (props: any) => {
         }
     ];
 
-    const saveTransformation = async (payload: any) => {
+    const saveTransformation = async (payload: any, updateStateData: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
         try {
             const data = await saveTransformations(payload);
-            if (data.data) return null;
+            if (data.data)
+                setSelection((preState: Array<any>) => {
+                    const updatedState = [...preState, updateStateData];
+                    pushStateToStore({ selection: updatedState });
+                    return updatedState;
+                });
             else dispatchError();
         } catch (err) {
             dispatchError();
@@ -79,27 +84,25 @@ const AddTransformationExpression = (props: any) => {
             const uuid = v4();
             let updatedMeta: Record<string, any> = { ...targetColumn, isModified: true, _transformationType: transformation, id: uuid, };
             if (transformation === "custom" && expression) {
+                updatedMeta = { ...updatedMeta, transformation: expression };
+                const meta = { ...targetColumn, ...updatedMeta };
                 saveTransformation({
                     id: uuid,
                     field_key: column,
                     transformation_function: expression,
                     dataset_id: mainDatasetId,
-                });
-                updatedMeta = { ...updatedMeta, transformation: expression };
+                }, meta);
             } else {
+                const meta = { ...targetColumn, ...updatedMeta };
                 saveTransformation({
                     id: uuid,
                     field_key: column,
                     transformation_function: transformation,
                     dataset_id: mainDatasetId,
-                });
+                }, meta);
             }
-            const meta = { ...targetColumn, ...updatedMeta };
-            setSelection((preState: Array<any>) => {
-                const updatedState = [...preState, meta];
-                pushStateToStore({ selection: updatedState });
-                return updatedState;
-            });
+
+
             onClose();
         }
     }
