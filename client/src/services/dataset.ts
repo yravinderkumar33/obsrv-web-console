@@ -135,6 +135,7 @@ const connectorInfoToDraft = async (state: Record<string, any>, master: any) => 
             connector_type: type,
             connector_config: { ...rest },
             type: master ? 'master' : 'dataset',
+            status: 'DRAFT',
         }
         return saveConnectorDraft(payload);
     } else return false;
@@ -182,7 +183,7 @@ export const uploadToUrl = async (url: string, file: any) => {
 }
 
 export const saveConnectorDraft = async (payload: any) => {
-    return axios.post(`${apiEndpoints.datasetSourceConfig}`, payload);
+    return axios.patch(`${apiEndpoints.datasetSourceConfig}`, payload);
 }
 
 export const updateTransformations = async (payload: any) => {
