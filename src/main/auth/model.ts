@@ -28,16 +28,13 @@ const model = {
   },
 
   saveAuthorizationCode: async (code: AuthorizationCode, client: Client, user: User) => {
-    console.log(`saveAuthorizationCode`, code, client, user)
     db.authorizationCodes.push({ ...code, user, client });
     return { ...code, user, client };
   },
 
   getAuthorizationCode: async (authorizationCode: string) => {
-    console.log(`getAuthorizationCode: `, authorizationCode, db.authorizationCodes)
     const authCode = db.authorizationCodes.find((c) => c.authorizationCode === authorizationCode);
     if (!authCode) return Promise.resolve(null);
-    console.log(`authCode: `, authCode);
     const response: AuthorizationCode = {
       authorizationCode: authCode.authorizationCode,
       expiresAt: authCode.expiresAt,
@@ -49,7 +46,6 @@ const model = {
   },
 
   revokeAuthorizationCode: async (code: AuthorizationCode) => {
-    console.log(`revokeAuthorizationCode`, code)
     db.authorizationCodes = db.authorizationCodes.filter((c) => c.authorizationCode !== code.authorizationCode);
     return true;
   },

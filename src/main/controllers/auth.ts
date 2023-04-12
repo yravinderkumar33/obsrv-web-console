@@ -5,6 +5,7 @@ import model from './../auth/model'
 export default {
   name: 'auth:read',
   handler: () => async (request: Request, response: Response, next: NextFunction) => {
+    console.log("auth:read")
     if (request.session.user) {
       const user = { user: request.session.user.id }
       try {
