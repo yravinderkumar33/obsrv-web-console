@@ -5,8 +5,8 @@ import model from './../auth/model'
 export default {
   name: 'auth:read',
   handler: () => async (request: Request, response: Response, next: NextFunction) => {
-    if(request.session.user) {
-      const user = {user: request.session.user.id}
+    if (request.session.user) {
+      const user = { user: request.session.user.id }
       try {
         return oauthServer.authorize(
           {
@@ -16,18 +16,17 @@ export default {
               }
             }
           }
-         )(request, response, next)
+        )(request, response, next)
       } catch (error) {
         return next(error)
       }
-    } 
-    const {username, password}= request.body
+    }
+    const { username, password } = request.body
     if (username && password) {
       const user = await model.getUser(username, password)
       request.session.user = user;
       if (user) {
-        request.body.user = {user: user.id}
-        console.log(user)
+        request.body.user = { user: user.id }
         try {
           return oauthServer.authorize(
             {
@@ -37,15 +36,14 @@ export default {
                 }
               }
             }
-           )(request, response, next)
+          )(request, response, next)
         } catch (error) {
           return next(error)
         }
-     
-    } else {
-      return next(new Error("user name or password missing"))
+      } else {
+        return next(new Error("user name or password missing"))
+      }
     }
-  } 
-   
+
   },
 };

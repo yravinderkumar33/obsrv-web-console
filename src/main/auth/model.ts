@@ -1,29 +1,5 @@
+import { db } from "./auth_db";
 import { Client, User, Token, AuthorizationCode } from "oauth2-server";
-
-interface InMemoryDb {
-  clients: Client[];
-  users: User[];
-  accessTokens: Token[];
-  authorizationCodes: AuthorizationCode[];
-}
-
-const db: InMemoryDb = {
-  clients: [
-    {
-      id: "1",
-      clientId: "123",
-      clientSecret: "secret",
-      grants: ["authorization_code", "refresh_token", "client_credentials"],
-      redirectUris: ["http://localhost:3001/", "http://localhost:8088/oauth-authorized/obsrv"],
-    },
-  ],
-  users: [
-    { id: "1", username: "user", password: "password", email: "user@123.com", clientId: "123" },
-    { id: "2", username: "admin", password: "password", email: "admin@123.com",clientId: "123" },
-  ],
-  accessTokens: [],
-  authorizationCodes: [],
-};
 
 const model = {
   getClient: async (clientId: string, clientSecret: string) => {
@@ -34,6 +10,12 @@ const model = {
     return { ...client, grants: client.grants ?? [] };
   },
 
+  getUserById: async (id: string) => {
+    const user = db.users.find((u) => u.id === id);
+    if (!user) return null;
+    return user;
+  },
+
   getUser: async (username: string, password: string) => {
     const user = db.users.find((u) => u.username === username && u.password === password);
     if (!user) return null;
@@ -41,31 +23,34 @@ const model = {
   },
 
   saveToken: async (token: Token, client: Client, user: User) => {
-    console.log(`save Token`, user, token, client)
     db.accessTokens.push({ ...token, user, client });
     return { ...token, user, client };
   },
 
   saveAuthorizationCode: async (code: AuthorizationCode, client: Client, user: User) => {
+    console.log(`saveAuthorizationCode`, code, client, user)
     db.authorizationCodes.push({ ...code, user, client });
     return { ...code, user, client };
   },
 
   getAuthorizationCode: async (authorizationCode: string) => {
-    const authCode = db.authorizationCodes.find((c) => c.code === authorizationCode);
+    console.log(`getAuthorizationCode: `, authorizationCode, db.authorizationCodes)
+    const authCode = db.authorizationCodes.find((c) => c.authorizationCode === authorizationCode);
     if (!authCode) return Promise.resolve(null);
+    console.log(`authCode: `, authCode);
     const response: AuthorizationCode = {
       authorizationCode: authCode.authorizationCode,
       expiresAt: authCode.expiresAt,
       redirectUri: authCode.redirectUri,
       client: { id: authCode.client.id, grants: ["authorization_code", "refresh_token", "client_credentials"] },
-      user: { id: authCode.user.id }
+      user: { id: authCode.user.user }
     }
-    return Promise.resolve(response);
+    return response;
   },
 
   revokeAuthorizationCode: async (code: AuthorizationCode) => {
-    db.authorizationCodes = db.authorizationCodes.filter((c) => c.code !== code.code);
+    console.log(`revokeAuthorizationCode`, code)
+    db.authorizationCodes = db.authorizationCodes.filter((c) => c.authorizationCode !== code.authorizationCode);
     return true;
   },
 
@@ -93,24 +78,6 @@ const model = {
   verifyScope: async (token: Token, scope: string | string[]) => {
     // For the purpose of this example, we'll allow any scope.
     return true;
-  },
-  getUserFromClient: async (client: Client) => {
-
-    // TODO: implement this method  for a client and users properly
-    console.log(`getUserFromClient`, client)
-    const storedClient = db.clients.find(
-      (c) => c.id === client.id
-    );
-    const user = db.users.find((user) => user.id === client.id);
-    if (!client) return null;
-    return {
-      id: user?.id,
-      name: user?.username,
-      email: user?.email,
-      clientId: storedClient?.id,
-      grants: storedClient?.grants,
-      redirectUris: storedClient?.redirectUris,
-    };
   }
 };
 

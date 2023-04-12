@@ -1,6 +1,7 @@
 import middlewares from '../middlewares';
 import commonMiddlewares from '../../shared/middlewares';
 import controllers from '../controllers';
+import { oauthServer } from '../auth/auth'
 
 
 export default [
@@ -36,6 +37,7 @@ export default [
         method: 'get',
         middlewares: [
           commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.user.read' }),
+          oauthServer.authenticate(),
           controllers.get('auth:user')?.handler({})
         ],
       }
