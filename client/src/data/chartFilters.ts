@@ -5,25 +5,25 @@ export default {
             value: 1140,
             default: true,
             step: '5m',
-            granulatity: "five_minutes"
+            granularity: "five_minute"
         },
         {
             label: 'Last 7 Days',
             value: 10080,
             step: '15m',
-            granulatity: "fifteen_minutes"
+            granularity: "fifteen_minute"
         },
         {
             label: 'Last 15 Days',
             value: 21600,
             step: '30m',
-            granulatity: "thirty_minutes"
+            granularity: "thirty_minute"
         },
         {
             label: 'Last 30 Days',
             value: 43200,
-            step: '1h',
-            granulatity: "hour"
+            step: '1d',
+            granularity: "hour"
         }
     ],
     variant1: [

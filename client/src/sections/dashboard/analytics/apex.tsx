@@ -35,7 +35,7 @@ const ApexChart = (props: any) => {
         }
       }
 
-      const metadata = { interval, step };
+      const metadata = props;
       const seriesData = await fetchChartData(query, metadata);
       setSeries(seriesData);
     } catch (error) {

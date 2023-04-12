@@ -11,6 +11,8 @@ import filters from 'data/chartFilters';
 import AsyncLabel from "components/cards/statistics/AsyncLabel";
 import { totalVsRunningNodes, percentageUsage, cpuPercentageUsage, backupStatus } from 'services/transformers';
 import { Stack } from "@mui/material";
+import GrafanaChart from "sections/dashboard/analytics/GrafanaEmbedded";
+import IngestionCharts from "sections/dashboard/analytics/IngestionCharts";
 
 export const metricsMetadata = [
     {
@@ -140,9 +142,6 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="0" secondary="Response Time (Avg)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_avg.query')} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Response Time (Min)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_min.query')} />
-                    },
-                    {
                         chart: <ReportCard primary="0" secondary="Response Time (Max)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_max.query')} />
                     },
                 ]
@@ -224,15 +223,10 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ApexWithFilters title="Total Data Received" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Total Data Received (All Datasets)" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'totalEventsProcessedTimeSeries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Total Data Received/ Dataset" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'totalEventsProcessedTimeSeries')} interval={1140}></ApexChart>
-                        </ApexWithFilters>
-                    },
+                    }
                 ]
             },
             large: {
@@ -243,7 +237,9 @@ export const metricsMetadata = [
                     lg: 12
                 },
                 metadata: [
-
+                    {
+                        chart: <IngestionCharts title="Total Data Received " chartName="totalEventsProcessedTimeSeriesPerDataset" />
+                    },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
                             <AlertsMessages />
@@ -293,7 +289,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ApexWithFilters title="Processing Time (Min)" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Processing Time (All Datasets)" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'minProcessingTimeSeries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
@@ -312,7 +308,9 @@ export const metricsMetadata = [
                     lg: 12
                 },
                 metadata: [
-
+                    {
+                        chart: <IngestionCharts title="Procesing Time" chartName="minProcessingTimeSeriesPerDataset" />
+                    },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
                             <AlertsMessages />
@@ -368,12 +366,6 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         chart: <ReportCard primary="0" secondary="Success Backups Count" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'backup_count.query')} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Deep Storage Used" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'deep_storage_used.query')} suffix={'MB'} />
-                    },
-                    {
-                        chart: <ReportCard primary="0" secondary="Deep Storage Total" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'deep_storage_total.query')} suffix={'MB'} />
                     }
                 ]
             },
@@ -405,6 +397,9 @@ export const metricsMetadata = [
                     lg: 12
                 },
                 metadata: [
+                    {
+                        chart: <GrafanaChart url="/d-solo/EbXSjT24k/velero?orgId=1&from=1681118030875&to=1681290830875&theme=light&panelId=13" width="100%" height="400" />
+                    },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
                             <AlertsMessages />
