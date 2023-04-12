@@ -195,7 +195,7 @@ export const uploadToUrl = async (url: string, file: any) => {
 }
 
 export const saveConnectorDraft = async (payload: any) => {
-    return axios.patch(`${apiEndpoints.datasetSourceConfig}`, payload);
+    return axios.post(`${apiEndpoints.datasetSourceConfig}`, payload);
 }
 
 export const updateTransformations = async (payload: any) => {
