@@ -117,7 +117,7 @@ export default {
                     "queryType": "timeseries",
                     "dataSource": "system-stats",
                     "intervals": "$interval",
-                    "granularity": "five_minute",
+                    "granularity": "$granularity",
                     "aggregations": [
                         {
                             "type": "longSum",
@@ -146,12 +146,12 @@ export default {
             },
             context: (payload: any) => {
                 const { body, metadata = {} } = payload;
-                const { interval = 1140 } = metadata;
+                const { interval = 1140, granularity } = metadata;
                 const strPayload = JSON.stringify(body);
                 const start = dayjs().subtract(interval - 1140, 'minutes').format(dateFormat);
                 const end = dayjs().add(1, 'day').format(dateFormat);
                 const rangeInterval = `${start}/${end}`;
-                const updatedStrPayload = _.replace(strPayload, '$interval', rangeInterval);
+                const updatedStrPayload = _.replace(_.replace(strPayload, '$interval', rangeInterval), '$granularity', granularity);
                 const updatedPayload = JSON.parse(updatedStrPayload);
                 payload.body = updatedPayload;
                 return payload;

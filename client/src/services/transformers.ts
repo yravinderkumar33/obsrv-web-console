@@ -18,3 +18,9 @@ export const cpuPercentageUsage = (response: any) => {
     const [percentage, nodes, totalCpu] = response;
     return `${percentage} % Usage on ${nodes} Nodes, ${totalCpu} CPU's`
 }
+
+export const backupStatus = (response: any) => {
+    const [backupCount, percentage] = response;
+    const status = percentage < 100 ? "Unhealthy" : "Healthy";
+    return `${backupCount} Successful Backups (${status})`;
+}

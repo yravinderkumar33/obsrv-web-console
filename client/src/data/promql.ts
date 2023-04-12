@@ -30,7 +30,7 @@ export default {
         "query": '(cluster:node_cpu:ratio_rate5m{cluster=""}) * 100'
     },
     "instance_disk": {
-        "query": "(1 - (sum(node_filesystem_free_bytes) / sum(node_filesystem_size_bytes))) * 100"
+        "query": "(sum(kubelet_volume_stats_used_bytes)/ sum(kubelet_volume_stats_capacity_bytes))* 100"
     },
     "disk_usage_radial": {
         "query": "100 - ((node_filesystem_free_bytes{mountpoint=\"/\"} / node_filesystem_size_bytes{mountpoint=\"/\"}) * 100)"
@@ -57,10 +57,10 @@ export default {
         "query": "node_query_response_time"
     },
     "node_total_api_call": {
-        "query": "node_total_api_calls"
+        "query": "sum(node_total_api_calls) by(namespace)"
     },
     "node_total_failed_api_call": {
-        "query": "node_failed_api_calls"
+        "query": "sum(node_failed_api_calls) by (namespace)"
     },
     "node_query_response_time_min": {
         "query": "min_over_time(node_query_response_time[1d])"
@@ -85,5 +85,11 @@ export default {
     },
     "network_bytes_received": {
         "query": 'sum(irate(container_network_receive_packets_total{job="kubelet", metrics_path="/metrics/cadvisor", cluster="", namespace=~".+"}[$interval])) by (namespace)'
+    },
+    "backupCount": {
+        "query": "velero_backup_total"
+    },
+    "backupSuccessRate": {
+        "query": 'sum(velero_backup_success_total{schedule=~".*"}) / sum(velero_backup_attempt_total{schedule=~".*"})'
     }
 }
