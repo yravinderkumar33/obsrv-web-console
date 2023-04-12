@@ -5,11 +5,9 @@ import apiEndpoints from 'data/apiEndpoints';
 
 export const saveDatasource = ({ data = {}, config }: any) => {
     const { ingestionSpec, state, storeState } = data;
-    const datasetId = _.get(state, ['pages', 'datasetConfiguration', 'state', 'config', 'dataset_id']);
-    const idData = _.get(storeState, ['dataset', 'data']);
-    const id = idData.find((obj: any) => obj.dataset_id === datasetId);
+    const datasetId = _.get(state, ['pages', 'datasetConfiguration', 'state', 'masterId']);
     const payload = {
-        "dataset_id": id.id,
+        "dataset_id": datasetId,
         "ingestion_spec": ingestionSpec,
         "datasource": `${datasetId}_DAY`,
         "datasource_ref": `${datasetId}_DAY`,

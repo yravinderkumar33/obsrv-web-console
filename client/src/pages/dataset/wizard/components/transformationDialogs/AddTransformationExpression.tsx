@@ -14,7 +14,7 @@ import { v4 } from "uuid";
 import PreviewTransformation from "./PreviewTransform";
 
 const AddTransformationExpression = (props: any) => {
-    const { id, data, onClose, selection, setSelection, actions, configState } = props;
+    const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
     const dispatch = useDispatch();
     const [value, subscribe] = useState<any>({});
     const [previewState, setPreviewState] = useState<any>("");
@@ -83,6 +83,7 @@ const AddTransformationExpression = (props: any) => {
                     id: uuid,
                     field_key: column,
                     transformation_function: expression,
+                    dataset_id: mainDatasetId,
                 });
                 updatedMeta = { ...updatedMeta, transformation: expression };
             } else {
@@ -90,7 +91,7 @@ const AddTransformationExpression = (props: any) => {
                     id: uuid,
                     field_key: column,
                     transformation_function: transformation,
-                    dataset_id: configState.id,
+                    dataset_id: mainDatasetId,
                 });
             }
             const meta = { ...targetColumn, ...updatedMeta };

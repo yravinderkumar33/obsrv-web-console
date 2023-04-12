@@ -134,13 +134,11 @@ export const saveTransformations = async (payload: any) => {
 
 const connectorInfoToDraft = async (state: Record<string, any>, master: any) => {
     const data = _.get(state, ['wizard', 'pages', 'dataSource', 'value']);
-    const datasetId = _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'config', 'dataset_id']);
-    const idData = _.get(state, ['dataset', 'data']);
-    const idObject = idData.find((obj: any) => obj.dataset_id === datasetId);
+    const datasetId = _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'masterId']);
     if (datasetId && data && _.has(data, 'type')) {
         const { type, ...rest }: any = data;
         const payload = {
-            dataset_id: idObject.id,
+            dataset_id: datasetId,
             connector_type: type,
             connector_config: { ...rest },
             type: master ? 'master' : 'dataset',

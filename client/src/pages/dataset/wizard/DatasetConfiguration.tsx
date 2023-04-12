@@ -3,7 +3,7 @@ import * as yup from 'yup';
 import * as _ from 'lodash'
 import AnimateButton from 'components/@extended/AnimateButton';
 import { useDispatch, useSelector } from 'react-redux';
-import { addState } from 'store/reducers/wizard';
+import { addState, updateState } from 'store/reducers/wizard';
 import { IWizard } from 'types/formWizard';
 import UploadFiles from './UploadFiles';
 import { useEffect, useState } from 'react';
@@ -48,11 +48,11 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const [files, setFiles] = useState(filesState);
     const initialValues = pageData?.state?.config || { name: '', dataset_id: '' };
 
-    useEffect(() => {
-        return () => {
-            setFiles(null);
-        }
-    })
+    // useEffect(() => {
+    //     return () => {
+    //         setFiles(null);
+    //     }
+    // });
 
     const generateJSONSchema = async (data: Array<any>, config: Record<string, any>) => {
         const dataset = _.get(config, 'name');
@@ -68,7 +68,11 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const createDraft = async (config: Record<string, any>) => {
         try {
             const payload = { ...config, type: datasetType, version: 1, status: "DRAFT" };
-            await createDraftDataset({ data: payload });
+            const data = await createDraftDataset({ data: payload });
+            const dataset_id = _.get(data, 'data.result.dataset_id');
+            if (dataset_id) {
+                dispatch(updateState({ id: pageMeta.pageId, state: { masterId: dataset_id } }));
+            }
             setShowWizard(true);
         } catch (err: any) {
             dispatch(error({ message: "Failed to create dataset. Please try again later." }));
@@ -89,9 +93,9 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const onSubmit = (config: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
-            createDraft(config);
-            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
             uploadFiles(files);
+            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
+            createDraft(config);
             setShowWizard(true);
         } else {
             dispatch(error({ message: "Please fill the required fields" }));
