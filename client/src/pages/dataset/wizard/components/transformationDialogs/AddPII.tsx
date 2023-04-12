@@ -52,7 +52,11 @@ const AddPIIDialog = (props: any) => {
             saveTransformation({
                 id: uuid,
                 field_key: column,
-                transformation_function: transformation,
+                transformation_function: {
+                    type: transformation,
+                    expr: column,
+                    condition: null
+                },
                 dataset_id: mainDatasetId,
             }, updatedColumnMetadata);
             onClose();
