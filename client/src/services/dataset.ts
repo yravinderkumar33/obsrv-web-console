@@ -3,7 +3,6 @@ import axios from 'axios';
 import { updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
-import { v4 } from "uuid";
 
 export const createDraftDataset = ({ data = {}, config }: any) => {
     return axios.post(apiEndpoints.saveDatset, data, config);
@@ -132,7 +131,6 @@ const connectorInfoToDraft = async (state: Record<string, any>, master: any) => 
     if (datasetId && data && _.has(data, 'type')) {
         const { type, ...rest }: any = data;
         const payload = {
-            id: v4(),
             dataset_id: idObject.id,
             connector_type: type,
             connector_config: { ...rest },
