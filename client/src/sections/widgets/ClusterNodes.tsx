@@ -9,16 +9,16 @@ import { Stack } from "@mui/material";
 
 const ClusterNodes = () => {
     const metrics = useMemo(() => [chartMeta.total_nodes_count, chartMeta.total_running_nodes_count], []);
-    const [percentage, setPercentage] = useState(0);
-    const getNodeRunningPercentage = (total: number, running: number) => (running / total);
+    const [percentage, setPercentage] = useState<any>(0);
     const [suffix, setSuffix] = useState("0/0 Nodes Running");
+
+    const getNodeRunningPercentage = (total: number, running: number) => (running / total);
 
     const fetchMetrics = async () => {
         try {
             const [totalNodes, totalRunningNodes] = await Promise.all(_.map(metrics, metric => fetchChartData(metric.query as any)));
-            const nodeRunningPercentage = (totalNodes && getNodeRunningPercentage(totalNodes as any, totalRunningNodes as any)) || 0;
+            const nodeRunningPercentage = (totalNodes && getNodeRunningPercentage(totalNodes as any, totalRunningNodes as any)) || 0;            setSuffix(`${totalRunningNodes}/${totalNodes} Nodes Running`);
             setPercentage(nodeRunningPercentage);
-            setSuffix(`${totalRunningNodes}/${totalNodes} Nodes Running`);
         } catch (error) {
             console.log(error);
         }
@@ -38,7 +38,7 @@ const ClusterNodes = () => {
 
     return <>
         <Stack direction="column" justifyContent="center" alignItems="center">
-            <GaugeChart arcsLength={null} nrOfLevels={20} colors={['#EA4228', '#5BE12C']} percentage={percentage} />
+            <GaugeChart arcsLength={null} nrOfLevels={20} colors={['#EA4228', '#5BE12C']} percentage={1} />
             <AsyncLabel align="center" variant="caption" color="textSecondary" suffix={suffix}></AsyncLabel>
         </Stack>
     </>
