@@ -209,62 +209,65 @@ export default {
                 }
             }
         },
-        queries: [
-            {
-                type: 'api',
-                timeout: 3000,
-                url: '/obsrv/v1/query',
-                method: 'POST',
-                headers: {},
-                body: {
-                    "context": {
-                        "dataSource": "system-stats"
-                    },
-                    "query": {
-                        "queryType": "timeseries",
-                        "dataSource": "system-stats",
-                        "intervals": "$interval",
-                        "granularity": "five_minute",
-                        "aggregations": [
-                            {
-                                "type": "longSum",
-                                "name": "count",
-                                "fieldName": "count"
-                            }
-                        ]
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/obsrv/v1/query',
+            method: 'POST',
+            headers: {},
+            body: {
+                "context": {
+                    "dataSource": "system-stats"
+                },
+                "query": {
+                    "queryType": "timeseries",
+                    "dataSource": "system-stats",
+                    "intervals": "$interval",
+                    "granularity": "$granularity",
+                    "aggregations": [
+                        {
+                            "type": "longSum",
+                            "name": "count",
+                            "fieldName": "count"
+                        }
+                    ],
+                    "filter": {
+                        "type": "selector",
+                        "dimension": "dataset",
+                        "value": "$datasetId"
                     }
-                },
-                params: {},
-                parse: (response: any) => {
-                    const payload = _.get(response, 'result') || [];
-                    const series = _.map(payload, value => {
-                        const timestamp = Date.parse(_.get(value, 'timestamp'));
-                        const count = _.get(value, 'result.count')
-                        return [timestamp, count];
-                    });
+                }
+            },
+            params: {},
+            parse: (response: any) => {
+                const payload = _.get(response, 'result') || [];
+                const series = _.map(payload, value => {
+                    const timestamp = Date.parse(_.get(value, 'timestamp'));
+                    const count = _.get(value, 'result.count')
+                    return [timestamp, count];
+                });
 
-                    return [{
-                        name: 'Total Events Processed',
-                        data: series
-                    }]
-                },
-                error() {
-                    return [];
-                },
-                context: (payload: any) => {
-                    const { body, metadata = {} } = payload;
-                    const { interval = 1140 } = metadata;
-                    const strPayload = JSON.stringify(body);
-                    const start = dayjs().subtract(interval - 1140, 'minutes').format(dateFormat);
-                    const end = dayjs().add(1, 'day').format(dateFormat);
-                    const rangeInterval = `${start}/${end}`;
-                    const updatedStrPayload = _.replace(strPayload, '$interval', rangeInterval);
-                    const updatedPayload = JSON.parse(updatedStrPayload);
-                    payload.body = updatedPayload;
-                    return payload;
-                },
-                noParams: true
-            }
-        ]
+                return [{
+                    name: 'Total Events Processed',
+                    data: series
+                }]
+            },
+            error() {
+                return [];
+            },
+            context: (payload: any) => {
+                const { body, metadata = {} } = payload;
+                const { interval = 1140, granularity } = metadata;
+                const strPayload = JSON.stringify(body);
+                const start = dayjs().subtract(interval - 1140, 'minutes').format(dateFormat);
+                const end = dayjs().add(1, 'day').format(dateFormat);
+                const rangeInterval = `${start}/${end}`;
+                const updatedStrPayload = _.replace(_.replace(strPayload, '$interval', rangeInterval), '$granularity', granularity);
+                const updatedPayload = JSON.parse(updatedStrPayload);
+                payload.body = updatedPayload;
+                return payload;
+            },
+            noParams: true
+        }
     }
 }

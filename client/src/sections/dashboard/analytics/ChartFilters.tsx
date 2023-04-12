@@ -10,6 +10,7 @@ const ApexWithFilters = (props: any) => {
     const defaultFilter = _.find(filters, ['default', true]);
     const [filter, setFilter] = useState<any>(_.get(defaultFilter, 'value'));
     const [step, setStep] = useState<string>('5m');
+    const [filterMeta, setFilterMeta] = useState<any>(defaultFilter || {});
 
     const getFilterMeta = (value: number) => _.find(filters, ['value', value]);
 
@@ -17,6 +18,7 @@ const ApexWithFilters = (props: any) => {
         const value = _.get(event, 'target.value');
         if (value) {
             const filter = getFilterMeta(value);
+            filter && setFilterMeta(filter);
             setFilter(value);
             filter && setStep(_.get(filter, 'step'));
         }
@@ -27,6 +29,7 @@ const ApexWithFilters = (props: any) => {
         if (value && step) {
             setFilter(value);
             setStep(step);
+            setFilterMeta(filter);
         }
     }
 
@@ -52,7 +55,7 @@ const ApexWithFilters = (props: any) => {
 
     const childrenWithProps = React.Children.map(children, child => {
         if (React.isValidElement(child)) {
-            const updatedProps = { interval: filter, step };
+            const updatedProps = { interval: filter, step, ...filterMeta };
             return React.cloneElement(child, updatedProps);
         }
         return child;

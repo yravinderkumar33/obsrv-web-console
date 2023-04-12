@@ -206,7 +206,17 @@ export default {
             },
             error() {
                 return 0;
-            }
+            },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params, metadata = {} } = clonedPayload;
+                const { step } = metadata;
+                const query = _.get(params, 'query');
+                if (step && query) {
+                    _.set(params, 'query', _.replace(query, '$interval', step));
+                }
+                return clonedPayload;
+            },
         }
     },
     node_total_failed_api_call: {
@@ -278,13 +288,16 @@ export default {
             error() {
                 return 0;
             },
-            // context: (payload: any) => {
-            //     const { metadata = {}, params } = payload;
-            //     const query = _.get(params, 'query');
-            //     const updatedQuery = _.replace(query, '$interval', _.get(metadata, 'step'));
-            //     params.query = updatedQuery;
-            //     return payload;
-            // },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params, metadata = {} } = clonedPayload;
+                const { step } = metadata;
+                const query = _.get(params, 'query');
+                if (step && query) {
+                    _.set(params, 'query', _.replace(query, '$interval', step));
+                }
+                return clonedPayload;
+            },
         }
     },
     api_failure_percentage: {
@@ -366,7 +379,7 @@ export default {
             headers: {},
             body: {},
             params: {
-                query: promql.node_query_response_time_avg.query,
+                query: promql.node_query_response_time_avg_timeseries.query,
                 step: '1m'
             },
             parse: (response: any) => {
@@ -378,7 +391,17 @@ export default {
             },
             error() {
                 return 0;
-            }
+            },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params, metadata = {} } = clonedPayload;
+                const { step } = metadata;
+                const query = _.get(params, 'query');
+                if (step && query) {
+                    _.set(params, 'query', _.replace(query, '$interval', step));
+                }
+                return clonedPayload;
+            },
         }
     }
 }
