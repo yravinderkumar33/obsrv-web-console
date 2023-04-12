@@ -486,13 +486,13 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     buttonProps={{ size: "large" }}
                     tooltipProps={{ arrow: true }}
                 />
-                <IconButtonWithTips
+                {/* <IconButtonWithTips
                     tooltipText="Re-upload Schema"
                     icon={<UploadOutlined />}
                     handleClick={() => { }}
                     buttonProps={{ size: "large" }}
                     tooltipProps={{ arrow: true }}
-                />
+                /> */}
                 <IconButtonWithTips
                     tooltipText="View all suggestions"
                     icon={<FolderViewOutlined />}
