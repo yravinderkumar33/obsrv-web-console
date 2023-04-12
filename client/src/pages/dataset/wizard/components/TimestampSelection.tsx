@@ -15,7 +15,7 @@ const TimestampSelection = (props: any) => {
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const jsonSchema = _.get(wizardState, 'pages.jsonSchema');
 
-    const indexColumns = _.map(_.get(jsonSchema, 'configurations.indexConfiguration.index'), col => ({ label: col, value: col }));
+    const indexColumns = Object.entries(_.get(jsonSchema, 'configurations.indexConfiguration.index')).map(([key, value]) => ({ label: value, value: key }));
     const [value, subscribe] = useState<any>({});
 
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
@@ -50,4 +50,4 @@ const TimestampSelection = (props: any) => {
     </>
 }
 
-export default TimestampSelection
+export default TimestampSelection;

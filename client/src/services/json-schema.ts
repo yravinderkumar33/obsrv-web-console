@@ -70,9 +70,9 @@ const removeRequiredFlag = (jsonSchema: any, key: string) => {
     _.set(jsonSchema, `${parentPath}.required`, updatedRequiredKey);
 }
 
-export const checkIfRequired = (originalRequired: any, key: string, required: boolean) => {
+export const checkIfRequired = (originalRequired: string[], key: string, required: boolean) => {
     if (!required) return _.pull(originalRequired, key.replace('properties.', ''));
-    else return originalRequired;
+    else return [...originalRequired, key.replace('properties.', '')];
 }
 
 export const updateJSONSchema = (original: any, updatePayload: any) => {
@@ -83,21 +83,10 @@ export const updateJSONSchema = (original: any, updatePayload: any) => {
             const modifiedRows = _.filter(values, ['isModified', true]);
             _.forEach(modifiedRows, row => {
                 const { isDeleted = false, required = true, key, type } = row;
-                if (isDeleted) {
-                    // removeRequiredFlag(valueFromOriginalPayload, key);
-                    _.unset(valueFromOriginalPayload, key);
-                    _.set(
-                        valueFromOriginalPayload,
-                        'required',
-                        checkIfRequired(valueFromOriginalPayload?.required, key, false)
-                    )
-                } else {
-                    _.set(valueFromOriginalPayload, key, { type: type, required: required });
-                    _.set(
-                        valueFromOriginalPayload,
-                        'required',
-                        checkIfRequired(valueFromOriginalPayload?.required, key, required)
-                    );
+                if (isDeleted) { _.unset(valueFromOriginalPayload, key); }
+                else {
+                    _.set(valueFromOriginalPayload, key, { type: type });
+                    _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.required, key, required));
                 }
             })
         }

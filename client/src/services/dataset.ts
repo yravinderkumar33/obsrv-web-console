@@ -4,6 +4,15 @@ import { updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
 
+const synctsObject = {
+    "column": "syncts",
+    "type": "number",
+    "key": "properties.syncts",
+    "ref": "properties.syncts",
+    "required": true,
+    "isModified": true,
+}
+
 export const createDraftDataset = ({ data = {}, config }: any) => {
     return axios.post(apiEndpoints.saveDatset, data, config);
 }
@@ -144,7 +153,12 @@ const connectorInfoToDraft = async (state: Record<string, any>, master: any) => 
 export const publishDataset = async (state: Record<string, any>, storeState: any, master: any) => {
     await connectorInfoToDraft(storeState, master);
     const jsonSchema = _.get(state, 'pages.jsonSchema');
-    const updatePayload = { schema: _.get(state, 'pages.columns.state.schema') };
+    const timestampCol = _.get(state, 'pages.timestamp.indexCol') || "syncts";
+    let updatePayload;
+    if (timestampCol === "syncts")
+        updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject] };
+    else
+        updatePayload = { schema: _.get(state, 'pages.columns.state.schema') };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
     const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedJsonSchema, state }, config: {} });
     const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
@@ -199,4 +213,11 @@ export const updateClientState = async ({ clientState }: any) => {
     const pagesData = _.get(clientState, 'pages');
     const datasetConfig = _.get(pagesData, 'datasetConfiguration.state.config');
     return updateDataset({ data: { ...datasetConfig, client_state: clientState } });
+}
+
+export const verifyKafkaConnection = async (connectorInfo: any) => {
+    return await axios.post(`${apiEndpoints.kafkaConnection}`, {
+        bootstrap: connectorInfo.kafkaBrokers,
+        topic: connectorInfo.topic,
+    });
 }
