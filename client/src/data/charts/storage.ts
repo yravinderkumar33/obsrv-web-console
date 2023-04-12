@@ -119,5 +119,47 @@ export default {
                 return 0
             }
         }
+    },
+    backup_count: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.backupCount.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result[0].value[1]');
+                if (!result) throw new Error();
+                return _.floor(result);
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    backup_success_rate: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.backupSuccessRate.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'result.data.result[0].value[1]');
+                if (!result) throw new Error();
+                return _.floor(result * 100);
+            },
+            error() {
+                return 0
+            }
+        }
     }
 }

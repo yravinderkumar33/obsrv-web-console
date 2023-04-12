@@ -9,7 +9,7 @@ import GaugeChart from "sections/dashboard/analytics/guageChart";
 import ApexWithFilters from "sections/dashboard/analytics/ChartFilters";
 import filters from 'data/chartFilters';
 import AsyncLabel from "components/cards/statistics/AsyncLabel";
-import { totalVsRunningNodes, percentageUsage, cpuPercentageUsage } from 'services/transformers';
+import { totalVsRunningNodes, percentageUsage, cpuPercentageUsage, backupStatus } from 'services/transformers';
 import { Stack } from "@mui/material";
 
 export const metricsMetadata = [
@@ -137,14 +137,14 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_health_status.query')} />
                     },
                     {
+                        chart: <ReportCard primary="0" secondary="Response Time (Avg)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_avg.query')} />
+                    },
+                    {
                         chart: <ReportCard primary="0" secondary="Response Time (Min)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_min.query')} />
                     },
                     {
                         chart: <ReportCard primary="0" secondary="Response Time (Max)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_max.query')} />
                     },
-                    {
-                        chart: <ReportCard primary="0" secondary="Response Time (Avg)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_avg.query')} />
-                    }
                 ]
             },
             medium: {
@@ -155,16 +155,6 @@ export const metricsMetadata = [
                     lg: 6
                 },
                 metadata: [
-                    {
-                        chart: <ApexWithFilters title="Query Response Time (Min)" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'node_query_response_min_timeseries')} interval={1140}></ApexChart>
-                        </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Query Response Time (Max)" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'node_query_response_max_timeseries')} interval={1140}></ApexChart>
-                        </ApexWithFilters>
-                    },
                     {
                         chart: <ApexWithFilters title="Query Response Time (Avg)" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'node_query_response_avg_timeseries')} interval={1140}></ApexChart>
@@ -339,6 +329,11 @@ export const metricsMetadata = [
         description: "This page shows the metrics of storage",
         icon: DotChartOutlined,
         menuIcon: StockOutlined,
+        links: {
+            grafana: {
+                link: "d/EbXSjT24k/velero?orgId=1"
+            }
+        },
         color: 'main',
         charts: {
             xs: {
@@ -354,6 +349,12 @@ export const metricsMetadata = [
                             <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
                             <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'disk_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
                         </AnalyticsDataCard>
+                    },
+                    {
+                        chart: <AnalyticsDataCard title="Backup Success Rate">
+                            <GaugeChart arcsLength={null} nrOfLevels={20} colors={['#EA4228', '#5BE12C']} query={_.get(chartMeta, 'backup_success_rate.query')} />
+                            <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'backup_count.query'), _.get(chartMeta, 'backup_success_rate.query')]} transformer={backupStatus}></AsyncLabel>
+                        </AnalyticsDataCard>
                     }
                 ]
             },
@@ -366,7 +367,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ReportCard primary="Healthy" secondary="Backups Status" iconPrimary={BarChartOutlined} />
+                        chart: <ReportCard primary="0" secondary="Success Backups Count" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'backup_count.query')} />
                     },
                     {
                         chart: <ReportCard primary="0" secondary="Deep Storage Used" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'deep_storage_used.query')} suffix={'MB'} />

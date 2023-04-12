@@ -44,6 +44,7 @@ const ClusterMetrics = () => {
   const [metrics, setMetrics] = useState(metricsMetadata)
 
   const getColor = (metric: Record<string, any>, value: number) => {
+    if (value === 0) return "error";
     const { colors } = metric;
     const color = _.findKey(colors, (range) => {
       const [start, end] = range;
@@ -80,7 +81,7 @@ const ClusterMetrics = () => {
       <Grid container spacing={3}>
         {metrics.map(metric => {
           const { label, value = 0 } = metric;
-          return <Grid item xs={12}>
+          return <Grid item xs={12} key={Math.random()}>
             <Grid container alignItems="center" spacing={1}>
               <Grid item sm zeroMinWidth>
                 <Typography variant="body2">{label.toUpperCase()}</Typography>
@@ -99,9 +100,6 @@ const ClusterMetrics = () => {
       </Grid>
     </MainCard>
   </>
-
-
-
 };
 
 export default ClusterMetrics;

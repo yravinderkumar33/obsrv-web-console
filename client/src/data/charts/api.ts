@@ -277,7 +277,14 @@ export default {
             },
             error() {
                 return 0;
-            }
+            },
+            // context: (payload: any) => {
+            //     const { metadata = {}, params } = payload;
+            //     const query = _.get(params, 'query');
+            //     const updatedQuery = _.replace(query, '$interval', _.get(metadata, 'step'));
+            //     params.query = updatedQuery;
+            //     return payload;
+            // },
         }
     },
     api_failure_percentage: {
@@ -300,77 +307,6 @@ export default {
             },
             error() {
                 return [0, "error"];
-            }
-        }
-    },
-    node_query_response_min_timeseries: {
-        type: 'line',
-        series: [],
-        options: {
-            chart: {
-                type: 'line',
-                animations: defaultConf.animations,
-                toolbar: {
-                    show: false
-                }
-            },
-            grid: defaultConf.grid,
-            legend: {
-                show: false
-            },
-            stroke: {
-                width: 2,
-                curve: 'smooth'
-            },
-            yaxis: {
-                labels: {
-                    formatter: function (value: number) {
-                        return ` ${_.round(value, 1)} ms`;
-                    }
-                }
-            },
-            tooltip: {
-                theme: 'light',
-                x: {
-                    show: true,
-                    formatter(value: number) {
-                        return new Date(value * 1000)
-                    }
-                }
-            },
-            xaxis: {
-                tickAmount: 10,
-                type: 'datetime',
-                labels: {
-                    formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
-                    }
-                },
-                tooltip: {
-                    enabled: false
-                }
-            }
-        },
-        query: {
-            type: 'api',
-            timeout: 3000,
-            url: '/api/report/v1/query/range',
-            method: 'GET',
-            headers: {},
-            body: {},
-            params: {
-                query: promql.node_query_response_time_min.query,
-                step: '1m'
-            },
-            parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
-                return _.map(result, payload => ({
-                    name: 'Min Query Response Time',
-                    data: _.get(payload, 'values')
-                }))
-            },
-            error() {
-                return 0;
             }
         }
     },
@@ -444,76 +380,5 @@ export default {
                 return 0;
             }
         }
-    },
-    node_query_response_max_timeseries: {
-        type: 'line',
-        series: [],
-        options: {
-            chart: {
-                type: 'line',
-                animations: defaultConf.animations,
-                toolbar: {
-                    show: false
-                }
-            },
-            grid: defaultConf.grid,
-            legend: {
-                show: false
-            },
-            stroke: {
-                width: 2,
-                curve: 'smooth'
-            },
-            yaxis: {
-                labels: {
-                    formatter: function (value: number) {
-                        return ` ${_.round(value, 1)} ms`;
-                    }
-                }
-            },
-            tooltip: {
-                theme: 'light',
-                x: {
-                    show: true,
-                    formatter(value: number) {
-                        return new Date(value * 1000)
-                    }
-                }
-            },
-            xaxis: {
-                tickAmount: 10,
-                type: 'datetime',
-                labels: {
-                    formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
-                    }
-                },
-                tooltip: {
-                    enabled: false
-                }
-            }
-        },
-        query: {
-            type: 'api',
-            timeout: 3000,
-            url: '/api/report/v1/query/range',
-            method: 'GET',
-            headers: {},
-            body: {},
-            params: {
-                query: promql.node_query_response_time_max.query,
-                step: '1m'
-            },
-            parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
-                return _.map(result, payload => ({
-                    name: 'Min Query Response Time',
-                    data: _.get(payload, 'values')
-                }))
-            },
-            error() {
-                return 0;
-            }
-        }
-    },
+    }
 }

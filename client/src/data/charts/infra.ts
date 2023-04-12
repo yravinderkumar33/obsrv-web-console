@@ -295,7 +295,7 @@ export default {
                 return _.floor(result);
             },
             error() {
-                return [0, "error"]
+                return 0
             }
         }
     },
@@ -329,27 +329,11 @@ export default {
         series: [0],
         options: {
             chart: {
+                height: 350,
                 type: 'radialBar',
             },
-            plotOptions: {
-                radialBar: {
-                    hollow: {
-                        margin: 0,
-                        size: '90%'
-                    },
-                    track: {
-                        margin: 0,
-                        background: '#FF0000'
-                    },
-                    dataLabels: {
-                        value: {
-                            show: false
-                        }
-                    }
-                },
-
-            },
-            labels: ['Nodes'],
+            series: [70],
+            labels: ['Progress'],
         }
     },
     instance_memory: {
