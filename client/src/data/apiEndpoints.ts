@@ -14,4 +14,5 @@ export default {
     s3Upload: "/config/obsrv/v1/file/upload",
     datasetSourceConfig: "/config/obsrv/v1/datasets/source/config",
     transformationsConfig: "/config/obsrv/v1/datasets/transformation",
+    kafkaConnection: "/api/report/v1/kafka",
 }

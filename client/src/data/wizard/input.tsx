@@ -4,8 +4,7 @@ import { forms } from 'data/forms'
 import ConditionalCheckboxForm from "pages/dataset/wizard/components/ConditionalCheckboxBasedForm";
 import sampleBatchConfig from 'data/sampleBatchEvent.json';
 import { downloadJSONFile } from 'services/utils';
-import apiEndpoints from 'data/apiEndpoints';
-import { v4 } from "uuid";
+import VerifyKafka from 'pages/dataset/wizard/components/VerifyKafka';
 
 const downloadBatchConfig = () => {
     downloadJSONFile(sampleBatchConfig, "sampleBatchConfig.json");
@@ -70,7 +69,8 @@ const datasourceQues = {
             required: true,
             form: forms.input_kafka,
             description: "Load streaming data in real-time from Apache Kafka. Configure topic name and list of Kafka brokers in the form: <BROKER_1>:<PORT_1>,<BROKER_2>:<PORT_2>,...",
-        }
+            component: <VerifyKafka />,
+        },
     ]
 }
 

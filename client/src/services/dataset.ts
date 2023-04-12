@@ -200,3 +200,10 @@ export const updateClientState = async ({ clientState }: any) => {
     const datasetConfig = _.get(pagesData, 'datasetConfiguration.state.config');
     return updateDataset({ data: { ...datasetConfig, client_state: clientState } });
 }
+
+export const verifyKafkaConnection = async (connectorInfo: any) => {
+    return await axios.post(`${apiEndpoints.kafkaConnection}`, {
+        bootstrap: connectorInfo.kafkaBrokers,
+        topic: connectorInfo.topic,
+    });
+}
