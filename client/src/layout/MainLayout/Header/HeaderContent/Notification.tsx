@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -20,13 +20,17 @@ import {
   useMediaQuery
 } from '@mui/material';
 
-// project import
 import MainCard from 'components/MainCard';
 import IconButton from 'components/@extended/IconButton';
 import Transitions from 'components/@extended/Transitions';
 
+import { fetchChartData } from 'services/clusterMetrics';
+import chartMeta from 'data/charts'
+import * as _ from 'lodash';
+import dayjs from 'dayjs';
+
 // assets
-import { BellOutlined, CheckCircleOutlined, GiftOutlined, MessageOutlined, SettingOutlined } from '@ant-design/icons';
+import { BellOutlined, GiftOutlined } from '@ant-design/icons';
 
 // sx styles
 const avatarSX = {
@@ -50,9 +54,9 @@ const actionSX = {
 const Notification = () => {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
-
+  const [alerts, setAlerts] = useState<Record<string, any>>([]);
   const anchorRef = useRef<any>(null);
-  const [read, setRead] = useState(2);
+  const [read, setRead] = useState(0);
   const [open, setOpen] = useState(false);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -64,6 +68,44 @@ const Notification = () => {
     }
     setOpen(false);
   };
+
+
+  const fetchAlerts = async () => {
+    const { query } = chartMeta.alerts;
+    const alerts = await fetchChartData(query);
+    setAlerts(alerts);
+    setRead(_.get(alerts, 'length') || 0)
+  }
+
+  useEffect(() => {
+    fetchAlerts();
+  }, [])
+
+  const getNotification = (alert: any) => {
+    return <ListItemButton selected={read > 0}>
+      <ListItemAvatar>
+        <Avatar
+          sx={{
+            color: 'success.main',
+            bgcolor: 'success.lighter'
+          }}
+        >
+          <GiftOutlined />
+        </Avatar>
+      </ListItemAvatar>
+      <ListItemText
+        primary={
+          <Typography variant="h6">
+            <Typography component="span" variant="subtitle1">
+              {alert?.annotations?.description}
+            </Typography>{' '}
+          </Typography>
+        }
+        secondary={dayjs(alert?.startsAt).format('DD/MM/YYYY::DD:mm:ss')}
+      />
+    </ListItemButton>
+  }
+
 
   const iconBackColorOpen = theme.palette.mode === 'dark' ? 'grey.200' : 'grey.300';
   const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
@@ -121,6 +163,7 @@ const Notification = () => {
                   elevation={0}
                   border={false}
                   content={false}
+                  sx={{ overflow: 'auto', height: '50vh' }}
                 >
                   <List
                     component="nav"
@@ -134,44 +177,11 @@ const Notification = () => {
                       }
                     }}
                   >
-                    <ListItemButton selected={read > 0}>
-                      <ListItemAvatar>
-                        <Avatar
-                          sx={{
-                            color: 'success.main',
-                            bgcolor: 'success.lighter'
-                          }}
-                        >
-                          <GiftOutlined />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6">
-                            <Typography component="span" variant="subtitle1">
-                              Redis Down
-                            </Typography>{' '}
-                          </Typography>
-                        }
-                        secondary="2 min ago"
-                      />
-                      <ListItemSecondaryAction>
-                        <Typography variant="caption" noWrap>
-                          3:00 AM
-                        </Typography>
-                      </ListItemSecondaryAction>
-                    </ListItemButton>
+                    {
+                      _.map(alerts, getNotification)
+                    }
                     <Divider />
                     <Divider />
-                    <ListItemButton sx={{ textAlign: 'center', py: `${12}px !important` }}>
-                      <ListItemText
-                        primary={
-                          <Typography variant="h6" color="primary">
-                            View All
-                          </Typography>
-                        }
-                      />
-                    </ListItemButton>
                   </List>
                 </MainCard>
               </ClickAwayListener>

@@ -84,7 +84,7 @@ export default {
         "query": 'topk(1, sum(minio_cluster_capacity_usable_free_bytes{job="loki-minio"}) by (instance)) '
     },
     "api_failure_percentage": {
-        "query": "(node_failed_api_calls / node_total_api_calls) * 100"
+        "query": "((sum_over_time(sum by (job) (node_failed_api_calls)[1d:30s]) / sum_over_time(sum by (job) (node_total_api_calls)[1d:30s]))*100)"
     },
     "network_bytes_received": {
         "query": 'sum(irate(container_network_receive_packets_total{job="kubelet", metrics_path="/metrics/cadvisor", cluster="", namespace=~".+"}[$interval])) by (namespace)'

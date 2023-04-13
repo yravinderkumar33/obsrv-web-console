@@ -6,7 +6,7 @@ import { fetchChartData } from 'services/clusterMetrics';
 
 const GaugeChart = (props: any) => {
     const { textColor = 'black', nrOfLevels = 100, arcsLength = [80, 10, 10], colors = ['#5BE12C', '#F5CD19', '#EA4228'], percentage = 0, query = {}, ...rest } = props
-    const [percent, setPercent] = useState(percentage);
+    const [percent, setPercent] = useState(0);
 
     const fetchMetrics = async () => {
         try {
@@ -36,7 +36,7 @@ const GaugeChart = (props: any) => {
             nrOfLevels={nrOfLevels}
             arcsLength={arcsLength}
             colors={colors}
-            percent={percent}
+            percent={percentage || percent}
             textColor={textColor}
             needleColor={'#6a727a'}
         />

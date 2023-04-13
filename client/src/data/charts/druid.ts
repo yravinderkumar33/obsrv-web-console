@@ -61,10 +61,11 @@ export default {
             params: {},
             parse: (response: any) => {
                 const ms = _.get(response, 'result[0].event.last_synced_time') || 0;
+                if(!ms) throw new Error();
                 return dayjs(ms).format('YYYY-MM-DD HH:mm:ss')
             },
             error() {
-                return 0
+                return '-'
             }
         }
     },
@@ -104,7 +105,7 @@ export default {
                 })
             },
             error() {
-                return 0
+                return '-'
             }
         }
     },

@@ -117,7 +117,7 @@ export default {
                     "queryType": "groupBy",
                     "dataSource": "system-stats",
                     "intervals": "$interval",
-                    "granularity": "$granularity",
+                    "granularity": "all",
                     "aggregations": [
                         {
                             "type": "doubleMean",
