@@ -93,7 +93,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const onSubmit = (config: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
-            uploadFiles(files);
+            // uploadFiles(files);
             dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
             createDraft(config);
             setShowWizard(true);
