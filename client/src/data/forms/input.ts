@@ -26,13 +26,6 @@ export const batchForm = [
         required: true
     },
     {
-        name: "batchId",
-        label: "Batch Id",
-        type: 'text',
-        required: true,
-        tooltip: 'Provide a unique batch identifier',
-    },
-    {
         name: "dedupeRequired",
         label: "Dedupe Batch ?",
         type: 'select',
@@ -40,8 +33,8 @@ export const batchForm = [
         selectOptions: confirmationOptions
     },
     {
-        name: "dedupeKey",
-        label: "Dedupe Key",
+        name: "batchId",
+        label: "Batch ID",
         type: 'text',
         required: true,
         dependsOn: {

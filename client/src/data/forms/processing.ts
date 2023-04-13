@@ -31,7 +31,7 @@ export const dedupeForm = [
     },
     {
         name: "dedupePeriod",
-        label: "Dedupe Period in Days",
+        label: "Dedupe Period in Minutes",
         type: 'number',
         required: true
     }
