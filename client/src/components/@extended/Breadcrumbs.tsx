@@ -15,6 +15,7 @@ import { ApartmentOutlined, HomeOutlined, HomeFilled } from '@ant-design/icons';
 // types
 import { OverrideIcon } from 'types/root';
 import { NavItemType } from 'types/menu';
+import { useSelector } from 'react-redux';
 
 // ==============================|| BREADCRUMBS ||============================== //
 
@@ -55,6 +56,13 @@ const Breadcrumbs = ({
     const location = useLocation();
     const [main, setMain] = useState<NavItemType | undefined>();
     const [item, setItem] = useState<NavItemType>();
+    const config: any = useSelector((state: any) => state?.wizard?.pages?.datasetConfiguration);
+    const [replaceLabel, setReplaceLabel] = useState('');
+
+    useEffect(() => {
+        if (config?.state?.config?.dataset_id) setReplaceLabel(config?.state?.config?.dataset_id);
+        else setReplaceLabel('');
+    }, [config]);
 
     const iconSX = {
         marginRight: theme.spacing(0.75),
@@ -128,6 +136,9 @@ const Breadcrumbs = ({
         itemTitle = item.title;
 
         ItemIcon = item.icon ? item.icon : ApartmentOutlined;
+        if (location.pathname.includes('/dataset/') && replaceLabel !== '')
+            itemTitle = replaceLabel;
+
         itemContent = (
             <Typography variant="subtitle1" color="textPrimary">
                 {icons && <ItemIcon style={iconSX} />}
