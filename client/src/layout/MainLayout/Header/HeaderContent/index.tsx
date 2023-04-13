@@ -11,8 +11,8 @@ const HeaderContent = ({ wizard = false }) => {
 
     return (
         <>
-            {matchesXs && <Box sx={{ width: '100%', ml: 1 }} />}
-            {!matchesXs && <Search wizard={wizard} />}
+            {matchesXs && <Box sx={{ ml: 1 }} />}
+            <Search wizard={wizard} />
             <MegaMenuSection />
             <Notification />
             {matchesXs && <MobileSection />}

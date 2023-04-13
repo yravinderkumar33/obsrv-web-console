@@ -255,12 +255,12 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     return (
                         <Box position="relative" maxWidth={180} display="flex" alignItems="center">
                             {row?.oneof && !isResolved &&
-                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} onClick={handleSuggestions}>
+                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} color="error" onClick={handleSuggestions}>
                                     <WarningOutlined />
                                 </IconButton>
                             }
                             {row?.oneof && isResolved &&
-                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} onClick={handleSuggestions}>
+                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} color="success" onClick={handleSuggestions}>
                                     <CheckOutlined />
                                 </IconButton>
                             }
@@ -483,7 +483,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     tooltipText="Download Schema"
                     icon={<DownloadOutlined />}
                     handleClick={handleDownloadButton}
-                    buttonProps={{ size: "large" }}
+                    buttonProps={{ size: "large", sx: { color: "#000" } }}
                     tooltipProps={{ arrow: true }}
                 />
                 {/* <IconButtonWithTips
@@ -497,7 +497,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     tooltipText="View all suggestions"
                     icon={<FolderViewOutlined />}
                     handleClick={handleSuggestionsView}
-                    buttonProps={{ size: "large" }}
+                    buttonProps={{ size: "large", sx: { color: "#000" } }}
                     tooltipProps={{ arrow: true }}
                 />
             </Box>

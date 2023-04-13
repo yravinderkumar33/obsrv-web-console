@@ -10,7 +10,6 @@ import { useMediaQuery, Box, Container, Toolbar } from '@mui/material';
 import Drawer from './Drawer';
 import Header from './Header';
 import Footer from './Footer';
-import navigation from 'menu-items';
 import useConfig from 'hooks/useConfig';
 
 // types
@@ -19,8 +18,6 @@ import { openDrawer } from 'store/reducers/menu';
 import ScrollButton from 'components/ScrollButton';
 
 // ==============================|| MAIN LAYOUT ||============================== //
-
-const wizardPages = ['/dataset/new', '/dataset/new/master']
 
 const MainLayout = () => {
     const theme = useTheme();
@@ -57,11 +54,10 @@ const MainLayout = () => {
     //   // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [drawerOpen]);
 
-
     return (
         <>
             <Box sx={{ display: 'flex', width: '100%', }} position="relative">
-                <Header open={open} handleDrawerToggle={handleDrawerToggle} wizard={wizardPages.includes(location.pathname)} />
+                <Header open={open} handleDrawerToggle={handleDrawerToggle} wizard={location.pathname.includes('/dataset/')} />
                 <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
                 <Box component="main" sx={{ width: 'calc(100% - 260px)', flexGrow: 1, py: { xs: 2, sm: 2 }, px: { xs: 2, sm: 1 } }}>
                     <Toolbar style={{ 'height': `${mainContainerHeight}px` }} />

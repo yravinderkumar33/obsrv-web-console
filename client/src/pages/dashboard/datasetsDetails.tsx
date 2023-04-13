@@ -32,7 +32,7 @@ const DatasetDetails = () => {
             },
             charts: [
                 {
-                    title: 'Average Processing Time',
+                    title: 'Average Processing Time (ms)',
                     query: () => {
                         const startDate = '2000-01-01';
                         const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
@@ -96,7 +96,7 @@ const DatasetDetails = () => {
                     chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
                 },
                 {
-                    title: 'Average Processing Time',
+                    title: 'Average Processing Time (ms)',
                     query: () => {
                         const startDate = '2023-03-01';
                         const endDate = dayjs().add(2, 'day').format('YYYY-MM-DD');

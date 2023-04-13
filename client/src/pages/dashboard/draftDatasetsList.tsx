@@ -27,9 +27,9 @@ const DraftDatasetsList = ({ datasets }: any) => {
     }
 
     const publish = async (payload: Record<string, any>) => {
-        const { id, dataset_name } = payload;
+        const { dataset_id } = payload;
         try {
-            await publishDataset({ data: { datasetId: id } });
+            await publishDataset({ data: { datasetId: dataset_id } });
             dispatch(success({ message: "Dataset publishing is under progress." }))
         } catch (err) {
             dispatch(error({ message: "Failed to publish dataset" }));

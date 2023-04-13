@@ -52,7 +52,7 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                     tooltipText="Download Schema"
                     icon={<DownloadOutlined />}
                     handleClick={handleDownloadButton}
-                    buttonProps={{ size: "large" }}
+                    buttonProps={{ size: "large", sx: { color: "#000" } }}
                     tooltipProps={{ arrow: true }}
                 />
             </Box>

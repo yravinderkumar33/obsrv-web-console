@@ -19,7 +19,7 @@ const ClusterHealth = () => {
     const [liveDatasets, setLiveDatasets] = useState([]);
 
     const getDatasets = async () => {
-        const [draft, live] = await Promise.all([fetchDatasets({ data: { filters: {} } }), fetchDatasets({ data: { filters: { status: ['ACTIVE', 'DISABLED'] } } })])
+        const [draft, live] = await Promise.all([fetchDatasets({ data: { filters: { status: ['DRAFT', 'READY_FOR_PUBLISH'] } } }), fetchDatasets({ data: { filters: { status: ['ACTIVE', 'DISABLED'] } } })])
         setDraftDatasets(draft)
         setLiveDatasets(live);
     }
