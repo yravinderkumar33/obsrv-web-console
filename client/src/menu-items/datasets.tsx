@@ -33,7 +33,7 @@ const other: NavItemType = {
             type: 'item',
             url: '/dataset/new/master',
             icon: icons.PlusCircleOutlined
-        }
+        },
     ]
 };
 

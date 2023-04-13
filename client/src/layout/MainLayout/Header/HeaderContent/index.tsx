@@ -6,13 +6,13 @@ import Notification from './Notification';
 import MegaMenuSection from './MegaMenuSection'
 
 
-const HeaderContent = ({ wizard = false }) => {
+const HeaderContent = () => {
     const matchesXs = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
 
     return (
         <>
             {matchesXs && <Box sx={{ ml: 1 }} />}
-            <Search wizard={wizard} />
+            <Search />
             <MegaMenuSection />
             <Notification />
             {matchesXs && <MobileSection />}

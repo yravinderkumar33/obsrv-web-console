@@ -69,12 +69,15 @@ const AddNewField = (props: any) => {
             name: "transformation",
             label: "Transformation Expression",
             type: 'text',
-            required: true
+            required: true,
+            helperText: <>
+                Ex: $sum(Product.(Price * Quantity)) <br /> FirstName & " " & Surname
+            </>,
         }
     ]
 
     return <>
-        <Box sx={{ p: 1, py: 1.5, width: '50vw' }}>
+        <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
             <DialogTitle id="alert-dialog-title">
                 Add New Field
                 {onClose ? (

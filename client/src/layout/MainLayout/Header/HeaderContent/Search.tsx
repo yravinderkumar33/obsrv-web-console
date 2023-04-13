@@ -5,10 +5,9 @@ import WizardBreadcrumbs from 'components/@extended/WizardBreadCrumbs';
 import navigation from 'menu-items';
 // ==============================|| HEADER CONTENT - SEARCH ||============================== //
 
-const Search = ({ wizard = false }) => (
+const Search = () => (
     <Box sx={{ width: '100%', ml: { xs: 0, md: 1 } }}>
-        {wizard && <WizardBreadcrumbs />}
-        {!wizard && <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />}
+        <Breadcrumbs navigation={navigation} title titleBottom card={false} divider={false} />
     </Box>
 );
 
