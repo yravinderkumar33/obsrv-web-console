@@ -100,7 +100,7 @@ const DatasetsList = ({ datasets }: any) => {
                     const row = cell?.row?.original || {};
                     return <Grid container spacing={1} justifyContent="center">
                         <Grid item>
-                            <Chip color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase()} size="small" variant="light" />          </Grid>
+                            <Chip color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" />          </Grid>
                     </Grid>
                 }
             },
