@@ -95,7 +95,7 @@ export const druidQueries = {
                 "queryType": "timeseries",
                 "dataSource": "system-stats",
                 "intervals": intervals,
-                "granularity": "all",
+                "granularity": "hour",
                 "filter": {
                     "type": "selector",
                     "dimension": "dataset",

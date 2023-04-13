@@ -13,16 +13,16 @@ const AlertsMessages = (props: any) => {
   const [alerts, setAlerts] = useState<Record<string, any>>([]);
 
   const calcInterval = (minutes: number) => {
-    return [dayjs().subtract(minutes, 'minutes'), dayjs()]
+    return [dayjs().subtract(minutes, 'minutes').toISOString(), dayjs().toISOString()]
   }
 
   const fetchAlerts = async () => {
     const { query } = chartMeta.alerts;
     if (interval) {
-      const [startsAt, endsAt] = calcInterval(interval);
+      const [start, end] = calcInterval(interval);
       query.params = {
         ...query.params,
-        startsAt, endsAt
+        start, end
       }
     }
     const alerts = await fetchChartData(query);
@@ -75,7 +75,7 @@ const AlertsMessages = (props: any) => {
   }
 
   return <>
-    <CardContent>
+    <CardContent style={{ overflow: 'auto', height: '700px' }}>
       <Grid
         container
         spacing={2.75}

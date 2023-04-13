@@ -136,13 +136,16 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_health_status.query')} />
+                        chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'api_failure_percentage.query')} />
                     },
                     {
                         chart: <ReportCard primary="0" secondary="Response Time (Avg)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_avg.query')} />
                     },
                     {
                         chart: <ReportCard primary="0" secondary="Response Time (Max)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_max.query')} />
+                    },
+                    {
+                        chart: <ReportCard primary="0" secondary="Api Failure Percentage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'api_failure_percent.query')} suffix="%"/>
                     },
                 ]
             },
@@ -210,7 +213,7 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_health_status.query')} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Total Data Received" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} />
+                        chart: <ReportCard primary="0" secondary="Total Data Received (Today)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} suffix="Events"/>
                     }
                 ]
             },
@@ -242,7 +245,7 @@ export const metricsMetadata = [
                     },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
-                            <AlertsMessages />
+                            <AlertsMessages interval={1140}/>
                         </ApexWithFilters>
                     }
                 ]
@@ -270,13 +273,13 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_health_status.query')} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Processing Time (Min)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'minProcessingTime.query')} suffix={'ms'} />
+                        chart: <ReportCard primary="0" secondary="Processing Time (Avg)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'avgProcessingTime.query')} suffix={'ms'} />
                     },
                     {
                         chart: <ReportCard primary="0" secondary="Processing Time (Max)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'maxProcessingTime.query')} suffix={'ms'} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Processing Time (Avg)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'avgProcessingTime.query')} suffix={'ms'} />
+                        chart: <ReportCard primary="0" secondary="Processing Time (Min)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'minProcessingTime.query')} suffix={'ms'} />
                     }
                 ]
             },

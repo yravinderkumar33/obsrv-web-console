@@ -23,22 +23,10 @@ const DatasetsList = ({ datasets }: any) => {
     const [data, setData] = useState<any>(datasets);
     const [openAlertDialog, setOpenAlertDialog] = useState(false);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
     const navigateToPath = (path: string) => {
         navigate(path);
     }
-
-    const publish = async (payload: Record<string, any>) => {
-        const { id, dataset_name } = payload;
-        try {
-            await publishDataset({ data: { datasetId: id } });
-            dispatch(success({ message: "Dataset publishing is under progress." }))
-        } catch (err) {
-            dispatch(error({ message: "Failed to publish dataset" }));
-        }
-    }
-
 
     const AsyncColumnData = (query: Record<string, any>) => {
         const [asyncData, setAsyncData] = useState(null);
@@ -58,7 +46,6 @@ const DatasetsList = ({ datasets }: any) => {
                     setIsLoading(false)
                 }
             };
-
             if (!memoizedAsyncData) {
                 fetchData(query);
             }
@@ -121,14 +108,14 @@ const DatasetsList = ({ datasets }: any) => {
                 Header: 'Published On',
                 accessor: 'published_date',
                 disableFilters: true,
-                Cell: ({ value, cell }: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') || "-"
+                Cell: ({ value, cell }: any) => dayjs(value).format('YYYY-MM-DD') || "-"
             },
             {
                 Header: 'Total Events (Today)',
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
-                    const datasetId = row?.id;
+                    const datasetId = row?.dataset_id;
                     const startDate = dayjs().format('YYYY-MM-DD');
                     const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
                     const body = druidQueries.total_events_processed({ datasetId, intervals: `${startDate}/${endDate}` })
@@ -141,7 +128,7 @@ const DatasetsList = ({ datasets }: any) => {
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
-                    const datasetId = row?.id;
+                    const datasetId = row?.dataset_id;
                     const startDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
                     const endDate = dayjs().format('YYYY-MM-DD');
                     const body = druidQueries.total_events_processed({ datasetId, intervals: `${startDate}/${endDate}` })
@@ -168,7 +155,7 @@ const DatasetsList = ({ datasets }: any) => {
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
                     const datasetId = row?.id;
-                    const startDate = '2000-01-01';
+                    const startDate = dayjs().subtract(10, 'day').format('YYYY-MM-DD');
                     const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
                     const body = druidQueries.last_synced_time({ datasetId, intervals: `${startDate}/${endDate}` })
                     const query = _.get(chartMeta, 'last_synced_time.query');

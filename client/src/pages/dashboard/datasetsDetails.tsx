@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { datasetRead } from 'services/dataset';
 import { error } from 'services/toaster';
@@ -11,8 +11,9 @@ import { BarChartOutlined } from '@ant-design/icons';
 import { druidQueries } from 'services/druid';
 import dayjs from 'dayjs';
 import chartMeta from 'data/charts';
-import AnalyticsDataCard from 'components/cards/statistics/AnalyticsDataCard';
 import ApexChart from 'sections/dashboard/analytics/apex';
+import ApexWithFilters from 'sections/dashboard/analytics/ChartFilters';
+import filters from 'data/chartFilters';
 
 const DatasetDetails = () => {
     const dispatch = useDispatch();
@@ -26,11 +27,19 @@ const DatasetDetails = () => {
         small: {
             size: {
                 xs: 12,
-                sm: 6,
+                sm: 4,
                 md: 4,
                 lg: 4
             },
             charts: [
+                {
+                    title: "Status",
+                    primary: _.get(datasetDetails, 'data.status'),
+                    query: () => null,
+                    chart: ({ title, query, primary }: any) => {
+                        return <ReportCard primary={primary} secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                    }
+                },
                 {
                     title: 'Average Processing Time (ms)',
                     query: () => {
@@ -40,7 +49,7 @@ const DatasetDetails = () => {
                         return { ..._.get(chartMeta, 'druid_avg_processing_time.query'), body }
 
                     },
-                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} suffix="ms" />
                 },
                 {
                     title: 'Last Synced Time',
@@ -94,34 +103,38 @@ const DatasetDetails = () => {
                         return { ..._.get(chartMeta, 'failed_events_summary.query'), body }
                     },
                     chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
-                },
-                {
-                    title: 'Average Processing Time (ms)',
-                    query: () => {
-                        const startDate = '2023-03-01';
-                        const endDate = dayjs().add(2, 'day').format('YYYY-MM-DD');
-                        const body = druidQueries.avgProcessingTimeSeries({ datasetId, intervals: `${startDate}/${endDate}` })
-                        const metadata = _.cloneDeep(_.get(chartMeta, 'average_processing_time_series'));
-                        metadata.query.body = body;
-                        return metadata;
-                    },
-                    chart: ({ title, query }: any) => <AnalyticsDataCard title={title}>
-                        <ApexChart metadata={query}></ApexChart>
-                    </AnalyticsDataCard>
-                },
+                }
+            ]
+        },
+        medium: {
+            size: {
+                xs: 12,
+                sm: 6,
+                md: 6,
+                lg: 6
+            },
+            charts: [
                 {
                     title: 'Total Events Processed',
                     query: () => {
-                        const startDate = '2023-03-01';
-                        const endDate = dayjs().add(2, 'day').format('YYYY-MM-DD');
-                        const body = druidQueries.totalEventsProcessedTimeSeries({ datasetId, intervals: `${startDate}/${endDate}` })
-                        const metadata = _.cloneDeep(_.get(chartMeta, 'total_events_processed_time_series'));
-                        metadata.query.body = body;
+                        const metadata = _.cloneDeep(_.get(chartMeta, 'totalEventsProcessedTimeSeriesPerDataset'));
+                        _.set(metadata, 'query.body.query.filter.value', datasetId);
                         return metadata;
                     },
-                    chart: ({ title, query }: any) => <AnalyticsDataCard title={title}>
-                        <ApexChart metadata={query}></ApexChart>
-                    </AnalyticsDataCard>
+                    chart: ({ title, query }: any) => <ApexWithFilters title={title} filters={_.get(filters, 'default')}>
+                        <ApexChart metadata={query} interval={1140}></ApexChart>
+                    </ApexWithFilters>
+                },
+                {
+                    title: 'Events Processing Time (ms)',
+                    query: () => {
+                        const metadata = _.cloneDeep(_.get(chartMeta, 'minProcessingTimeSeriesPerDataset'));
+                        _.set(metadata, 'query.body.query.filter.value', datasetId);
+                        return metadata;
+                    },
+                    chart: ({ title, query }: any) => <ApexWithFilters title={title} filters={_.get(filters, 'default')}>
+                        <ApexChart metadata={query} interval={1140}></ApexChart>
+                    </ApexWithFilters>
                 }
             ]
         }
@@ -129,7 +142,7 @@ const DatasetDetails = () => {
 
     const fetchDataset = async () => {
         try {
-            const response = await datasetRead({ datasetId }).then(response => _.get(response, 'data.result'));
+            const response = await datasetRead({ datasetId: `${datasetId}?status=ACTIVE` }).then(response => _.get(response, 'data.result'));
             setDatasetDetails({ data: response, status: 'success' });
         } catch (err) {
             dispatch(error({ message: 'Read Dataset Failed' }));
@@ -141,17 +154,32 @@ const DatasetDetails = () => {
         fetchDataset();
     }, [])
 
-    return <>
-        <MainCard title={`Dataset Metrics (${_.get(datasetDetails, 'data.dataset_name') || ''})`}>
-            <Grid container spacing={1}>
+    const renderSections = () => {
+        return _.flatten(_.map(data, (value, index) => {
+            const { size, charts = [] } = value as any;
+            const { xs, sm, lg, md } = size;
+            return <Grid container rowSpacing={1} columnSpacing={1} key={Math.random()} marginBottom={1}>
                 {
-                    data.small.charts.map(chartMeta => {
-                        const { title, query: getQuery, chart } = chartMeta
-                        return <Grid item xs={4}>
-                            {chart({ title, query: getQuery() })}
+                    _.map(charts, (chartMetadata: Record<string, any>, index: number) => {
+                        const { title, query: getQuery, chart, ...rest } = chartMetadata;
+                        return <Grid item xs={xs} sm={sm} md={md} lg={lg} key={`${Math.random()}`}>
+                            {chart({ title, query: getQuery(), ...rest })}
                         </Grid>
                     })
                 }
+            </Grid>
+        }))
+    }
+
+    return <>
+        <MainCard title={`Dataset Metrics (${_.get(datasetDetails, 'data.id') || ''})`}>
+            <Grid container spacing={1}>
+                <Grid item xs={12}>
+
+                </Grid>
+                <Grid item xs={12}>
+                    {renderSections()}
+                </Grid>
             </Grid>
         </MainCard >
     </>

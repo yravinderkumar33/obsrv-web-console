@@ -323,6 +323,27 @@ export default {
             }
         }
     },
+    api_failure_percent: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/api/report/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.api_failure_percentage.query
+            },
+            parse: (response: any) => {
+                const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                if (!value) throw new Error();
+                return _.floor(value);
+            },
+            error() {
+                return [0, "error"];
+            }
+        }
+    },
     node_query_response_avg_timeseries: {
         type: 'line',
         series: [],

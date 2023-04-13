@@ -89,7 +89,11 @@ const AddTransformationExpression = (props: any) => {
                 saveTransformation({
                     id: uuid,
                     field_key: column,
-                    transformation_function: expression,
+                    transformation_function: {
+                        type: "jsonata",
+                        expr: column,
+                        condition: null
+                    },
                     dataset_id: mainDatasetId,
                 }, meta);
             } else {
@@ -97,7 +101,11 @@ const AddTransformationExpression = (props: any) => {
                 saveTransformation({
                     id: uuid,
                     field_key: column,
-                    transformation_function: transformation,
+                    transformation_function: {
+                        type: transformation,
+                        expr: column,
+                        condition: null
+                    },
                     dataset_id: mainDatasetId,
                 }, meta);
             }

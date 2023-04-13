@@ -47,7 +47,11 @@ const AddNewField = (props: any) => {
             saveTransformation({
                 id: uuid,
                 field_key: column,
-                transformation_function: transformation,
+                transformation_function: {
+                    type: "jsonata",
+                    expr: column,
+                    condition: null
+                },
                 dataset_id: mainDatasetId,
             }, updatedColumnMetadata);
             onClose();
