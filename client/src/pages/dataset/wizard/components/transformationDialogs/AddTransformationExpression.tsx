@@ -116,7 +116,7 @@ const AddTransformationExpression = (props: any) => {
     }
 
     return <>
-        <Box sx={{ p: 1, py: 1.5, width: '50vw', height: 'auto' }}>
+        <Box sx={{ p: 1, py: 1.5, width: '50vw', height: 'auto', maxWidth: "100%", }}>
             <DialogTitle id="alert-dialog-title">
                 Add Field Transformation
                 {onClose ? (

@@ -167,7 +167,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                 </Grid>
                                 <Grid container spacing={3} justifyContent="center" alignItems="center">
                                     <Grid item xs={12}>
-                                        <UploadFiles data={data} setData={setData} files={files} setFiles={setFiles} maxFileSize={maxFileSizeConfig} />
+                                        <UploadFiles data={data} setData={setData} files={files} setFiles={setFiles} maxFileSize={maxFileSizeConfig} allowSchema />
                                     </Grid>
                                     <Grid item xs={12}>
                                         <Stack direction="row" justifyContent="flex-end">

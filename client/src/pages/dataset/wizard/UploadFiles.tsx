@@ -36,7 +36,7 @@ function TabPanel(props: any) {
     );
 }
 
-const UploadFiles = ({ data, setData, files, setFiles, maxFileSize }: any) => {
+const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema = false }: any) => {
     const dispatch = useDispatch();
     const [tabIndex, setTabIndex] = useState(0);
 
@@ -85,8 +85,8 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize }: any) => {
                     <Box sx={{ width: '100%' }}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                                <Tab label="Upload JSON Data/Schema" {...tabProps(0)} />
-                                <Tab label="Paste/Edit JSON Data/Schema" {...tabProps(1)} />
+                                <Tab label={allowSchema ? "Upload JSON Data/Schema" : "Upload JSON Data"}  {...tabProps(0)} />
+                                <Tab label={allowSchema ? "Paste/Edit JSON Data/Schema" : "Paste/Edit JSON Data"}  {...tabProps(1)} />
                             </Tabs>
                         </Box>
                         <TabPanel value={tabIndex} index={0}>

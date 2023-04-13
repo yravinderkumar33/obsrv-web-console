@@ -22,13 +22,13 @@ interface Props {
     wizard?: boolean;
 }
 
-const Header = ({ open, handleDrawerToggle, wizard = false }: Props) => {
+const Header = ({ open, handleDrawerToggle }: Props) => {
     const theme = useTheme();
     const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
     const globalConfigState: Record<string, any> = useSelector((state: any) => state.config);
 
     // header content
-    const headerContent = useMemo(() => <HeaderContent wizard={wizard} />, []);
+    const headerContent = useMemo(() => <HeaderContent />, []);
 
     const iconBackColorOpen = theme.palette.mode === 'dark' ? 'grey.200' : 'grey.300';
     const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';

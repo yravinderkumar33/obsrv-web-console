@@ -75,7 +75,7 @@ const AddDenormField = (props: any) => {
     }
 
     return <>
-        <Box sx={{ p: 1, py: 1.5, width: '50vw', height: 'auto' }}>
+        <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", height: 'auto' }}>
             <DialogTitle id="alert-dialog-title">
                 Add Denorm Field
                 {onClose ? (

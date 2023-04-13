@@ -81,7 +81,7 @@ const AddPIIDialog = (props: any) => {
     ]
 
     return <>
-        <Box sx={{ p: 1, py: 1.5, width: '50vw' }}>
+        <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
             <DialogTitle id="alert-dialog-title">
                 Add PII Field
                 {onClose ? (
