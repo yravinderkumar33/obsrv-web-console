@@ -401,7 +401,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <GrafanaChart url="/d-solo/EbXSjT24k/velero?orgId=1&from=1681118030875&to=1681290830875&theme=light&panelId=13" width="100%" height="400" />
+                        chart: <GrafanaChart url="/d-solo/EbXSjT24k/velero?orgId=1&panelId=13" width="100%" height="400" />
                     },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>

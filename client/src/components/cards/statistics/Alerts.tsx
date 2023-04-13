@@ -58,7 +58,7 @@ const AlertsMessages = (props: any) => {
             </Grid>
             <Grid item xs={12}>
               <Typography align="left" variant="body2">
-                {alert?.annotations?.description}
+                {alert?.annotations?.description || alert?.annotations?.message}
               </Typography>
             </Grid>
           </Grid>
