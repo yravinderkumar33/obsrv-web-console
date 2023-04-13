@@ -187,7 +187,7 @@ const DatasetsList = ({ datasets }: any) => {
                                 < DashboardOutlined />
                             </IconButton>
                         </Tooltip>
-                        <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_name}`)}>
+                        <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_id}`)}>
                             <IconButton color="primary" size="large">
                                 <DatabaseOutlined />
                             </IconButton>

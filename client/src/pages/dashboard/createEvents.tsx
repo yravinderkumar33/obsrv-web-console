@@ -11,7 +11,7 @@ import { error, success } from 'services/toaster';
 
 const DatasetCreateEvents = () => {
     const dataset = useSelector((state: any) => state.dataset);
-    const [data, setData] = useState();
+    const [data, setData] = useState<any>();
     const [files, setFiles] = useState();
     const dispatch = useDispatch();
     const params = useParams();
@@ -19,8 +19,13 @@ const DatasetCreateEvents = () => {
     const pushEvents = async () => {
         try {
             const { datasetId, datasetName } = params;
-            await sendEvents({ datasetId, datasetName, events: data });
-            dispatch(success({ message: 'Events pushed successfully.' }))
+            const [firstEvent] = data || [];
+            if (firstEvent) {
+                await sendEvents(datasetName, firstEvent);
+                dispatch(success({ message: 'Events pushed successfully.' }));
+                return;
+            }
+            dispatch(error({ message: 'No data to push' }));
         } catch (err) {
             dispatch(error({ message: 'Failed to push events. Please try again later' }))
         }

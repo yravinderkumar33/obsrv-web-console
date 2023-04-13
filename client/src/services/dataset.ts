@@ -164,14 +164,8 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
 }
 
 
-export const sendEvents = ({ datasetId, datasetName, events, config }: any) => {
-    const payload = {
-        data: {
-            id: datasetId,
-            events
-        }
-    }
-    return axios.post(`${apiEndpoints.sendEvents}/${datasetName}`, payload, config);
+export const sendEvents = (datasetId: string | undefined, payload: any) => {
+    return axios.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, {});
 }
 
 export const checkUniqueId = async (id: string | undefined) => {

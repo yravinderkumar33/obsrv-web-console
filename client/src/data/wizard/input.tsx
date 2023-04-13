@@ -2,12 +2,12 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { Button } from '@mui/material';
 import { forms } from 'data/forms'
 import ConditionalCheckboxForm from "pages/dataset/wizard/components/ConditionalCheckboxBasedForm";
-import sampleBatchConfig from 'data/sampleBatchEvent.json';
 import { downloadJSONFile } from 'services/utils';
 import VerifyKafka from 'pages/dataset/wizard/components/VerifyKafka';
+import { generateSample } from 'data/sampleBatchEvent';
 
 const downloadBatchConfig = () => {
-    downloadJSONFile(sampleBatchConfig, "sampleBatchConfig.json");
+    downloadJSONFile(generateSample("observations"), "sampleBatchConfig.json");
 }
 
 const dataFormatQues = {
