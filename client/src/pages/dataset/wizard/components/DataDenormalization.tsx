@@ -12,7 +12,7 @@ import AddDenormField from "./transformationDialogs/AddDenormFields"
 import IconButton from "components/@extended/IconButton";
 import * as _ from 'lodash';
 import { useDispatch, useSelector } from "react-redux"
-import { updateState } from "store/reducers/wizard"
+import { addState } from "store/reducers/wizard"
 import { useNavigate } from "react-router"
 
 const { spacing } = config;
@@ -41,11 +41,11 @@ const DataDenorm = (props: any) => {
     }
 
     const pushStateToStore = (values: Array<any>) => {
-        dispatch(updateState({ id, values }));
+        dispatch(addState({ id, values }));
     }
 
     useEffect(() => {
-        existingState && setSelection(existingState);
+        existingState && setSelection([...existingState]);
     }, [existingState]);
 
     const columns = [
