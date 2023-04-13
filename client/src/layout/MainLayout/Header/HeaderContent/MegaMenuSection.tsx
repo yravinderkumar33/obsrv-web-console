@@ -33,7 +33,7 @@ const MegaMenuSection = () => {
             {
                 buttons.map((button, index) => {
                     return <Tooltip title={button.tooltip} key={index}>
-                        <IconButton color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }} onClick={_ => navigate(button.url)}>
+                        <IconButton color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: 'transparent', ml: 0.75 }} onClick={_ => navigate(button.url)}>
                             <Avatar sx={{ width: 30, height: 30 }} src={button.icon}></Avatar>
                         </IconButton>
                     </Tooltip>
