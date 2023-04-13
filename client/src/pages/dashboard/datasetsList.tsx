@@ -211,7 +211,7 @@ const DatasetsList = ({ datasets }: any) => {
     return (
         <MainCard content={false}>
             <ScrollX>
-                <FilteringTable columns={columns} data={data} />
+                <FilteringTable columns={columns} data={data} title={"Live Datasets"} />
             </ScrollX>
             <AlertDialog open={openAlertDialog} handleClose={handleClose} context={alertDialogContext}></AlertDialog>
         </MainCard>
