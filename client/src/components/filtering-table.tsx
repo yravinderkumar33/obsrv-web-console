@@ -8,8 +8,9 @@ import {
 } from 'utils/react-table';
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router';
+import { Typography } from '@mui/material';
 
-function FilteringTable({ columns, data }: any) {
+function FilteringTable({ columns, data, title = '' }: any) {
     const filterTypes = useMemo(() => renderFilterTypes, []);
     const defaultColumn = useMemo(() => ({ Filter: DefaultColumnFilter }), []);
     const initialState = useMemo(() => ({ filters: [] }), []);
@@ -45,21 +46,28 @@ function FilteringTable({ columns, data }: any) {
     return (
         <Stack spacing={2}>
             <Box sx={{ p: 2, pb: 0 }} textAlign='end'>
-                <Grid container spacing={2} direction="row"
-                    justifyContent="flex-end"
-                    alignItems="center" sx={{ flexWrap: 'nowrap' }}>
+                <Grid
+                    container
+                    spacing={2}
+                    direction="row"
+                    justifyContent={"space-between"}
+                    alignItems="center"
+                    sx={{ flexWrap: 'nowrap' }}
+                >
                     <Grid item>
+                        <Typography variant="h5">{title}</Typography>
+                    </Grid>
+                    <Grid item alignItems="center" display="flex">
                         <GlobalFilter
                             preGlobalFilteredRows={preGlobalFilteredRows}
                             // @ts-ignore
                             globalFilter={state.globalFilter}
                             setGlobalFilter={setGlobalFilter}
                         />
+                        <Button sx={{ mx: 1 }} variant="contained" onClick={e => navigate('/dataset/new')}>Add Dataset</Button>
                     </Grid>
 
-                    <Grid item>
-                        <Button variant="contained" onClick={e => navigate('/dataset/new')}>Add Dataset</Button>
-                    </Grid>
+
                 </Grid>
             </Box>
 

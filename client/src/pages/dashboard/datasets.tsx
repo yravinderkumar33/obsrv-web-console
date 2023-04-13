@@ -47,7 +47,7 @@ const ClusterHealth = () => {
 
             {dataset?.status === 'success' && draftDatasets?.length == 0 &&
                 <Grid item xs={12}>
-                    {showNoDatasetsError('No datasets found')}
+                    {showNoDatasetsError('No draft datasets found')}
                 </Grid>
             }
 
