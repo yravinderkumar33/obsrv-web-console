@@ -13,6 +13,21 @@ const synctsObject = {
     "isModified": true,
 }
 
+const formatDenormFields = (denormFields: any) => {
+    if (denormFields.length > 0) {
+        const final = _.map(denormFields, (item: any) => ({
+            "column": item.denorm_out_field,
+            "type": "json",
+            "key": `properties.${item.denorm_out_field}`,
+            "ref": `properties.${item.denorm_out_field}`,
+            "required": true,
+            "isModified": true,
+        }));
+        return final;
+    }
+    else return [];
+}
+
 export const createDraftDataset = ({ data = {}, config }: any) => {
     return axios.post(apiEndpoints.saveDatset, data, config);
 }
@@ -152,11 +167,13 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
     await connectorInfoToDraft(storeState, master);
     const jsonSchema = _.get(state, 'pages.jsonSchema');
     const timestampCol = _.get(state, 'pages.timestamp.indexCol') || "syncts";
+    let denormFields = _.get(state, 'pages.denorm.values') || [];
+    denormFields = formatDenormFields(denormFields);
     let updatePayload;
     if (timestampCol === "syncts")
-        updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject] };
+        updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject, ...denormFields] };
     else
-        updatePayload = { schema: _.get(state, 'pages.columns.state.schema') };
+        updatePayload = { schema: _.get(state, 'pages.columns.state.schema'), ...denormFields };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
     const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedJsonSchema, state }, config: {} });
     const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
@@ -212,4 +229,8 @@ export const verifyKafkaConnection = async (connectorInfo: any) => {
         bootstrap: connectorInfo.kafkaBrokers,
         topic: connectorInfo.topic,
     });
+}
+
+export const updateDenormConfig = async (denormPayload: any) => {
+    return await axios.patch(apiEndpoints.saveDatset, denormPayload, {});
 }
