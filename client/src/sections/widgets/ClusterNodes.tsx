@@ -35,9 +35,11 @@ const ClusterNodes = () => {
     }
 
     useEffect(() => {
-        configureMetricFetcher();
+        const interval = configureMetricFetcher();
+        return () => {
+            interval && clearInterval(interval);
+        }
     }, [])
-
 
     const renderGuage = (percentage: any) => <GaugeChart arcsLength={null} nrOfLevels={20} colors={['#EA4228', '#5BE12C']} percentage={percentage} />
 

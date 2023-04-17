@@ -74,8 +74,6 @@ const ClusterMetrics = () => {
     return () => clearInterval(interval);
   }, [])
 
-
-
   return <>
     <MainCard style={{ 'background': 'inherit' }} title="" >
       <Grid container spacing={3}>

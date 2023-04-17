@@ -1,13 +1,8 @@
 import { createContext, ReactNode } from 'react';
-
-// project import
 import config from 'config';
 import useLocalStorage from 'hooks/useLocalStorage';
-
-// types
 import { CustomizationProps, FontFamily, PresetColor, ThemeDirection, ThemeMode } from 'types/config';
 
-// initial state
 const initialState: CustomizationProps = {
   ...config,
   onChangeContainer: () => {},
@@ -17,8 +12,6 @@ const initialState: CustomizationProps = {
   onChangeMiniDrawer: (miniDrawer: boolean) => {},
   onChangeFontFamily: (fontFamily: FontFamily) => {}
 };
-
-// ==============================|| CONFIG CONTEXT & PROVIDER ||============================== //
 
 const ConfigContext = createContext(initialState);
 

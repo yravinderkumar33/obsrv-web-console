@@ -17,7 +17,7 @@ const AsyncLabel = (props: any) => {
     }
 
     const configureMetricFetcher = (query: any) => {
-        const frequency = rest?.frequency || globalConfig.clusterMenu.frequency;
+        const frequency = globalConfig.clusterMenu.frequency;
         fetchMetric(query);
         return setInterval(() => fetchMetric(query), frequency * 1000)
     }

@@ -46,12 +46,19 @@ const ApexChart = (props: any) => {
   }
 
   const configureMetricFetcher = () => {
-    const frequency = rest?.frequency || globalConfig.clusterMenu.frequency;
+    const frequency = globalConfig.clusterMenu.frequency;
     fetchMetric();
     return setInterval(() => {
       fetchMetric();
     }, frequency * 1000)
   }
+
+  useEffect(() => {
+    const interval = configureMetricFetcher();
+    return () => {
+      interval && clearInterval(interval)
+    }
+  }, [interval]);
 
   useEffect(() => {
     setOptions((prevState) => ({
@@ -63,13 +70,7 @@ const ApexChart = (props: any) => {
         colors: [theme.palette.primary.main, theme.palette.primary[700]]
       })
     }));
-
-    const interval = configureMetricFetcher();
-
-    return () => {
-      interval && clearInterval(interval)
-    }
-  }, [mode, primary, secondary, line, theme, step, interval]);
+  }, [mode, primary, secondary, line, theme]);
 
   return <>
     {loading && <Loader />}

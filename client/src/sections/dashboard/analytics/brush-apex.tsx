@@ -48,7 +48,7 @@ const BrushChart = (props: any) => {
   }
 
   const configureMetricFetcher = (query: Record<string, any>) => {
-    const frequency = rest?.frequency || globalConfig.clusterMenu.frequency;
+    const frequency = globalConfig.clusterMenu.frequency;
     fetchMetric(query);
     return setInterval(() => {
       fetchMetric(query);

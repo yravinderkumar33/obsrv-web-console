@@ -3,10 +3,10 @@ export default {
         "query": "(1 - sum(:node_memory_MemAvailable_bytes:sum{cluster=\"\"}) / sum(node_memory_MemTotal_bytes{job=\"node-exporter\",cluster=\"\"})) * 100"
     },
     "node_cpu": {
-        "query": "(cluster:node_cpu:ratio_rate5m{cluster=\"\"}) * 100"
+        "query": '(cluster:node_cpu:ratio_rate5m{cluster=""}) * 100'
     },
     "cpu_percentage": {
-        "query": "cluster:node_cpu:ratio_rate5m{cluster=\"\"}"
+        "query": 'cluster:node_cpu:ratio_rate5m{cluster=""}'
     },
     "memory_percentage": {
         "query": "1 - sum(:node_memory_MemAvailable_bytes:sum{cluster=\"\"}) / sum(node_memory_MemTotal_bytes{job=\"node-exporter\",cluster=\"\"})"

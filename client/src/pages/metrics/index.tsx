@@ -20,7 +20,6 @@ function Panel(props: any) {
 
 const MetricsPanel = () => {
     const [value, setValue] = useState(0);
-    
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };

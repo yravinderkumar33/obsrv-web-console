@@ -12,7 +12,6 @@ const other: NavItemType = {
     title: <FormattedMessage id="Datasets" />,
     type: 'group',
     children: [
-
         {
             id: 'Datasets',
             title: <FormattedMessage id="Datasets" />,

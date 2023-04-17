@@ -18,7 +18,7 @@ const GaugeChart = (props: any) => {
     }
 
     const configureMetricFetcher = () => {
-        const frequency = rest?.frequency || globalConfig.clusterMenu.frequency;
+        const frequency = globalConfig.clusterMenu.frequency;
         fetchMetrics();
         return setInterval(() => {
             fetchMetrics();
