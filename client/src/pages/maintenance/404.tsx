@@ -21,7 +21,7 @@ function Error404() {
           <Stack direction="row">
             <Grid item>
               <Box sx={{ width: { xs: 250, sm: 590 }, height: { xs: 130, sm: 300 } }}>
-                <img src={error404} alt="mantis" style={{ width: '100%', height: '100%' }} />
+                <img src={error404} alt="obsrv" style={{ width: '100%', height: '100%' }} />
               </Box>
             </Grid>
           </Stack>
