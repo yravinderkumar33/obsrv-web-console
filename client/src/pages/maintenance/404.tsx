@@ -5,7 +5,6 @@ import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 
 import config from 'config';
 import error404 from 'assets/images/maintenance/Error404.png';
-import TwoCone from 'assets/images/maintenance/TwoCone.png';
 
 function Error404() {
   return (
@@ -25,18 +24,13 @@ function Error404() {
                 <img src={error404} alt="mantis" style={{ width: '100%', height: '100%' }} />
               </Box>
             </Grid>
-            <Grid item sx={{ position: 'relative' }}>
-              <Box sx={{ position: 'absolute', top: 60, left: -40, width: { xs: 130, sm: 390 }, height: { xs: 115, sm: 330 } }}>
-                <img src={TwoCone} alt="mantis" style={{ width: '100%', height: '100%' }} />
-              </Box>
-            </Grid>
           </Stack>
         </Grid>
         <Grid item xs={12}>
           <Stack spacing={2} justifyContent="center" alignItems="center">
             <Typography variant="h1">Page Not Found</Typography>
             <Typography color="textSecondary" align="center" sx={{ width: { xs: '73%', sm: '61%' } }}>
-              The page you are looking was moved, removed, renamed, or might never exist!
+              The requested page does not exists.
             </Typography>
             <Button component={Link} to={config.defaultPath} variant="contained">
               Back To Home
