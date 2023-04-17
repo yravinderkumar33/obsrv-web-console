@@ -1,7 +1,6 @@
 import { Theme } from '@mui/material/styles';
 import { Box, useMediaQuery } from '@mui/material';
 import Search from './Search';
-import MobileSection from './MobileSection';
 import Notification from './Notification';
 import MegaMenuSection from './MegaMenuSection'
 
@@ -15,7 +14,6 @@ const HeaderContent = () => {
             <Search />
             <MegaMenuSection />
             <Notification />
-            {matchesXs && <MobileSection />}
         </>
     );
 };

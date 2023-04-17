@@ -1,16 +1,8 @@
 import { useSelector } from 'react-redux';
-
-// material-ui
 import { Box, Typography } from '@mui/material';
-
-// types
 import { RootStateProps } from 'types/root';
-
-// project import
 import NavGroup from './NavGroup';
 import menuItem from 'menu-items';
-
-// ==============================|| DRAWER CONTENT - NAVIGATION ||============================== //
 
 const Navigation = ({ handleDrawerToggle = () => { } }) => {
     const menu = useSelector((state: RootStateProps) => state.menu);
