@@ -69,8 +69,8 @@ const AddDenormField = (props: any) => {
             const data = await updateDenormConfig({
                 dataset_id: datasetId,
                 denorm_config: {
-                    redis_db_host: redisConfig.redis_db_host,
-                    redis_db_port: redisConfig.redis_db_port,
+                    redis_db_host: _.get(redisConfig, 'redis_db_host'),
+                    redis_db_port: _.get(redisConfig, 'redis_db_port'),
                     denormFields: [...selection, payload],
                 },
             });

@@ -8,6 +8,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import AlertMessage from 'components/AlertMessage';
 import { useEffect } from 'react';
 import { fetchAlertsThunk } from 'store/middlewares';
+import isBetween from 'dayjs/plugin/isBetween';
+
+dayjs.extend(isBetween);
+
+const filterDates = (interval: any) => (alert: Record<string, any>) => {
+  const from = dayjs().subtract(interval, 'minutes');
+  const now = dayjs();
+  const alertTime = dayjs(alert?.startsAt);
+  return alertTime.isBetween(from, now);
+}
 
 const AlertsMessages = (props: any) => {
   const { predicate, interval } = props;
@@ -17,12 +27,7 @@ const AlertsMessages = (props: any) => {
   const status = _.get(alertsState, 'status') || "idle";
   const alerts = _.get(alertsState, 'data.data') || [];
   let filteredAlerts = predicate ? _.filter(alerts, predicate) : alerts;
-
-  const filter = () => {
-    const from = dayjs().subtract(interval, 'minutes');
-    
-  }
-
+  filteredAlerts = interval ? _.filter(filteredAlerts, filterDates(interval)) : filteredAlerts;
 
   useEffect(() => {
     if (status === "idle") {

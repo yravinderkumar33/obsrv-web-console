@@ -148,9 +148,9 @@ export const saveTransformations = async (payload: any) => {
 }
 
 const connectorInfoToDraft = async (state: Record<string, any>, master: any) => {
-    const data = _.get(state, ['wizard', 'pages', 'dataSource', 'value']);
+    const data = _.get(state, ['wizard', 'pages', 'dataSource', 'value']) || {};
     const datasetId = _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'masterId']);
-    if (datasetId && data && _.has(data, 'type')) {
+    if (datasetId && _.get(data, 'type') === 'kafka') {
         const { type, ...rest }: any = data;
         const payload = {
             dataset_id: datasetId,

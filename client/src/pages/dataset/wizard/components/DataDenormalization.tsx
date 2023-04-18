@@ -20,15 +20,15 @@ import { updateDenormConfig } from "services/dataset"
 const { spacing } = config;
 
 const getMasterDatasets = (datasets: Array<any>) => {
-    return _.filter(datasets, dataset => _.get(dataset, 'type') === "master")// && _.get(dataset, 'status') === "ACTIVE");
+    return _.filter(datasets, (dataset: Record<string, any>) => _.get(dataset, 'type') === "master" && _.get(dataset, 'status') === "ACTIVE");
 }
 
 const getRedisConfig = (datasets: Array<any>) => {
-    const data = _.filter(datasets, dataset => _.get(dataset, 'type') === "master")// && _.get(dataset, 'status') === "ACTIVE");
+    const data = _.filter(datasets, dataset => _.get(dataset, 'type') === "master" && _.get(dataset, 'status') === "ACTIVE");
     if (data.length > 0)
         return {
-            redis_db_host: data[0].denorm_config.redis_db_host,
-            redis_db_port: data[0].denorm_config.redis_db_port,
+            redis_db_host: _.get(data, '[0].denorm_config.redis_db_host'),
+            redis_db_port: _.get(data, '[0].denorm_config.redis_db_port'),
         }
     else return {
         redis_db_host: '',
@@ -60,8 +60,8 @@ const DataDenorm = (props: any) => {
             const data = await updateDenormConfig({
                 dataset_id: datasetId,
                 denorm_config: {
-                    redis_db_host: redisConfig.redis_db_host,
-                    redis_db_port: redisConfig.redis_db_port,
+                    redis_db_host: _.get(redisConfig, 'redis_db_host'),
+                    redis_db_port: _.get(redisConfig, 'redis_db_port'),
                     denormFields: [...payload],
                 },
             });
