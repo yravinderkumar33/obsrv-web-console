@@ -49,10 +49,10 @@ const ClusterStatus = () => {
                   <ClusterMetrics />
                 </Grid>
                 <Grid item xs={4}>
-                  <ApexChart metadata={chartMeta.node_cpu} />
+                  <ApexChart metadata={chartMeta.node_cpu} step="30s" />
                 </Grid>
                 <Grid item xs={4}>
-                  <ApexChart metadata={chartMeta.node_memory} />
+                  <ApexChart metadata={chartMeta.node_memory} step="30s" />
                 </Grid>
               </Grid>
               <Box sx={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}>

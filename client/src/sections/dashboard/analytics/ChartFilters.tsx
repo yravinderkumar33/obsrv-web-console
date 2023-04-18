@@ -4,12 +4,24 @@ import MainCard from 'components/MainCard';
 import * as _ from 'lodash';
 import { InfoCircleOutlined } from "@ant-design/icons";
 import globalConfig from 'data/initialConfig';
+import dayjs from 'dayjs';
+
+const transformFilter = (filter: Record<string, any>) => {
+
+    if (_.toLower(_.get(filter, 'label')) === "today") {
+        const now = dayjs();
+        const minutesSinceStartOfDay = now.hour() * 60 + now.minute();
+        return { ...filter, value: minutesSinceStartOfDay }
+    }
+
+    return filter;
+}
 
 const ApexWithFilters = (props: any) => {
     const { title = '', filters = [], children, type = 'chip' } = props;
-    const defaultFilter = _.find(filters, ['default', true]);
+    const defaultFilter = transformFilter(_.find(filters, ['default', true]));
     const [filter, setFilter] = useState<any>(_.get(defaultFilter, 'value'));
-    const [step, setStep] = useState<string>('5m');
+    const [step, setStep] = useState<string>(_.get(defaultFilter, 'step') || '5m');
     const [filterMeta, setFilterMeta] = useState<any>(defaultFilter || {});
 
     const getFilterMeta = (value: number) => _.find(filters, ['value', value]);
@@ -17,15 +29,17 @@ const ApexWithFilters = (props: any) => {
     const handlechange = (event: any) => {
         const value = _.get(event, 'target.value');
         if (value) {
-            const filter = getFilterMeta(value);
-            filter && setFilterMeta(filter);
-            setFilter(value);
-            filter && setStep(_.get(filter, 'step'));
+            const filter = transformFilter(getFilterMeta(value));
+            if (filter) {
+                setFilterMeta(filter);
+                setFilter(_.get(filter, 'value'));
+                setStep(_.get(filter, 'step'));
+            }
         }
     }
 
     const onClickHandler = (filter: Record<string, any>) => {
-        const { value, step } = filter;
+        const { value, step } = transformFilter(filter);
         if (value && step) {
             setFilter(value);
             setStep(step);
@@ -43,11 +57,11 @@ const ApexWithFilters = (props: any) => {
 
     const renderChipFilters = () => {
         const menuItems = _.map(filters, (filterMeta: Record<string, any>, index) => {
-            const variant = (_.get(filterMeta, 'value') === filter) ? "filled" : "outlined";
+            const transformedFilter = transformFilter(filterMeta);
+            const variant = (_.get(transformedFilter, 'value') === filter) ? "filled" : "outlined";
             const color = _.get(filterMeta, 'color') || "primary"
             return <Chip label={filterMeta.label} variant={variant} color={color} onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
         })
-
         return <Stack direction="row" spacing={2}>
             {menuItems}
         </Stack>

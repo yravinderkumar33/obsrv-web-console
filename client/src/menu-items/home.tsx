@@ -34,7 +34,7 @@ const other: NavItemType = {
                     icon: metric.menuIcon || icons.HomeOutlined
                 })))
             ]
-        },
+        }
     ]
 };
 

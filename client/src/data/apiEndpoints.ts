@@ -15,4 +15,5 @@ export default {
     datasetSourceConfig: "/config/obsrv/v1/datasets/source/config",
     transformationsConfig: "/config/obsrv/v1/datasets/transformation",
     kafkaConnection: "/api/report/v1/kafka",
+    alerts: "/alertmanager/api/v2/alerts"
 }

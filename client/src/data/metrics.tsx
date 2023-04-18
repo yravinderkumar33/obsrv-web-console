@@ -9,7 +9,7 @@ import GaugeChart from "sections/dashboard/analytics/guageChart";
 import ApexWithFilters from "sections/dashboard/analytics/ChartFilters";
 import filters from 'data/chartFilters';
 import AsyncLabel from "components/cards/statistics/AsyncLabel";
-import { totalVsRunningNodes, percentageUsage, cpuPercentageUsage, backupStatus } from 'services/transformers';
+import { totalVsRunningNodes, percentageUsage, cpuPercentageUsage, backupStatus, alertsFilterByLabels } from 'services/transformers';
 import { Stack } from "@mui/material";
 import GrafanaChart from "sections/dashboard/analytics/GrafanaEmbedded";
 import IngestionCharts from "sections/dashboard/analytics/IngestionCharts";
@@ -88,11 +88,6 @@ export const metricsMetadata = [
                         chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_disk')} interval={1140}></ApexChart>
                         </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Rate of Received Packets" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'network_bytes_received')} interval={1140}></ApexChart>
-                        </ApexWithFilters>
                     }
                 ]
             },
@@ -106,7 +101,7 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
-                            <AlertsMessages />
+                            <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "infra" } })} />
                         </ApexWithFilters>
                     }
                 ]
@@ -145,7 +140,7 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="0" secondary="Response Time (Max)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_max.query')} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Api Failure Percentage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'api_failure_percent.query')} suffix="%"/>
+                        chart: <ReportCard primary="0" secondary="Api Failure Percentage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'api_failure_percent.query')} suffix="%" />
                     },
                 ]
             },
@@ -185,7 +180,7 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
-                            <AlertsMessages />
+                            <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "api" } })} />
                         </ApexWithFilters>
                     }
                 ]
@@ -213,7 +208,7 @@ export const metricsMetadata = [
                         chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_health_status.query')} />
                     },
                     {
-                        chart: <ReportCard primary="0" secondary="Total Data Received (Today)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} suffix="Events"/>
+                        chart: <ReportCard primary="0" secondary="Total Data Received (Today)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} suffix="Events" />
                     }
                 ]
             },
@@ -245,7 +240,7 @@ export const metricsMetadata = [
                     },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
-                            <AlertsMessages interval={1140}/>
+                            <AlertsMessages interval={1140} predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "ingestion" } })} />
                         </ApexWithFilters>
                     }
                 ]
@@ -316,7 +311,7 @@ export const metricsMetadata = [
                     },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
-                            <AlertsMessages />
+                            <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "processing" } })} />
                         </ApexWithFilters>
                     }
                 ]
@@ -405,7 +400,7 @@ export const metricsMetadata = [
                     },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
-                            <AlertsMessages />
+                            <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "storage" } })} />
                         </ApexWithFilters>
                     }
                 ]

@@ -17,7 +17,6 @@ const ConditionalCheckboxForm = (props: any) => {
     const onSubmission = (value: any) => { };
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || ({}));
     const [childFormValue, setChildFormValues] = useState<any>({});
-    const configState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'config']));
 
     const filterPredicate = (field: any) => {
         if (_.includes(_.get(existingState, 'formFieldSelection'), _.get(field, 'value'))) return true;
@@ -39,7 +38,6 @@ const ConditionalCheckboxForm = (props: any) => {
     const persistState = (state: Record<string, any>) => dispatch(addState({ id, ...state }));
     const formik = useFormik({ initialValues: getInitialValues(), onSubmit: values => { } });
     const formValues = formik.values;
-    const reset = () => persistState({});
 
     const persist = () => {
         const formFieldSelection = _.get(formValues, [name]);
@@ -50,15 +48,20 @@ const ConditionalCheckboxForm = (props: any) => {
         persist();
     }, [formValues, childFormValue]);
 
+    const handleParentFormChange = (e: any) => {
+        formik.handleChange(e);
+        setChildFormValues({});
+    }
+
     const getFormType = (metadata: Record<string, any>) => {
         const { name, value } = metadata;
         switch (type) {
             case "checkbox":
-                return <Checkbox name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={formik.handleChange} />
+                return <Checkbox name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
             case "radio":
-                return <Radio name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={formik.handleChange} />
+                return <Radio name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
             default:
-                return <Checkbox name={name} className="size-medium" value={value} onChange={formik.handleChange} />
+                return <Checkbox name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
         }
     }
 

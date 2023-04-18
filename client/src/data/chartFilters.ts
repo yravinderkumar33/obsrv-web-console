@@ -22,7 +22,7 @@ export default {
         {
             label: 'Last 30 Days',
             value: 43200,
-            step: '1d',
+            step: '12h',
             granularity: "hour"
         }
     ],
@@ -43,6 +43,7 @@ export default {
         {
             label: 'Warning',
             color: 'warning',
+            default: true,
             value: 'warning'
         },
         {

@@ -1,42 +1,37 @@
 import { Button, CardContent, Grid, Typography } from '@mui/material';
 import Avatar from 'components/@extended/Avatar';
-import { AlertOutlined } from '@ant-design/icons';
+import { AlertOutlined, BugFilled } from '@ant-design/icons';
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react';
-import { fetchChartData } from 'services/clusterMetrics';
-import chartMeta from 'data/charts'
 import * as _ from 'lodash';
 import { Stack } from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import AlertMessage from 'components/AlertMessage';
+import { useEffect } from 'react';
+import { fetchAlertsThunk } from 'store/middlewares';
 
 const AlertsMessages = (props: any) => {
-  const { interval } = props;
-  const [alerts, setAlerts] = useState<Record<string, any>>([]);
+  const { predicate, interval } = props;
+  const dispatch = useDispatch();
+  const alertsState = useSelector((state: any) => state?.alerts);
 
-  const calcInterval = (minutes: number) => {
-    return [dayjs().subtract(minutes, 'minutes').toISOString(), dayjs().toISOString()]
+  const status = _.get(alertsState, 'status') || "idle";
+  const alerts = _.get(alertsState, 'data.data') || [];
+  let filteredAlerts = predicate ? _.filter(alerts, predicate) : alerts;
+
+  const filter = () => {
+    const from = dayjs().subtract(interval, 'minutes');
+    
   }
 
-  const fetchAlerts = async () => {
-    const { query } = chartMeta.alerts;
-    if (interval) {
-      const [start, end] = calcInterval(interval);
-      query.params = {
-        ...query.params,
-        start, end
-      }
-    }
-    const alerts = await fetchChartData(query);
-    setAlerts(alerts);
-  }
 
   useEffect(() => {
-    fetchAlerts();
-  }, [interval])
+    if (status === "idle") {
+      dispatch(fetchAlertsThunk({}));
+    }
+  }, [status]);
 
   const getAlert = (alert: Record<string, any>) => {
-
     const color: any = _.get(alert, 'labels.severity') === 'critical' ? 'error' : 'success'
-
     return <><Grid item xs={12}>
       <Grid container spacing={2}>
         <Grid item xs={1}>
@@ -74,8 +69,18 @@ const AlertsMessages = (props: any) => {
     </>
   }
 
+  const renderAlerts = () => {
+    return _.map(_.orderBy(filteredAlerts, ['startsAt'], ['desc']), getAlert)
+  }
+
+  const renderNoAlertsMessage = () => {
+    return <Grid item xs={12}>
+      <AlertMessage color='error' messsage={"No Alerts Found"} icon={BugFilled} />
+    </Grid>
+  }
+
   return <>
-    <CardContent style={{ overflow: 'auto', height: '700px' }}>
+    <CardContent style={{ overflow: 'auto', height: 'auto' }}>
       <Grid
         container
         spacing={2.75}
@@ -98,9 +103,9 @@ const AlertsMessages = (props: any) => {
           }
         }}
       >
-        {
-          _.map(_.orderBy(alerts, ['startsAt'], ['desc']), getAlert)
-        }
+        {status !== 'success' && renderNoAlertsMessage()}
+        {status === 'success' && _.get(filteredAlerts, 'length') === 0 && renderNoAlertsMessage()}
+        {status === 'success' && _.get(filteredAlerts, 'length') > 0 && renderAlerts()}
       </Grid>
     </CardContent>
   </>

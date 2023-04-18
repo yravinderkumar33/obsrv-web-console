@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import {
   Avatar,
@@ -12,10 +10,8 @@ import {
   ListItemButton,
   ListItemAvatar,
   ListItemText,
-  ListItemSecondaryAction,
   Paper,
   Popper,
-  Tooltip,
   Typography,
   useMediaQuery
 } from '@mui/material';
@@ -23,16 +19,13 @@ import {
 import MainCard from 'components/MainCard';
 import IconButton from 'components/@extended/IconButton';
 import Transitions from 'components/@extended/Transitions';
-
-import { fetchChartData } from 'services/clusterMetrics';
-import chartMeta from 'data/charts'
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
-
-// assets
 import { BellOutlined, GiftOutlined } from '@ant-design/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAlertsThunk } from 'store/middlewares';
+import { alertsFilterByLabels } from 'services/transformers';
 
-// sx styles
 const avatarSX = {
   width: 36,
   height: 36,
@@ -49,15 +42,19 @@ const actionSX = {
   transform: 'none'
 };
 
-// ==============================|| HEADER CONTENT - NOTIFICATION ||============================== //
-
 const Notification = () => {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
-  const [alerts, setAlerts] = useState<Record<string, any>>([]);
   const anchorRef = useRef<any>(null);
   const [read, setRead] = useState(0);
   const [open, setOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const alertsState = useSelector((state: any) => state?.alerts);
+  const status = _.get(alertsState, 'status');
+  const predicate = alertsFilterByLabels({ matchLabels: { bb: "obsrv" } });
+  const alerts = _.filter(_.get(alertsState, 'data.data') || [], predicate);
+
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -69,20 +66,14 @@ const Notification = () => {
     setOpen(false);
   };
 
-
-  const fetchAlerts = async () => {
-    const { query } = chartMeta.alerts;
-    const alerts = await fetchChartData(query);
-    setAlerts(alerts);
-    setRead(_.get(alerts, 'length') || 0)
-  }
-
   useEffect(() => {
-    fetchAlerts();
-  }, [])
+    if (status === "idle") {
+      dispatch(fetchAlertsThunk({}));
+    }
+  }, [status]);
 
   const getNotification = (alert: any) => {
-    return <ListItemButton selected={read > 0}>
+    return <ListItemButton>
       <ListItemAvatar>
         <Avatar
           sx={{
@@ -97,7 +88,7 @@ const Notification = () => {
         primary={
           <Typography variant="h6">
             <Typography component="span" variant="subtitle1">
-              {alert?.annotations?.description}
+              {alert?.annotations?.description || alert?.annotations?.message}
             </Typography>{' '}
           </Typography>
         }
@@ -163,7 +154,7 @@ const Notification = () => {
                   elevation={0}
                   border={false}
                   content={false}
-                  sx={{ overflow: 'auto', height: '50vh' }}
+                  sx={{ overflow: 'auto', height: 'auto', maxHeight: '50vh' }}
                 >
                   <List
                     component="nav"
@@ -178,7 +169,7 @@ const Notification = () => {
                     }}
                   >
                     {
-                      _.map(alerts, getNotification)
+                      _.map(_.orderBy(alerts, ['startsAt'], ['desc']), getNotification)
                     }
                     <Divider />
                     <Divider />

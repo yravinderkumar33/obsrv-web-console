@@ -24,3 +24,15 @@ export const backupStatus = (response: any) => {
     const status = percentage < 100 ? "Unhealthy" : "Healthy";
     return `${backupCount} Successful Backups (${status})`;
 }
+
+export const alertsFilterByLabels = (config: any) => {
+    const { matchLabels } = config;
+    return (alert: Record<string, any>) => {
+        const labels = _.get(alert, 'labels') || {};
+        if (_.size(matchLabels) === 0) return true;
+        return _.every(matchLabels, (labelValue, labelKey) => {
+            const doesExists = _.find(labels, (value, key) => value === labelValue && key === labelKey);
+            return doesExists ? true : false;
+        })
+    }
+}

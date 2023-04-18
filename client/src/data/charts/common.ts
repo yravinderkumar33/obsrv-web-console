@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 export default {
     animations: {
         enabled: true,
@@ -25,4 +27,13 @@ export default {
             }
         }
     },
+    timestampLabelFormatter(timestamp: any) {
+        const now = dayjs();
+        const givenTimestamp = dayjs.unix(timestamp)
+        if (now.isSame(givenTimestamp, 'day')) {
+            return givenTimestamp.format('HH:mm');
+        } else {
+            return givenTimestamp.format('DD MMM HH:mm');
+        }
+    }
 }

@@ -8,7 +8,6 @@ import { fetchChartData } from 'services/clusterMetrics';
 import globalConfig from 'data/initialConfig';
 import Loader from 'components/Loader';
 
-
 const ApexChart = (props: any) => {
   const { metadata, ...rest } = props;
   const theme = useTheme();
