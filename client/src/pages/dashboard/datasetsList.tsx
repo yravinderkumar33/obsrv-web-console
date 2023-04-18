@@ -3,13 +3,10 @@ import { Chip, CircularProgress, Divider, Grid, Stack, Tooltip, Typography } fro
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import { IconButton } from '@mui/material';
-import { PlayCircleOutlined, EditOutlined, DatabaseOutlined, DashboardOutlined } from '@ant-design/icons';
-import { useDispatch } from 'react-redux';
+import { EditOutlined, DatabaseOutlined, DashboardOutlined } from '@ant-design/icons';
 import FilteringTable from 'components/filtering-table';
 import AlertDialog from 'components/AlertDialog';
 import { useNavigate } from 'react-router';
-import { publishDataset } from 'services/system';
-import { error, success } from 'services/toaster';
 import { fetchChartData } from 'services/clusterMetrics';
 import { druidQueries } from 'services/druid';
 import dayjs from 'dayjs';

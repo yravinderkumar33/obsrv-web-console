@@ -17,6 +17,7 @@ const EditDataset = (props: any) => {
     const { datasetId } = params;
     const [searchParams] = useSearchParams();
     const master = searchParams.get("master") || "false";
+    const status = searchParams.get("status") || "DRAFT";
     const navigate = useNavigate();
 
     const restoreClientState = (restoreData: any) => {
@@ -25,7 +26,7 @@ const EditDataset = (props: any) => {
 
     const fetchDatasetDetails = async () => {
         try {
-            const response = await datasetRead({ datasetId });
+            const response = await datasetRead({ datasetId, config: { params: { status } } });
             const clientState = _.get(response, 'data.result.client_state');
             restoreClientState(clientState);
         } catch (err) {
