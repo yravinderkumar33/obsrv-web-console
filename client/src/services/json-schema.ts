@@ -76,21 +76,26 @@ export const checkIfRequired = (originalRequired: string[], key: string, require
 }
 
 export const updateJSONSchema = (original: any, updatePayload: any) => {
-    const clonedOriginal = _.cloneDeep(original)
+    const clonedOriginal = _.cloneDeep(original);
     _.forEach(updatePayload, (values, key) => {
         const valueFromOriginalPayload = clonedOriginal[key];
         if (valueFromOriginalPayload) {
             const modifiedRows = _.filter(values, ['isModified', true]);
             _.forEach(modifiedRows, row => {
                 const { isDeleted = false, required = true, key, type } = row;
-                if (isDeleted) { _.unset(valueFromOriginalPayload, key); }
+                if (isDeleted) { _.unset(valueFromOriginalPayload, key); console.log("step 3"); }
                 else {
                     _.set(valueFromOriginalPayload, key, { type: type });
-                    _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.required, key, required));
+                    if (required && !clonedOriginal.schema.required) {
+                        clonedOriginal.schema.required = [];
+                        _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.required, key, required));
+                    } else if (required && clonedOriginal.schema.required) {
+                        _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.required, key, required));
+                    }
                 }
             })
         }
-    })
+    });
     return clonedOriginal;
 }
 
