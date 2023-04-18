@@ -39,6 +39,8 @@ const AuthLogin = () => {
   const { isLoggedIn } = useAuth();
   const scriptedRef = useScriptRef();
 
+  const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID
+  const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -60,8 +62,8 @@ const AuthLogin = () => {
     <>
       <Formik
         initialValues={{
-          username: 'user',
-          password: 'password',
+          username: '',
+          password: '',
           submit: null
         }}
         validationSchema={Yup.object().shape({
@@ -69,41 +71,7 @@ const AuthLogin = () => {
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            let config = {
-              method: 'post',
-              url: 'http://localhost:3000/api/oauth/authorize',
-              headers: { 
-                'Content-Type': 'application/x-www-form-urlencoded'
-              },
-              params: {
-                'client_id': '123',
-                'redirect_uri': 'http://localhost:3001/',
-                'response_type': 'code',
-                'grant_type': 'authorization_code',
-                'username': 'user',
-                'password': 'password' 
-              },
-            };
-            
-            axios.request(config)
-            .then((response) => {
-              // if(response.status == 302) {
-                console.log(response)
-              // }
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-            
-          } catch (err: any) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
-          }
+         // This method is not required as we will submit the form as normal form
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -133,8 +101,8 @@ const AuthLogin = () => {
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="password-login">Password</InputLabel>
-                  <input type="hidden" value="123" name="client_id"/>
-                  <input type="hidden" value="http://localhost:3001/" name="redirect_uri"/>
+                  <input type="hidden" value={clientId} name="client_id"/>
+                  <input type="hidden" value={redirectURI} name="redirect_uri"/>
                   <input type="hidden" value="code" name="response_type"/>
                   <input type="hidden" value="authorization_code" name="grant_type"/>
                   <OutlinedInput
