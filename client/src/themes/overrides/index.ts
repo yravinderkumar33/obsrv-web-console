@@ -49,7 +49,6 @@ import ToggleButton from './ToggleButton';
 import TreeItem from './TreeItem';
 import Typography from './Typography';
 
-// ==============================|| OVERRIDES - MAIN ||============================== //
 
 export default function ComponentsOverrides(theme: Theme) {
   return merge(

@@ -2,7 +2,7 @@ import { CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, IconButton, Paper, Typography } from "@mui/material";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MUIForm from "components/form";
-import { useEffect, useMemo, useState } from "react";
+import {useMemo, useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch, useSelector } from "react-redux";
 import { addState, updateState } from "store/reducers/wizard";
@@ -17,13 +17,10 @@ const AddTransformationExpression = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
     const dispatch = useDispatch();
     const [value, subscribe] = useState<any>({});
-    const [previewState, setPreviewState] = useState<any>("");
     const filteredData = _.filter(data, payload => {
         if (_.find(selection, ['column', _.get(payload, 'column')])) return false;
         return true
     });
-    const wizardState: any = useSelector((state: any) => state?.wizard);
-    const jsonData: any = _.get(wizardState, ['pages', 'datasetConfiguration', 'state', 'data']);
 
     const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);

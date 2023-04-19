@@ -486,13 +486,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     buttonProps={{ size: "large", sx: { color: "#000" } }}
                     tooltipProps={{ arrow: true }}
                 />
-                {/* <IconButtonWithTips
-                    tooltipText="Re-upload Schema"
-                    icon={<UploadOutlined />}
-                    handleClick={() => { }}
-                    buttonProps={{ size: "large" }}
-                    tooltipProps={{ arrow: true }}
-                /> */}
+                
                 <IconButtonWithTips
                     tooltipText="View all suggestions"
                     icon={<FolderViewOutlined />}
@@ -502,7 +496,6 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 />
             </Box>
         </Stack>
-        {/* Collapsible suggestions viewer */}
         <CollapsibleSuggestions
             flattenedData={flattenedData}
             showSuggestions={showSuggestions}

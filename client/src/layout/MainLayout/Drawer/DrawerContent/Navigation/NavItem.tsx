@@ -2,18 +2,15 @@ import { forwardRef, useEffect, ForwardRefExoticComponent, RefAttributes } from 
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 
-// project import
 import { activeItem } from 'store/reducers/menu';
 
-// types
 import { LinkTarget, NavItemType } from 'types/menu';
 import { RootStateProps } from 'types/root';
 
-// ==============================|| NAVIGATION - LIST ITEM ||============================== //
+
 
 interface Props {
     item: NavItemType;
@@ -52,7 +49,6 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
 
     const { pathname } = useLocation();
 
-    // active menu item on page load
     useEffect(() => {
         if (pathname && pathname.includes('product-details')) {
             if (item.url && item.url.includes('product-details')) {
@@ -69,7 +65,7 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
         if (pathname === item.url) {
             dispatch(activeItem({ openItem: [item.id] }));
         }
-        // eslint-disable-next-line
+
     }, [pathname]);
 
     const textColor = theme.palette.mode === 'dark' ? 'grey.400' : 'text.primary';

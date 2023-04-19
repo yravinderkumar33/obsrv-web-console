@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import { sendEvents } from 'services/dataset';
-import { setConfig } from 'store/reducers/config';
 import { error, success } from 'services/toaster';
 
 const DatasetCreateEvents = () => {

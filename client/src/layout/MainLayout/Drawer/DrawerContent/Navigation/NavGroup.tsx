@@ -1,18 +1,16 @@
 import { useSelector } from 'react-redux';
 
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import { Box, List, Typography } from '@mui/material';
 
-// project import
 import NavItem from './NavItem';
 import NavCollapse from './NavCollapse';
 
-// types
+
 import { NavItemType } from 'types/menu';
 import { RootStateProps } from 'types/root';
 
-// ==============================|| NAVIGATION - LIST GROUP ||============================== //
+
 
 interface Props {
     item: NavItemType;

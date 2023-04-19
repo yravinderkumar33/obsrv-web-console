@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// types
 import { SnackbarProps } from 'types/snackbar';
 
 const initialState: SnackbarProps = {
@@ -21,7 +20,6 @@ const initialState: SnackbarProps = {
   actionButton: false
 };
 
-// ==============================|| SLICE - SNACKBAR ||============================== //
 
 const snackbar = createSlice({
   name: 'snackbar',

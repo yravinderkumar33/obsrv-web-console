@@ -2,7 +2,7 @@ import { CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, IconButton } from "@mui/material";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MUIForm from "components/form";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { updateState } from "store/reducers/wizard";

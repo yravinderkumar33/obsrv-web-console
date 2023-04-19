@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addState, updateState } from 'store/reducers/wizard';
 import { IWizard } from 'types/formWizard';
 import UploadFiles from './UploadFiles';
-import { useEffect, useState } from 'react';
+import {useState } from 'react';
 import { error } from 'services/toaster';
 import { Formik, Form } from 'formik';
 import { generateSlug } from 'utils/stringUtils';
@@ -48,11 +48,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const [files, setFiles] = useState(filesState);
     const initialValues = pageData?.state?.config || { name: '', dataset_id: '' };
 
-    // useEffect(() => {
-    //     return () => {
-    //         setFiles(null);
-    //     }
-    // });
+
 
     const generateJSONSchema = async (data: Array<any>, config: Record<string, any>) => {
         const dataset = _.get(config, 'name');
@@ -93,7 +89,6 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const onSubmit = (config: any) => {
         if ((data || files) && config) {
             generateJSONSchema(data, config);
-            // uploadFiles(files);
             dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
             createDraft(config);
             setShowWizard(true);

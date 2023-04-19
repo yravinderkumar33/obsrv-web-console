@@ -1,16 +1,16 @@
 import { useEffect, useMemo, useState } from 'react';
 
-// material-ui
+
 import { MenuItem, OutlinedInput, Select, Slider, Stack, TextField, Tooltip } from '@mui/material';
 
-// third-party
+
 import { useAsyncDebounce, Row } from 'react-table';
 import { matchSorter } from 'match-sorter';
 
-// project import
+
 import IconButton from 'components/@extended/IconButton';
 
-// assets
+
 import { CloseOutlined, LineOutlined, SearchOutlined } from '@ant-design/icons';
 
 export function GlobalFilter({ preGlobalFilteredRows, globalFilter, setGlobalFilter, ...other }: any) {
@@ -41,7 +41,7 @@ export function DefaultColumnFilter({ column: { filterValue, Header, setFilter }
             fullWidth
             value={filterValue || ''}
             onChange={(e) => {
-                setFilter(e.target.value || undefined); // Set undefined to remove the filter entirely
+                setFilter(e.target.value || undefined); 
             }}
             placeholder={Header}
             size="small"

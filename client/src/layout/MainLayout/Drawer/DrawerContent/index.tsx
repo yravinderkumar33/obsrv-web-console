@@ -1,8 +1,7 @@
-// project import
 import Navigation from './Navigation';
 import SimpleBar from 'components/third-party/SimpleBar';
 
-// ==============================|| DRAWER CONTENT ||============================== //
+
 
 const DrawerContent = ({ handleDrawerToggle = () => { } }) => (
     <SimpleBar

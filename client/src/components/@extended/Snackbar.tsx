@@ -1,20 +1,20 @@
 import { SyntheticEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-// material-ui
+
 import { Alert, Button, Fade, Grow, Slide, SlideProps } from '@mui/material';
 import MuiSnackbar from '@mui/material/Snackbar';
 
-// project-import
+
 import IconButton from './IconButton';
 
-// assets
+
 import { CloseOutlined } from '@ant-design/icons';
 
 import { KeyedObject, RootStateProps } from 'types/root';
 import { closeSnackbar } from 'store/reducers/snackbar';
 
-// animation function
+
 function TransitionSlideLeft(props: SlideProps) {
     return <Slide {...props} direction="left" />;
 }
@@ -35,7 +35,6 @@ function GrowTransition(props: SlideProps) {
     return <Grow {...props} />;
 }
 
-// animation options
 const animation: KeyedObject = {
     SlideLeft: TransitionSlideLeft,
     SlideUp: TransitionSlideUp,
@@ -44,8 +43,6 @@ const animation: KeyedObject = {
     Grow: GrowTransition,
     Fade
 };
-
-// ==============================|| SNACKBAR ||============================== //
 
 const Snackbar = () => {
     const dispatch = useDispatch();
@@ -61,7 +58,6 @@ const Snackbar = () => {
 
     return (
         <>
-            {/* default snackbar */}
             {variant === 'default' && (
                 <MuiSnackbar
                     anchorOrigin={anchorOrigin}
@@ -83,7 +79,6 @@ const Snackbar = () => {
                 />
             )}
 
-            {/* alert snackbar */}
             {variant === 'alert' && (
                 <MuiSnackbar
                     TransitionComponent={animation[transition]}

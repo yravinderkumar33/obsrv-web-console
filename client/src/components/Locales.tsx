@@ -1,18 +1,16 @@
 import { ReactNode, useEffect, useState } from 'react';
 
-// third-party
+
 import { IntlProvider, MessageFormatElement } from 'react-intl';
 
-// project import
+
 import useConfig from 'hooks/useConfig';
 import { I18n } from 'types/config';
 
-// load locales files
+
 const loadLocaleData = (locale: I18n) => {
   return import('utils/locales/en.json');
 };
-
-// ==============================|| LOCALIZATION ||============================== //
 
 interface Props {
   children: ReactNode;
