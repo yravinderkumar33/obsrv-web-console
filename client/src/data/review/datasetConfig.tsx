@@ -9,7 +9,7 @@ import AdvancedPreview from "./advancedConfig";
 
 const DatasetPreview = () => {
     const wizardState: any = useSelector((state: any) => state?.wizard);
-    const datasetConfig: any = _.get(wizardState, ['pages', 'datasetConfiguration', 'state', 'config']);
+    const datasetConfig: any = _.get(wizardState, ['pages', 'datasetConfiguration', 'state', 'config']) || {};
     return (
         <MainCard content={false} title="Dataset Configurations">
             <TableContainer>
@@ -27,10 +27,10 @@ const DatasetPreview = () => {
                     <TableBody>
                         <TableRow>
                             <TableCell>
-                                {datasetConfig.name}
+                                {datasetConfig?.name}
                             </TableCell>
                             <TableCell>
-                                {datasetConfig.dataset_id}
+                                {datasetConfig?.dataset_id}
                             </TableCell>
                         </TableRow>
                     </TableBody>
