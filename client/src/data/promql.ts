@@ -57,22 +57,22 @@ export default {
         "query": "node_query_response_time"
     },
     "node_total_api_call": {
-        "query": 'round(sum(increase(node_total_api_calls[$interval])))'
+        "query": 'sum by (job)(increase(node_total_api_calls[$interval]))'
     },
     "node_total_failed_api_call": {
-        "query": 'round(sum(increase(node_failed_api_calls[$interval])))'
+        "query": 'sum by (job)(increase(node_failed_api_calls[$interval]))'
     },
     "node_query_response_time_min": {
-        "query": "sum(min_over_time(node_query_response_time[1d])) by (job)"
+        "query": "min_over_time(sum by (job) (node_query_response_time)[1d:5m])"
     },
     "node_query_response_time_max": {
-        "query": "sum(max_over_time(node_query_response_time[1d])) by (job)"
+        "query": "max_over_time(sum by (job) (node_query_response_time)[1d:5m])"
     },
     "node_query_response_time_avg": {
-        "query": "sum(avg_over_time(node_query_response_time[1d])) by (job)"
+        "query": "avg_over_time(sum by (job) (node_query_response_time)[1d:5m])"
     },
     "node_query_response_time_avg_timeseries": {
-        "query": 'sum(avg_over_time(node_query_response_time[$interval])) by (job)'
+        "query": 'avg_over_time(sum by (job) (node_query_response_time)[$interval:$res])'
     },
     "data_usage_growth": {
         "query": 'max(sum(minio_bucket_usage_total_bytes{job="loki-minio"}) by (instance,server))'

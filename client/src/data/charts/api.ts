@@ -424,7 +424,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
                 return _.map(result, payload => ({
-                    name: 'Min Query Response Time',
+                    name: 'Avg Query Response Time',
                     data: _.get(payload, 'values')
                 }))
             },
@@ -434,13 +434,13 @@ export default {
             context: (payload: any) => {
                 const clonedPayload = _.cloneDeep(payload);
                 const { params, metadata = {} } = clonedPayload;
-                const { step } = metadata;
+                const { step, res } = metadata;
                 const query = _.get(params, 'query');
                 if (step && query) {
-                    _.set(params, 'query', _.replace(query, '$interval', step));
+                    _.set(params, 'query', _.replace(_.replace(query, '$interval', step), '$res', res));
                 }
                 return clonedPayload;
-            },
+            }
         }
     }
 }

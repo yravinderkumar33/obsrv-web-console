@@ -38,6 +38,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "Nodes Running Status",
                         chart: <AnalyticsDataCard title="Nodes Status">
                             <Stack spacing={4} direction="column" justifyContent="space-around" height={'auto'} >
                                 <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" fontSize={'8vh'} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
@@ -46,12 +47,14 @@ export const metricsMetadata = [
                         </AnalyticsDataCard>
                     },
                     {
+                        description: "Current CPU Usage Percent",
                         chart: <AnalyticsDataCard title="CPU Usage">
                             <GaugeChart query={_.get(chartMeta, 'cpu_usage_radial.query')} />
                             <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'cpu_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'totalCPU.query')]} transformer={cpuPercentageUsage}></AsyncLabel>
                         </AnalyticsDataCard>
                     },
                     {
+                        description: "Current Memory Usage Percent",
                         chart: <AnalyticsDataCard title="Memory Usage">
                             <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
                             <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'memory_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
@@ -59,6 +62,7 @@ export const metricsMetadata = [
                         </AnalyticsDataCard>
                     },
                     {
+                        description: "Current Disk Usage Percent",
                         chart: <AnalyticsDataCard title="Disk Usage">
                             <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
                             <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'disk_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
@@ -135,15 +139,19 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "Shows the Http Requests Health. If the API failure percentage is above 1%, then it's UNHEALTHY",
                         chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'api_failure_percentage.query')} />
                     },
                     {
+                        description: "Shows the average Query Response time for today",
                         chart: <ReportCard primary="0" secondary="Response Time (Avg)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_avg.query')} />
                     },
                     {
+                        description: "Shows the max Query Response time for today",
                         chart: <ReportCard primary="0" secondary="Response Time (Max)" suffix={'ms'} iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'node_query_response_time_max.query')} />
                     },
                     {
+                        description: "Shows the api failure percentage for today",
                         chart: <ReportCard primary="0" secondary="Api Failure Percentage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'api_failure_percent.query')} suffix="%" />
                     },
                 ]
@@ -212,9 +220,11 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This chart shows the Druid Health Status",
                         chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_health_status.query')} />
                     },
                     {
+                        description: "This chart shows the total number of events received today",
                         chart: <ReportCard primary="0" secondary="Total Data Received (Today)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} suffix="Events" />
                     }
                 ]
@@ -273,15 +283,19 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This charts shows the druid health status",
                         chart: <ReportCard primary="0" secondary="Health Status" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'druid_health_status.query')} />
                     },
                     {
+                        description: "This chart shows the average data processing time for today",
                         chart: <ReportCard primary="0" secondary="Processing Time (Avg)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'avgProcessingTime.query')} suffix={'ms'} />
                     },
                     {
+                        description: "This chart shows the maximum data processing time for today",
                         chart: <ReportCard primary="0" secondary="Processing Time (Max)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'maxProcessingTime.query')} suffix={'ms'} />
                     },
                     {
+                        description: "This chart shows the minimum data processing time for today",
                         chart: <ReportCard primary="0" secondary="Processing Time (Min)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'minProcessingTime.query')} suffix={'ms'} />
                     }
                 ]
@@ -350,12 +364,14 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This chart shows the current disk utilization percentage",
                         chart: <AnalyticsDataCard title="Disk Usage">
                             <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
                             <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'disk_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
                         </AnalyticsDataCard>
                     },
                     {
+                        description: "This chart shows the backup success rate percentage",
                         chart: <AnalyticsDataCard title="Backup Success Rate">
                             <GaugeChart arcsLength={null} nrOfLevels={20} colors={['#EA4228', '#5BE12C']} query={_.get(chartMeta, 'backup_success_rate.query')} />
                             <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'backup_count.query'), _.get(chartMeta, 'backup_success_rate.query')]} transformer={backupStatus}></AsyncLabel>
@@ -372,6 +388,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This chart shows the current success backup count",
                         chart: <ReportCard primary="0" secondary="Success Backups Count" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'backup_count.query')} />
                     }
                 ]

@@ -7,8 +7,8 @@ interface InMemoryDb {
   authorizationCodes: AuthorizationCode[];
 }
 const redirectUri: any = [process.env.OAUTH2_WEB_CONSOLE_REDIRECT_URI, process.env.OAUTH2_SUPER_SET_REDIRECT_URI, process.env.OAUTH2_GRAFANA_REDIRECT_URI]
-const usersEnv: any = process.env.OAUTH2_USER;
-const usersObj = usersEnv && JSON.parse(usersEnv)
+// const usersEnv: any = process.env.OAUTH2_USER;
+// const usersObj = usersEnv && JSON.parse(usersEnv)
 
 export const db: InMemoryDb = {
   clients: [
@@ -21,7 +21,7 @@ export const db: InMemoryDb = {
     },
   ],
   users: [
-    usersObj
+    { "id": "1", "username": "user", "password": "password", "email": "user@123.com" }
   ],
   accessTokens: [],
   authorizationCodes: [],

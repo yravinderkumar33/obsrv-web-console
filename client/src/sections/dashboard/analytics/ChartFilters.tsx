@@ -18,7 +18,7 @@ const transformFilter = (filter: Record<string, any>) => {
 }
 
 const ApexWithFilters = (props: any) => {
-    const { title = '', filters = [], children, type = 'chip', description } = props;
+    const { title = '', filters = [], children, type = 'chip', description = '' } = props;
     const defaultFilter = transformFilter(_.find(filters, ['default', true]));
     const [filter, setFilter] = useState<any>(_.get(defaultFilter, 'value'));
     const [step, setStep] = useState<string>(_.get(defaultFilter, 'step') || '5m');
@@ -84,7 +84,7 @@ const ApexWithFilters = (props: any) => {
                             <Stack sx={{ ml: 2, mt: 3 }} alignItems={{ xs: 'center', sm: 'flex-start' }}>
                                 <Stack direction="row" alignItems="center" spacing={1}>
                                     <Typography color="textSecondary">{title}</Typography>
-                                    <Tooltip title={description || ''}>
+                                    <Tooltip title={description}>
                                         <InfoCircleOutlined />
                                     </Tooltip>
                                 </Stack>

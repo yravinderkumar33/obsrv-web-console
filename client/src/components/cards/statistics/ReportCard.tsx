@@ -1,4 +1,4 @@
-import { Grid, Stack, Typography, useTheme } from '@mui/material';
+import { Grid, Stack, Tooltip, Typography, useTheme } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { useEffect, useState } from 'react';
 import { fetchChartData } from 'services/clusterMetrics';
@@ -9,7 +9,7 @@ import { Paper } from '@mui/material';
 
 interface ReportCardProps extends GenericCardProps { }
 
-const ReportCard = ({ primary, suffix, secondary, iconPrimary, color, query }: ReportCardProps) => {
+const ReportCard = ({ primary, suffix, secondary, iconPrimary, color, query, description = '' }: ReportCardProps) => {
   const theme = useTheme();
   const IconPrimary = iconPrimary!;
   const primaryIcon = iconPrimary ? <IconPrimary fontSize="large" /> : null;
@@ -47,25 +47,27 @@ const ReportCard = ({ primary, suffix, secondary, iconPrimary, color, query }: R
 
   return (
     <Paper elevation={globalConfig.elevation}>
-      <MainCard>
-        <Grid container justifyContent="space-between" alignItems="center" color={_.get(theme, ['palette', colorType, 'dark'])}>
-          <Grid item>
-            <Stack spacing={1}>
-              <Typography variant="h4">
-                {primaryLabel} {suffix}
+      <Tooltip title={description}>
+        <MainCard>
+          <Grid container justifyContent="space-between" alignItems="center" color={_.get(theme, ['palette', colorType, 'dark'])}>
+            <Grid item>
+              <Stack spacing={1}>
+                <Typography variant="h4">
+                  {primaryLabel} {suffix}
+                </Typography>
+                <Typography variant="body1" color="secondary">
+                  {secondary}
+                </Typography>
+              </Stack>
+            </Grid>
+            <Grid item>
+              <Typography variant="h2" style={{ color }}>
+                {primaryIcon}
               </Typography>
-              <Typography variant="body1" color="secondary">
-                {secondary}
-              </Typography>
-            </Stack>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Typography variant="h2" style={{ color }}>
-              {primaryIcon}
-            </Typography>
-          </Grid>
-        </Grid>
-      </MainCard>
+        </MainCard>
+      </Tooltip>
     </Paper>
   );
 };
