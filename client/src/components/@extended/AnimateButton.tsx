@@ -1,9 +1,7 @@
 import { ReactNode } from 'react';
 
-// third-party
 import { motion, useCycle } from 'framer-motion';
 
-// ==============================|| ANIMATION BUTTON ||============================== //
 
 export type ScaleProps = {
   hover: number | string | undefined;

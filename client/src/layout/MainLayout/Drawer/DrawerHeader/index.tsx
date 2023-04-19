@@ -1,11 +1,10 @@
-// material-ui
+
 import { useTheme } from '@mui/material/styles';
 
-// project import
+
 import DrawerHeaderStyled from './DrawerHeaderStyled';
 import Logo from 'components/logo';
 
-// ==============================|| DRAWER HEADER ||============================== //
 
 interface Props {
   open: boolean;

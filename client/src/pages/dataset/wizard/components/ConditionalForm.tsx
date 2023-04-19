@@ -19,8 +19,7 @@ const ConditionalForm = (props: any) => {
     const selectedOption = _.get(response, _.get(question, 'name'));
     const onSubmission = (value: any) => { };
     const [config, setConfig] = useState<any>({});
-    const [initialValue, setInitialValue] = useState<Record<string, any>>({});
-    const redux = useSelector((state: any) => state);
+
 
     const selectForm = () => {
         const optionMeta = _.get(options, [selectedOption]);

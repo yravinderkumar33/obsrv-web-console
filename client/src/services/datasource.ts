@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 import apiEndpoints from 'data/apiEndpoints';
 
 export const saveDatasource = ({ data = {}, config }: any) => {
-    const { ingestionSpec, state, storeState } = data;
+    const { ingestionSpec, state} = data;
     const datasetId = _.get(state, ['pages', 'datasetConfiguration', 'state', 'masterId']);
     const payload = {
         "dataset_id": datasetId,

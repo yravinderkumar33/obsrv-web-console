@@ -17,14 +17,13 @@ import {
     Typography
 } from '@mui/material';
 
-// project import
 import NavItem from './NavItem';
 import Transitions from 'components/@extended/Transitions';
 
-// assets
+
 import { BorderOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
 
-// types
+
 import { NavItemType } from 'types/menu';
 import { RootStateProps } from 'types/root';
 
@@ -33,7 +32,7 @@ type VirtualElement = {
     contextElement?: Element;
 };
 
-// mini-menu - wrapper
+
 const PopperStyled = styled(Popper)(({ theme }) => ({
     overflow: 'visible',
     zIndex: 1202,
@@ -54,7 +53,6 @@ const PopperStyled = styled(Popper)(({ theme }) => ({
     }
 }));
 
-// ==============================|| NAVIGATION - LIST COLLAPSE ||============================== //
 
 interface Props {
     menu: NavItemType;

@@ -1,9 +1,7 @@
 import { forwardRef, CSSProperties, ExoticComponent, ReactElement, Ref } from 'react';
 
-// material-ui
 import { Collapse, Fade, Box, Grow, Slide, Zoom } from '@mui/material';
 
-// ==============================|| TRANSITIONS ||============================== //
 
 interface Props {
   children?: ReactElement;

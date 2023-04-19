@@ -1,20 +1,19 @@
 import { forwardRef, CSSProperties, ReactNode, Ref } from 'react';
 
-// material-ui
+
 import { useTheme } from '@mui/material/styles';
 import { Card, CardContent, CardHeader, Divider, Typography, CardProps, CardHeaderProps, CardContentProps } from '@mui/material';
 
-// types
+
 import { KeyedObject } from 'types/root';
 
-// header style
+
 const headerSX = {
     px: 2.5,
     py: 1,
     '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
 };
 
-// ==============================|| CUSTOM - MAIN CARD ||============================== //
 
 export interface MainCardProps extends KeyedObject {
     border?: boolean;
@@ -87,7 +86,6 @@ const MainCard = forwardRef(
                     ...sx
                 }}
             >
-                {/* card header and action */}
                 {!darkTitle && title && (
                     <CardHeader
                         sx={headerSX}
@@ -98,11 +96,9 @@ const MainCard = forwardRef(
                     />
                 )}
                 {darkTitle && title && <CardHeader sx={headerSX} title={<Typography variant="h4">{title}</Typography>} action={secondary} />}
-
-                {/* content & header divider */}
                 {title && divider && <Divider />}
 
-                {/* card content */}
+            
                 {content && <CardContent sx={contentSX}>{children}</CardContent>}
                 {!content && children}
             </Card>

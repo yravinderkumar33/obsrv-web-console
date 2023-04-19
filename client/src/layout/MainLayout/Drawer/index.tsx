@@ -1,16 +1,13 @@
 import { useMemo } from 'react';
 
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import { Box, Drawer, useMediaQuery } from '@mui/material';
 
-// project import
 import DrawerHeader from './DrawerHeader';
 import DrawerContent from './DrawerContent';
 import MiniDrawerStyled from './MiniDrawerStyled';
 import { drawerWidth } from 'config';
 
-// ==============================|| MAIN LAYOUT - DRAWER ||============================== //
 
 interface Props {
     open: boolean;
@@ -22,10 +19,9 @@ const MainDrawer = ({ open, handleDrawerToggle, window }: Props) => {
     const theme = useTheme();
     const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
 
-    // responsive drawer container
     const container = window !== undefined ? () => window().document.body : undefined;
 
-    // header content
+
     const drawerContent = useMemo(() => <DrawerContent handleDrawerToggle={handleDrawerToggle} />, []);
     const drawerHeader = useMemo(() => <DrawerHeader open={open} />, [open]);
 

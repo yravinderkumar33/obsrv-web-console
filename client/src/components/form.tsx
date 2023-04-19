@@ -26,7 +26,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
             onSubmit={onSubmit}
             enableReinitialize={enableReinitialize}
         >
-            {({ handleChange, values, handleBlur, errors, touched, setFieldValue }) => {
+            {({ handleChange, values, errors, setFieldValue }) => {
                 subscribe && subscribe(values);
                 subscribeErrors && subscribeErrors(errors);
                 return (

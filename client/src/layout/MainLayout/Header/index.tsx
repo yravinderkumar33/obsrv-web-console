@@ -1,20 +1,19 @@
 import { ReactNode, useMemo } from 'react';
 
-// material-ui
+
 import { useTheme } from '@mui/material/styles';
 import { AppBar, Toolbar, useMediaQuery, AppBarProps } from '@mui/material';
 
-// project import
+
 import AppBarStyled from './AppBarStyled';
 import HeaderContent from './HeaderContent';
 import IconButton from 'components/@extended/IconButton';
 
-// assets
+
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import ClusterStatus from 'sections/widgets/Cluster';
 import { useSelector } from 'react-redux';
 
-// ==============================|| MAIN LAYOUT - HEADER ||============================== //
 
 interface Props {
     open: boolean;
@@ -27,13 +26,12 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
     const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
     const globalConfigState: Record<string, any> = useSelector((state: any) => state.config);
 
-    // header content
+
     const headerContent = useMemo(() => <HeaderContent />, []);
 
     const iconBackColorOpen = theme.palette.mode === 'dark' ? 'grey.200' : 'grey.300';
     const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
 
-    // common header
     const mainHeader: ReactNode = (
         <div id='rootHeader'>
             <Toolbar>
@@ -49,13 +47,10 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
                 </IconButton>
                 {headerContent}
             </Toolbar>
-            {/* {globalConfigState?.showClusterMenu && <Toolbar>
-        <ClusterStatus />
-      </Toolbar>} */}
         </div>
     );
 
-    // app-bar params
+
     const appBar: AppBarProps = {
         position: 'fixed',
         color: 'inherit',
@@ -63,7 +58,6 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
         sx: {
             borderBottom: `1px solid ${theme.palette.divider}`,
             zIndex: 1200
-            // boxShadow: theme.customShadows.z1
         }
     };
 

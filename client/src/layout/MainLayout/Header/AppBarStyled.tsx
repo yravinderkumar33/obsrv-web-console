@@ -1,11 +1,10 @@
-// material-ui
+
 import { styled } from '@mui/material/styles';
 import AppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
-// project import
+
 import { drawerWidth } from 'config';
 
-// ==============================|| HEADER - APP BAR STYLED ||============================== //
 
 interface Props extends MuiAppBarProps {
   open?: boolean;

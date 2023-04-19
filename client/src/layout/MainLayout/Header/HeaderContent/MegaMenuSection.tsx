@@ -6,8 +6,6 @@ import supersetIcon from 'assets/images/icons/superset_logo.png';
 import { useMemo } from 'react';
 
 const MegaMenuSection = () => {
-    const theme = useTheme();
-    const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
 
     const navigate = (path: any) => {
         if (path) {

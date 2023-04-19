@@ -7,7 +7,6 @@ import FieldSection from './FieldSection';
 import { reviewSections as allSections } from 'data/review';
 
 const ReviewSections = ({ section, master }: any) => {
-    const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const [expanded, setExpanded] = useState<string | false>(false);
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => { setExpanded(isExpanded ? panel : false) };
 

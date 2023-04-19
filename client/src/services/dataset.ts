@@ -66,8 +66,7 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
     const { schema, state } = data;
     const validate = _.get(state, 'pages.dataValidation.formFieldSelection') || {};
     const extractionConfig = _.get(state, 'pages.dataFormat.value');
-    const datasourceConfig = _.get(state, 'pages.dataSource.value');
-    const timestampCol = _.get(state, 'pages.timestamp.indexCol');
+
 
     const validation_config = {
         validate: validate !== "none",
@@ -217,7 +216,6 @@ export const deleteTransformations = async (id: string) => {
     return axios.delete(`${apiEndpoints.transformationsConfig}/${id}`);
 }
 
-// update the client state table.
 export const updateClientState = async ({ clientState }: any) => {
     const pagesData = _.get(clientState, 'pages');
     const datasetConfig = _.get(pagesData, 'datasetConfiguration.state.config');
