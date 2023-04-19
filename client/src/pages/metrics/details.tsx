@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import { Alert, Grid, Tooltip } from '@mui/material';
 import IconButton from 'components/@extended/IconButton';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import MainCard from 'components/MainCard';
 import { metricsMetadata } from 'data/metrics';
@@ -48,9 +48,9 @@ const MetricsDetails = (props: any) => {
                 return <Grid container rowSpacing={1} columnSpacing={1} key={`chart-${index}`} marginBottom={1}>
                     {
                         _.map(metadata, (meta, index) => {
-                            const { chart } = meta;
+                            const { chart, description } = meta;
                             return <Grid item xs={xs} sm={sm} md={md} lg={lg} key={`${index}-${Math.random()}`}>
-                                {chart}
+                                {React.cloneElement(chart, { description })}
                             </Grid>
                         })
                     }

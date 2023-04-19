@@ -42,12 +42,8 @@ const ReportCard = ({ primary, suffix, secondary, iconPrimary, color, query }: R
 
   useEffect(() => {
     const interval = query && configureMetricFetcher();
-    return () => {
-      if (interval) {
-        clearInterval(interval);
-      }
-    }
-  }, [query])
+    return () => interval && clearInterval(interval);
+  }, [])
 
   return (
     <Paper elevation={globalConfig.elevation}>

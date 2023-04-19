@@ -4,7 +4,7 @@ import * as _ from 'lodash';
 export default {
     showClusterMenu: false,
     spacing: 1,
-    clusterMenu: { frequency: 120, interval: 10 },
+    clusterMenu: { frequency: 1200, interval: 10 },
     elevation: 2,
     severityToColorMapping: {
         "HIGH": {

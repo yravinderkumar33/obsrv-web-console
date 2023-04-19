@@ -75,16 +75,19 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This chart typically displays the percentage of a computer's central processing unit (CPU) that is currently being utilized. The chart may show a live update of the CPU usage over time, or display a historical record of usage over a specified period.",
                         chart: <ApexWithFilters title="CPU Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
+                        description: "This chart is a graphical representation of the amount of memory being used by a computer system at a given time. The chart typically displays the amount of memory usage as a percentage of the total available memory, with the horizontal axis representing time and the vertical axis representing memory usage percentage",
                         chart: <ApexWithFilters title="Memory Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_memory')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
+                        description: "This is a graphical representation of the amount of disk space being used across a cluster",
                         chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_disk')} interval={1140}></ApexChart>
                         </ApexWithFilters>
@@ -100,6 +103,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This table shows the currently active infrastructure alerts within the cluster",
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1'), ..._.get(filters, 'alertsSeverity')]}>
                             <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "infra" } })} />
                         </ApexWithFilters>
@@ -153,16 +157,19 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This chart shows the average query response time of http calls within the cluster",
                         chart: <ApexWithFilters title="Query Response Time (Avg)" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'node_query_response_avg_timeseries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
+                        description: "This chart shows the total number of api calls within the cluster",
                         chart: <ApexWithFilters title="Number of API Calls" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'node_total_api_call')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
+                        description: "This chart shows the total number of failed api calls within the cluster",
                         chart: <ApexWithFilters title="Number of Failed API Calls" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'node_total_failed_api_call')} interval={1140}></ApexChart>
                         </ApexWithFilters>
@@ -221,6 +228,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This chart shows the total number of events received within the cluster. It shows the cumulative count of all the datasets",
                         chart: <ApexWithFilters title="Total Data Received (All Datasets)" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'totalEventsProcessedTimeSeries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
@@ -287,6 +295,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This chart shows the average processing time for all the datasets",
                         chart: <ApexWithFilters title="Processing Time (All Datasets)" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'minProcessingTimeSeries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
@@ -376,6 +385,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        description: "This is a graphical representation of the amount of disk space being used across a cluster",
                         chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_disk')} interval={1140}></ApexChart>
                         </ApexWithFilters>

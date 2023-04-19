@@ -80,6 +80,9 @@ export default {
                     formatter: function (value: number) {
                         return value;
                     }
+                },
+                title: {
+                    text: "Count"
                 }
             },
             tooltip: {
@@ -95,11 +98,14 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs(timestamp).format('DD MMM HH:mm');
+                        return defaultConf.timestampLabelFormatter(timestamp);
                     }
                 },
                 tooltip: {
                     enabled: false
+                },
+                title: {
+                    text: "Time"
                 }
             }
         },
@@ -201,11 +207,14 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs(timestamp).format('DD MMM HH:mm');
+                        return defaultConf.timestampLabelFormatter(timestamp);
                     }
                 },
                 tooltip: {
                     enabled: false
+                },
+                title: {
+                    text: "Time"
                 }
             }
         },

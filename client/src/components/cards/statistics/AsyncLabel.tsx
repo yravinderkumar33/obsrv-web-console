@@ -25,7 +25,7 @@ const AsyncLabel = (props: any) => {
     useEffect(() => {
         const interval = configureMetricFetcher(query);
         return () => interval && clearInterval(interval)
-    }, [query]);
+    }, []);
 
     return <>
         <Typography {...rest} >

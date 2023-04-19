@@ -441,6 +441,9 @@ export default {
                     formatter: function (value: number) {
                         return ` ${_.round(value, 1)}%`;
                     }
+                },
+                title: {
+                    text: "Memory Utilization Percentage"
                 }
             },
             tooltip: {
@@ -457,11 +460,14 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                        return defaultConf.timestampLabelFormatter(timestamp);
                     }
                 },
                 tooltip: {
                     enabled: false
+                },
+                title: {
+                    text: "Time"
                 }
             }
         },
@@ -478,7 +484,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
                 return _.map(result, payload => ({
-                    name: _.get(payload, 'metric.instance'),
+                    name: "Memory Percentage",
                     data: _.get(payload, 'values')
                 }))
             },
@@ -549,6 +555,9 @@ export default {
                     formatter: function (value: number) {
                         return ` ${_.round(value, 1)}%`;
                     }
+                },
+                title: {
+                    text: "CPU Utilization Percentage"
                 }
             },
             tooltip: {
@@ -565,11 +574,14 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                        return defaultConf.timestampLabelFormatter(timestamp);
                     }
                 },
                 tooltip: {
                     enabled: false
+                },
+                title: {
+                    text: "Time"
                 }
             }
         },
@@ -587,7 +599,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
                 return _.map(result, payload => ({
-                    name: _.get(payload, 'metric.instance'),
+                    name: 'Cpu Percentage',
                     data: _.get(payload, 'values')
                 }))
             },
@@ -658,6 +670,9 @@ export default {
                     formatter: function (value: number) {
                         return ` ${_.round(value, 1)}%`;
                     }
+                },
+                title: {
+                    text: "Disk Utilization Percentage"
                 }
             },
             tooltip: {
@@ -674,11 +689,14 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                        return defaultConf.timestampLabelFormatter(timestamp);
                     }
                 },
                 tooltip: {
                     enabled: false
+                },
+                title: {
+                    text: "Time"
                 }
             }
         },
@@ -696,7 +714,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'result.data.result');
                 return _.map(result, payload => ({
-                    name: _.get(payload, 'metric.instance'),
+                    name: 'Disk Percentage',
                     data: _.get(payload, 'values')
                 }))
             },

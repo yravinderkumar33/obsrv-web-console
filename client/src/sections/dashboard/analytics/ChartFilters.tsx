@@ -1,4 +1,4 @@
-import { Box, Chip, Grid, MenuItem, Select, Stack, Typography, Paper } from "@mui/material"
+import { Box, Chip, Grid, MenuItem, Select, Stack, Typography, Paper, Tooltip } from "@mui/material"
 import React, { useEffect, useState } from 'react';
 import MainCard from 'components/MainCard';
 import * as _ from 'lodash';
@@ -18,7 +18,7 @@ const transformFilter = (filter: Record<string, any>) => {
 }
 
 const ApexWithFilters = (props: any) => {
-    const { title = '', filters = [], children, type = 'chip' } = props;
+    const { title = '', filters = [], children, type = 'chip', description } = props;
     const defaultFilter = transformFilter(_.find(filters, ['default', true]));
     const [filter, setFilter] = useState<any>(_.get(defaultFilter, 'value'));
     const [step, setStep] = useState<string>(_.get(defaultFilter, 'step') || '5m');
@@ -84,7 +84,9 @@ const ApexWithFilters = (props: any) => {
                             <Stack sx={{ ml: 2, mt: 3 }} alignItems={{ xs: 'center', sm: 'flex-start' }}>
                                 <Stack direction="row" alignItems="center" spacing={1}>
                                     <Typography color="textSecondary">{title}</Typography>
-                                    <InfoCircleOutlined />
+                                    <Tooltip title={description || ''}>
+                                        <InfoCircleOutlined />
+                                    </Tooltip>
                                 </Stack>
                             </Stack>
                         </Grid>

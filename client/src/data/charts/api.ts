@@ -162,6 +162,9 @@ export default {
                     formatter: function (value: number) {
                         return ` ${_.round(value, 1)}`;
                     }
+                },
+                title: {
+                    text: "Count"
                 }
             },
             tooltip: {
@@ -178,11 +181,14 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                        return defaultConf.timestampLabelFormatter(timestamp);
                     }
                 },
                 tooltip: {
                     enabled: false
+                },
+                title: {
+                    text: "Time"
                 }
             }
         },
@@ -243,6 +249,9 @@ export default {
                     formatter: function (value: number) {
                         return ` ${_.round(value, 1)}`;
                     }
+                },
+                title: {
+                    text: "Count"
                 }
             },
             tooltip: {
@@ -250,7 +259,7 @@ export default {
                 x: {
                     show: true,
                     formatter(value: number) {
-                        return new Date(value * 1000)
+                        return new Date(value * 1000);
                     }
                 }
             },
@@ -259,11 +268,14 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                        return defaultConf.timestampLabelFormatter(timestamp);
                     }
                 },
                 tooltip: {
                     enabled: false
+                },
+                title: {
+                    text: "Time"
                 }
             }
         },
@@ -368,6 +380,9 @@ export default {
                     formatter: function (value: number) {
                         return ` ${_.round(value, 1)} ms`;
                     }
+                },
+                title: {
+                    text: "Query Response Time (Ms)"
                 }
             },
             tooltip: {
@@ -384,11 +399,14 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
+                        return defaultConf.timestampLabelFormatter(timestamp);
                     }
                 },
                 tooltip: {
                     enabled: false
+                },
+                title: {
+                    text: "Time"
                 }
             }
         },

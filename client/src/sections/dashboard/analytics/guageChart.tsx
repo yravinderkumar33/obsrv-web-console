@@ -26,8 +26,13 @@ const GaugeChart = (props: any) => {
     }
 
     useEffect(() => {
+        let interval: NodeJS.Timer;
         if (!percentage) {
-            configureMetricFetcher();
+            interval = configureMetricFetcher();
+        }
+
+        return () => {
+            interval && clearInterval(interval);
         }
     }, [])
 
