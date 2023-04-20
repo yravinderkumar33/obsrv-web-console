@@ -1,6 +1,7 @@
 import commonMiddlewares from '../../shared/middlewares';
 import controllers from '../controllers';
 import schemaValidator from '../middlewares/schemaValidator';
+import authMiddleware from '../middlewares/auth';
 import { oauthServer } from '../auth/auth'
 
 export default [
@@ -39,7 +40,16 @@ export default [
                     oauthServer.authenticate(),
                     controllers.get('auth:user')?.handler({})
                 ],
-            }
+            },
+            {
+                path: 'logout',
+                method: 'get',
+                middlewares: [
+                    commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.user.logout' }),
+                    controllers.get('auth:logout')?.handler({})
+                ],
+            },
+            
         ]
     },
     {
@@ -52,6 +62,7 @@ export default [
                         path: 'query',
                         method: 'GET',
                         middlewares: [
+                            authMiddleware.handler({}),
                             commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.get' }),
                             controllers.get('prometheus:read')?.handler({}),
                         ],
@@ -60,6 +71,7 @@ export default [
                         path: 'query/range',
                         method: 'GET',
                         middlewares: [
+                            authMiddleware.handler({}),
                             commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.get' }),
                             controllers.get('prometheus:read:range')?.handler({}),
                         ],
@@ -68,6 +80,7 @@ export default [
                         path: 'kafka',
                         method: 'POST',
                         middlewares: [
+                            authMiddleware.handler({}),
                             schemaValidator.handler({ entityName: 'kafka', schema: 'verify' }),
                             controllers.get('kafka:verify')?.handler({}),
                         ],
