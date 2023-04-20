@@ -3,6 +3,7 @@ import { Box, useMediaQuery } from '@mui/material';
 import Search from './Search';
 import Notification from './Notification';
 import MegaMenuSection from './MegaMenuSection'
+import Logout from './Logout';
 
 
 const HeaderContent = () => {
@@ -14,6 +15,7 @@ const HeaderContent = () => {
             <Search />
             <MegaMenuSection />
             <Notification />
+            <Logout />
         </>
     );
 };

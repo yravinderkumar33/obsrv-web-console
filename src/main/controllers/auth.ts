@@ -5,46 +5,45 @@ import model from './../auth/model'
 export default {
   name: 'auth:read',
   handler: () => async (request: Request, response: Response, next: NextFunction) => {
-    console.log("auth:read")
+    let user: { user: any } | null
+
     if (request.session.user) {
-      const user = { user: request.session.user.id }
-      try {
-        return oauthServer.authorize(
-          {
-            authenticateHandler: {
-              handle: (request: Request) => {
-                return user;
-              }
-            }
-          }
-        )(request, response, next)
-      } catch (error) {
-        return next(error)
-      }
-    }
-    const { username, password } = request.body
-    if (username && password) {
-      const user = await model.getUser(username, password)
-      request.session.user = user;
-      if (user) {
-        request.body.user = { user: user.id }
-        try {
-          return oauthServer.authorize(
-            {
-              authenticateHandler: {
-                handle: (request: Request) => {
-                  return request.body.user
-                }
-              }
-            }
-          )(request, response, next)
-        } catch (error) {
-          return next(error)
-        }
-      } else {
-        return next(new Error("user name or password missing"))
-      }
+      user = { "user": request.session.user.id };
+      return authenticate(user, request, response, next);
     }
 
+    const { username, password } = request.body
+    if (!username) {
+      return next(new Error("user name missing in request"))
+    }
+
+    if (!password) {
+      return next(new Error("password missing in request"))
+    }
+    
+    const userObj = await model.getUser(username, password)
+    request.session.user = userObj;
+    if (userObj) {
+      request.body.user = { user: userObj.id }
+      return authenticate(request.body.user, request, response, next);
+    } else {
+      return next(new Error("User not found"))
+    }
   },
 };
+
+const authenticate = (user: any, request: Request, response: Response, next: NextFunction) => {
+  try {
+    return oauthServer.authorize(
+      {
+        authenticateHandler: {
+          handle: (request: Request) => {
+            return user;
+          }
+        }
+      }
+    )(request, response, next)
+  } catch (error) {
+    return next(error)
+  }
+}
