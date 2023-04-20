@@ -65,14 +65,6 @@ export default [
                         ],
                     },
                     {
-                        path: 'alerts',
-                        method: 'GET',
-                        middlewares: [
-                            commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.alerts.get' }),
-                            controllers.get('prometheus:alerts')?.handler({}),
-                        ],
-                    },
-                    {
                         path: 'kafka',
                         method: 'POST',
                         middlewares: [
