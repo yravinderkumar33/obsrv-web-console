@@ -30,7 +30,7 @@ const other: NavItemType = {
             id: 'newMasterDataset',
             title: <FormattedMessage id="New Master Dataset" />,
             type: 'item',
-            url: '/dataset/new/master',
+            url: '/dataset/new/master?master=true',
             icon: icons.PlusCircleOutlined
         },
     ]

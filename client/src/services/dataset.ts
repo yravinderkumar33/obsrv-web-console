@@ -166,14 +166,16 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
     const timestampCol = _.get(state, 'pages.timestamp.indexCol') || "syncts";
     let denormFields = _.get(state, 'pages.denorm.values') || [];
     denormFields = formatDenormFields(denormFields);
-    let updatePayload;
+    let updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema')] };
     if (timestampCol === "syncts")
-        updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject, ...denormFields] };
-    else
-        updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema'), ...denormFields] };
+        updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject] };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
-    const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedJsonSchema, state }, config: {} });
     const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
+    let denormPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), ...denormFields] };
+    if (timestampCol === "syncts")
+        denormPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject, ...denormFields] };
+    const updatedIngestionPayload = _.get(updateJSONSchema(jsonSchema, denormPayload), 'schema');
+    const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedIngestionPayload, state }, config: {} });
     return saveDatasource({ data: { state, storeState, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
 }
 

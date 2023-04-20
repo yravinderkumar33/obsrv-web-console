@@ -5,6 +5,7 @@ import ConditionalCheckboxForm from "pages/dataset/wizard/components/Conditional
 import { downloadJSONFile } from 'services/utils';
 import VerifyKafka from 'pages/dataset/wizard/components/VerifyKafka';
 import { generateSample } from 'data/sampleBatchEvent';
+import DataKeySelection from 'pages/dataset/wizard/components/DataKeySelection';
 
 const downloadBatchConfig = () => {
     downloadJSONFile(generateSample("observations"), "sampleBatchConfig.json");
@@ -75,6 +76,17 @@ const datasourceQues = {
 }
 
 export const sections = [
+    {
+        id: 'dataKey',
+        title: 'Data key',
+        description: 'Select the key from your data for denormalization.',
+        component: <DataKeySelection />,
+        master: true,
+        componentType: 'box',
+        navigation: {
+            next: 'dataSource'
+        },
+    },
     {
         id: 'dataSource',
         title: 'Input Data Sources',
