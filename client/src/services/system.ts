@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import axios from 'axios';
+import { http } from 'services/http';
 import { v4 } from 'uuid';
 import apiEndpoints from 'data/apiEndpoints';
 
@@ -13,5 +13,5 @@ export const publishDataset = ({ data, config = {} }: any) => {
             "command": "PUBLISH_DATASET"
         }
     }
-    return axios.post(apiEndpoints.publishDataset, payload, config);
+    return http.post(apiEndpoints.publishDataset, payload, config);
 }

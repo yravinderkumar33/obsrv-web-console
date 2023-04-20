@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import axios from 'axios';
+import { http } from 'services/http';
 // material-ui
 import {
   Button,
@@ -71,7 +71,7 @@ const AuthLogin = () => {
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-         // This method is not required as we will submit the form as normal form
+          // This method is not required as we will submit the form as normal form
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
@@ -101,10 +101,10 @@ const AuthLogin = () => {
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="password-login">Password</InputLabel>
-                  <input type="hidden" value={clientId} name="client_id"/>
-                  <input type="hidden" value={redirectURI} name="redirect_uri"/>
-                  <input type="hidden" value="code" name="response_type"/>
-                  <input type="hidden" value="authorization_code" name="grant_type"/>
+                  <input type="hidden" value={clientId} name="client_id" />
+                  <input type="hidden" value={redirectURI} name="redirect_uri" />
+                  <input type="hidden" value="code" name="response_type" />
+                  <input type="hidden" value="authorization_code" name="grant_type" />
                   <OutlinedInput
                     fullWidth
                     color={capsWarning ? 'warning' : 'primary'}

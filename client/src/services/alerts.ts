@@ -1,6 +1,6 @@
-import axios from 'axios';
+import { http } from 'services/http';
 import endpoints from 'data/apiEndpoints'
 
 export const fetchAlerts = ({ config }: any) => {
-    return axios.get(endpoints.alerts, config || {});
+    return http.get(endpoints.alerts, config || {});
 }

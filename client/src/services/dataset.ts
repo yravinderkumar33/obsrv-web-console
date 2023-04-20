@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import axios from 'axios';
+import { http } from 'services/http';
 import { updateJSONSchema } from './json-schema';
 import { saveDatasource } from './datasource';
 import apiEndpoints from 'data/apiEndpoints';
@@ -29,15 +29,15 @@ const formatDenormFields = (denormFields: any) => {
 }
 
 export const createDraftDataset = ({ data = {}, config }: any) => {
-    return axios.post(apiEndpoints.saveDatset, data, config);
+    return http.post(apiEndpoints.saveDatset, data, config);
 }
 
 export const updateDataset = ({ data = {}, config }: any) => {
-    return axios.patch(apiEndpoints.updateDataset, data, config);
+    return http.patch(apiEndpoints.updateDataset, data, config);
 }
 
 export const searchDatasets = ({ data = { filters: {} }, config }: any) => {
-    return axios.post(apiEndpoints.listDatasets, data, config);
+    return http.post(apiEndpoints.listDatasets, data, config);
 }
 
 export const fetchDatasets = (config: Record<string, any>) => {
@@ -108,11 +108,11 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
         denorm_config,
         dataset_config
     }
-    return axios.patch(apiEndpoints.updateDataset, payload, config);
+    return http.patch(apiEndpoints.updateDataset, payload, config);
 }
 
 export const datasetRead = ({ datasetId, config = {} }: any) => {
-    return axios.get(`${apiEndpoints.readDataset}/${datasetId}`, {
+    return http.get(`${apiEndpoints.readDataset}/${datasetId}`, {
         ...config
     })
 }
@@ -139,11 +139,11 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
             }
         }
     };
-    return axios.post(apiEndpoints.generateIngestionSpec, payload, config);
+    return http.post(apiEndpoints.generateIngestionSpec, payload, config);
 }
 
 export const saveTransformations = async (payload: any) => {
-    return axios.post(`${apiEndpoints.transformationsConfig}`, payload);
+    return http.post(`${apiEndpoints.transformationsConfig}`, payload);
 }
 
 const connectorInfoToDraft = async (state: Record<string, any>, master: any) => {
@@ -181,39 +181,39 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
 
 
 export const sendEvents = (datasetId: string | undefined, payload: any) => {
-    return axios.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, {});
+    return http.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, {});
 }
 
 export const checkUniqueId = async (id: string | undefined) => {
-    return axios.get(`${apiEndpoints.uniqueId}/${id}`);
+    return http.get(`${apiEndpoints.uniqueId}/${id}`);
 }
 
 export const getUrls = async (files: any) => {
     const payload = {
         files: _.map(files, 'path'),
     };
-    return axios.post(`${apiEndpoints.s3Upload}`, payload);
+    return http.post(`${apiEndpoints.s3Upload}`, payload);
 }
 
 export const uploadToUrl = async (url: string, file: any) => {
     const formData = new FormData();
     formData.append('Content-Type', _.get(file, 'type'));
     formData.append('file', file);
-    return axios.put(url, formData, {
+    return http.put(url, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
     });
 }
 
 export const saveConnectorDraft = async (payload: any) => {
-    return axios.post(`${apiEndpoints.datasetSourceConfig}`, payload);
+    return http.post(`${apiEndpoints.datasetSourceConfig}`, payload);
 }
 
 export const updateTransformations = async (payload: any) => {
-    return axios.patch(`${apiEndpoints.transformationsConfig}`, payload);
+    return http.patch(`${apiEndpoints.transformationsConfig}`, payload);
 }
 
 export const deleteTransformations = async (id: string) => {
-    return axios.delete(`${apiEndpoints.transformationsConfig}/${id}`);
+    return http.delete(`${apiEndpoints.transformationsConfig}/${id}`);
 }
 
 export const updateClientState = async ({ clientState }: any) => {
@@ -223,12 +223,12 @@ export const updateClientState = async ({ clientState }: any) => {
 }
 
 export const verifyKafkaConnection = async (connectorInfo: any) => {
-    return await axios.post(`${apiEndpoints.kafkaConnection}`, {
+    return await http.post(`${apiEndpoints.kafkaConnection}`, {
         bootstrap: connectorInfo.kafkaBrokers,
         topic: connectorInfo.topic,
     });
 }
 
 export const updateDenormConfig = async (denormPayload: any) => {
-    return await axios.patch(apiEndpoints.saveDatset, denormPayload, {});
+    return await http.patch(apiEndpoints.saveDatset, denormPayload, {});
 }

@@ -1,9 +1,9 @@
 import * as _ from 'lodash'
-import axios from 'axios';
+import { http } from 'services/http';
 import apiEndpoint from 'data/apiEndpoints';
 
 export const fetchJsonSchema = (data: Record<string, any>) => {
-    return axios.post(apiEndpoint.generateJsonSchema, data)
+    return http.post(apiEndpoint.generateJsonSchema, data)
         .then(response => response.data?.result);
 }
 

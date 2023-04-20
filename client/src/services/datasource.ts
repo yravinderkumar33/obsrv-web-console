@@ -1,4 +1,4 @@
-import axios from 'axios';
+import {http} from 'services/http';
 import * as _ from 'lodash';
 
 import apiEndpoints from 'data/apiEndpoints';
@@ -13,9 +13,9 @@ export const saveDatasource = ({ data = {}, config }: any) => {
         "datasource_ref": `${datasetId}_DAY`,
     };
 
-    return axios.post(apiEndpoints.saveDatasource, payload, config);
+    return http.post(apiEndpoints.saveDatasource, payload, config);
 }
 
 export const datasourceRead = ({ datasetId, config = {} }: any) => {
-    return axios.get(`${apiEndpoints.readDatasource}/${datasetId}`, { ...config });
+    return http.get(`${apiEndpoints.readDatasource}/${datasetId}`, { ...config });
 }

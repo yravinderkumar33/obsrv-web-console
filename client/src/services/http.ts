@@ -1,5 +1,9 @@
 import axios, { AxiosRequestConfig } from 'axios';
 
-export const request = (config: AxiosRequestConfig) => {
+const http = axios;
+
+const request = (config: AxiosRequestConfig) => {
     return axios.request(config)
 }
+
+export { http, request };
