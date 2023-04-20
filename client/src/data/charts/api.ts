@@ -350,7 +350,7 @@ export default {
             parse: (response: any) => {
                 const value = _.get(response, 'data.result[0].value[1]') || 0;
                 if (!value) throw new Error();
-                return _.floor(value);
+                return _.floor(value, 2);
             },
             error() {
                 return [0, "error"];

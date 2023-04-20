@@ -1,6 +1,6 @@
 import client from 'prom-client';
-import { queryResponseTimeMetric, totalApiCallsMetric, apiThroughputMetric, failedApiCallsMetric } from './metrics'
-const metrics = [queryResponseTimeMetric, totalApiCallsMetric, apiThroughputMetric, failedApiCallsMetric];
+import { queryResponseTimeMetric, totalApiCallsMetric, failedApiCallsMetric } from './metrics'
+const metrics = [queryResponseTimeMetric, totalApiCallsMetric, failedApiCallsMetric];
 
 const register = new client.Registry();
 
@@ -12,9 +12,9 @@ const configureRegistry = (register: client.Registry) => {
     })
 }
 
-const incrementApiCalls = () => totalApiCallsMetric.inc();
-const setQueryResponseTime = (duration: any) => queryResponseTimeMetric.set(duration);
-const incrementFailedApiCalls = () => failedApiCallsMetric.inc();
+const incrementApiCalls = (labels: Record<string, any> = {}) => totalApiCallsMetric.labels(labels).inc();
+const setQueryResponseTime = (duration: any, labels: Record<string, any> = {}) => queryResponseTimeMetric.labels(labels).set(duration);
+const incrementFailedApiCalls = (labels: Record<string, any>) => failedApiCallsMetric.labels(labels).inc();
 
 //register all the metrics
 configureRegistry(register);

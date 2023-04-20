@@ -20,11 +20,11 @@ import { updateDenormConfig } from "services/dataset"
 const { spacing } = config;
 
 const getMasterDatasets = (datasets: Array<any>) => {
-    return _.filter(datasets, (dataset: Record<string, any>) => _.get(dataset, 'type') === "master" && _.get(dataset, 'status') === "ACTIVE");
+    return _.filter(datasets, (dataset: Record<string, any>) => _.get(dataset, 'type') === "master" && ['ACTIVE', 'PUBLISHED'].includes(_.get(dataset, 'status')));
 }
 
 const getRedisConfig = (datasets: Array<any>) => {
-    const data = _.filter(datasets, dataset => _.get(dataset, 'type') === "master" && _.get(dataset, 'status') === "ACTIVE");
+    const data = _.filter(datasets, dataset => _.get(dataset, 'type') === "master" && ['ACTIVE', 'PUBLISHED'].includes(_.get(dataset, 'status')));
     if (data.length > 0)
         return {
             redis_db_host: _.get(data, '[0].denorm_config.redis_db_host'),

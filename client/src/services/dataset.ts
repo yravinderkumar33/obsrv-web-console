@@ -9,7 +9,6 @@ const synctsObject = {
     "type": "number",
     "key": "properties.syncts",
     "ref": "properties.syncts",
-    "required": true,
     "isModified": true,
 }
 
@@ -20,7 +19,6 @@ const formatDenormFields = (denormFields: any) => {
             "type": "json",
             "key": `properties.${item.denorm_out_field}`,
             "ref": `properties.${item.denorm_out_field}`,
-            "required": true,
             "isModified": true,
         }));
         return final;
@@ -172,7 +170,7 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
     if (timestampCol === "syncts")
         updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject, ...denormFields] };
     else
-        updatePayload = { schema: _.get(state, 'pages.columns.state.schema'), ...denormFields };
+        updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema'), ...denormFields] };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
     const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedJsonSchema, state }, config: {} });
     const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
