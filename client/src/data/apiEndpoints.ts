@@ -15,5 +15,7 @@ export default {
     datasetSourceConfig: "/config/obsrv/v1/datasets/source/config",
     transformationsConfig: "/config/obsrv/v1/datasets/transformation",
     kafkaConnection: "/api/report/v1/kafka",
-    alerts: "/alertmanager/api/v2/alerts"
+    alerts: "/alertmanager/api/v2/alerts",
+    prometheusRead: "/prom/api/v1/query",
+    prometheusReadRange: "/prom/api/v1/query_range"
 }

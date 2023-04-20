@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 
 import promql from 'data/promql';
 import defaultConf from './common';
+import endpoints from 'data/apiEndpoints';
 
 export default {
     node_query_response_time: {
@@ -56,7 +57,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -65,7 +66,7 @@ export default {
                 step: '1m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: 'Query Response Time',
                     data: _.get(payload, 'values')
@@ -80,7 +81,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -88,7 +89,7 @@ export default {
                 query: promql.node_query_response_time_min.query,
             },
             parse: (response: any) => {
-                const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                const value = _.get(response, 'data.result[0].value[1]') || 0;
                 return _.floor(value, 1)
             },
             error() {
@@ -100,7 +101,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -108,7 +109,7 @@ export default {
                 query: promql.node_query_response_time_max.query
             },
             parse: (response: any) => {
-                const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                const value = _.get(response, 'data.result[0].value[1]') || 0;
                 if (!value) throw new Error();
                 return _.floor(value, 1)
             },
@@ -121,7 +122,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -129,7 +130,7 @@ export default {
                 query: promql.node_query_response_time_avg.query
             },
             parse: (response: any) => {
-                const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                const value = _.get(response, 'data.result[0].value[1]') || 0;
                 if (!value) throw new Error();
                 return _.floor(value, 1)
             },
@@ -195,7 +196,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -204,7 +205,7 @@ export default {
                 step: '1m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: 'Total Api Calls',
                     data: _.get(payload, 'values')
@@ -282,7 +283,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -291,7 +292,7 @@ export default {
                 step: '1m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: 'Total Api Calls',
                     data: _.get(payload, 'values')
@@ -316,7 +317,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -324,7 +325,7 @@ export default {
                 query: promql.api_failure_percentage.query
             },
             parse: (response: any) => {
-                const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                const value = _.get(response, 'data.result[0].value[1]') || 0;
                 if (!value) throw new Error();
                 if (value > 1) return ["UNHEALTHY", "error"]
                 if (value > 0.1 && value <= 1) return ["HEALTHY", "warning"]
@@ -339,7 +340,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -347,7 +348,7 @@ export default {
                 query: promql.api_failure_percentage.query
             },
             parse: (response: any) => {
-                const value = _.get(response, 'result.data.result[0].value[1]') || 0;
+                const value = _.get(response, 'data.result[0].value[1]') || 0;
                 if (!value) throw new Error();
                 return _.floor(value);
             },
@@ -413,7 +414,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -422,7 +423,7 @@ export default {
                 step: '1m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: 'Avg Query Response Time',
                     data: _.get(payload, 'values')

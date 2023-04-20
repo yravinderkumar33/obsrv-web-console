@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import dayjs from 'dayjs';
 import defaultConf from './common';
 import promql from 'data/promql';
-
+import endpoints from 'data/apiEndpoints';
 
 export default {
     data_growth_over_time: {
@@ -58,7 +58,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -67,7 +67,7 @@ export default {
                 step: '5m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: "Data Usage Growth",
                     data: _.get(payload, 'values')
@@ -82,7 +82,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: '/prom/api/v1/query',
             method: 'GET',
             headers: {},
             body: {},
@@ -90,7 +90,7 @@ export default {
                 query: promql.deep_storage_used.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result[0].value[1]');
+                const result = _.get(response, 'data.result[0].value[1]');
                 if (!result) throw new Error();
                 return _.floor(result / (1024 * 1024));
             },
@@ -103,7 +103,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: '/prom/api/v1/query',
             method: 'GET',
             headers: {},
             body: {},
@@ -111,7 +111,7 @@ export default {
                 query: promql.deep_storage_total.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result[0].value[1]');
+                const result = _.get(response, 'data.result[0].value[1]');
                 if (!result) throw new Error();
                 return _.floor(result / (1024 * 1024));
             },
@@ -124,7 +124,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: '/prom/api/v1/query',
             method: 'GET',
             headers: {},
             body: {},
@@ -132,7 +132,7 @@ export default {
                 query: promql.backupCount.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result[0].value[1]');
+                const result = _.get(response, 'data.result[0].value[1]');
                 if (!result) throw new Error();
                 return _.floor(result);
             },
@@ -145,7 +145,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: '/prom/api/v1/query',
             method: 'GET',
             headers: {},
             body: {},
@@ -153,7 +153,7 @@ export default {
                 query: promql.backupSuccessRate.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result[0].value[1]');
+                const result = _.get(response, 'data.result[0].value[1]');
                 if (!result) throw new Error();
                 return _.floor(result * 100);
             },

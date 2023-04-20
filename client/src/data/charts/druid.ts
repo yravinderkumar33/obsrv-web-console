@@ -2,13 +2,14 @@ import * as _ from 'lodash';
 import dayjs from 'dayjs';
 import promql from '../promql';
 import defaultConf from './common';
+import endpoints from 'data/apiEndpoints'
 
 export default {
     druid_health_status: {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -16,7 +17,7 @@ export default {
                 query: promql.druid_health_status.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;

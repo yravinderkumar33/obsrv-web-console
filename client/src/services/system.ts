@@ -3,7 +3,6 @@ import { http } from 'services/http';
 import { v4 } from 'uuid';
 import apiEndpoints from 'data/apiEndpoints';
 
-
 export const publishDataset = ({ data, config = {} }: any) => {
     const { datasetId } = data;
     const payload = {

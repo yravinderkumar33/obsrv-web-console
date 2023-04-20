@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import dayjs from 'dayjs';
 import promql from '../promql';
 import defaultConf from './common'
+import endpoints from 'data/apiEndpoints';
 
 export default {
     node_memory: {
@@ -96,7 +97,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -105,7 +106,7 @@ export default {
                 step: '30s'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: _.get(payload, 'metric.instance'),
                     data: _.get(payload, 'values')
@@ -208,7 +209,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -217,7 +218,7 @@ export default {
                 step: '30s'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: _.get(payload, 'metric.instance'),
                     data: _.get(payload, 'values')
@@ -232,7 +233,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -240,7 +241,7 @@ export default {
                 query: promql.cpu_percentage.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;
@@ -257,7 +258,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -265,7 +266,7 @@ export default {
                 query: promql.memory_percentage.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;
@@ -282,7 +283,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -290,7 +291,7 @@ export default {
                 query: promql.instance_disk.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result[0].value[1]');
+                const result = _.get(response, 'data.result[0].value[1]');
                 if (!result) throw new Error()
                 return _.floor(result);
             },
@@ -303,7 +304,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -311,7 +312,7 @@ export default {
                 query: promql.nodes_percentage.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;
@@ -474,7 +475,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -482,7 +483,7 @@ export default {
                 query: promql.instance_memory.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: "Memory Percentage",
                     data: _.get(payload, 'values')
@@ -588,7 +589,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -597,7 +598,7 @@ export default {
                 step: '5m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: 'Cpu Percentage',
                     data: _.get(payload, 'values')
@@ -703,7 +704,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -712,7 +713,7 @@ export default {
                 step: '5m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: 'Disk Percentage',
                     data: _.get(payload, 'values')
@@ -783,7 +784,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -791,7 +792,7 @@ export default {
                 query: promql.instance_disk.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result[0].value[1]');
+                const result = _.get(response, 'data.result[0].value[1]');
                 if (!result) throw new Error()
                 return _.floor(result);
             },
@@ -860,7 +861,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -868,7 +869,7 @@ export default {
                 query: promql.cpu_usage_radial.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;
@@ -941,7 +942,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -949,7 +950,7 @@ export default {
                 query: promql.memory_usage_radial.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;
@@ -966,7 +967,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -974,7 +975,7 @@ export default {
                 query: promql.cluster_total_nodes_count.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;
@@ -991,7 +992,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -999,7 +1000,7 @@ export default {
                 query: promql.cluster_running_nodes_count.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;
@@ -1016,7 +1017,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query',
+            url: endpoints.prometheusRead,
             method: 'GET',
             headers: {},
             body: {},
@@ -1024,7 +1025,7 @@ export default {
                 query: promql.totalCpuCores.query
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 const sum = _.sumBy(result, (payload: any) => {
                     const { value } = payload;
                     const [_, percentage = 0] = value;
@@ -1090,7 +1091,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -1099,7 +1100,7 @@ export default {
                 step: '5m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: _.get(payload, 'metric.namespace'),
                     data: _.get(payload, 'values')
@@ -1163,7 +1164,7 @@ export default {
         query: {
             type: 'api',
             timeout: 3000,
-            url: '/api/report/v1/query/range',
+            url: endpoints.prometheusReadRange,
             method: 'GET',
             headers: {},
             body: {},
@@ -1172,7 +1173,7 @@ export default {
                 step: '5m'
             },
             parse: (response: any) => {
-                const result = _.get(response, 'result.data.result');
+                const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
                     name: _.get(payload, 'metric.namespace'),
                     data: _.get(payload, 'values')

@@ -5,10 +5,6 @@ export const totalVsRunningNodes = (response: any) => {
     return `${runningNodes} / ${totalNodes}`
 }
 
-const getUsedCpu = (total: any, percent: any) => {
-    _.floor((total * percent) / 100, 2)
-}
-
 export const percentageUsage = (response: any) => {
     const [percentage, nodes] = response;
     return `${percentage} % Usage on ${nodes} Nodes`

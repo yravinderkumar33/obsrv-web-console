@@ -59,24 +59,6 @@ export default [
                 path: 'v1',
                 routes: [
                     {
-                        path: 'query',
-                        method: 'GET',
-                        middlewares: [
-                            authMiddleware.handler({}),
-                            commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.get' }),
-                            controllers.get('prometheus:read')?.handler({}),
-                        ],
-                    },
-                    {
-                        path: 'query/range',
-                        method: 'GET',
-                        middlewares: [
-                            authMiddleware.handler({}),
-                            commonMiddlewares.get('set:metadata')?.handler({ id: 'api.report.get' }),
-                            controllers.get('prometheus:read:range')?.handler({}),
-                        ],
-                    },
-                    {
                         path: 'kafka',
                         method: 'POST',
                         middlewares: [
