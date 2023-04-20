@@ -62,7 +62,7 @@ const DataDenorm = (props: any) => {
                 denorm_config: {
                     redis_db_host: _.get(redisConfig, 'redis_db_host'),
                     redis_db_port: _.get(redisConfig, 'redis_db_port'),
-                    denormFields: [...payload],
+                    denorm_fields: [...payload],
                 },
             });
             if (data.data) {

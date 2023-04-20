@@ -71,7 +71,7 @@ const AddDenormField = (props: any) => {
                 denorm_config: {
                     redis_db_host: _.get(redisConfig, 'redis_db_host'),
                     redis_db_port: _.get(redisConfig, 'redis_db_port'),
-                    denormFields: [...selection, payload],
+                    denorm_fields: [...selection, payload],
                 },
             });
 
