@@ -2,7 +2,6 @@
 import { styled, Theme, CSSObject } from '@mui/material/styles';
 import Drawer from '@mui/material/Drawer';
 
-
 import { drawerWidth } from 'config';
 
 const openedMixin = (theme: Theme): CSSObject => ({
@@ -13,7 +12,8 @@ const openedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.enteringScreen
   }),
   overflowX: 'hidden',
-  boxShadow: theme.palette.mode === 'dark' ? theme.customShadows.z1 : 'none'
+  boxShadow: theme.customShadows.z1,
+  backgroundColor: "rgba(30, 30, 30, 0.95)"
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -24,7 +24,8 @@ const closedMixin = (theme: Theme): CSSObject => ({
   overflowX: 'hidden',
   width: theme.spacing(7.5),
   borderRight: 'none',
-  boxShadow: theme.customShadows.z1
+  boxShadow: theme.customShadows.z1,
+  backgroundColor: "rgba(30, 30, 30, 0.95)"
 });
 
 

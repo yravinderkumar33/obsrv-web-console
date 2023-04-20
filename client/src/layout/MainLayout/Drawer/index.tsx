@@ -8,7 +8,6 @@ import DrawerContent from './DrawerContent';
 import MiniDrawerStyled from './MiniDrawerStyled';
 import { drawerWidth } from 'config';
 
-
 interface Props {
     open: boolean;
     window?: () => Window;
@@ -18,15 +17,12 @@ interface Props {
 const MainDrawer = ({ open, handleDrawerToggle, window }: Props) => {
     const theme = useTheme();
     const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
-
     const container = window !== undefined ? () => window().document.body : undefined;
-
-
     const drawerContent = useMemo(() => <DrawerContent handleDrawerToggle={handleDrawerToggle} />, []);
     const drawerHeader = useMemo(() => <DrawerHeader open={open} />, [open]);
 
     return (
-        <Box component="nav" sx={{ flexShrink: { md: 0 }, zIndex: 1200 }} aria-label="mailbox folders">
+        <Box component="nav" sx={{ flexShrink: { md: 0 }, zIndex: 1200 }} aria-label="mailbox folders" >
             {!matchDownMD ? (
                 <MiniDrawerStyled variant="permanent" open={open}>
                     {drawerHeader}

@@ -36,7 +36,7 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
         onClick?: () => void;
     } = {
         component: forwardRef((props, ref) => <Link {...props} to={item.url!} target={itemTarget} />),
-        onClick: () => {}
+        onClick: () => { }
     };
     if (item?.external) {
         listItemProps = { component: 'a', href: item.url, target: itemTarget };
@@ -68,8 +68,8 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
 
     }, [pathname]);
 
-    const textColor = theme.palette.mode === 'dark' ? 'grey.400' : 'text.primary';
-    const iconSelectedColor = theme.palette.mode === 'dark' && drawerOpen ? 'text.primary' : 'primary.main';
+    const textColor = 'grey.400';
+    const iconSelectedColor = 'text.primary';
 
     return (
         <ListItemButton
@@ -82,15 +82,15 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
                 py: !drawerOpen && level === 1 ? 1.25 : 1,
                 ...(drawerOpen && {
                     '&:hover': {
-                        bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'primary.lighter'
+                        bgcolor: 'divider'
                     },
                     '&.Mui-selected': {
-                        bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'primary.lighter',
+                        bgcolor: 'divider',
                         borderRight: `2px solid ${theme.palette.primary.main}`,
                         color: iconSelectedColor,
                         '&:hover': {
                             color: iconSelectedColor,
-                            bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'primary.lighter'
+                            bgcolor: 'divider'
                         }
                     }
                 }),
@@ -119,14 +119,14 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             '&:hover': {
-                                bgcolor: theme.palette.mode === 'dark' ? 'secondary.light' : 'secondary.lighter'
+                                bgcolor: 'secondary.light'
                             }
                         }),
                         ...(!drawerOpen &&
                             isSelected && {
-                            bgcolor: theme.palette.mode === 'dark' ? 'primary.900' : 'primary.lighter',
+                            bgcolor: 'primary.900',
                             '&:hover': {
-                                bgcolor: theme.palette.mode === 'dark' ? 'primary.darker' : 'primary.lighter'
+                                bgcolor: 'primary.darker'
                             }
                         })
                     }}

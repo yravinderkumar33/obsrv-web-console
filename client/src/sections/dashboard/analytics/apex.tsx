@@ -64,10 +64,7 @@ const ApexChart = (props: any) => {
       ...prevState,
       tooltip: {
         theme: mode === 'dark' ? 'dark' : 'light'
-      },
-      ...(!('colors' in meta) && {
-        colors: [theme.palette.primary.main, theme.palette.primary[700]]
-      })
+      }
     }));
   }, [mode, primary, secondary, line, theme]);
 

@@ -1,6 +1,5 @@
 import { Link as RouterLink } from 'react-router-dom';
 
-
 import { Link, Stack, Typography } from '@mui/material';
 
 const Footer = () => (

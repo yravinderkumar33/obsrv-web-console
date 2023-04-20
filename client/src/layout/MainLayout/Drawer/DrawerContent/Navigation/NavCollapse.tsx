@@ -123,8 +123,8 @@ const NavCollapse = ({ menu, level, handleDrawerToggle }: Props) => {
     const borderIcon = level === 1 ? <BorderOutlined style={{ fontSize: '1rem' }} /> : false;
     const Icon = menu.icon!;
     const menuIcon = menu.icon ? <Icon style={{ fontSize: drawerOpen ? '1rem' : '1.25rem' }} /> : borderIcon;
-    const textColor = theme.palette.mode === 'dark' ? 'grey.400' : 'text.primary';
-    const iconSelectedColor = theme.palette.mode === 'dark' && drawerOpen ? theme.palette.text.primary : theme.palette.primary.main;
+    const textColor = 'grey.400';
+    const iconSelectedColor = theme.palette.primary.main;
 
     return (
         <>
@@ -138,12 +138,12 @@ const NavCollapse = ({ menu, level, handleDrawerToggle }: Props) => {
                     py: !drawerOpen && level === 1 ? 1.25 : 1,
                     ...(drawerOpen && {
                         '&:hover': {
-                            bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'primary.lighter'
+                            bgcolor: 'divider'
                         },
                         '&.Mui-selected': {
                             bgcolor: 'transparent',
                             color: iconSelectedColor,
-                            '&:hover': { color: iconSelectedColor, bgcolor: theme.palette.mode === 'dark' ? 'divider' : 'transparent' }
+                            '&:hover': { color: iconSelectedColor, bgcolor: 'divider' }
                         }
                     }),
                     ...(!drawerOpen && {
@@ -171,14 +171,14 @@ const NavCollapse = ({ menu, level, handleDrawerToggle }: Props) => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 '&:hover': {
-                                    bgcolor: theme.palette.mode === 'dark' ? 'secondary.light' : 'secondary.lighter'
+                                    bgcolor: 'secondary.light'
                                 }
                             }),
                             ...(!drawerOpen &&
                                 selected === menu.id && {
-                                bgcolor: theme.palette.mode === 'dark' ? 'primary.900' : 'primary.lighter',
+                                bgcolor: 'primary.900',
                                 '&:hover': {
-                                    bgcolor: theme.palette.mode === 'dark' ? 'primary.darker' : 'primary.lighter'
+                                    bgcolor: 'primary.darker'
                                 }
                             })
                         }}

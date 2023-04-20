@@ -1,19 +1,11 @@
 import { ReactNode, useMemo } from 'react';
-
-
 import { useTheme } from '@mui/material/styles';
 import { AppBar, Toolbar, useMediaQuery, AppBarProps } from '@mui/material';
-
-
 import AppBarStyled from './AppBarStyled';
 import HeaderContent from './HeaderContent';
 import IconButton from 'components/@extended/IconButton';
-
-
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import ClusterStatus from 'sections/widgets/Cluster';
 import { useSelector } from 'react-redux';
-
 
 interface Props {
     open: boolean;
@@ -25,12 +17,9 @@ const Header = ({ open, handleDrawerToggle }: Props) => {
     const theme = useTheme();
     const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
     const globalConfigState: Record<string, any> = useSelector((state: any) => state.config);
-
-
     const headerContent = useMemo(() => <HeaderContent />, []);
-
-    const iconBackColorOpen = theme.palette.mode === 'dark' ? 'grey.200' : 'grey.300';
-    const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
+    const iconBackColorOpen = 'grey.200';
+    const iconBackColor = 'background.default';
 
     const mainHeader: ReactNode = (
         <div id='rootHeader'>

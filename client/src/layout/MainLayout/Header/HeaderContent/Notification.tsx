@@ -46,14 +46,14 @@ const Notification = () => {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
   const anchorRef = useRef<any>(null);
-  const [read, setRead] = useState(0);
   const [open, setOpen] = useState(false);
-
+  
   const dispatch = useDispatch();
   const alertsState = useSelector((state: any) => state?.alerts);
   const status = _.get(alertsState, 'status');
   const predicate = alertsFilterByLabels({ matchLabels: { bb: "obsrv" } });
   const alerts = _.filter(_.get(alertsState, 'data.data') || [], predicate);
+  const [read, setRead] = useState(_.get(alerts, 'length') || 0);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
