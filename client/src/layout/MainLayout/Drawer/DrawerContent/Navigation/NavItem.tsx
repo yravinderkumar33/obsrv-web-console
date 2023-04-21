@@ -1,80 +1,52 @@
-import { forwardRef, useEffect, ForwardRefExoticComponent, RefAttributes } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { forwardRef, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
-
 import { activeItem } from 'store/reducers/menu';
 
-import { LinkTarget, NavItemType } from 'types/menu';
-import { RootStateProps } from 'types/root';
-
-
-
-interface Props {
-    item: NavItemType;
-    level: number;
-    handleDrawerToggle: () => void;
-}
-
-const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
+const NavItem = ({ item, level }: any) => {
     const theme = useTheme();
     const dispatch = useDispatch();
-    const menu = useSelector((state: RootStateProps) => state.menu);
+    const menu = useSelector((state: any) => state.menu);
     const { drawerOpen, openItem } = menu;
 
-    let itemTarget: LinkTarget = '_self';
+    let itemTarget = '_self';
     if (item.target) {
         itemTarget = '_blank';
     }
 
-    let listItemProps: {
-        component: ForwardRefExoticComponent<RefAttributes<HTMLAnchorElement>> | string;
-        href?: string;
-        target?: LinkTarget;
-        onClick?: () => void;
-    } = {
-        component: forwardRef((props, ref) => <Link {...props} to={item.url!} target={itemTarget} />),
-        onClick: () => { }
-    };
+    let listItemProps = { component: forwardRef((props, ref: any) => <Link ref={ref} {...props} to={item.url} target={itemTarget} />) };
     if (item?.external) {
-        listItemProps = { component: 'a', href: item.url, target: itemTarget };
+        listItemProps = { component: 'a', href: item.url, target: itemTarget } as any;
     }
 
-    const Icon = item.icon!;
+    const itemHandler = (id: any) => {
+        dispatch(activeItem({ openItem: [id] }));
+    };
+
+    const Icon = item.icon;
     const itemIcon = item.icon ? <Icon style={{ fontSize: drawerOpen ? '1rem' : '1.25rem' }} /> : false;
-
-    const isSelected = openItem.findIndex((id) => id === item.id) > -1;
-
-    const { pathname } = useLocation();
-
+    const isSelected = openItem.findIndex((id: any) => id === item.id) > -1;
     useEffect(() => {
-        if (pathname && pathname.includes('product-details')) {
-            if (item.url && item.url.includes('product-details')) {
-                dispatch(activeItem({ openItem: [item.id] }));
-            }
-        }
-
-        if (pathname && pathname.includes('kanban')) {
-            if (item.url && item.url.includes('kanban')) {
-                dispatch(activeItem({ openItem: [item.id] }));
-            }
-        }
-
-        if (pathname === item.url) {
+        const currentIndex = document.location.pathname
+            .toString()
+            .split('/')
+            .findIndex((id) => id === item.id);
+        if (currentIndex > -1) {
             dispatch(activeItem({ openItem: [item.id] }));
         }
+    }, []);
 
-    }, [pathname]);
-
-    const textColor = 'grey.400';
-    const iconSelectedColor = 'text.primary';
+    const textColor = 'text.primary';
+    const iconSelectedColor = 'primary.main';
 
     return (
         <ListItemButton
             {...listItemProps}
             disabled={item.disabled}
+            onClick={() => itemHandler(item.id)}
             selected={isSelected}
             sx={{
                 zIndex: 1201,
@@ -82,15 +54,15 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
                 py: !drawerOpen && level === 1 ? 1.25 : 1,
                 ...(drawerOpen && {
                     '&:hover': {
-                        bgcolor: 'divider'
+                        bgcolor: 'primary.lighter'
                     },
                     '&.Mui-selected': {
-                        bgcolor: 'divider',
+                        bgcolor: 'primary.lighter',
                         borderRight: `2px solid ${theme.palette.primary.main}`,
                         color: iconSelectedColor,
                         '&:hover': {
                             color: iconSelectedColor,
-                            bgcolor: 'divider'
+                            bgcolor: 'primary.lighter'
                         }
                     }
                 }),
@@ -119,14 +91,14 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             '&:hover': {
-                                bgcolor: 'secondary.light'
+                                bgcolor: 'secondary.lighter'
                             }
                         }),
                         ...(!drawerOpen &&
                             isSelected && {
-                            bgcolor: 'primary.900',
+                            bgcolor: 'primary.lighter',
                             '&:hover': {
-                                bgcolor: 'primary.darker'
+                                bgcolor: 'primary.lighter'
                             }
                         })
                     }}
@@ -154,6 +126,11 @@ const NavItem = ({ item, level, handleDrawerToggle }: Props) => {
             )}
         </ListItemButton>
     );
+};
+
+NavItem.propTypes = {
+    item: PropTypes.object,
+    level: PropTypes.number
 };
 
 export default NavItem;

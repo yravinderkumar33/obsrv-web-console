@@ -1,21 +1,16 @@
-import { Theme } from '@mui/material/styles';
-import { Box, useMediaQuery } from '@mui/material';
-import Search from './Search';
+import { Box, Stack } from '@mui/material';
+import Menus from './MenuSection'
 import Notification from './Notification';
-import MegaMenuSection from './MegaMenuSection'
-import Logout from './Logout';
-
 
 const HeaderContent = () => {
-    const matchesXs = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'));
-
     return (
         <>
-            {matchesXs && <Box sx={{ ml: 1 }} />}
-            <Search />
-            <MegaMenuSection />
-            <Notification />
-            <Logout />
+            <Box sx={{ ml: 1, width: '100%' }}>
+                <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
+                    <Menus />
+                    <Notification />
+                </Stack>
+            </Box>
         </>
     );
 };

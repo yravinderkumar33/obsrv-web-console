@@ -1,7 +1,7 @@
 import Navigation from './Navigation';
 import SimpleBar from 'components/third-party/SimpleBar';
 
-const DrawerContent = ({ handleDrawerToggle = () => { } }) => (
+const DrawerContent = () => (
     <SimpleBar
         sx={{
             '& .simplebar-content': {
@@ -10,7 +10,7 @@ const DrawerContent = ({ handleDrawerToggle = () => { } }) => (
             }
         }}
     >
-        <Navigation handleDrawerToggle={handleDrawerToggle} />
+        <Navigation />
     </SimpleBar>
 );
 

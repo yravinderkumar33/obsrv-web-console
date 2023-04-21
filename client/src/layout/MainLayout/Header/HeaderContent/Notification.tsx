@@ -26,28 +26,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAlertsThunk } from 'store/middlewares';
 import { alertsFilterByLabels } from 'services/transformers';
 
-const avatarSX = {
-  width: 36,
-  height: 36,
-  fontSize: '1rem'
-};
+const avatarSX = { width: 36, height: 36, fontSize: '1rem' };
 
-const actionSX = {
-  mt: '6px',
-  ml: 1,
-  top: 'auto',
-  right: 'auto',
-  alignSelf: 'flex-start',
-
-  transform: 'none'
-};
+const actionSX = { mt: '6px', ml: 1, top: 'auto', right: 'auto', alignSelf: 'flex-start', transform: 'none' };
 
 const Notification = () => {
   const theme = useTheme();
   const matchesXs = useMediaQuery(theme.breakpoints.down('md'));
   const anchorRef = useRef<any>(null);
   const [open, setOpen] = useState(false);
-  
+
   const dispatch = useDispatch();
   const alertsState = useSelector((state: any) => state?.alerts);
   const status = _.get(alertsState, 'status');
