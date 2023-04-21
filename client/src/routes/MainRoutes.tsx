@@ -1,9 +1,8 @@
 import { lazy } from 'react';
 import MainLayout from 'layout/MainLayout';
 import Loadable from 'components/Loadable';
-import DatasetDetails from 'pages/dashboard/datasetsDetails';
-import Login from 'sections/auth/auth-forms/AuthLogin';
 
+const DatasetDetails = Loadable(lazy(() => import('pages/dashboard/datasetsDetails')));
 const ClusterHealth = Loadable(lazy(() => import('pages/dashboard/datasets')));
 const NewDataset = Loadable(lazy(() => import('pages/dataset/newDataset')));
 const EditDataset = Loadable(lazy(() => import('pages/dataset/editDataset')));
@@ -19,10 +18,6 @@ const MainRoutes = {
         {
             path: '/',
             element: <HomePage />
-        },
-        {
-            path: '/login',
-            element: <Login />
         },
         {
             path: 'datasets',
