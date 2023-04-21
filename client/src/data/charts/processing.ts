@@ -34,6 +34,7 @@ export default {
             params: {},
             parse: (response: any) => {
                 const payload = _.get(response, 'result') || [];
+                if (_.get(payload, 'length') === 0) return [0, "error"];
                 return _.sumBy(payload, value => {
                     return _.get(value, 'event.total_processing_time') || 0;
                 })
@@ -82,6 +83,7 @@ export default {
             params: {},
             parse: (response: any) => {
                 const payload = _.get(response, 'result') || [];
+                if (_.get(payload, 'length') === 0) return [0, "error"];
                 return _.sumBy(payload, value => {
                     return _.get(value, 'event.total_processing_time') || 0;
                 })
@@ -130,6 +132,7 @@ export default {
             params: {},
             parse: (response: any) => {
                 const payload = _.get(response, 'result') || [];
+                if (_.get(payload, 'length') === 0) return [0, "error"];
                 const sum = _.sumBy(payload, value => {
                     return _.get(value, 'event.total_processing_time') || 0;
                 })

@@ -1,27 +1,22 @@
-import { useSelector } from 'react-redux';
 import { Box, Typography } from '@mui/material';
-import { RootStateProps } from 'types/root';
 import NavGroup from './NavGroup';
 import menuItem from 'menu-items';
 
-const Navigation = ({ handleDrawerToggle = () => { } }) => {
-    const menu = useSelector((state: RootStateProps) => state.menu);
-    const { drawerOpen } = menu;
-
+const Navigation = () => {
     const navGroups = menuItem.items.map((item) => {
         switch (item.type) {
             case 'group':
-                return <NavGroup key={item.id} item={item} handleDrawerToggle={handleDrawerToggle} />;
+                return <NavGroup key={item.id} item={item} />;
             default:
                 return (
                     <Typography key={item.id} variant="h6" color="error" align="center">
-                        Fix - Navigation Group
+                        Invalid Input
                     </Typography>
                 );
         }
     });
 
-    return <Box sx={{ pt: drawerOpen ? 2 : 0, '& > ul:first-of-type': { mt: 0 } }}>{navGroups}</Box>;
+    return <Box sx={{ pt: 2 }}>{navGroups}</Box>;
 };
 
 export default Navigation;
