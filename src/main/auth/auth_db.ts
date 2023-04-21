@@ -21,7 +21,7 @@ export const db: InMemoryDb = {
     },
   ],
   users: [
-    { "id": "1", "username": "obsrv", "password": "enDoPvTAxFSd", "email": "user@123.com" }
+    { "id": "1", "username": "admin", "password": "enDoPvTAxFSd", "email": "admin@obsrv.com" }
   ],
   accessTokens: [],
   authorizationCodes: [],

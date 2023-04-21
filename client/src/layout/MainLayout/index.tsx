@@ -5,7 +5,6 @@ import { useTheme } from '@mui/material/styles';
 import { useMediaQuery, Box, Container, Toolbar } from '@mui/material';
 import Drawer from './Drawer';
 import Header from './Header';
-import Footer from './Footer';
 import useConfig from 'hooks/useConfig';
 import { RootStateProps } from 'types/root';
 import { openDrawer } from 'store/reducers/menu';
@@ -23,7 +22,7 @@ const MainLayout = () => {
 
     const menu = useSelector((state: RootStateProps) => state.menu);
     const { drawerOpen } = menu;
-    
+
     const [open, setOpen] = useState(!miniDrawer || drawerOpen);
     const handleDrawerToggle = () => {
         setOpen(!open);
@@ -53,7 +52,6 @@ const MainLayout = () => {
                             >
                                 <Outlet />
                             </Container>
-                            <Footer />
                         </>
                     )}
                     {!container && (
@@ -61,7 +59,6 @@ const MainLayout = () => {
                             <Box sx={{ position: 'relative', display: 'flex', flexDirection: 'column', minHeight: 'calc(110vh - 220px)' }}>
                                 <Outlet />
                             </Box>
-                            <Footer />
                         </>
                     )}
                 </Box>

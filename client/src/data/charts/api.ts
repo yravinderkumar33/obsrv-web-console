@@ -6,77 +6,6 @@ import defaultConf from './common';
 import endpoints from 'data/apiEndpoints';
 
 export default {
-    node_query_response_time: {
-        type: 'line',
-        series: [],
-        options: {
-            chart: {
-                type: 'line',
-                animations: defaultConf.animations,
-                toolbar: {
-                    show: false
-                }
-            },
-            grid: defaultConf.grid,
-            legend: {
-                show: false
-            },
-            stroke: {
-                width: 2,
-                curve: 'smooth'
-            },
-            yaxis: {
-                labels: {
-                    formatter: function (value: number) {
-                        return ` ${_.round(value, 1)} ms`;
-                    }
-                }
-            },
-            tooltip: {
-                theme: 'light',
-                x: {
-                    show: true,
-                    formatter(value: number) {
-                        return new Date(value * 1000)
-                    }
-                }
-            },
-            xaxis: {
-                tickAmount: 10,
-                type: 'datetime',
-                labels: {
-                    formatter: function (value: any, timestamp: any) {
-                        return dayjs.unix(timestamp).format('DD MMM HH:mm');
-                    }
-                },
-                tooltip: {
-                    enabled: false
-                }
-            }
-        },
-        query: {
-            type: 'api',
-            timeout: 3000,
-            url: endpoints.prometheusReadRange,
-            method: 'GET',
-            headers: {},
-            body: {},
-            params: {
-                query: promql.node_query_response_time.query,
-                step: '1m'
-            },
-            parse: (response: any) => {
-                const result = _.get(response, 'data.result');
-                return _.map(result, payload => ({
-                    name: 'Query Response Time',
-                    data: _.get(payload, 'values')
-                }))
-            },
-            error() {
-                return 0;
-            }
-        }
-    },
     node_query_response_time_min: {
         query: {
             type: 'api',
@@ -152,7 +81,7 @@ export default {
             },
             grid: defaultConf.grid,
             legend: {
-                show: false
+                show: true
             },
             stroke: {
                 width: 2,
@@ -207,7 +136,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: 'Total Api Calls',
+                    name: _.get(payload, 'metric.entity') || 'Total Api Calls',
                     data: _.get(payload, 'values')
                 }))
             },
@@ -239,7 +168,7 @@ export default {
             },
             grid: defaultConf.grid,
             legend: {
-                show: false
+                show: true
             },
             stroke: {
                 width: 2,
@@ -294,7 +223,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: 'Total Api Calls',
+                    name: _.get(payload, 'metric.entity') || 'Total Failed Api Calls',
                     data: _.get(payload, 'values')
                 }))
             },
@@ -370,7 +299,7 @@ export default {
             },
             grid: defaultConf.grid,
             legend: {
-                show: false
+                show: true
             },
             stroke: {
                 width: 2,
@@ -425,7 +354,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: 'Avg Query Response Time',
+                    name: _.get(payload, 'metric.entity') || "Avg Query Response Time",
                     data: _.get(payload, 'values')
                 }))
             },
@@ -439,6 +368,93 @@ export default {
                 const query = _.get(params, 'query');
                 if (step && query) {
                     _.set(params, 'query', _.replace(_.replace(query, '$interval', step), '$res', res));
+                }
+                return clonedPayload;
+            }
+        }
+    },
+    api_throughput: {
+        type: 'line',
+        series: [],
+        options: {
+            chart: {
+                type: 'line',
+                animations: defaultConf.animations,
+                toolbar: {
+                    show: false
+                }
+            },
+            grid: defaultConf.grid,
+            legend: {
+                show: true
+            },
+            stroke: {
+                width: 2,
+                curve: 'smooth'
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (value: number) {
+                        return ` ${_.round(value, 1)}`;
+                    }
+                },
+                title: {
+                    text: "Throughput = (count / response time )"
+                }
+            },
+            tooltip: {
+                theme: 'light',
+                x: {
+                    show: true,
+                    formatter(value: number) {
+                        return new Date(value * 1000)
+                    }
+                }
+            },
+            xaxis: {
+                tickAmount: 10,
+                type: 'datetime',
+                labels: {
+                    formatter: function (value: any, timestamp: any) {
+                        return defaultConf.timestampLabelFormatter(timestamp);
+                    }
+                },
+                tooltip: {
+                    enabled: false
+                },
+                title: {
+                    text: "Time"
+                }
+            }
+        },
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: endpoints.prometheusReadRange,
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.apiThroughput.query,
+                step: '1m'
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'data.result');
+                return _.map(result, payload => ({
+                    name: _.get(payload, 'metric.entity') || "Throughput",
+                    data: _.get(payload, 'values')
+                }))
+            },
+            error() {
+                return 0;
+            },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params, metadata = {} } = clonedPayload;
+                const { step, res } = metadata;
+                const query = _.get(params, 'query');
+                if (step && query) {
+                    _.set(params, 'query', _.replace(_.replace(query, /\$interval/g, step), /\$res/g, res));
                 }
                 return clonedPayload;
             }

@@ -182,6 +182,12 @@ export const metricsMetadata = [
                             <ApexChart metadata={_.get(chartMeta, 'node_total_failed_api_call')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
+                    {
+                        description: "This chart shows the API throughput.",
+                        chart: <ApexWithFilters title="API Throughput" filters={_.get(filters, 'default')}>
+                            <ApexChart metadata={_.get(chartMeta, 'api_throughput')} interval={1140}></ApexChart>
+                        </ApexWithFilters>
+                    },
 
                 ]
             },
@@ -313,12 +319,7 @@ export const metricsMetadata = [
                         chart: <ApexWithFilters title="Processing Time (All Datasets)" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'minProcessingTimeSeries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
-                    },
-                    {
-                        chart: <ApexWithFilters title="Throughput" filters={_.get(filters, 'default')}>
-                            <ApexChart metadata={_.get(chartMeta, 'instance_memory')} interval={1140}></ApexChart>
-                        </ApexWithFilters>
-                    },
+                    }
                 ]
             },
             large: {
