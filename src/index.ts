@@ -15,22 +15,19 @@ import sharedMiddlewares from './shared/middlewares';
 const port = config.PORT;
 const globalErrorHandler = sharedMiddlewares.get('globalErrorHandler');
 const invalidRouteHandler = sharedMiddlewares.get('invalidRoute');
-const authRouteHandler = sharedMiddlewares.get('auth');
 app.set('port', port);
 app.set('logger', logger);
 app.disable('x-powered-by');
 // app.use(helmet());
 app.use(cors());
-authRouteHandler && app.use('*', authRouteHandler?.handler({}));
-
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'build')));
 
 // mount routers
 mountRoutes(app);
 // handler for invalid route
 
 app.get('*', function (req, res) {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 invalidRouteHandler && app.use('*', invalidRouteHandler?.handler({}));

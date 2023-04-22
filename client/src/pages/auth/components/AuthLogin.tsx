@@ -1,37 +1,21 @@
-import React from 'react';
-import {
-  Button,
-  Checkbox,
-  Divider,
-  FormControlLabel,
-  FormHelperText,
-  Grid,
-  Link,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-  Typography
-} from '@mui/material';
-
+import React, { useEffect } from 'react';
+import { Button, Grid, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import useAuth from 'hooks/useAuth';
-import useScriptRef from 'hooks/useScriptRef';
 import IconButton from 'components/@extended/IconButton';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import { useDispatch } from 'react-redux';
+import { error } from 'services/toaster';
+import { useSearchParams } from 'react-router-dom';
 
 const AuthLogin = () => {
-  const [checked, setChecked] = React.useState(false);
-  const [capsWarning, setCapsWarning] = React.useState(false);
-
-  const { isLoggedIn } = useAuth();
-  const scriptedRef = useScriptRef();
-
-  const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID
-  const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI
+  const dispatch = useDispatch();
+  const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID || ""
+  const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI || ""
   const [showPassword, setShowPassword] = React.useState(false);
+  const [searchParams] = useSearchParams();
+
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
   };
@@ -40,31 +24,21 @@ const AuthLogin = () => {
     event.preventDefault();
   };
 
-  const onKeyDown = (keyEvent: any) => {
-    if (keyEvent.getModifierState('CapsLock')) {
-      setCapsWarning(true);
-    } else {
-      setCapsWarning(false);
+  useEffect(() => {
+    const err = searchParams.get("err");
+    if (err) {
+      dispatch(error({ message: err }));
     }
-  };
+  }, [])
 
   return (
     <>
       <Formik
-        initialValues={{
-          username: '',
-          password: '',
-          submit: null
-        }}
-        validationSchema={Yup.object().shape({
-          username: Yup.string().max(255).required('User name is required'),
-          password: Yup.string().max(255).required('Password is required')
-        })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          // This method is not required as we will submit the form as normal form
-        }}
+        initialValues={{ username: '', password: '', submit: null }}
+        validationSchema={Yup.object().shape({ username: Yup.string().max(255).required('User name is required'), password: Yup.string().max(255).required('Password is required') })}
+        onSubmit={async () => { }}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+        {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
           <form noValidate action='/api/oauth/authorize' method='post'>
             <Grid container spacing={3}>
               <Grid item xs={12}>
@@ -81,11 +55,6 @@ const AuthLogin = () => {
                     fullWidth
                     error={Boolean(touched.username && errors.username)}
                   />
-                  {touched.username && errors.username && (
-                    <FormHelperText error id="standard-weight-helper-text-email-login">
-                      {errors.username}
-                    </FormHelperText>
-                  )}
                 </Stack>
               </Grid>
               <Grid item xs={12}>
@@ -97,17 +66,15 @@ const AuthLogin = () => {
                   <input type="hidden" value="authorization_code" name="grant_type" />
                   <OutlinedInput
                     fullWidth
-                    color={capsWarning ? 'warning' : 'primary'}
+                    color={'primary'}
                     error={Boolean(touched.password && errors.password)}
                     id="-password-login"
                     type={showPassword ? 'text' : 'password'}
                     value={values.password}
                     name="password"
                     onBlur={(event: React.FocusEvent<any, Element>) => {
-                      setCapsWarning(false);
                       handleBlur(event);
                     }}
-                    onKeyDown={onKeyDown}
                     onChange={handleChange}
                     endAdornment={
                       <InputAdornment position="end">
@@ -124,23 +91,8 @@ const AuthLogin = () => {
                     }
                     placeholder="Enter password"
                   />
-                  {capsWarning && (
-                    <Typography variant="caption" sx={{ color: 'warning.main' }} id="warning-helper-text-password-login">
-                      Caps lock on!
-                    </Typography>
-                  )}
-                  {touched.password && errors.password && (
-                    <FormHelperText error id="standard-weight-helper-text-password-login">
-                      {errors.password}
-                    </FormHelperText>
-                  )}
                 </Stack>
               </Grid>
-              {errors.submit && (
-                <Grid item xs={12}>
-                  <FormHelperText error>{errors.submit}</FormHelperText>
-                </Grid>
-              )}
               <Grid item xs={12}>
                 <AnimateButton>
                   <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
