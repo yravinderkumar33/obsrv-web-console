@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import logoIcon from 'assets/images/half_logo.jpeg';
+import logoIcon from 'assets/images/half_logo.png';
 
 const LogoIcon = () => {
   const theme = useTheme();

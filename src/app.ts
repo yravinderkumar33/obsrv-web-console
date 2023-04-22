@@ -1,17 +1,17 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
-import session, { Session } from 'express-session';
+import session from 'express-session';
 import proxies from './main/proxies';
 import mountProxies from './main/utils/proxy';
 
 const app = express();
 app.use(
-    session({
-      secret: 'secret',
-      resave: false,
-      saveUninitialized: true,
-    })
-  );
+  session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 mountProxies(app, proxies);
 app.use(express.json());

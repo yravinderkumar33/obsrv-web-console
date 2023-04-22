@@ -9,7 +9,12 @@ export default {
     handler:
         (metadata: Record<string, any> = {}) =>
             (request: Request, response: Response, next: NextFunction) => {
-                const userId =  request?.session?.user?.id
+
+                if (request.path.includes("/api/oauth")) {
+                    return next();
+                }
+
+                const userId = request?.session?.user?.id
                 const errorObj = {
                     status: 401,
                     message: "You don't have access to view this resource",
