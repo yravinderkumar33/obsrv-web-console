@@ -69,6 +69,18 @@ const DraftDatasetsList = ({ datasets }: any) => {
                 }
             },
             {
+                Header: 'Type',
+                accessor: 'type',
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+                    return <Grid container spacing={1} justifyContent="center">
+                        <Grid item>
+                            <Chip color={'success'} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" /></Grid>
+                    </Grid>
+                }
+            },
+            {
                 Header: 'Status',
                 accessor: 'status',
                 disableFilters: true,
@@ -124,7 +136,7 @@ const DraftDatasetsList = ({ datasets }: any) => {
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
-                            <IconButton color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master"}&status=${row.status}`)}>
+                            <IconButton color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

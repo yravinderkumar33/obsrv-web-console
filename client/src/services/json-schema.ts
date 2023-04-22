@@ -56,41 +56,58 @@ export const flattenSchema = (schema: Record<string, any>) => {
     return _.map(flattend, (value, key) => ({ column: key, ...value }))
 }
 
-const removeRequiredFlag = (jsonSchema: any, key: string) => {
-    if (!_.has(jsonSchema, key)) return;
-    const keys = _.split(key, '.');
-    const length = keys.length
-    if (!length) return;
-    const index = _.findLastIndex(keys, 'properties')
-    const parentPath = _.join(_.slice(keys, 0, index), '.');
-    const propertyKey = _.last(keys);
-    const requiredProperties = _.get(jsonSchema, [parentPath, 'required']);
-    if (!requiredProperties) return;
-    const updatedRequiredKey = _.difference(requiredProperties, [propertyKey]);
-    _.set(jsonSchema, `${parentPath}.required`, updatedRequiredKey);
+const modifyRequired = (schemaPropertiesObject: any, requiredPath: any, required: any, requiredKey: any) => {
+    const previousValue = _.get(schemaPropertiesObject, requiredPath) || [];
+    const previousRequired = _.get(previousValue, 'required') || [];
+    if (required)
+        _.set(schemaPropertiesObject, requiredPath, { ...previousValue, required: [...previousRequired, requiredKey] });
+    if (!required)
+        _.set(schemaPropertiesObject, requiredPath, { ...previousValue, required: _.pull(previousRequired, requiredKey) });
 }
 
-export const checkIfRequired = (originalRequired: string[], key: string, required: boolean) => {
-    if (!required) return _.pull(originalRequired, key.replace('properties.', ''));
-    else return [...originalRequired, key.replace('properties.', '')];
+export const checkIfRequired = (schemaPropertiesObject: any, originalRequired: string[],
+    key: string, required: boolean
+) => {
+    const jsonKey = key.replace('properties.', '');
+    if (jsonKey.includes(".")) {
+        const path = jsonKey.split(".");
+        const actualKey = _.last(path);
+        const keyType = _.get(schemaPropertiesObject, [path[0], 'type']);
+        if (keyType === "array") {
+            const requiredPath = [path[0], 'items'].join(".");
+            modifyRequired(schemaPropertiesObject, requiredPath, required, actualKey);
+        }
+        else if (keyType === "object") {
+            const requiredPath = path[0];
+            modifyRequired(schemaPropertiesObject, requiredPath, required, actualKey);
+        }
+        return [...originalRequired];
+    }
+    else if (!required) return _.pull(originalRequired, jsonKey);
+    else if (_.includes(originalRequired, key)) return originalRequired;
+    else return [...originalRequired, jsonKey];
+}
+
+export const deleteItemFromSchema = (valueFromOriginalPayload: any, key: string) => {
+    _.unset(valueFromOriginalPayload, key);
 }
 
 export const updateJSONSchema = (original: any, updatePayload: any) => {
     const clonedOriginal = _.cloneDeep(original);
     _.forEach(updatePayload, (values, key) => {
-        const valueFromOriginalPayload = clonedOriginal[key];
+        let valueFromOriginalPayload = clonedOriginal[key];
         if (valueFromOriginalPayload) {
             const modifiedRows = _.filter(values, ['isModified', true]);
             _.forEach(modifiedRows, row => {
                 const { isDeleted = false, required = true, key, type } = row;
-                if (isDeleted) { _.unset(valueFromOriginalPayload, key); console.log("step 3"); }
+                if (isDeleted)
+                    deleteItemFromSchema(valueFromOriginalPayload, key);
                 else {
-                    _.set(valueFromOriginalPayload, key, { type: type });
                     if (required && !clonedOriginal.schema.required) {
                         clonedOriginal.schema.required = [];
-                        _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.required, key, required));
+                        _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.properties, clonedOriginal.schema.required, key, required));
                     } else if (required && clonedOriginal.schema.required) {
-                        _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.required, key, required));
+                        _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.properties, clonedOriginal.schema.required, key, required));
                     }
                 }
             })

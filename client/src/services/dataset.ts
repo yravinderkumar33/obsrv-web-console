@@ -10,6 +10,7 @@ const synctsObject = {
     "key": "properties.syncts",
     "ref": "properties.syncts",
     "isModified": true,
+    "required": false,
 }
 
 const formatDenormFields = (denormFields: any) => {
@@ -153,7 +154,7 @@ const connectorInfoToDraft = async (state: Record<string, any>, master: any) => 
             dataset_id: datasetId,
             connector_type: type,
             connector_config: { ...rest },
-            type: master ? 'master' : 'dataset',
+            type: master ? 'master-dataset' : 'dataset',
             status: 'DRAFT',
         }
         return saveConnectorDraft(payload);

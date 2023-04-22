@@ -134,7 +134,7 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
                         </Button>
                     </Box>
                 }>
-                {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master" : "dataset"} />}
+                {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master-dataset" : "dataset"} />}
                 {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
             </MainCard >
         </Box>

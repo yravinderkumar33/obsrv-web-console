@@ -49,7 +49,7 @@ const MainRoutes = {
         },
         {
             path: 'dataset/new/master',
-            element: <NewDataset master key="master" />
+            element: <NewDataset master key="master-dataset" />
         }
     ]
 };

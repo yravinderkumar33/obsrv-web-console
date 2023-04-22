@@ -90,6 +90,18 @@ const DatasetsList = ({ datasets }: any) => {
                 }
             },
             {
+                Header: 'Type',
+                accessor: 'type',
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+                    return <Grid container spacing={1} justifyContent="center">
+                        <Grid item>
+                            <Chip color={'success'} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" /></Grid>
+                    </Grid>
+                }
+            },
+            {
                 Header: 'Status',
                 accessor: 'status',
                 disableFilters: true,

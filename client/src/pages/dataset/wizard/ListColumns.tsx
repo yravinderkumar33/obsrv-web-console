@@ -61,20 +61,22 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const jsonSchema = _.get(wizardState, 'pages.jsonSchema.schema');
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
-        const column = cellValue?.column
+        const column = cellValue?.column;
         if (column) {
             setFlattenedData((preState: Array<Record<string, any>>) => {
-                return _.map(preState, payload => {
+                const data = _.map(preState, payload => {
                     return {
                         ...payload,
                         ...(_.get(payload, 'column') === column && {
                             isModified: true,
-                            isDeleted: true
+                            isDeleted: true,
+                            resolved: true,
                         })
-                    }
-                })
+                    };
+                });
+                persistState(data);
+                return data;
             });
-            persistState();
         }
     }
 
@@ -371,22 +373,14 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 filter: 'equals',
                 Cell: ({ value, cell, ...rest }: any) => {
                     const row = cell?.row?.original || {};
-                    const handleDelete = () => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const values = _.filter(preState, state => {
-                                if (_.get(state, 'column') !== _.get(row, 'column'))
-                                    return state;
-                            });
-                            persistState(values);
-                            return values;
-                        });
+                    const handleDeleteColumn = () => {
+                        setSelection(row);
+                        setOpenAlertDialog(true);
                     }
+
                     return (
                         <Stack direction="row">
-                            <IconButton color="primary" size="large" sx={{ m: 'auto' }} onClick={e => {
-                                setOpenAlertDialog(true);
-                                handleDelete();
-                            }}>
+                            <IconButton color="primary" size="large" sx={{ m: 'auto' }} onClick={handleDeleteColumn}>
                                 <DeleteOutlined style={{ color: "#F04134" }} />
                             </IconButton>
                         </Stack>
@@ -411,11 +405,15 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         setSkipPageReset(true);
     };
 
-    const handleAlertDialogClose = (status: boolean) => {
-        if (selection && status) {
-            markRowAsDeleted(selection?.cell?.row?.values);
-        }
+    const handleAlertDialogClose = () => {
         setOpenAlertDialog(false);
+    }
+
+    const handleAlertDialogAction = () => {
+        if (selection) {
+            markRowAsDeleted(selection);
+            setSelection({});
+        }
     }
 
     const handleFilterChange = (filter: columnFilter) => {
@@ -486,7 +484,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     buttonProps={{ size: "large", sx: { color: "#000" } }}
                     tooltipProps={{ arrow: true }}
                 />
-                
+
                 <IconButtonWithTips
                     tooltipText="View all suggestions"
                     icon={<FolderViewOutlined />}
@@ -530,7 +528,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     </AnimateButton>
                 </Stack>
             </Grid>
-            <AlertDialog open={openAlertDialog} handleClose={handleAlertDialogClose} context={alertDialogContext}></AlertDialog>
+            <AlertDialog open={openAlertDialog} action={handleAlertDialogAction} handleClose={handleAlertDialogClose} context={alertDialogContext} />
         </Grid>
     </>;
 };
