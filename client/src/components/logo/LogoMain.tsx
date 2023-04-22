@@ -1,5 +1,5 @@
 import { useTheme } from '@mui/material/styles';
-import logo from 'assets/images/full_logo.jpeg';
+import logo from 'assets/images/full_logo.png';
 
 
 const LogoMain = ({ reverse, ...others }: { reverse?: boolean }) => {
