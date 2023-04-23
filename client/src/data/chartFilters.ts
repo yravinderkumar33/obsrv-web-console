@@ -13,21 +13,21 @@ export default {
             value: 10080,
             step: '30m',
             granularity: "fifteen_minute",
-            res: '15m'
+            res: '30s'
         },
         {
             label: 'Last 15 Days',
             value: 21600,
             step: '1h',
             granularity: "thirty_minute",
-            res: '30m'
+            res: '30s'
         },
         {
             label: 'Last 30 Days',
             value: 43200,
             step: '6h',
             granularity: "hour",
-            res: '2h'
+            res: '30s'
         }
     ],
     variant1: [

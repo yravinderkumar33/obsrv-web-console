@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
+import prettyMilliseconds from 'pretty-ms';
 
 import promql from 'data/promql';
 import defaultConf from './common';
@@ -40,10 +41,21 @@ export default {
             parse: (response: any) => {
                 const value = _.get(response, 'data.result[0].value[1]') || 0;
                 if (!value) throw new Error();
-                return _.floor(value, 1)
+                return prettyMilliseconds(+value);
             },
             error() {
-                return [0, "error"];
+                return [prettyMilliseconds(0), "error"];
+            },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params } = clonedPayload;
+                const query = _.get(params, 'query');
+                if (query) {
+                    const now = dayjs();
+                    const minutesSinceStartOfDay = now.hour() * 60 + now.minute();
+                    _.set(params, 'query', _.replace(query, /\$interval/g, `${minutesSinceStartOfDay}m`));
+                }
+                return clonedPayload;
             }
         }
     },
@@ -61,10 +73,21 @@ export default {
             parse: (response: any) => {
                 const value = _.get(response, 'data.result[0].value[1]') || 0;
                 if (!value) throw new Error();
-                return _.floor(value, 1)
+                return prettyMilliseconds(+value);
             },
             error() {
-                return [0, "error"];
+                return [prettyMilliseconds(0), "error"];
+            },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params } = clonedPayload;
+                const query = _.get(params, 'query');
+                if (query) {
+                    const now = dayjs();
+                    const minutesSinceStartOfDay = now.hour() * 60 + now.minute();
+                    _.set(params, 'query', _.replace(query, /\$interval/g, `${minutesSinceStartOfDay}m`));
+                }
+                return clonedPayload;
             }
         }
     },
@@ -262,6 +285,17 @@ export default {
             },
             error() {
                 return [0, "error"];
+            },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params, metadata = {} } = clonedPayload;
+                const query = _.get(params, 'query');
+                if (query) {
+                    const now = dayjs();
+                    const minutesSinceStartOfDay = now.hour() * 60 + now.minute();
+                    _.set(params, 'query', _.replace(query, /\$interval/g, `${minutesSinceStartOfDay}m`));
+                }
+                return clonedPayload;
             }
         }
     },
@@ -279,10 +313,21 @@ export default {
             parse: (response: any) => {
                 const value = _.get(response, 'data.result[0].value[1]') || 0;
                 if (!value) throw new Error();
-                return _.floor(value, 2);
+                return _.floor(value, 3);
             },
             error() {
                 return [0, "error"];
+            },
+            context: (payload: any) => {
+                const clonedPayload = _.cloneDeep(payload);
+                const { params } = clonedPayload;
+                const query = _.get(params, 'query');
+                if (query) {
+                    const now = dayjs();
+                    const minutesSinceStartOfDay = now.hour() * 60 + now.minute();
+                    _.set(params, 'query', _.replace(query, /\$interval/g, `${minutesSinceStartOfDay}m`));
+                }
+                return clonedPayload;
             }
         }
     },

@@ -15,7 +15,7 @@ const IngestionCharts = (props: any) => {
 
     const getLiveDatasets = async () => {
         try {
-            return fetchDatasets({ data: { filters: { status: ['ACTIVE', 'DISABLED'] } } });
+            return fetchDatasets({ data: { filters: { type: 'dataset', status: ['ACTIVE', 'DISABLED'] } } });
         } catch (error) {
             return []
         }

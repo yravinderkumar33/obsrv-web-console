@@ -1,7 +1,6 @@
 import { Box, Stack } from '@mui/material';
 import Menus from './MenuSection'
 import Notification from './Notification';
-import Logout from './Logout'
 
 const HeaderContent = () => {
     return (
@@ -10,7 +9,6 @@ const HeaderContent = () => {
                 <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={2}>
                     <Menus />
                     <Notification />
-                    <Logout />
                 </Stack>
             </Box>
         </>

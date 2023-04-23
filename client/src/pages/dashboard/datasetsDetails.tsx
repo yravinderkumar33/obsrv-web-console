@@ -20,8 +20,6 @@ const DatasetDetails = () => {
     const params = useParams();
     const { datasetId } = params;
     const [datasetDetails, setDatasetDetails] = useState({ data: null, status: "loading" });
-    const [queries, setQueries] = useState<Array<any>>([]);
-    const query = druidQueries.druid_avg_processing_time({});
 
     const data = {
         small: {
@@ -39,28 +37,6 @@ const DatasetDetails = () => {
                     chart: ({ title, query, primary }: any) => {
                         return <ReportCard primary={primary} secondary={title} iconPrimary={BarChartOutlined} query={query} />
                     }
-                },
-                {
-                    title: 'Average Processing Time (ms)',
-                    query: () => {
-                        const startDate = '2000-01-01';
-                        const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
-                        const body = druidQueries.druid_avg_processing_time({ datasetId, intervals: `${startDate}/${endDate}` });
-                        return { ..._.get(chartMeta, 'druid_avg_processing_time.query'), body }
-
-                    },
-                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} suffix="ms" />
-                },
-                {
-                    title: 'Last Synced Time',
-                    query: () => {
-                        const startDate = '2000-01-01';
-                        const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
-                        const body = druidQueries.last_synced_time({ datasetId, intervals: `${startDate}/${endDate}` })
-                        return { ..._.get(chartMeta, 'last_synced_time.query'), body }
-                    },
-                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
-
                 },
                 {
                     title: 'Total Events Processed (Today)',
@@ -84,6 +60,83 @@ const DatasetDetails = () => {
                     chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
                 },
                 {
+                    title: 'Average Processing Time Today',
+                    query: () => {
+                        const startDate = dayjs().format('YYYY-MM-DD');
+                        const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
+                        const body = druidQueries.druid_avg_processing_time({ datasetId, intervals: `${startDate}/${endDate}` });
+                        return { ..._.get(chartMeta, 'avgProcessingTime.query'), body }
+
+                    },
+                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                },
+                {
+                    title: 'Max Processing Time Today',
+                    query: () => {
+                        const startDate = dayjs().format('YYYY-MM-DD');
+                        const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
+                        const body = druidQueries.druid_max_processing_time({ datasetId, intervals: `${startDate}/${endDate}` });
+                        return { ..._.get(chartMeta, 'maxProcessingTime.query'), body }
+
+                    },
+                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                },
+                {
+                    title: 'Min Processing Time Today',
+                    query: () => {
+                        const startDate = dayjs().format('YYYY-MM-DD');
+                        const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
+                        const body = druidQueries.druid_min_processing_time({ datasetId, intervals: `${startDate}/${endDate}` });
+                        return { ..._.get(chartMeta, 'minProcessingTime.query'), body }
+
+                    },
+                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                },
+                {
+                    title: 'Average Processing Time Yesterday',
+                    query: () => {
+                        const startDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+                        const endDate = dayjs().format('YYYY-MM-DD');
+                        const body = druidQueries.druid_avg_processing_time({ datasetId, intervals: `${startDate}/${endDate}` });
+                        return { ..._.get(chartMeta, 'avgProcessingTime.query'), body }
+
+                    },
+                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                },
+                {
+                    title: 'Max Processing Time Yesterday',
+                    query: () => {
+                        const startDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+                        const endDate = dayjs().format('YYYY-MM-DD');
+                        const body = druidQueries.druid_max_processing_time({ datasetId, intervals: `${startDate}/${endDate}` });
+                        return { ..._.get(chartMeta, 'maxProcessingTime.query'), body }
+
+                    },
+                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                },
+                {
+                    title: 'Min Processing Time Yesterday',
+                    query: () => {
+                        const startDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+                        const endDate = dayjs().format('YYYY-MM-DD');
+                        const body = druidQueries.druid_min_processing_time({ datasetId, intervals: `${startDate}/${endDate}` });
+                        return { ..._.get(chartMeta, 'minProcessingTime.query'), body }
+
+                    },
+                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                },
+                {
+                    title: 'Last Synced Time',
+                    query: () => {
+                        const startDate = '2000-01-01';
+                        const endDate = dayjs().add(1, 'day').format('YYYY-MM-DD');
+                        const body = druidQueries.last_synced_time({ datasetId, intervals: `${startDate}/${endDate}` })
+                        return { ..._.get(chartMeta, 'last_synced_time.query'), body }
+                    },
+                    chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
+                },
+
+                {
                     title: 'Total Failed Events (Today)',
                     query: () => {
                         const startDate = dayjs().format('YYYY-MM-DD');
@@ -92,7 +145,6 @@ const DatasetDetails = () => {
                         return { ..._.get(chartMeta, 'failed_events_summary.query'), body }
                     },
                     chart: ({ title, query }: any) => <ReportCard primary="0" secondary={title} iconPrimary={BarChartOutlined} query={query} />
-
                 },
                 {
                     title: 'Total Failed Events (Yesterday)',

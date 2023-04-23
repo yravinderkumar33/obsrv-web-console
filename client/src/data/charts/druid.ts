@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import prettyMilliseconds from 'pretty-ms';
 import dayjs from 'dayjs';
 import promql from '../promql';
 import defaultConf from './common';
@@ -41,10 +42,8 @@ export default {
             body: {},
             params: {},
             parse: (response: any) => {
-                const result = _.get(response, 'result') || [];
-                return _.sumBy(result, val => {
-                    return _.round(_.get(val, 'event.total_processing_time') || 0, 2)
-                })
+                const avgProcessingTime = _.get(response, 'result[0].event.average_processing_time') || 0
+                return prettyMilliseconds(avgProcessingTime);
             },
             error() {
                 return 0
@@ -62,7 +61,7 @@ export default {
             params: {},
             parse: (response: any) => {
                 const ms = _.get(response, 'result[0].event.last_synced_time') || 0;
-                if(!ms) throw new Error();
+                if (!ms) throw new Error();
                 return dayjs(ms).format('YYYY-MM-DD HH:mm:ss')
             },
             error() {
@@ -81,12 +80,14 @@ export default {
             params: {},
             parse: (response: any) => {
                 const payload = _.get(response, 'result') || [];
-                return _.sumBy(payload, value => {
+                const sum = _.sumBy(payload, value => {
                     return _.get(value, 'result.count') || 0;
                 })
+                if (!sum) throw new Error();
+                return sum;
             },
             error() {
-                return 0
+                return [0, "error"]
             }
         }
     },
@@ -100,10 +101,8 @@ export default {
             body: {},
             params: {},
             parse: (response: any) => {
-                const payload = _.get(response, 'result') || [];
-                return _.sumBy(payload, value => {
-                    return _.get(value, 'event.count') || 0;
-                })
+                const count = _.get(response, 'result[0].event.count') || 0;
+                return count;
             },
             error() {
                 return '-'

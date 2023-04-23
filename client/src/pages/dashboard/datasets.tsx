@@ -14,14 +14,17 @@ const ClusterHealth = () => {
     const dataset = useSelector((state: any) => state.dataset)
     const dispatch = useDispatch();
     const showNoDatasetsError = (message = 'No Datasets Found') => <AlertMessage color='error' messsage={message} icon={BugFilled} />
+    const [loading, setLoading] = useState(false);
 
     const [draftDatasets, setDraftDatasets] = useState([]);
     const [liveDatasets, setLiveDatasets] = useState([]);
 
     const getDatasets = async () => {
-        const [draft, live] = await Promise.all([fetchDatasets({ data: { filters: { status: ['DRAFT', 'READY_FOR_PUBLISH'] } } }), fetchDatasets({ data: { filters: { status: ['ACTIVE', 'DISABLED'] } } })])
+        setLoading(true);
+        const [draft = [], live = []] = await Promise.all([fetchDatasets({ data: { filters: { status: ['DRAFT', 'READY_FOR_PUBLISH'] } } }), fetchDatasets({ data: { filters: { status: ['ACTIVE', 'DISABLED'] } } })])
         setDraftDatasets(draft)
         setLiveDatasets(live);
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -29,34 +32,29 @@ const ClusterHealth = () => {
         if (dataset?.status !== 'success') dispatch(fetchDatasetsThunk({ data: { filters: {} } }));
     }, [])
 
+    const renderNoDatasetsMessage = (message: string) => <Grid item xs={12}>
+        {showNoDatasetsError(message)}
+    </Grid>
+
+    const renderDatasets = (status: string) => {
+        switch (status) {
+            case 'live': return <Grid item xs={12}>
+                <DatasetsList datasets={liveDatasets} />
+            </Grid>
+
+            case 'draft': return <Grid item xs={12}>
+                <DraftDatasetsList datasets={draftDatasets} />
+            </Grid>
+
+            default: renderNoDatasetsMessage("No Datasets");
+        }
+    }
+
     return (
         <Grid container rowSpacing={2} columnSpacing={2}>
-            {dataset?.status !== 'success' && <Loader />}
-
-            {dataset?.status === 'success' && liveDatasets?.length == 0 &&
-                <Grid item xs={12}>
-                    {showNoDatasetsError('No live datasets found')}
-                </Grid>
-            }
-
-            {dataset?.status === 'success' && liveDatasets?.length > 0 &&
-                <Grid item xs={12}>
-                    <DatasetsList datasets={liveDatasets} />
-                </Grid>
-            }
-
-            {dataset?.status === 'success' && draftDatasets?.length == 0 &&
-                <Grid item xs={12}>
-                    {showNoDatasetsError('No draft datasets found')}
-                </Grid>
-            }
-
-            {dataset?.status === 'success' && draftDatasets?.length > 0 &&
-                <Grid item xs={12}>
-                    <DraftDatasetsList datasets={draftDatasets} />
-                </Grid>
-            }
-
+            {loading && <Loader />}
+            {!loading && (liveDatasets?.length == 0 ? renderNoDatasetsMessage("No Live Datasets") : renderDatasets("live"))}
+            {!loading && (draftDatasets?.length == 0 ? renderNoDatasetsMessage("No Draft Datasets") : renderDatasets("draft"))}
         </Grid>
     )
 };

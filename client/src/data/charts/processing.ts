@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
 import defaultConf from './common';
+import prettyMilliseconds from 'pretty-ms';
 
 const dateFormat = 'YYYY-MM-DD'
 
@@ -18,26 +19,44 @@ export default {
                     "dataSource": "system-stats"
                 },
                 "query": {
-                    "queryType": "groupBy",
+                    "queryType": "topN",
                     "dataSource": "system-stats",
+                    "virtualColumns": [
+                        {
+                            "type": "expression",
+                            "name": "v0",
+                            "expression": "(\"total_processing_time\" / \"count\")",
+                            "outputType": "DOUBLE"
+                        }
+                    ],
+                    "dimension": {
+                        "type": "default",
+                        "dimension": "dataset",
+                        "outputName": "dataset",
+                        "outputType": "STRING"
+                    },
+                    "metric": {
+                        "type": "numeric",
+                        "metric": "min_processing_time"
+                    },
                     "intervals": "$interval",
-                    "granularity": "all",
+                    "granularity": {
+                        "type": "all"
+                    },
                     "aggregations": [
                         {
                             "type": "doubleMin",
-                            "name": "total_processing_time",
-                            "fieldName": "total_processing_time"
+                            "name": "min_processing_time",
+                            "fieldName": "v0"
                         }
                     ]
                 }
             },
             params: {},
             parse: (response: any) => {
-                const payload = _.get(response, 'result') || [];
-                if (_.get(payload, 'length') === 0) return [0, "error"];
-                return _.sumBy(payload, value => {
-                    return _.get(value, 'event.total_processing_time') || 0;
-                })
+                const min_processing_time = _.get(response, 'result[0].result[0].min_processing_time');
+                if (!min_processing_time) throw new Error();
+                return prettyMilliseconds(_.floor(min_processing_time));
             },
             error() {
                 return [0, "error"];
@@ -67,26 +86,44 @@ export default {
                     "dataSource": "system-stats"
                 },
                 "query": {
-                    "queryType": "groupBy",
+                    "queryType": "topN",
                     "dataSource": "system-stats",
+                    "virtualColumns": [
+                        {
+                            "type": "expression",
+                            "name": "v0",
+                            "expression": "(\"total_processing_time\" / \"count\")",
+                            "outputType": "DOUBLE"
+                        }
+                    ],
+                    "dimension": {
+                        "type": "default",
+                        "dimension": "dataset",
+                        "outputName": "dataset",
+                        "outputType": "STRING"
+                    },
+                    "metric": {
+                        "type": "numeric",
+                        "metric": "max_processing_time"
+                    },
                     "intervals": "$interval",
-                    "granularity": "all",
+                    "granularity": {
+                        "type": "all"
+                    },
                     "aggregations": [
                         {
                             "type": "doubleMax",
-                            "name": "total_processing_time",
-                            "fieldName": "total_processing_time"
+                            "name": "max_processing_time",
+                            "fieldName": "v0"
                         }
                     ]
                 }
             },
             params: {},
             parse: (response: any) => {
-                const payload = _.get(response, 'result') || [];
-                if (_.get(payload, 'length') === 0) return [0, "error"];
-                return _.sumBy(payload, value => {
-                    return _.get(value, 'event.total_processing_time') || 0;
-                })
+                const max_processing_time = _.get(response, 'result[0].result[0].max_processing_time');
+                if (!max_processing_time) throw new Error();
+                return prettyMilliseconds(_.floor(max_processing_time));
             },
             error() {
                 return [0, "error"];
@@ -122,9 +159,21 @@ export default {
                     "granularity": "all",
                     "aggregations": [
                         {
-                            "type": "doubleMean",
+                            "type": "longSum",
                             "name": "total_processing_time",
                             "fieldName": "total_processing_time"
+                        },
+                        {
+                            "type": "longSum",
+                            "name": "count",
+                            "fieldName": "count"
+                        }
+                    ],
+                    "postAggregations": [
+                        {
+                            "type": "expression",
+                            "name": "average_processing_time",
+                            "expression": "(total_processing_time / count)"
                         }
                     ]
                 }
@@ -134,9 +183,9 @@ export default {
                 const payload = _.get(response, 'result') || [];
                 if (_.get(payload, 'length') === 0) return [0, "error"];
                 const sum = _.sumBy(payload, value => {
-                    return _.get(value, 'event.total_processing_time') || 0;
+                    return _.get(value, 'event.average_processing_time') || 0;
                 })
-                return _.floor(sum)
+                return prettyMilliseconds(sum)
             },
             error() {
                 return [0, "error"];
@@ -192,6 +241,12 @@ export default {
                     formatter(value: number) {
                         return dayjs(value).format('DD MMM HH:mm')
                     }
+                },
+                y: {
+                    show: true,
+                    formatter(value: number) {
+                        return prettyMilliseconds(value);
+                    }
                 }
             },
             xaxis: {
@@ -223,23 +278,53 @@ export default {
                 "query": {
                     "queryType": "timeseries",
                     "dataSource": "system-stats",
+                    "virtualColumns": [
+                        {
+                            "type": "expression",
+                            "name": "processing_time",
+                            "expression": "if(count > 0, total_processing_time / count, 0)",
+                            "outputType": "DOUBLE"
+                        }
+                    ],
+                    "dimension": {
+                        "type": "default",
+                        "dimension": "dataset",
+                        "outputName": "dataset",
+                        "outputType": "STRING"
+                    },
+                    "metric": {
+                        "type": "numeric",
+                        "metric": "min_processing_time"
+                    },
                     "intervals": "$interval",
                     "granularity": "$granularity",
                     "aggregations": [
                         {
                             "type": "doubleMin",
-                            "name": "min",
-                            "fieldName": "total_processing_time"
+                            "name": "min_processing_time",
+                            "fieldName": "processing_time"
                         },
                         {
                             "type": "doubleMax",
-                            "name": "max",
+                            "name": "max_processing_time",
+                            "fieldName": "processing_time"
+                        },
+                        {
+                            "type": "doubleSum",
+                            "name": "total_processing_time",
                             "fieldName": "total_processing_time"
                         },
                         {
-                            "type": "doubleMean",
-                            "name": "avg",
-                            "fieldName": "total_processing_time"
+                            "type": "longSum",
+                            "name": "event_count",
+                            "fieldName": "count"
+                        }
+                    ],
+                    "postAggregations": [
+                        {
+                            "type": "expression",
+                            "name": "avg_processing_time",
+                            "expression": "if(event_count > 0, total_processing_time / event_count, 0)"
                         }
                     ]
                 }
@@ -262,15 +347,15 @@ export default {
                 return [
                     {
                         name: 'Min Processing Time',
-                        data: getSeries('min')
+                        data: getSeries('min_processing_time')
                     },
                     {
                         name: 'Max Processing Time',
-                        data: getSeries('max')
+                        data: getSeries('max_processing_time')
                     },
                     {
                         name: 'Avg Processing Time',
-                        data: getSeries('avg')
+                        data: getSeries('avg_processing_time')
                     }
                 ]
             },
@@ -327,6 +412,12 @@ export default {
                     formatter(value: number) {
                         return dayjs(value).format('DD MMM HH:mm')
                     }
+                },
+                y: {
+                    show: true,
+                    formatter(value: number) {
+                        return prettyMilliseconds(value);
+                    }
                 }
             },
             xaxis: {
@@ -355,23 +446,53 @@ export default {
                 "query": {
                     "queryType": "timeseries",
                     "dataSource": "system-stats",
+                    "virtualColumns": [
+                        {
+                            "type": "expression",
+                            "name": "processing_time",
+                            "expression": "if(count > 0, total_processing_time / count, 0)",
+                            "outputType": "DOUBLE"
+                        }
+                    ],
+                    "dimension": {
+                        "type": "default",
+                        "dimension": "dataset",
+                        "outputName": "dataset",
+                        "outputType": "STRING"
+                    },
+                    "metric": {
+                        "type": "numeric",
+                        "metric": "min_processing_time"
+                    },
                     "intervals": "$interval",
-                    "granularity": "day",
+                    "granularity": "$granularity",
                     "aggregations": [
                         {
                             "type": "doubleMin",
-                            "name": "min",
-                            "fieldName": "total_processing_time"
+                            "name": "min_processing_time",
+                            "fieldName": "processing_time"
                         },
                         {
                             "type": "doubleMax",
-                            "name": "max",
+                            "name": "max_processing_time",
+                            "fieldName": "processing_time"
+                        },
+                        {
+                            "type": "doubleSum",
+                            "name": "total_processing_time",
                             "fieldName": "total_processing_time"
                         },
                         {
-                            "type": "doubleMean",
-                            "name": "avg",
-                            "fieldName": "total_processing_time"
+                            "type": "longSum",
+                            "name": "event_count",
+                            "fieldName": "count"
+                        }
+                    ],
+                    "postAggregations": [
+                        {
+                            "type": "expression",
+                            "name": "avg_processing_time",
+                            "expression": "if(event_count > 0, total_processing_time / event_count, 0)"
                         }
                     ],
                     "filter": {
@@ -399,15 +520,15 @@ export default {
                 return [
                     {
                         name: 'Min Processing Time',
-                        data: getSeries('min')
+                        data: getSeries('min_processing_time')
                     },
                     {
                         name: 'Max Processing Time',
-                        data: getSeries('max')
+                        data: getSeries('max_processing_time')
                     },
                     {
                         name: 'Avg Processing Time',
-                        data: getSeries('avg')
+                        data: getSeries('avg_processing_time')
                     }
                 ]
             },

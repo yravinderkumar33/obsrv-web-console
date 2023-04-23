@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { forwardRef, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Chip, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
@@ -9,6 +9,7 @@ import { activeItem } from 'store/reducers/menu';
 const NavItem = ({ item, level }: any) => {
     const theme = useTheme();
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const menu = useSelector((state: any) => state.menu);
     const { drawerOpen, openItem } = menu;
 
@@ -17,12 +18,18 @@ const NavItem = ({ item, level }: any) => {
         itemTarget = '_blank';
     }
 
+    const itemClick = () => {
+        if (!item?.onClick) return;
+        item.onClick({ dispatch, navigate });
+    }
+
     let listItemProps = { component: forwardRef((props, ref: any) => <Link ref={ref} {...props} to={item.url} target={itemTarget} />) };
     if (item?.external) {
         listItemProps = { component: 'a', href: item.url, target: itemTarget } as any;
     }
 
     const itemHandler = (id: any) => {
+        itemClick();
         dispatch(activeItem({ openItem: [id] }));
     };
 

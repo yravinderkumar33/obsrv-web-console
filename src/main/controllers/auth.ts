@@ -33,7 +33,7 @@ export default {
       request.body.user = { user: userObj.id }
       return authenticate(request.body.user, request, response, next);
     } else {
-      return redirectToLoginPage(response, "user not found");
+      return redirectToLoginPage(response, "Invalid Credentials");
     }
   }
 };

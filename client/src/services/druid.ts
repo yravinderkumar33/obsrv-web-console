@@ -43,9 +43,111 @@ export const druidQueries = {
                 },
                 "aggregations": [
                     {
-                        "type": "doubleMean",
+                        "type": "longSum",
                         "name": "total_processing_time",
                         "fieldName": "total_processing_time"
+                    },
+                    {
+                        "type": "longSum",
+                        "name": "count",
+                        "fieldName": "count"
+                    }
+                ],
+                "postAggregations": [
+                    {
+                        "type": "expression",
+                        "name": "average_processing_time",
+                        "expression": "(total_processing_time / count)"
+                    }
+                ]
+            }
+        }
+    },
+    druid_max_processing_time: ({ datasetId, intervals }: any) => {
+        return {
+            "context": {
+                "dataSource": "system-stats"
+            },
+            "query": {
+                "queryType": "topN",
+                "dataSource": "system-stats",
+                "virtualColumns": [
+                    {
+                        "type": "expression",
+                        "name": "v0",
+                        "expression": "(total_processing_time / count)",
+                        "outputType": "DOUBLE"
+                    }
+                ],
+                "dimension": {
+                    "type": "default",
+                    "dimension": "dataset",
+                    "outputName": "dataset",
+                    "outputType": "STRING"
+                },
+                "metric": {
+                    "type": "numeric",
+                    "metric": "max_processing_time"
+                },
+                "filter": {
+                    "type": "selector",
+                    "dimension": "dataset",
+                    "value": datasetId
+                },
+                "intervals": intervals,
+                "granularity": {
+                    "type": "all"
+                },
+                "aggregations": [
+                    {
+                        "type": "doubleMax",
+                        "name": "max_processing_time",
+                        "fieldName": "v0"
+                    }
+                ]
+            }
+        }
+    },
+    druid_min_processing_time: ({ datasetId, intervals }: any) => {
+        return {
+            "context": {
+                "dataSource": "system-stats"
+            },
+            "query": {
+                "queryType": "topN",
+                "dataSource": "system-stats",
+                "virtualColumns": [
+                    {
+                        "type": "expression",
+                        "name": "v0",
+                        "expression": "(total_processing_time / count)",
+                        "outputType": "DOUBLE"
+                    }
+                ],
+                "dimension": {
+                    "type": "default",
+                    "dimension": "dataset",
+                    "outputName": "dataset",
+                    "outputType": "STRING"
+                },
+                "metric": {
+                    "type": "numeric",
+                    "metric": "min_processing_time"
+                },
+                "filter": {
+                    "type": "selector",
+                    "dimension": "dataset",
+                    "value": datasetId
+                },
+                "intervals": intervals,
+                "granularity": {
+                    "type": "all"
+                },
+                "aggregations": [
+                    {
+                        "type": "doubleMin",
+                        "name": "min_processing_time",
+                        "fieldName": "v0"
                     }
                 ]
             }
@@ -93,7 +195,7 @@ export const druidQueries = {
                 },
                 "aggregations": [
                     {
-                        "type": "count",
+                        "type": "longSum",
                         "name": "count",
                         "fieldName": "count"
                     }
@@ -119,8 +221,7 @@ export const druidQueries = {
                 "aggregations": [
                     {
                         "type": "count",
-                        "name": "count",
-                        "fieldName": "count"
+                        "name": "count"
                     }
                 ]
             }

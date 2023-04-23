@@ -1,11 +1,7 @@
 import { ReactNode } from 'react';
-
-// material-ui
 import { ChipProps } from '@mui/material';
 
 import { GenericCardProps } from './root';
-
-// ==============================|| MENU TYPES  ||============================== //
 
 export type NavItemType = {
   breadcrumbs?: boolean;
@@ -22,6 +18,7 @@ export type NavItemType = {
   title?: ReactNode | string;
   type?: string;
   url?: string | undefined;
+  onClick?: (config: any) => any;
 };
 
 export type LinkTarget = '_blank' | '_self' | '_parent' | '_top';
