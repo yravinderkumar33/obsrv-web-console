@@ -35,7 +35,8 @@ const DatasetsList = ({ datasets }: any) => {
             const fetchData = async (value: any) => {
                 setIsLoading(true);
                 try {
-                    const data = await fetchChartData(value)
+                    let data = await fetchChartData(value);
+                    data = Array.isArray(data) ? _.first(data) : data;
                     setAsyncData(data as any);
                 }
                 catch (error) { }
@@ -159,6 +160,19 @@ const DatasetsList = ({ datasets }: any) => {
                 }
             },
             {
+                Header: 'Avg Processing Time (Yestersday)',
+                disableFilters: true,
+                Cell: ({ value, cell }: any) => {
+                    const row = cell?.row?.original || {};
+                    const datasetId = row?.id;
+                    const startDate = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+                    const endDate = dayjs().format('YYYY-MM-DD');
+                    const body = druidQueries.druid_avg_processing_time({ datasetId, intervals: `${startDate}/${endDate}` })
+                    const query = _.get(chartMeta, 'druid_avg_processing_time.query');
+                    return AsyncColumnData({ ...query, body });
+                }
+            },
+            {
                 Header: 'Last Synced Time',
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
@@ -192,7 +206,7 @@ const DatasetsList = ({ datasets }: any) => {
                     const row = cell?.row?.original || {};
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="View Metrics" onClick={(e: any) => navigateToPath(`/datasets/${row?.id}`)}>
-                            <IconButton color="primary" size="large">
+                            <IconButton disabled={row?.type !== "dataset"} color="primary" size="large">
                                 < DashboardOutlined />
                             </IconButton>
                         </Tooltip>
