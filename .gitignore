@@ -50,3 +50,4 @@ lerna-debug.log*
 logs
 *.log
 /src/public/*
+/src/build/*
