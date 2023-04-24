@@ -99,7 +99,7 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return defaultConf.timestampLabelFormatter(timestamp);
+                        return defaultConf.timestampLabelFormatterv2(timestamp);
                     }
                 },
                 tooltip: {
@@ -208,7 +208,7 @@ export default {
                 type: 'datetime',
                 labels: {
                     formatter: function (value: any, timestamp: any) {
-                        return defaultConf.timestampLabelFormatter(timestamp);
+                        return defaultConf.timestampLabelFormatterv2(timestamp);
                     }
                 },
                 tooltip: {

@@ -5,7 +5,7 @@ import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
-import { updateState } from "store/reducers/wizard";
+import { addState, updateState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
@@ -21,14 +21,14 @@ const AddNewField = (props: any) => {
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
     const onSubmission = (value: any) => { };
-    const pushStateToStore = (values: Record<string, any>) => dispatch(updateState({ id, ...values }));
+    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
     const saveTransformation = async (payload: any, updateStateData: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
         try {
             const data = await saveTransformations(payload);
             if (data.data)
-                setSelection((preState: Array<any>) => {
+                setSelection((preState: any) => {
                     const updatedState = [...preState, updateStateData];
                     pushStateToStore({ selection: updatedState });
                     return updateState;
@@ -39,7 +39,7 @@ const AddNewField = (props: any) => {
         }
     }
 
-    const updatePIIMeta = () => {
+    const updateAdditionalField = () => {
         const { column, transformation } = value;
         if (column && transformation) {
             const uuid = v4();
@@ -49,7 +49,7 @@ const AddNewField = (props: any) => {
                 field_key: column,
                 transformation_function: {
                     type: "jsonata",
-                    expr: column,
+                    expr: transformation,
                     condition: null
                 },
                 dataset_id: mainDatasetId,
@@ -108,7 +108,7 @@ const AddNewField = (props: any) => {
                 </ Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" onClick={_ => updatePIIMeta()}>
+                <Button variant="contained" onClick={_ => updateAdditionalField()}>
                     Add
                 </Button>
             </DialogActions>

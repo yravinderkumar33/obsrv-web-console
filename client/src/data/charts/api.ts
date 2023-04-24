@@ -1,8 +1,8 @@
 import * as _ from 'lodash';
 import dayjs from 'dayjs';
 import prettyMilliseconds from 'pretty-ms';
-
 import promql from 'data/promql';
+
 import defaultConf from './common';
 import endpoints from 'data/apiEndpoints';
 

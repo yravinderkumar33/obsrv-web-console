@@ -99,39 +99,15 @@ const DraftDatasetsList = ({ datasets }: any) => {
                 Cell: ({ value, cell }: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') || "-"
             },
             {
-                Header: 'Total Events (Today)',
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => '-'
-            },
-            {
-                Header: 'Total Events (Yesterday)',
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => '-'
-            },
-            {
-                Header: 'Avg Processing Time (Today)',
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => '-'
-            },
-            {
-                Header: 'Last Synced Time',
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => '-'
-            },
-            {
-                Header: 'Event Failed (Today)',
-                disableFilters: true,
-                Cell: ({ value, cell }: any) => '-'
-            },
-            {
                 Header: 'Actions',
                 accessor: 'color',
                 disableFilters: true,
                 Cell: ({ value, cell }: any) => {
                     const row = cell?.row?.original || {};
+                    const status = _.toLower(row?.status)
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
-                            <IconButton color="primary" size="large">
+                            <IconButton color="primary" size="large" disabled={status !== "ready_to_publish"}>
                                 < PlayCircleOutlined />
                             </IconButton>
                         </Tooltip>

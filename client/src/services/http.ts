@@ -1,5 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import axiosRetry from 'axios-retry';
 import { error } from './toaster';
+
+axiosRetry(axios, { retries: 3 });
 
 const http = axios;
 

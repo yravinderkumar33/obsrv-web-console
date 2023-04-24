@@ -88,7 +88,7 @@ const AddTransformationExpression = (props: any) => {
                     field_key: column,
                     transformation_function: {
                         type: "jsonata",
-                        expr: column,
+                        expr: expression,
                         condition: null
                     },
                     dataset_id: mainDatasetId,

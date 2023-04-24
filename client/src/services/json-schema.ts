@@ -103,6 +103,7 @@ export const updateJSONSchema = (original: any, updatePayload: any) => {
                 if (isDeleted)
                     deleteItemFromSchema(valueFromOriginalPayload, key);
                 else {
+                    _.set(valueFromOriginalPayload, key, { type: type });
                     if (required && !clonedOriginal.schema.required) {
                         clonedOriginal.schema.required = [];
                         _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.properties, clonedOriginal.schema.required, key, required));

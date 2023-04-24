@@ -21,6 +21,22 @@ const formatDenormFields = (denormFields: any) => {
             "key": `properties.${item.denorm_out_field}`,
             "ref": `properties.${item.denorm_out_field}`,
             "isModified": true,
+            "required": false,
+        }));
+        return final;
+    }
+    else return [];
+}
+
+const formatNewFields = (newFields: any) => {
+    if (newFields.length > 0) {
+        const final = _.map(newFields, (item: any) => ({
+            "column": item.column,
+            "type": "string",
+            "key": `properties.${item.column}`,
+            "ref": `properties.${item.column}`,
+            "isModified": true,
+            "required": false,
         }));
         return final;
     }
@@ -166,13 +182,15 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
     const jsonSchema = _.get(state, 'pages.jsonSchema');
     const timestampCol = _.get(state, 'pages.timestamp.indexCol') || "syncts";
     let denormFields = _.get(state, 'pages.denorm.values') || [];
+    let newFields = _.get(state, 'pages.additionalFields.selection') || [];
     denormFields = formatDenormFields(denormFields);
+    newFields = formatNewFields(newFields);
     const updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema')] };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
     const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
-    let ingestionPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), ...denormFields] };
+    let ingestionPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), ...denormFields, ...newFields] };
     if (timestampCol === "syncts")
-        ingestionPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject, ...denormFields] };
+        ingestionPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject, ...denormFields, ...newFields] };
     const updatedIngestionPayload = _.get(updateJSONSchema(jsonSchema, ingestionPayload), 'schema');
     const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedIngestionPayload, state }, config: {} });
     return saveDatasource({ data: { state, storeState, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
