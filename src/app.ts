@@ -3,13 +3,23 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import proxies from './main/proxies';
 import mountProxies from './main/utils/proxy';
-const passport = require('passport');
+import passport from 'passport';
+import pg from 'pg';
+import pgSession from 'connect-pg-simple';
 
 const app = express();
 const sessionSecret: any = process.env.SESSION_SECRET
+const postGresConnectionString = process.env.POSTGRES_CONNECTION_STRING
+const pgPool: any = new pg.Pool({connectionString: postGresConnectionString});
+const PostgresqlStore = pgSession(session)
+const sessionStore: any = new PostgresqlStore({
+  pool: pgPool,
+  tableName: 'user_session'
+})
 app.use(
   session({
-    secret: sessionSecret ,
+    store: sessionStore,
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: true,
   })

@@ -20,6 +20,7 @@
     "@types/randomstring": "^1.1.8",
     "ajv": "^8.12.0",
     "axios": "^1.2.3",
+    "connect-pg-simple": "^8.0.0",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dayjs": "^1.11.7",
@@ -36,6 +37,7 @@
     "lodash-es": "^4.17.21",
     "morgan": "^1.10.0",
     "passport": "^0.6.0",
+    "pg": "^8.10.0",
     "pg-promise": "^11.4.3",
     "prom-client": "^14.2.0",
     "randomstring": "^1.2.3",
@@ -43,6 +45,7 @@
     "winston": "^3.8.2"
   },
   "devDependencies": {
+    "@types/connect-pg-simple": "^7.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/debug": "^4.1.7",
@@ -57,6 +60,7 @@
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.11.18",
     "@types/oauth2-server": "^3.0.13",
+    "@types/passport": "^1.0.12",
     "@types/uuid": "^9.0.0",
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
