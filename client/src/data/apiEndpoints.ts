@@ -1,0 +1,22 @@
+export default {
+    generateJsonSchema: "/config/obsrv/v1/dataset/dataschema",
+    generateIngestionSpec: "/config/obsrv/v1/dataset/ingestionspec",
+    saveDatset: "/obsrv/v1/datasets",
+    updateDataset: "/obsrv/v1/datasets",
+    readDataset: "/obsrv/v1/datasets",
+    saveDatasource: "/obsrv/v1/datasources",
+    readDatasource: "/obsrv/v1/datasources",
+    listDatasets: "/obsrv/v1/datasets/list",
+    sendEvents: "/obsrv/v1/data",
+    publishDataset: "/system/dataset/command",
+    druidNativeQuery: "/obsrv/v1/query",
+    uniqueId: "/config/obsrv/v1/datasets/slug/identification",
+    s3Upload: "/config/obsrv/v1/file/upload",
+    datasetSourceConfig: "/config/obsrv/v1/datasets/source/config",
+    transformationsConfig: "/config/obsrv/v1/datasets/transformation",
+    kafkaConnection: "/api/report/v1/kafka",
+    alerts: "/alertmanager/api/v2/alerts",
+    prometheusRead: "/prom/api/v1/query",
+    prometheusReadRange: "/prom/api/v1/query_range",
+    logout: "/api/oauth/logout"
+}

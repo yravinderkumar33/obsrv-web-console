@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: web-console
+  name: web-console
+  namespace: web-console
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-console
+  template:
+    metadata:
+      labels:
+        app: web-console
+    spec:
+      containers:
+        - image: yravinderkumar33/web-console:v10
+          name: web-console
+          resources: {}
+          envFrom:
+            - configMapRef:
+                name: web-console
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: web-console
+  name: web-console
+  namespace: web-console
+spec:
+  ports:
+    - name: 3000-3000
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app: web-console
+  type: ClusterIP
