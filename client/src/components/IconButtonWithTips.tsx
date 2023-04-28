@@ -1,21 +1,21 @@
-import { IconButton } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import HtmlTooltip from "./HtmlTooltip";
-
 
 interface Props {
     tooltipText: string;
     handleClick?: () => void;
-    icon: React.ReactElement<any, any>;
+    icon: any;
     buttonProps?: any;
     tooltipProps?: any;
+    label?: string;
 }
 
-const IconButtonWithTips = ({ tooltipText, handleClick = () => { }, icon, tooltipProps, buttonProps }: Props) => {
+const IconButtonWithTips = ({ tooltipText, handleClick = () => { }, tooltipProps, buttonProps, label, icon, }: Props) => {
     return (
         <HtmlTooltip title={tooltipText} {...tooltipProps}>
-            <IconButton onClick={handleClick} {...buttonProps}>
-                {icon}
-            </IconButton>
+            <Button onClick={handleClick} startIcon={icon} {...buttonProps}>
+                <Typography variant="body2" color="text.primary">{label}</Typography>
+            </Button>
         </HtmlTooltip>
     );
 }

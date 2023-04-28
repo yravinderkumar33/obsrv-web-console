@@ -1,5 +1,5 @@
 {
-    "name": "sunbird-observ",
+    "name": "sunbird-obsrv",
     "version": "1.2.0",
     "private": true,
     "proxy": "http://localhost:3000",
@@ -10,6 +10,7 @@
         "@emotion/react": "^11.10.5",
         "@emotion/styled": "^11.10.5",
         "@mui/base": "^5.0.0-alpha.101",
+        "@mui/icons-material": "^5.11.16",
         "@mui/lab": "^5.0.0-alpha.103",
         "@mui/material": "^5.10.9",
         "@mui/styles": "^5.11.9",

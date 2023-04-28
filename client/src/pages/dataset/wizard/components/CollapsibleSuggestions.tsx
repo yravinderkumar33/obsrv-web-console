@@ -1,11 +1,13 @@
 import { useMemo } from 'react';
 import {
     Grid, Box, Stack, Typography,
-    Accordion, Alert, AccordionDetails,
+    Accordion, useTheme, AccordionDetails,
     Paper, Collapse, AccordionSummary, Chip,
 } from '@mui/material';
-import { CheckCircleOutlined, InfoCircleOutlined, WarningOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, FileSearchOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
+import { CardTitle } from 'components/styled/Cards';
+import SuggestionBox from 'components/SuggestionBox';
 
 interface Props {
     flattenedData: Array<Record<string, any>>;
@@ -15,7 +17,7 @@ interface Props {
 }
 
 const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setRequiredFilter, requiredFilter, }: Props) => {
-
+    const theme = useTheme();
     const getSuggestionCount = useMemo(() => {
         let count = 0;
         _.map(flattenedData, (item) => {
@@ -45,11 +47,13 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
     return (
         <Box>
             <Collapse orientation="vertical" in={showSuggestions}>
-                <Paper elevation={2} sx={{ mb: 2, p: 1 }}>
-                    <Accordion sx={{ m: 1 }} square={false} defaultExpanded={true}>
+                <Paper elevation={4} sx={{ mb: 2, pt: 3 }}>
+                    <CardTitle px={3}>Suggestions</CardTitle>
+                    <Accordion square={false} defaultExpanded={true}>
                         <AccordionSummary aria-controls="data-type-suggestions" id="data-type-suggestions-header">
-                            <Typography variant="h6">
-                                {`Data type suggestions - Total (${getSuggestionCount})`}
+                            <Typography variant="h5">
+                                {`Data type suggestions`}
+                                {/*- Total (${getSuggestionCount})*/}
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails sx={{ p: 1, maxHeight: 270, overflow: 'auto' }}>
@@ -63,26 +67,17 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                                     if (suggestion.severity === 'MUST-FIX' && resolved)
                                                         return (
                                                             <Grid key={Math.random()} item xs={12} mx={1} my={0.5}>
-                                                                <Alert color="success" icon={<CheckCircleOutlined />}>
-                                                                    <Typography>{suggestion.message}</Typography>
-                                                                    <Typography>{suggestion.advice}</Typography>
-                                                                </Alert>
+                                                                <SuggestionBox color={theme.palette.success.main} suggestion={suggestion} Icon={CheckCircleOutlined} />
                                                             </Grid>
                                                         );
                                                     else if (suggestion.severity === 'MUST-FIX' && !resolved) return (
                                                         <Grid key={Math.random()} item xs={12} mx={1} my={0.5}>
-                                                            <Alert color="error" icon={<WarningOutlined />}>
-                                                                <Typography>{suggestion.message}</Typography>
-                                                                <Typography>{suggestion.advice}</Typography>
-                                                            </Alert>
+                                                            <SuggestionBox color={theme.palette.error.main} suggestion={suggestion} Icon={InfoCircleOutlined} />
                                                         </Grid>
                                                     )
                                                     else return (
                                                         <Grid key={Math.random()} item xs={12} mx={1} my={0.5}>
-                                                            <Alert color="info" icon={<InfoCircleOutlined />}>
-                                                                <Typography>{suggestion.message}</Typography>
-                                                                <Typography>{suggestion.advice}</Typography>
-                                                            </Alert>
+                                                            <SuggestionBox color={theme.palette.info.main} suggestion={suggestion} Icon={FileSearchOutlined} />
                                                         </Grid>
                                                     )
                                                 })
@@ -94,16 +89,16 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                             })}
                         </AccordionDetails>
                     </Accordion>
-                    <Accordion sx={{ m: 1 }} square={false}>
+                    <Accordion square={false}>
                         <AccordionSummary aria-controls="required-suggestions" id="required-suggestions-header">
-                            <Typography variant="h6">
+                            <Typography variant="h5">
                                 Required field suggestions
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails>
                             <Stack direction="column">
-                                <Box display="flex" alignItems="center" my={1}>
-                                    <Typography>
+                                <Box display="flex" alignItems="center" my={1} px={1.25}>
+                                    <Typography variant="body2" fontWeight={500}>
                                         {`${formatNumber(getRequiredFields.requiredCount)}/${formatNumber(getRequiredFields.totalCount)}`} are marked as required
                                     </Typography>
                                     <Chip
@@ -111,12 +106,12 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                         onClick={() => setRequiredFilter("true")}
                                         label={'Review all fields marked as required'}
                                         sx={{ mx: 2 }}
-                                        variant="outlined"
+                                        variant="filled"
                                         color="success"
                                     />
                                 </Box>
-                                <Box display="flex" alignItems="center" my={1}>
-                                    <Typography>
+                                <Box display="flex" alignItems="center" my={1} px={1.25}>
+                                    <Typography variant="body2" fontWeight={500}>
                                         {`${formatNumber(getRequiredFields.notRequiredCount)}/${formatNumber(getRequiredFields.totalCount)}`} are marked as optional
                                     </Typography>
                                     <Chip
@@ -124,7 +119,7 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                         onClick={() => setRequiredFilter("false")}
                                         label={'Review all fields marked as optional'}
                                         sx={{ mx: 2 }}
-                                        variant="outlined"
+                                        variant="filled"
                                         color="success"
                                     />
                                 </Box>

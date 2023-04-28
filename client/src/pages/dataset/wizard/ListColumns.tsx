@@ -1,26 +1,29 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
-    Button, Grid, IconButton, DialogTitle, Box, Stack, Typography, DialogContent, Dialog, FormControl, Select, MenuItem, TextareaAutosize, FormControlLabel, Chip, Alert, Popover,
+    Button, Grid, Box, Stack,
+    Typography, Chip, useTheme
 } from '@mui/material';
 import MainCard from 'components/MainCard';
 import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
-import { CheckOutlined, CloseCircleOutlined, DeleteOutlined, DownloadOutlined, EditOutlined, FolderViewOutlined, InfoCircleOutlined, UploadOutlined, WarningOutlined, } from '@ant-design/icons';
+import { CloseOutlined, FolderViewOutlined, } from '@ant-design/icons';
 import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
-import AnimateButton from 'components/@extended/AnimateButton';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import AlertDialog from 'components/AlertDialog';
 import { error } from 'services/toaster';
 import { areConflictsResolved, flattenSchema, updateJSONSchema } from 'services/json-schema';
-import RequiredSwitch from 'components/RequiredSwitch';
 import { connect } from 'react-redux';
 import IconButtonWithTips from 'components/IconButtonWithTips';
 import { DefaultColumnFilter, SelectBooleanFilter, SelectColumnFilter } from 'utils/react-table';
 import CollapsibleSuggestions from './components/CollapsibleSuggestions';
 import { downloadJsonFile } from 'utils/downloadUtils';
 import { updateClientState } from 'services/dataset';
+import { CardTitle, GenericCard } from 'components/styled/Cards';
+import WizardNavigator from './components/WizardNavigator';
+import { resetDataTypeResolve, updateDataType } from './utils/dataTypeUtil';
+import { renderActionsCell, renderColumnCell, renderDataTypeCell, renderRequiredCell } from './utils/renderCells';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -59,6 +62,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
     const [requiredFieldFilters, setRequiredFieldFilters] = useState<string>('');
     const jsonSchema = _.get(wizardState, 'pages.jsonSchema.schema');
+    const theme = useTheme();
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
         const column = cellValue?.column;
@@ -119,213 +123,30 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 Filter: DefaultColumnFilter,
                 filter: 'includes',
                 Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
                     const [edit, setEdit] = useState(false);
                     const [text, setText] = useState('');
-                    const editDescription = () => {
-                        setEdit((prevState) => !prevState);
-                        updateState();
-                    }
-
-                    const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-                        setText(e.target.value);
-                    }
-
-                    const updateState = () => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, description: text };
-                                else return state
-                            });
-                            persistState(values);
-                            return values;
-                        });
-                    }
-
-                    return (
-                        <Box alignItems="baseline">
-                            <Typography variant="body1" m={1} onClick={editDescription}>
-                                {value} {
-                                    row.description ?
-                                        <IconButtonWithTips
-                                            icon={<InfoCircleOutlined />}
-                                            tooltipProps={{ arrow: true }}
-                                            buttonProps={{ size: "small" }}
-                                            tooltipText={row.description}
-                                        /> :
-                                        <IconButtonWithTips
-                                            icon={<EditOutlined />}
-                                            tooltipProps={{ arrow: true }}
-                                            buttonProps={{ size: "small" }}
-                                            tooltipText={"Click to edit description"}
-                                        />
-
-                                }
-                            </Typography>
-                            <Dialog open={edit} onClose={editDescription}>
-                                <DialogTitle
-                                    display="flex"
-                                    justifyContent="space-between"
-                                    alignItems="center"
-                                >
-                                    <Typography mx={2}>
-                                        Add description for {value} field
-                                    </Typography>
-                                    <CloseCircleOutlined onClick={editDescription} />
-                                </DialogTitle>
-                                <DialogContent>
-                                    <Box m={2}>
-                                        <TextareaAutosize
-                                            minRows={3}
-                                            style={{ width: 250 }}
-                                            autoFocus
-                                            defaultValue={row.description}
-                                            aria-label="description of field"
-                                            onChange={handleChange}
-                                            placeholder="Add description here..."
-                                        />
-                                    </Box>
-                                </DialogContent>
-                            </Dialog>
-                        </Box>
-                    );
+                    return renderColumnCell({
+                        cell, value, persistState, setFlattenedData,
+                        theme, text, setText, edit, setEdit
+                    });
                 }
             },
             {
                 Header: 'Data type',
                 accessor: 'type',
                 tipText: 'Data type of the field',
+                errorBg: true,
                 editable: true,
                 Filter: DefaultColumnFilter,
                 filter: 'includes',
                 Cell: ({ value, cell }: any) => {
-                    const row = cell?.row?.original || {};
-                    const hasConflicts = _.get(row, 'suggestions.length');
-                    const isResolved = _.get(row, 'resolved') || false;
                     const pageData: any = useSelector((state: any) => state?.wizard?.pages[pageMeta.pageId].state?.schema);
                     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | HTMLElement | null>(null);
-                    const updateValue = (val: string) => {
-                        const updatedValues = { ...row };
-                        const storeState = _.cloneDeep(pageData);
-                        const data = _.map(storeState, state => {
-                            if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                return { ...state, ...updatedValues, isModified: true, type: val, ...(hasConflicts && { resolved: true }) };
-                            else return state
-                        });
-                        persistState(data);
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const filteredData = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, type: val, ...(hasConflicts && { resolved: true }) };
-                                else return state;
-                            });
-                            return filteredData;
-                        });
-                        setAnchorEl(null);
-                    }
-                    const open = Boolean(anchorEl);
-
-                    const handleSuggestions = (e: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLElement>) => {
-                        setAnchorEl(e.currentTarget);
-                    }
-
-                    const handleClose = () => {
-                        setAnchorEl(null);
-                    }
-
-                    const renderSuggestions = () => {
-                        return row?.oneof?.map((suggestion: any) => {
-                            if (suggestion.type !== value) return (
-                                <Chip
-                                    key={suggestion.type}
-                                    aria-label='fix-data-type'
-                                    clickable
-                                    label={`Convert to ${_.capitalize(suggestion.type)}`}
-                                    sx={{ m: 1 }}
-                                    color='success'
-                                    size="medium"
-                                    variant="outlined"
-                                    onClick={() => updateValue(suggestion.type)}
-                                />
-                            );
-                            else return null;
-                        })
-                    }
-
-                    return (
-                        <Box position="relative" maxWidth={180} display="flex" alignItems="center">
-                            {row?.oneof && !isResolved &&
-                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} color="error" onClick={handleSuggestions}>
-                                    <WarningOutlined />
-                                </IconButton>
-                            }
-                            {row?.oneof && isResolved &&
-                                <IconButton sx={{ position: "absolute", right: "0", top: "0", my: 0.5, mx: 0.5 }} color="success" onClick={handleSuggestions}>
-                                    <CheckOutlined />
-                                </IconButton>
-                            }
-                            <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                                <Select
-                                    value={value}
-                                    variant="standard"
-                                >
-                                    {
-                                        validDatatypes.map((option: any) =>
-                                            (<MenuItem onClick={() => updateValue(option)} value={option} key={option}>{option}</MenuItem>))
-                                    }
-                                </Select>
-                            </FormControl>
-                            <Popover
-                                open={open}
-                                anchorEl={anchorEl}
-                                onClose={handleClose}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                            >
-                                <Box sx={{ p: 2 }}>
-                                    {isResolved && (
-                                        <>
-                                            <Typography variant="h6" fontWeight="bold">
-                                                Resolved
-                                                <Typography variant="body1">
-                                                    Data type of field {row?.column} is resolved to "{value}"
-                                                </Typography>
-                                            </Typography>
-                                            {renderSuggestions()}
-                                        </>
-                                    )}
-                                    {!isResolved && (
-                                        <>
-                                            <Typography variant="h6" fontWeight="bold">
-                                                Must-fix
-                                                <Typography variant="body1">
-                                                    The field {row?.column} has multiple data type values available
-                                                </Typography>
-                                            </Typography>
-                                            {renderSuggestions()}
-                                            <Box>
-                                                <Chip
-                                                    key={`${value}-mark-resolved`}
-                                                    aria-label='resolve-data-type'
-                                                    clickable
-                                                    label={`Mark as resolved`}
-                                                    sx={{ m: 1 }}
-                                                    color='success'
-                                                    variant="outlined"
-                                                    size="medium"
-                                                    onClick={() => updateValue(value)}
-                                                />
-                                            </Box>
-                                        </>
-                                    )}
-                                </Box>
-                            </Popover>
-                        </Box>
-                    );
+                    return renderDataTypeCell({
+                        cell, value, pageData, anchorEl, setAnchorEl,
+                        updateDataType, persistState, setFlattenedData,
+                        resetDataTypeResolve, validDatatypes
+                    });
                 }
             },
             {
@@ -336,33 +157,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 Filter: SelectBooleanFilter,
                 filter: 'equals',
                 customValue: requiredFieldFilters,
-                Cell: ({ value, cell, updateMyData }: any) => {
-                    const row = cell?.row?.original || {};
-                    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-                        setFlattenedData((preState: Array<Record<string, any>>) => {
-                            const updatedValues = { ...row };
-                            const values = _.map(preState, state => {
-                                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                                    return { ...state, ...updatedValues, isModified: true, required: e.target.checked };
-                                else return state
-                            });
-                            persistState(values);
-                            return values;
-                        });
-                    }
-                    switch (value) {
-                        default:
-                            return <Box display="flex" alignItems="center">
-                                <FormControl fullWidth sx={{ alignItems: 'center' }}>
-                                    <FormControlLabel
-                                        sx={{ m: 'auto' }}
-                                        control={<RequiredSwitch checked={value} onChange={handleChange} />}
-                                        label={''}
-                                    />
-                                </FormControl>
-                            </Box>;
-                    }
-                }
+                Cell: ({ value, cell, updateMyData }: any) => renderRequiredCell({
+                    cell, value, setFlattenedData, persistState,
+                })
             },
             {
                 Header: 'Actions',
@@ -371,21 +168,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 disableFilters: true,
                 Filter: SelectColumnFilter,
                 filter: 'equals',
-                Cell: ({ value, cell, ...rest }: any) => {
-                    const row = cell?.row?.original || {};
-                    const handleDeleteColumn = () => {
-                        setSelection(row);
-                        setOpenAlertDialog(true);
-                    }
-
-                    return (
-                        <Stack direction="row">
-                            <IconButton color="primary" size="large" sx={{ m: 'auto' }} onClick={handleDeleteColumn}>
-                                <DeleteOutlined style={{ color: "#F04134" }} />
-                            </IconButton>
-                        </Stack>
-                    );
-                }
+                Cell: ({ value, cell, ...rest }: any) => renderActionsCell({
+                    cell, value, setSelection, setOpenAlertDialog, theme,
+                })
             },
         ],
         [requiredFieldFilters]
@@ -424,7 +209,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 let result: any[] = [];
                 _.filter(data, function (item) {
                     return item.suggestions?.map((sv_item: any) => {
-                        if (sv_item.severity === filter.id) return result.push(item);
+                        if (sv_item.severity === filter.id && !item.resolved)
+                            return result.push(item);
                     })
                 });
                 return result;
@@ -456,81 +242,76 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         }
     }, [jsonSchema]);
 
-    return <>
-        <Stack direction="row" spacing={1} marginBottom={1} alignItems="center" justifyContent="space-between">
-            <Box display="flex" justifyContent="space-evenly" alignItems="center">
-                <Typography>
-                    Filter by suggestions:
-                </Typography>
-                {columnFilters.map((filter) => <Chip
-                    key={filter.label}
-                    aria-label='filter-issues'
-                    clickable
-                    label={filter.label}
-                    sx={{ mx: 0.5 }}
-                    color={filter.color}
-                    size="medium"
-                    variant="outlined"
-                    onClick={() => handleFilterChange(filter)}
-                    onDelete={filterByChip?.label === filter.label ? () => deleteFilter() : undefined}
-                />
-                )}
-            </Box>
-            <Box display="flex" justifyContent="space-evenly" alignItems="center">
-                <IconButtonWithTips
-                    tooltipText="Download Schema"
-                    icon={<DownloadOutlined />}
-                    handleClick={handleDownloadButton}
-                    buttonProps={{ size: "large", sx: { color: "#000" } }}
-                    tooltipProps={{ arrow: true }}
-                />
-
-                <IconButtonWithTips
-                    tooltipText="View all suggestions"
-                    icon={<FolderViewOutlined />}
-                    handleClick={handleSuggestionsView}
-                    buttonProps={{ size: "large", sx: { color: "#000" } }}
-                    tooltipProps={{ arrow: true }}
-                />
-            </Box>
-        </Stack>
-        <CollapsibleSuggestions
-            flattenedData={flattenedData}
-            showSuggestions={showSuggestions}
-            setRequiredFilter={setRequiredFieldFilters}
-            requiredFilter={requiredFieldFilters}
-        />
-        <Grid container spacing={2}>
-            <Grid item xs={12} sm={12}>
-                <MainCard content={false}>
-                    <ScrollX>
-                        <ReactTable
-                            columns={columns}
-                            data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []}
-                            updateMyData={updateMyData}
-                            skipPageReset={skipPageReset}
-                            limitHeight
+    return (
+        <>
+            <GenericCard elevation={1}>
+                <CardTitle fontWeight={400}>1- Schema Details</CardTitle>
+                <Stack direction="row" spacing={1} marginBottom={1} alignItems="center" justifyContent="space-between">
+                    <Box display="flex" justifyContent="space-evenly" alignItems="center">
+                        <Typography variant="body2" color="secondary" mr={1}>
+                            Filter Suggestion by:
+                        </Typography>
+                        {columnFilters.map((filter) => <Chip
+                            key={filter.label}
+                            aria-label='filter-button'
+                            clickable
+                            label={filter.label}
+                            sx={{ mx: 0.5 }}
+                            color={filter.color}
+                            size="medium"
+                            variant="outlined"
+                            onClick={() => handleFilterChange(filter)}
                         />
-                    </ScrollX>
-                </MainCard >
-            </Grid>
-            <Grid item xs={12}>
-                <Stack direction="row" justifyContent={edit ? 'flex-end' : 'space-between'}>
-                    {!edit && <AnimateButton>
-                        <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
-                            Previous
-                        </Button>
-                    </AnimateButton>}
-                    <AnimateButton>
-                        <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoNextSection}>
-                            Next
-                        </Button>
-                    </AnimateButton>
+                        )}
+                        {filterByChip &&
+                            <Button size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
+                                Clear filters
+                            </Button>
+                        }
+                    </Box>
+                    <Box display="flex" justifyContent="space-evenly" alignItems="center">
+                        <IconButtonWithTips
+                            tooltipText="View all suggestions"
+                            icon={<FolderViewOutlined style={{ fontSize: '1.25rem' }} />}
+                            handleClick={handleSuggestionsView}
+                            buttonProps={{ size: "large" }}
+                            tooltipProps={{ arrow: true }}
+                        />
+                    </Box>
                 </Stack>
-            </Grid>
-            <AlertDialog open={openAlertDialog} action={handleAlertDialogAction} handleClose={handleAlertDialogClose} context={alertDialogContext} />
-        </Grid>
-    </>;
+                <CollapsibleSuggestions
+                    flattenedData={flattenedData}
+                    showSuggestions={showSuggestions}
+                    setRequiredFilter={setRequiredFieldFilters}
+                    requiredFilter={requiredFieldFilters}
+                />
+                <Grid container spacing={2}>
+                    <Grid item xs={12} sm={12}>
+                        <MainCard content={false}>
+                            <ScrollX>
+                                <ReactTable
+                                    columns={columns}
+                                    data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []}
+                                    updateMyData={updateMyData}
+                                    skipPageReset={skipPageReset}
+                                    limitHeight
+                                    tHeadHeight={52}
+                                />
+                            </ScrollX>
+                        </MainCard >
+                    </Grid>
+                    <AlertDialog open={openAlertDialog} action={handleAlertDialogAction} handleClose={handleAlertDialogClose} context={alertDialogContext} />
+                </Grid>
+            </GenericCard>
+            <WizardNavigator
+                showPrevious={edit}
+                gotoPreviousSection={gotoPreviousSection}
+                gotoNextSection={gotoNextSection}
+                enableDownload
+                handleDownload={handleDownloadButton}
+            />
+        </>
+    );
 };
 
 const mapStateToProps = (state: any) => {

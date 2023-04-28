@@ -1,4 +1,4 @@
-import {useState } from 'react';
+import { useState } from 'react';
 import { FormHelperText, Grid, Stack } from '@mui/material';
 import { Formik } from 'formik';
 import * as yup from 'yup';
@@ -8,7 +8,6 @@ import * as _ from 'lodash';
 import { reset } from 'store/reducers/wizard';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import PasteData from './PasteData';
 import { readJsonFileContents } from 'services/utils';
@@ -28,8 +27,8 @@ function TabPanel(props: any) {
             {...other}
         >
             {value === index && (
-                <Box sx={{ p: 3 }}>
-                    <Typography>{children}</Typography>
+                <Box py={3}>
+                    {children}
                 </Box>
             )}
         </div>
@@ -83,12 +82,10 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema 
             <Grid container spacing={1}>
                 <Grid item xs={12}>
                     <Box sx={{ width: '100%' }}>
-                        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                                <Tab label={allowSchema ? "Upload JSON Data/Schema" : "Upload JSON Data"}  {...tabProps(0)} />
-                                <Tab label={allowSchema ? "Paste/Edit JSON Data/Schema" : "Paste/Edit JSON Data"}  {...tabProps(1)} />
-                            </Tabs>
-                        </Box>
+                        <Tabs value={tabIndex} onChange={handleTabChange} variant="fullWidth">
+                            <Tab label={allowSchema ? "Upload JSON Data/Schema" : "Upload JSON Data"}  {...tabProps(0)} />
+                            <Tab label={allowSchema ? "Paste/Edit JSON Data/Schema" : "Paste/Edit JSON Data"}  {...tabProps(1)} />
+                        </Tabs>
                         <TabPanel value={tabIndex} index={0}>
                             <Formik
                                 initialValues={form.initialState}
