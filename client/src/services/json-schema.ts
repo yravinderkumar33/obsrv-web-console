@@ -25,6 +25,39 @@ const addRequiredFields = (
     })
 }
 
+export const getNesting = (payload: any, jsonSchemaData: any) => {
+    const data = _.reduce(payload, (acc: any, current: any) => {
+        const { column } = current;
+        const [parent]: any = _.split(column, '.');
+        const existing = acc[parent] || [];
+        acc[parent] = [...existing, current];
+        return acc;
+    }, {});
+    return nestedToColumns(data, jsonSchemaData);
+}
+
+export const nestedToColumns = (payload: any, jsonSchemaData: any) => {
+    return _.reduce(payload, (acc: any, current: any) => {
+        const property = current;
+        const existing = acc || [];
+        if (_.values(property).length === 1) {
+            acc = [...existing, ...property];
+        }
+        else if (property.length > 1) {
+            const subRows = property;
+            const [element] = property;
+            const [parent] = _.split(element?.column, ".");
+            const data = {
+                column: parent,
+                type: _.get(jsonSchemaData, ['properties', parent, 'type']),
+                subRows,
+            }
+            acc = [...existing, data];
+        }
+        return acc;
+    }, []);
+}
+
 const flatten = (schemaObject: Record<string, any>) => {
     let schemaObjectData = schemaObject;
     const result: Record<string, any> = {};
@@ -82,7 +115,7 @@ const changeRequiredPropertyInSchema = (schema: Record<string, any>, schemaKeyPa
     const schemaKey = _.last(_.split(schemaKeyPath, '.'));
     if (schemaKey) {
         const pathToRequiredProperty = getPathToRequiredKey(schema, schemaKeyPath, schemaKey);
-        let existingRequiredKeys = _.get(schema, [pathToRequiredProperty]) || [];
+        let existingRequiredKeys = _.get(schema, pathToRequiredProperty) || [];
         if (required) {
             // add to required property.
             const updatedRequiredKeys = _.includes(existingRequiredKeys, schemaKey) ? existingRequiredKeys : [...existingRequiredKeys, schemaKey];
@@ -111,14 +144,14 @@ const updateTypeInSchema = (schema: Record<string, any>, schemaPath: string, typ
 
 export const updateJSONSchema = (schema: Record<string, any>, updatePayload: Record<string, any>) => {
     const clonedOriginal = _.cloneDeep(schema);
-    const modifiedRows = _.filter(_.get(updatePayload, 'schema'), ['isModified', true]);
+    const modifiedRows = _.filter(updatePayload, ['isModified', true]);
     _.forEach(modifiedRows, modifiedRow => {
-        const { isDeleted = false, required = true, key, type } = modifiedRow;
+        const { isDeleted = false, required = false, key, type } = modifiedRow;
         if (isDeleted) {
-            deleteItemFromSchema(_.get(clonedOriginal, 'schema'), key, false);
+            deleteItemFromSchema(clonedOriginal, key, false);
         } else {
-            updateTypeInSchema(_.get(clonedOriginal, 'schema'), key, type);
-            changeRequiredPropertyInSchema(_.get(clonedOriginal, 'schema'), key, required);
+            updateTypeInSchema(clonedOriginal, key, type);
+            changeRequiredPropertyInSchema(clonedOriginal, key, required);
         }
     });
     return clonedOriginal;

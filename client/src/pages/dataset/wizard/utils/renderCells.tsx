@@ -49,7 +49,7 @@ const renderColumnCell = ({
                     {value}
                 </Typography>
                 {!row.description &&
-                    <Button sx={{ fontWeight: 500 }} onClick={editDescription} startIcon={<PlusOutlined style={{ fontSize: '1.25rem', strokeWidth: 25, stroke: theme.palette.primary.main }} />}>
+                    <Button sx={{ fontWeight: 500 }} onClick={handleClose} startIcon={<PlusOutlined style={{ fontSize: '1.25rem', strokeWidth: 25, stroke: theme.palette.primary.main }} />}>
                         Description
                     </Button>
                 }
@@ -115,7 +115,7 @@ const renderColumnCell = ({
 const renderDataTypeCell = ({
     cell, value, pageData, anchorEl, setAnchorEl,
     updateDataType, persistState, setFlattenedData,
-    resetDataTypeResolve, validDatatypes,
+    resetDataTypeResolve, validDatatypes, disabled,
 }: any) => {
     const row = cell?.row?.original || {};
     const hasConflicts = _.get(row, 'suggestions.length');
@@ -151,6 +151,10 @@ const renderDataTypeCell = ({
             else return null;
         })
     }
+
+    if (disabled) return (
+        <Box px={2}><Typography variant="h6">{value}</Typography></Box>
+    );
 
     return (
         <Box position="relative" maxWidth={180} display='block' alignItems="center" m={1}>

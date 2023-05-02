@@ -1,9 +1,24 @@
 import { useTheme } from '@mui/material/styles';
-import { List, ListItemText, ListItem, Typography } from '@mui/material';
+import { Box, List, ListItemText, ListItem, Typography, LinearProgress, LinearProgressProps } from '@mui/material';
 import IconButton from 'components/@extended/IconButton';
 import { DropzopType, FilePreviewProps } from 'types/dropzone';
 import { CloseCircleFilled, FileTextOutlined } from '@ant-design/icons';
 import { CustomFile } from 'types/dropzone';
+
+function LinearProgressWithLabel({ value, theme, ...props }: any) {
+    return (
+        <Box sx={{ display: 'flex', alignItems: 'center', maxWidth: '22rem', }}>
+            <Box sx={{ width: '20rem', mr: 1, color: theme.palette.primary[400], }}>
+                <LinearProgress variant="determinate" color="inherit" {...props} />
+            </Box>
+            <Box sx={{ minWidth: 35 }}>
+                <Typography variant="h6" color="text.secondary">{`${Math.round(
+                    value,
+                )}%`}</Typography>
+            </Box>
+        </Box>
+    );
+}
 
 export function getDropzoneData(file: CustomFile | string, index?: number) {
     if (typeof file === 'string') {
@@ -103,10 +118,13 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
                             primary={<Typography variant="body1">{typeof file === 'string' ? file : name}</Typography>}
                             primaryTypographyProps={{ variant: 'subtitle2' }}
                             secondaryTypographyProps={{ variant: 'caption' }}
+                            sx={{ mr: 2, maxWidth: 200, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
                         />
 
+                        <LinearProgressWithLabel value={100} theme={theme} />
+
                         {onRemove && (
-                            <IconButton edge="end" size="small" onClick={() => onRemove(file)}>
+                            <IconButton sx={{ ml: 'auto' }} edge="end" size="small" onClick={() => onRemove(file)}>
                                 <CloseCircleFilled style={{ fontSize: '1.15rem' }} />
                             </IconButton>
                         )}
