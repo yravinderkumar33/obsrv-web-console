@@ -17,6 +17,7 @@
   },
   "author": "ravinder kumar",
   "dependencies": {
+    "@project-sunbird/telemetry-sdk": "0.0.29",
     "@types/randomstring": "^1.1.8",
     "ajv": "^8.12.0",
     "axios": "^1.2.3",
@@ -24,6 +25,7 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.7",
     "debug": "^4.3.4",
+    "dotenv": "^16.0.3",
     "express": "^4.17.6",
     "express-oauth-server": "^2.0.0",
     "express-session": "^1.17.3",

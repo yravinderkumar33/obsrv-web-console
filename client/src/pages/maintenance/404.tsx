@@ -5,6 +5,7 @@ import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 
 import config from 'config';
 import error404 from 'assets/images/maintenance/Error404.png';
+import { interactIds } from 'data/telemetry/interactIds';
 
 function Error404() {
   return (
@@ -32,7 +33,13 @@ function Error404() {
             <Typography color="textSecondary" align="center" sx={{ width: { xs: '73%', sm: '61%' } }}>
               The requested page does not exists.
             </Typography>
-            <Button component={Link} to={config.defaultPath} variant="contained">
+            <Button 
+            id="button:404"
+            data-edataId="button:error"
+            data-edataType="CLICK"
+            data-objectId={interactIds.object.id}
+            data-objectType="404"
+            component={Link} to={config.defaultPath} variant="contained">
               Back To Home
             </Button>
           </Stack>

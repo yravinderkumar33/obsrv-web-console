@@ -11,6 +11,7 @@ import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import PreviewTransformation from "./PreviewTransform";
+import { interactIds } from "data/telemetry/interactIds";
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank');
@@ -82,6 +83,11 @@ const AddNewField = (props: any) => {
                 Add New Field
                 {onClose ? (
                     <IconButton
+                        id="iconButton"
+                        data-edataId={interactIds.button.icon.menu.close}
+                        data-edataType="CLICK"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="icon:close"
                         aria-label="close"
                         onClick={onClose}
                         sx={{
@@ -103,12 +109,24 @@ const AddNewField = (props: any) => {
                         <PreviewTransformation fieldName={value.column} expression={value.transformation} />
                     }
                     <Box>
-                        <Button onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
+                        <Button 
+                        id="jsonata:editor"
+                        data-edataId="jsonata:editor:open"
+                        data-edataType="CLICK"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="dataset:jsonata"
+                        onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
                     </ Box>
                 </ Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" onClick={_ => updateAdditionalField()}>
+                <Button 
+                id="update:button"
+                data-edataId={interactIds.dataset.edit.add.transformation}
+                data-edataType="CLICK"
+                data-objectId={interactIds.object.id}
+                data-objectType="dataset:transformation"
+                variant="contained" onClick={_ => updateAdditionalField()}>
                     Add
                 </Button>
             </DialogActions>

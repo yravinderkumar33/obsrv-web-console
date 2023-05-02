@@ -66,17 +66,23 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                 <Grid item xs={12}>
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
-                            <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                            <Button
+                            id="dataset:previous"
+                            data-edataId={interactIds.dataset.create.publish}
+                            data-edataType="CLICK"
+                            data-objectId={interactIds.object.id}
+                            data-objectType="dataset:review"
+                             variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                 Previous
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
                             <Button 
-                            id="button"
+                            id="dataset:save"
                             data-edataId={interactIds.dataset.create.publish}
-                            data-edataType="INTERACT"
+                            data-edataType="CLICK"
                             data-objectId={interactIds.object.id}
-                            data-objectType="buttonClick"
+                            data-objectType="dataset:review"
                             variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>

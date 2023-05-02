@@ -8,6 +8,7 @@ import { Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { error } from "services/toaster";
 import { updateDenormConfig } from "services/dataset";
+import { interactIds } from "data/telemetry/interactIds";
 
 const AddDenormField = (props: any) => {
     const { selection, redisConfig, onClose, setSelection, persistState, masterDatasets = [] } = props;
@@ -100,6 +101,11 @@ const AddDenormField = (props: any) => {
                 Add Denorm Field
                 {onClose ? (
                     <IconButton
+                        id="iconButton"
+                        data-edataId={interactIds.button.icon.menu.close}
+                        data-edataType="CLICK"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="Button"
                         aria-label="close"
                         onClick={onClose}
                         sx={{
@@ -119,7 +125,13 @@ const AddDenormField = (props: any) => {
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" autoFocus onClick={_ => addField()}>
+                <Button 
+                id="button"
+                data-edataId={interactIds.dataset.create.add.denorm}
+                data-edataType="CLICK"
+                data-objectId={interactIds.object.id}
+                data-objectType="button:dataset:field"
+                variant="contained" autoFocus onClick={_ => addField()}>
                     Add Field
                 </Button>
             </DialogActions>

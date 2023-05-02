@@ -8,6 +8,7 @@ import config from 'data/initialConfig';
 import { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
+import { interactIds } from "data/telemetry/interactIds";
 const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
@@ -57,11 +58,26 @@ const ConditionalCheckboxForm = (props: any) => {
         const { name, value } = metadata;
         switch (type) {
             case "checkbox":
-                return <Checkbox name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
+                return <Checkbox 
+                id="button:checkbox"
+                data-edataId={interactIds.dataset.create.add.transformation}
+                data-edataType="CLICK"
+                data-objectType={`checkbox-${value}`}
+                name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
             case "radio":
-                return <Radio name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
+                return <Radio 
+                id="button:radio"
+                data-edataId={interactIds.dataset.create.add.transformation}
+                data-edataType="CLICK"
+                data-objectType={`radio-${value}`}
+                name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
             default:
-                return <Checkbox name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
+                return <Checkbox
+                id="button:checkbox"
+                data-edataId={interactIds.dataset.create.add.transformation}
+                data-edataType="CLICK"
+                data-objectType={`checkbox-${value}`}
+                name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
         }
     }
 

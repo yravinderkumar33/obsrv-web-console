@@ -9,6 +9,7 @@ import Review from './Review';
 import * as _ from 'lodash';
 import SectionConfiguration from './components/SectionConfiguration';
 import { fetchDatasetsThunk } from 'store/middlewares';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Advanced', 'Review'];
 const masterSteps = ['Schema', 'Ingestion', 'Review'];
@@ -125,6 +126,32 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
             {showWizard && stepper()}
             {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master-dataset" : "dataset"} />}
             {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
+            <MainCard title={null}
+                secondary={
+                    showWizard && <Box display="flex" justifyContent="space-between">
+                        <Button
+                        id="reset-button"
+                        data-edataId="dataset:reset:button"
+                        data-edataType="CLICK"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="dataset"
+                         onClick={(_) => resetState()}>
+                            Reset
+                        </Button>
+                        <Button 
+                        id="skip-button"
+                        data-edataId="dataset:skip:button"
+                        data-edataType="CLICK"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="dataset"
+                        onClick={(_) => handleNext()}>
+                            Skip
+                        </Button>
+                    </Box>
+                }>
+                {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master-dataset" : "dataset"} />}
+                {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
+            </MainCard >
         </Box>
     );
 };

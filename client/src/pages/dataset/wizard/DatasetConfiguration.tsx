@@ -15,6 +15,7 @@ import { checkUniqueId, getUrls, uploadToUrl, createDraftDataset } from 'service
 import { fetchJsonSchema } from 'services/json-schema';
 import FilesPreview from 'components/third-party/dropzone/FilesPreview';
 import { CardTitle, GenericCard } from 'components/styled/Cards';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const idCheck = async (value: any, resolve: any) => {
     const data = await checkUniqueId(value);

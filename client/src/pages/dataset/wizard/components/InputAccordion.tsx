@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { addState } from "store/reducers/wizard";
+import { interactIds } from "data/telemetry/interactIds";
 const { spacing } = config;
 
 const InputAccordion = (props: any) => {
@@ -65,7 +66,13 @@ const InputAccordion = (props: any) => {
                 return <ButtonGroup variant="outlined" aria-label="outlined button group">
                     {
                         actions.map((action: any) => {
-                            return <Button key="one" variant={_transformationType === action?.value ? 'contained' : 'outlined'}>{action?.label}</Button>
+                            return <Button
+                            id="input-button"
+                            data-edataId={`dataset:transformation:input:${action?.label}`}
+                            data-edataType="CLICK"
+                            data-objectId={interactIds.object.id}
+                            data-objectType="button"
+                             key="one" variant={_transformationType === action?.value ? 'contained' : 'outlined'}>{action?.label}</Button>
                         })
                     }
                 </ButtonGroup>
@@ -74,7 +81,13 @@ const InputAccordion = (props: any) => {
         {
             Header: 'Delete',
             Cell: ({ value, cell }: any) => {
-                return <IconButton variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
+                return <IconButton 
+                id="icon-button"
+                data-edataId="delete"
+                data-edataType="CLICK"
+                data-objectId={interactIds.object.id}
+                data-objectType="iconButton"
+                variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
                     <DeleteOutlined />
                 </IconButton>
             }
@@ -101,7 +114,13 @@ const InputAccordion = (props: any) => {
             <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>
             {renderTable()}
             <Grid item xs={12}>
-                <Button variant="outlined" onClick={_ => setDialogOpen(true)} >{label}</Button>
+                <Button 
+                id="button"
+                data-edataId={`input:${label}`}
+                data-edataType="CLICK"
+                data-objectId={interactIds.object.id}
+                data-objectType="open:dialog"
+                variant="outlined" onClick={_ => setDialogOpen(true)} >{label}</Button>
             </Grid>
             <Grid item xs={12}>
                 <Dialog open={dialogOpen} onClose={_ => setDialogOpen(false)} aria-labelledby={title} aria-describedby={title}>
