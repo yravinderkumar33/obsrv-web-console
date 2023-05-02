@@ -12,6 +12,7 @@ import FilesPreview from './FilesPreview';
 
 // types
 import { CustomFile, DropzopType, UploadMultiFileProps } from 'types/dropzone';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
     outline: 'none',
@@ -100,7 +101,12 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                         <PlaceholderContent type={type} />
                     </DropzoneWrapper>
                     {type === DropzopType.standard && files && files.length > 1 && (
-                        <Button variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
+                        <Button
+                        data-edataId={interactIds.file.remove.many}
+                        data-edataType="INTERACT"
+                        data-objectId="1.0.0"
+                        data-objectType="button"
+                         variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
                             Remove all
                         </Button>
                     )}
@@ -111,7 +117,12 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
 
             {type !== DropzopType.standard && files && files.length > 0 && (
                 <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ mt: 1.5 }}>
-                    <Button color="inherit" size="small" onClick={onRemoveAll}>
+                    <Button
+                    data-edataId={interactIds.file.remove.many}
+                    data-edataType="INTERACT"
+                    data-objectId="1.0.0"
+                    data-objectType="button"
+                    color="inherit" size="small" onClick={onRemoveAll}>
                         Remove all
                     </Button>
                     {/* <Button size="small" variant="contained" onClick={() => onUpload(files)}>

@@ -11,6 +11,7 @@ import { sections as allSections } from 'data/wizard';
 import { updateClientState } from 'services/dataset';
 import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const SectionsConfiguration = ({ handleNext, handleBack, index, section, defaultExpanded, master }: any) => {
     const sections = _.get(allSections, section) || [];
@@ -70,12 +71,24 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, default
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between">
                     <AnimateButton>
-                        <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                        <Button 
+                        id="section:config:button"
+                        data-edataId="previous:section"
+                        data-edataType="INTERACT"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="buttonClick"
+                        variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                             Previous
                         </Button>
                     </AnimateButton>
                     <AnimateButton>
-                        <Button variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
+                        <Button 
+                        id="section:config:button"
+                        data-edataId="next:section"
+                        data-edataType="INTERACT"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="buttonClick"
+                        variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
                             Next
                         </Button>
                     </AnimateButton>

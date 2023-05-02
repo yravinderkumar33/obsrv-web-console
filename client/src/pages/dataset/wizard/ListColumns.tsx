@@ -21,6 +21,7 @@ import { DefaultColumnFilter, SelectBooleanFilter, SelectColumnFilter } from 'ut
 import CollapsibleSuggestions from './components/CollapsibleSuggestions';
 import { downloadJsonFile } from 'utils/downloadUtils';
 import { updateClientState } from 'services/dataset';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -164,7 +165,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
 
                                 }
                             </Typography>
-                            <Dialog open={edit} onClose={editDescription}>
+                            <Dialog
+                            
+                             open={edit} onClose={editDescription}>
                                 <DialogTitle
                                     display="flex"
                                     justifyContent="space-between"
@@ -173,7 +176,13 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                                     <Typography mx={2}>
                                         Add description for {value} field
                                     </Typography>
-                                    <CloseCircleOutlined onClick={editDescription} />
+                                    <CloseCircleOutlined
+                                     id="dialog"
+                                     data-edataId={interactIds.description.edit}
+                                     data-edataType="INTERACT"
+                                     data-objectId={interactIds.object.id}
+                                     data-objectType="dialog"
+                                     onClick={editDescription} />
                                 </DialogTitle>
                                 <DialogContent>
                                     <Box m={2}>

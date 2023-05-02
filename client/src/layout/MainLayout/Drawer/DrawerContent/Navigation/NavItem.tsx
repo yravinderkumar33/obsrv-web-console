@@ -55,6 +55,7 @@ const NavItem = ({ item, level }: any) => {
             disabled={item.disabled}
             onClick={() => itemHandler(item.id)}
             selected={isSelected}
+            id="navItem" data-edataId={item} data-edataType="INTERACT" data-objectId="1.2.0" data-objectType="listItemButton"
             sx={{
                 zIndex: 1201,
                 pl: drawerOpen ? `${level * 28}px` : 1.5,
@@ -88,6 +89,7 @@ const NavItem = ({ item, level }: any) => {
         >
             {itemIcon && (
                 <ListItemIcon
+              
                     sx={{
                         minWidth: 28,
                         color: isSelected ? iconSelectedColor : textColor,

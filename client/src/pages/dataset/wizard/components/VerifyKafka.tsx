@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { verifyKafkaConnection } from 'services/dataset';
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
+import { interactIds } from 'data/telemetry/interactIds';
 
 type colors = "success" | "error" | "inherit" | "primary" | "secondary" | "info" | "warning";
 
@@ -38,6 +39,11 @@ const VerifyKafka = () => {
 
     return (
         <LoadingButton
+            id="loadingButton:kafka"
+            data-edataId={interactIds.kafka.verify}
+            data-edataType="INTERACT"
+            data-objectId={interactIds.object.id}
+            data-objectType="buttonClick"
             onClick={_ => testConnection()}
             variant="contained"
             color={buttonColor}
