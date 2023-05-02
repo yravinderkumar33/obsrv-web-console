@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogContentText } from '@mui/material';
 import { Box, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const AlertDialog = ({ handleClose, action = null, open = false, context = {} }: any) => {
 
@@ -18,10 +19,10 @@ const AlertDialog = ({ handleClose, action = null, open = false, context = {} }:
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button color="error" onClick={e => handleClose()}>
+                    <Button data-edataId={interactIds.alert.dialog.cancel} data-edataType="INTERACT" data-objectId="1.0.0" data-objectType="alertDialog" color="error" onClick={e => handleClose()}>
                         Cancel
                     </Button>
-                    <Button variant="contained" onClick={handleAction} autoFocus>
+                    <Button data-edataId={interactIds.alert.dialog.agree} data-edataType="INTERACT" data-objectId="1.0.0" data-objectType="alertDialog" variant="contained" onClick={handleAction} autoFocus>
                         Agree
                     </Button>
                 </DialogActions>

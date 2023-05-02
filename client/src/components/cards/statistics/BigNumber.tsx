@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import { Card, CardContent, Grid, Typography } from '@mui/material';
 
 import { GenericCardProps } from 'types/root';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const IconWrapper = styled('div')({
   position: 'absolute',
@@ -29,7 +30,12 @@ const BigNumberCard = ({ primary, secondary, iconPrimary, color, onClick }: Metr
   const primaryIcon = iconPrimary ? <IconPrimary fontSize="large" /> : null;
 
   return (
-    <Card elevation={0} sx={{ background: color, position: 'relative', color: '#fff' }} onClick={onClick}>
+    <Card 
+    data-edataId={interactIds.card.info}
+    data-edataType="INTERACT"
+    data-objectId={interactIds.object.id}
+    data-objectType={interactIds.card}
+    elevation={0} sx={{ background: color, position: 'relative', color: '#fff' }} onClick={onClick}>
       <CardContent>
         <IconWrapper>{primaryIcon}</IconWrapper>
         <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>

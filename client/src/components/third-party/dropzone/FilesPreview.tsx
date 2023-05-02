@@ -4,6 +4,7 @@ import IconButton from 'components/@extended/IconButton';
 import { DropzopType, FilePreviewProps } from 'types/dropzone';
 import { CloseCircleFilled, FileFilled } from '@ant-design/icons';
 import { CustomFile } from 'types/dropzone';
+import { interactIds } from 'data/telemetry/interactIds';
 
 export function getDropzoneData(file: CustomFile | string, index?: number) {
   if (typeof file === 'string') {
@@ -63,6 +64,10 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
 
               {onRemove && (
                 <IconButton
+                  data-edataId={interactIds.file.remove.one}
+                  data-edataType="INTERACT"
+                  data-objectId="1.0.0"
+                  data-objectType="iconButton"
                   size="small"
                   color="error"
                   shape="rounded"
@@ -106,7 +111,12 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
             />
 
             {onRemove && (
-              <IconButton edge="end" size="small" onClick={() => onRemove(file)}>
+              <IconButton
+              data-edataId={interactIds.file.remove.one}
+              data-edataType="INTERACT"
+              data-objectId="1.0.0"
+              data-objectType="iconButton"
+              edge="end" size="small" onClick={() => onRemove(file)}>
                 <CloseCircleFilled style={{ fontSize: '1.15rem' }} />
               </IconButton>
             )}

@@ -4,8 +4,9 @@ import { AppBar, AppBarProps, Toolbar, useMediaQuery } from '@mui/material';
 import AppBarStyled from './AppBarStyled';
 import HeaderContent from './HeaderContent';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useEffect, useMemo } from 'react';
 import IconButton from 'components/@extended/IconButton';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const Header = ({ open, handleDrawerToggle }: any) => {
     const theme = useTheme();
@@ -14,10 +15,17 @@ const Header = ({ open, handleDrawerToggle }: any) => {
     const headerContent = useMemo(() => <HeaderContent />, []);
     const iconBackColorOpen = 'grey.200';
 
+    
+
     const mainHeader: ReactNode = (
-        <div id='rootHeader'>
+   
             <Toolbar>
                 <IconButton
+                    id=""
+                    data-edataId={!open ? interactIds.button.icon.menu.open : interactIds.button.icon.menu.close}
+                    data-edataType="INTERACT"
+                    data-objectId={interactIds.object.id}
+                    data-objectType="iconButton"
                     aria-label="open drawer"
                     onClick={handleDrawerToggle}
                     edge="start"
@@ -29,7 +37,6 @@ const Header = ({ open, handleDrawerToggle }: any) => {
                 </IconButton>
                 {headerContent}
             </Toolbar>
-        </div>
     );
 
     const appBar: AppBarProps = {

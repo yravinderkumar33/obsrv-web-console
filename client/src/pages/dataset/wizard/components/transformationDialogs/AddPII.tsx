@@ -10,6 +10,7 @@ import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
+import { interactIds } from "data/telemetry/interactIds";
 
 const AddPIIDialog = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
@@ -87,6 +88,10 @@ const AddPIIDialog = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
+                        data-edataId={interactIds.button.icon.menu.close}
+                        data-edataType="INTERACT"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="buttonClick"
                         onClick={onClose}
                         sx={{
                             position: 'absolute',
@@ -105,7 +110,13 @@ const AddPIIDialog = (props: any) => {
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" onClick={_ => updatePIIMeta()}>
+                <Button 
+                id="button:add:pii"
+                data-edataId={interactIds.pii.add}
+                data-edataType="INTERACT"
+                data-objectId={interactIds.object.id}
+                data-objectType="buttonClick"
+                variant="contained" onClick={_ => updatePIIMeta()}>
                     Add
                 </Button>
             </DialogActions>

@@ -13,6 +13,7 @@ import IconButtonWithTips from 'components/IconButtonWithTips';
 import { DownloadOutlined } from '@ant-design/icons';
 import { updateJSONSchema } from 'services/json-schema';
 import { downloadJsonFile } from 'utils/downloadUtils';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const Final = ({ handleNext, handleBack, index, master }: any) => {
     const storeState: any = useSelector((state: any) => state);
@@ -70,7 +71,13 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
-                            <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
+                            <Button 
+                            id="button"
+                            data-edataId={interactIds.dataset.create.publish}
+                            data-edataType="INTERACT"
+                            data-objectId={interactIds.object.id}
+                            data-objectType="buttonClick"
+                            variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>
                         </AnimateButton>
