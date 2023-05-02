@@ -12,6 +12,7 @@ import { Avatar } from '@mui/material';
 import { navigateToGrafana } from 'services/grafana';
 import { useTheme } from '@mui/material';
 import grafanaIcon from 'assets/images/icons/grafana_icon.svg';
+import { pageIds } from 'data/telemetry/pageIds';
 
 const MetricsDetails = (props: any) => {
     const theme = useTheme();
@@ -62,11 +63,15 @@ const MetricsDetails = (props: any) => {
     const renderGrafanaIcon = () => {
         const link = _.get(metadata, 'links.grafana.link')
         if (!link) return null;
-        return <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
-            <IconButton color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
+        return (
+            <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
+            <IconButton 
+            id="grafana" data-edataId={pageIds.metrics.infra} data-edataType="INTERACT" data-edataVersion="1.5.0"
+            color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
                 <Avatar alt="Gradana" src={grafanaIcon} />
             </IconButton>
         </Tooltip>
+        );
     }
 
     return (

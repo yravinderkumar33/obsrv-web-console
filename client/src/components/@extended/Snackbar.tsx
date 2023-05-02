@@ -13,6 +13,7 @@ import { CloseOutlined } from '@ant-design/icons';
 
 import { KeyedObject, RootStateProps } from 'types/root';
 import { closeSnackbar } from 'store/reducers/snackbar';
+import { interactIds } from 'data/telemetry/interactIds';
 
 
 function TransitionSlideLeft(props: SlideProps) {
@@ -68,10 +69,22 @@ const Snackbar = () => {
                     TransitionComponent={animation[transition]}
                     action={
                         <>
-                            <Button color="secondary" size="small" onClick={handleClose}>
+                            <Button 
+                            id="button"
+                            data-edataId={interactIds.button.snackbar.undo}
+                            data-edataType="INTERACT"
+                            data-objectId={interactIds.object.id}
+                            data-objectType={interactIds.button}
+                            color="secondary" size="small" onClick={handleClose}>
                                 UNDO
                             </Button>
-                            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose} sx={{ mt: 0.25 }}>
+                            <IconButton
+                            id="iconButton"
+                            data-edataId={interactIds.button.snackbar.close}
+                            data-edataType="INTERACT"
+                            data-objectId={interactIds.object.id}
+                            data-objectType={interactIds.button}
+                            size="small" aria-label="close" color="inherit" onClick={handleClose} sx={{ mt: 0.25 }}>
                                 <CloseOutlined />
                             </IconButton>
                         </>
@@ -93,12 +106,23 @@ const Snackbar = () => {
                         action={
                             <>
                                 {actionButton !== false && (
-                                    <Button color={alert.color} size="small" onClick={handleClose}>
+                                    <Button
+                                    id="button"
+                                    data-edataId={interactIds.button.snackbar.undo}
+                                    data-edataType="INTERACT"
+                                    data-objectId={interactIds.object.id}
+                                    data-objectType={interactIds.button}
+                                     color={alert.color} size="small" onClick={handleClose}>
                                         UNDO
                                     </Button>
                                 )}
                                 {close !== false && (
                                     <IconButton
+                                    id="iconButton"
+                                    data-edataId={interactIds.button.snackbar.close}
+                                    data-edataType="INTERACT"
+                                    data-objectId={interactIds.object.id}
+                                    data-objectType={interactIds.button}
                                         sx={{ mt: 0.25 }}
                                         size="small"
                                         aria-label="close"

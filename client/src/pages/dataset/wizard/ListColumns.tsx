@@ -24,6 +24,7 @@ import { CardTitle, GenericCard } from 'components/styled/Cards';
 import WizardNavigator from './components/WizardNavigator';
 import { resetDataTypeResolve, updateDataType } from './utils/dataTypeUtil';
 import { renderActionsCell, renderColumnCell, renderDataTypeCell, renderRequiredCell } from './utils/renderCells';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
