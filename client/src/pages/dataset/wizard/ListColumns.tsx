@@ -177,8 +177,10 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     );
 
     const handleDownloadButton = () => {
-        const data = updateJSONSchema(jsonSchema, flattenedData);
-        downloadJsonFile(data, 'json-schema');
+        if (jsonSchema && flattenedData) {
+            const data = updateJSONSchema(jsonSchema, flattenedData);
+            downloadJsonFile(data, 'json-schema');
+        }
     }
 
     const [skipPageReset, setSkipPageReset] = useState(false);
