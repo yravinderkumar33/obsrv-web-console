@@ -32,15 +32,12 @@ const App = () => {
             objectversion
         })
       };
-      console.log('ELEMENT TARGET', target);
-      console.log('ELEMENT DATASET', target.dataset);
       if(target.hasAttribute('id')){  
       telemetry.interact(edata, object);
       }
   }
 
   useEffect(() => { 
-    console.log('LOCATION CHANGE', location);
     const { hash, key, pathname, search, state} = location;
     const impressionData = {
       id: key,

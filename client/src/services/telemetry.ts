@@ -28,10 +28,6 @@ const getOptions = (data?: Object) => {
 class TelemetryService {
   private static instance: TelemetryService;
 
-  constructor() {
-    //Telemetry.initialize();
-  }
-
   public static getInstance(): TelemetryService {
     if (!TelemetryService.instance) {
       TelemetryService.instance = new TelemetryService();
@@ -87,13 +83,7 @@ class TelemetryService {
     options.ets = currentTime;
     options.object = object;
     options.edata = impressionData;
-    // if (options.edata) {
-    //   options.object = {
-    //     id: impressionData.id,
-    //     type: 'obsrv',
-    //     ver: '1.0.0'
-    //   };
-    // }
+   
     const finalData = options;
     console.log('Telemetry.impression', JSON.stringify(finalData));
     // if (Telemetry.initialized) {
@@ -105,20 +95,6 @@ class TelemetryService {
     //     uri: data.uri
     //   };
     //   //Telemetry.impression(impressionData, options);
-    // }
-  }
-
-  public log(logData: ILogData) {
-    console.log('Telemetry.log', JSON.stringify(logData));
-    // if (Telemetry.initialized) {
-    //   const options = getOptions(logData);
-    //   const data = {
-    //     type: logData.type || 'api_call',
-    //     level: logData.level || '',
-    //     message: logData.message || ''
-    //   };
-
-    //   //Telemetry.log(data, options);
     // }
   }
 }
