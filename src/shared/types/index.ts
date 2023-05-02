@@ -3,6 +3,7 @@ export interface IRoute {
   routes?: IRoute[];
   method?: string;
   middlewares?: Function[];
+  pathPrefix?: string
 }
 
 export interface IController {

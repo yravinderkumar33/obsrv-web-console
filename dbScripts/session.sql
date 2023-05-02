@@ -9,21 +9,21 @@ ALTER TABLE "obsrv.user_session" ADD CONSTRAINT "session_pkey" PRIMARY KEY ("sid
 
 CREATE INDEX "IDX_session_expire" ON "obsrv.user_session" ("expire");
 
-CREATE TABLE IF NOT EXISTS "obsrv.access_tokens" (
+CREATE TABLE IF NOT EXISTS "obsrv.oauth_access_tokens" (
   id VARCHAR(255) PRIMARY KEY,
   user_id VARCHAR(255),
   client_id VARCHAR(255),
   created_on TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS "obsrv.refresh_tokens" (
+CREATE TABLE IF NOT EXISTS "obsrv.oauth_refresh_tokens" (
   id VARCHAR(255) PRIMARY KEY,
   user_id VARCHAR(255),
   client_id VARCHAR(255),
   created_on TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS "obsrv.authorization_codes" (
+CREATE TABLE IF NOT EXISTS "obsrv.oauth_authorization_codes" (
   id VARCHAR(255) PRIMARY KEY,
   client_id VARCHAR(255),
   redirect_uri VARCHAR(255),
@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS "obsrv.authorization_codes" (
   created_on TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS "obsrv.clients" (
+CREATE TABLE IF NOT EXISTS "obsrv.oauth_clients" (
   id VARCHAR(255) PRIMARY KEY,
   name VARCHAR(255),
   client_id VARCHAR(255) UNIQUE,
@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS "obsrv.clients" (
   last_updated_on TIMESTAMP NULL
 );
 
- CREATE TABLE IF NOT EXISTS "obsrv.users" (
+ CREATE TABLE IF NOT EXISTS "obsrv.oauth_users" (
   id VARCHAR(255) PRIMARY KEY,
   user_name VARCHAR(255) UNIQUE,
   password VARCHAR(255),
