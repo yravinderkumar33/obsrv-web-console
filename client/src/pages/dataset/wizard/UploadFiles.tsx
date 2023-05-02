@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 import PasteData from './PasteData';
 import { readJsonFileContents } from 'services/utils';
 import { error, success } from 'services/toaster';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const tabProps = (index: number) => ({ id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` });
 
@@ -85,8 +86,18 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema 
                     <Box sx={{ width: '100%' }}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs value={tabIndex} onChange={handleTabChange} centered>
-                                <Tab label={allowSchema ? "Upload JSON Data/Schema" : "Upload JSON Data"}  {...tabProps(0)} />
-                                <Tab label={allowSchema ? "Paste/Edit JSON Data/Schema" : "Paste/Edit JSON Data"}  {...tabProps(1)} />
+                                <Tab
+                                data-edataId={interactIds.schema.upload}
+                                data-edataType="CLICK"
+                                data-objectId={interactIds.object.id} 
+                                data-objectType="dataset"
+                                label={allowSchema ? "Upload JSON Data/Schema" : "Upload JSON Data"}  {...tabProps(0)} />
+                                <Tab 
+                                data-edataId={interactIds.schema.edit}
+                                data-edataType="CLICK"
+                                data-objectId={interactIds.object.id} 
+                                data-objectType="dataset"
+                                label={allowSchema ? "Paste/Edit JSON Data/Schema" : "Paste/Edit JSON Data"}  {...tabProps(1)} />
                             </Tabs>
                         </Box>
                         <TabPanel value={tabIndex} index={0}>

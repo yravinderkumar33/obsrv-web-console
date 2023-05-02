@@ -4,6 +4,7 @@ import { metricsMetadata } from 'data/metrics';
 import { useState } from 'react';
 import MetricsDetails from './details';
 import ClusterStatus from 'sections/widgets/Cluster';
+import { interactIds } from 'data/telemetry/interactIds';
 
 function Panel(props: any) {
     const { children, value, index, id, ...other } = props;
@@ -33,11 +34,17 @@ const MetricsPanel = () => {
                 <Grid item xs={12} id="tabSectionStart">
                     <Box sx={{ width: '100%' }}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="metrics tabs">
+                            <Tabs 
+                            variant="fullWidth" value={value} onChange={handleChange} aria-label="metrics tabs">
                                 {metricsMetadata.map((metric, index) => {
                                     const { menuIcon, id, primaryLabel } = metric;
                                     const MenuIcon = menuIcon
-                                    return <Tab label={primaryLabel} id={id} icon={<MenuIcon />} iconPosition="start" aria-controls={`metrics-tabpanel-${index}`} key={index} />
+                                    return <Tab 
+                                    data-edataId={primaryLabel}
+                                    data-edataType="Click"
+                                    data-objectId={interactIds.object.id}
+                                    data-objectType="Metrics"
+                                    label={primaryLabel} id={id} icon={<MenuIcon />} iconPosition="start" aria-controls={`metrics-tabpanel-${index}`} key={index} />
                                 })}
                             </Tabs>
                         </Box>

@@ -1,24 +1,24 @@
 //import * as Telemetry from '@project-sunbird/telemetry-sdk';
-import { IImpressionData, IInteractData, ILogData } from 'types/telemetry';
+import { IImpressionData, IInteractData } from 'types/telemetry';
 
 const getOptions = (data?: Object) => {
   return {
     eid: '',
     ets: 0,
     ver: '1.0.0',
-    context: {
-      env: 'dev',
-      did: 'deviceId',
-      channel: 'obsrv',
-      pdata: {
-        id: 'dev.obsrv.console',
-        pid: 'obsrv-console',
-        ver: '1.0.0'
-      }
-    },
+    mid: '',
     actor: {
       id: 'userId',
       type: 'client'
+    },
+    context: {
+      env: 'dev',
+      sid: 'sessionId',
+      
+      pdata: {
+        id: 'dev.obsrv.console',
+        ver: '1.0.0'
+      }
     },
     object: {},
     edata: {}

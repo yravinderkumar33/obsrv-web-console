@@ -109,6 +109,10 @@ export const interactIds = {
     add: 'rollup:add:config',
     delete: 'rollup:delete:config'
   },
+  schema: {
+    upload: 'json:schema:upload',
+    edit: 'json:schema:edit'
+  },
   suggestions: {
     optional: 'suggestions:optional',
     required: 'suggestions:required'

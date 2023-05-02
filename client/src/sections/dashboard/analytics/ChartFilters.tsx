@@ -63,11 +63,18 @@ const ApexWithFilters = (props: any) => {
             const color = _.get(filterMeta, 'color') || "primary"
             return <Chip 
                     id={filterMeta.label}
-                    data-edataId={interactIds.chart.filter}
-                    data-edataType="INTERACT"
+                    data-edataId={`${interactIds.chart.filter}:${title}:${filterMeta.label}`}
+                    data-edataType="CLICK"
                     data-objectId={interactIds.object.id}
-                    data-objectType="chart:filter:chip"
-                    label={filterMeta.label} variant={variant} color={color} onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
+                    data-objectType="metric:filter"
+                    label={<div
+                        id={filterMeta.label}
+                        data-edataId={`${interactIds.chart.filter}:${title}:${filterMeta.label}`}
+                        data-edataType="CLICK"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="metric:filter"
+                    >{filterMeta.label}</div>}
+                    variant={variant} color={color} onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
         })
         return <Stack direction="row" spacing={2}>
             {menuItems}

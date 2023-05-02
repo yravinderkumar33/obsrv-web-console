@@ -81,6 +81,11 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
             >
                 <Stack {...(type === DropzopType.standard && { alignItems: 'center' })}>
                     <DropzoneWrapper
+                    id={DropzopType.default}
+                    data-edataId="add:files"
+                    data-edataType="DRAG&DROP"
+                    data-objectId={interactIds.object.id}
+                    data-objectType="dataset"
                         {...getRootProps()}
                         sx={{
                             ...(type === DropzopType.standard && {
@@ -103,9 +108,9 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                     {type === DropzopType.standard && files && files.length > 1 && (
                         <Button
                         data-edataId={interactIds.file.remove.many}
-                        data-edataType="INTERACT"
-                        data-objectId="1.0.0"
-                        data-objectType="button"
+                        data-edataType="Click"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="dataset"
                          variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
                             Remove all
                         </Button>
