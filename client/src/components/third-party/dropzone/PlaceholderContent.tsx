@@ -13,21 +13,19 @@ export default function PlaceholderContent({ type }: { type?: string }) {
                     spacing={2}
                     alignItems="center"
                     justifyContent="center"
-                    direction={{ xs: 'column', md: 'row' }}
+                    direction="row"
                     sx={{ width: 1, textAlign: { xs: 'center', md: 'left' } }}
                 >
-                    <CardMedia component="img" image={UploadCover} sx={{ width: 150 }} />
+                    <CardMedia component="img" image={UploadCover} sx={{ width: 100 }} />
                     <Stack sx={{ p: 3 }} spacing={1}>
-                        <Typography variant="h5">Drag & Drop or Select file</Typography>
-
-                        <Typography color="secondary">
-                            Drop files here or click&nbsp;
-                            <Typography component="span" color="primary" sx={{ textDecoration: 'underline' }}>
-                                browse
+                        <Typography variant="h6" fontWeight={500}>Drag & Drop or {' '}
+                            <Typography component="span" variant="h6" fontWeight={500} color="primary" sx={{ textDecoration: 'underline' }}>
+                                Choose File
                             </Typography>
+                            {' '}to upload
                         </Typography>
 
-                        <Typography color="secondary" variant="subtitle2">Max file size allowed 5mb</Typography>
+                        <Typography color="secondary" variant="subtitle1" textAlign="left">Max file size allowed 5mb</Typography>
                     </Stack>
                 </Stack>
             )}

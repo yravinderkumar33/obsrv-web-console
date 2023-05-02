@@ -10,10 +10,11 @@ interface Props {
     updateMyData: (rowIndex: number, columnId: any, value: any) => void;
     skipPageReset: boolean;
     limitHeight: boolean;
+    tHeadHeight?: number;
 }
 
-function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }: Props) {
-    const tableSx = limitHeight ? { height: '60vh', overflowY: 'scroll' } : {};
+function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, tHeadHeight }: Props) {
+    const tableSx = limitHeight ? { height: '35.563rem', overflowY: 'scroll' } : {};
 
     const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows } = useTable(
         {
@@ -29,7 +30,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
     return (
         <TableContainer sx={tableSx}>
             <Table stickyHeader sx={{ borderCollapse: 'collapse' }} size="small" {...getTableProps()}>
-                <TableHead>
+                <TableHead sx={tHeadHeight ? { height: tHeadHeight } : {}}>
                     {headerGroups.map((headerGroup) => (
                         <TableRow {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map((column: any) => (
@@ -46,7 +47,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
                                     arrow
                                 >
                                     <TableCell sx={{ p: 0.5 }} {...column.getHeaderProps()}>
-                                        {column.render('Header')}{`﹖`}
+                                        <Typography variant="h5" textTransform='capitalize'>{column.render('Header')}</Typography>
                                     </TableCell>
                                 </HtmlTooltip>
                             ))}
@@ -69,16 +70,21 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight }:
                         const isResolved = _.get(row, 'original.resolved') || false;
                         const isCritical = checkForCriticalSuggestion(suggestions);
                         const bgColor = () => {
-                            if (isCritical && !isResolved) return { border: `2px solid #F04134` };
-                            else if (isResolved) return { border: `2px solid #00a854` };
+                            if (isCritical && !isResolved) return { bgcolor: `#FFEEEE` };
+                            else if (isResolved) return { bgcolor: `#EAFBEE` };
                             else return {};
                         }
-
                         return (
-                            <TableRow {...row.getRowProps()} sx={{ ...bgColor() }}>
+                            <TableRow {...row.getRowProps()}>
                                 {
-                                    row.cells.map((cell: any) =>
-                                        <TableCell sx={{ p: 0.5 }} {...cell.getCellProps()}>{cell.render('Cell')}</TableCell>
+                                    row.cells.map((cell: any) => (
+                                        <TableCell
+                                            sx={cell.column.errorBg ? { ...bgColor(), p: 0.5 } : { p: 0.5 }}
+                                            {...cell.getCellProps()}
+                                        >
+                                            {cell.render('Cell')}
+                                        </TableCell>
+                                    )
                                     )
                                 }
                             </TableRow>

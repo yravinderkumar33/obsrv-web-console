@@ -17,7 +17,7 @@ const other: NavItemType = {
             title: <FormattedMessage id="Datasets" />,
             type: 'item',
             url: '/datasets',
-            icon: icons.OrderedListOutlined
+            icon: icons.OrderedListOutlined,
         },
         {
             id: 'newDatasets',

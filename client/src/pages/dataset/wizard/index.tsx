@@ -123,20 +123,8 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
     return (
         <Box>
             {showWizard && stepper()}
-            <MainCard title={null}
-                secondary={
-                    showWizard && <Box display="flex" justifyContent="space-between">
-                        <Button onClick={(_) => resetState()}>
-                            Reset
-                        </Button>
-                        <Button onClick={(_) => handleNext()}>
-                            Skip
-                        </Button>
-                    </Box>
-                }>
-                {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master-dataset" : "dataset"} />}
-                {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
-            </MainCard >
+            {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master-dataset" : "dataset"} />}
+            {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
         </Box>
     );
 };
