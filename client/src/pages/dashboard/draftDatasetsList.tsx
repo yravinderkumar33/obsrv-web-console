@@ -107,7 +107,7 @@ const DraftDatasetsList = ({ datasets }: any) => {
                     const status = _.toLower(row?.status)
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
-                            <IconButton color="primary" size="large" disabled={status !== "ready_to_publish"}>
+                            <IconButton color="primary" size="large" disabled={status !== "ready_for_publish"}>
                                 < PlayCircleOutlined />
                             </IconButton>
                         </Tooltip>

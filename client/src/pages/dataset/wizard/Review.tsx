@@ -23,8 +23,10 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
     const navigate = useNavigate();
 
     const handleDownloadButton = () => {
-        const data = updateJSONSchema(jsonSchema, flattenedData);
-        downloadJsonFile(data, 'json-schema');
+        if (jsonSchema && flattenedData) {
+            const data = updateJSONSchema(jsonSchema, flattenedData);
+            downloadJsonFile(data, 'json-schema');
+        }
     }
 
     const publish = async () => {
