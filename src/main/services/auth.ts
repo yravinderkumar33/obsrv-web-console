@@ -32,8 +32,9 @@ passport.deserializeUser((id: any, done) => {
 
 const verifyClient = (clientId: string, clientSecret: string, done: (error: any, user?: any) => void) => {
     clientService.findByClientId(clientId).then((client: any) => {
+        console.log("verify client", client)
         if (!client) return done(null, false);
-        if (client.clientSecret !== clientSecret) return done(null, false);
+        if (client.client_secret !== clientSecret) return done(null, false);
         return done(null, client);
     }).catch((error: any) => {
         return done(error);
@@ -49,13 +50,13 @@ passport.use(new BearerStrategy(
         try {
             const token = await accessTokenService.find(accessToken);
             if (!token) return done(null, false);
-            if (token.userId) {
-                const user = await userService.findById(token.userId)
+            if (token.user_id) {
+                const user = await userService.findById(token.user_id)
                 if (!user) return done(null, false);
                     //TODO: To keep this simple, restricted scopes are not implemented,
                     done(null, user, { scope: '*' });
             } else {
-                const client = clientService.findByClientId(token.clientId)
+                const client = clientService.findByClientId(token.client_id)
                 if (!client) return done(null, false);
                 //TODO: To keep this simple, restricted scopes are not implemented,
                 done(null, client, { scope: '*' });

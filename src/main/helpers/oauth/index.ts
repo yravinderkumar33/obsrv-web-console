@@ -12,9 +12,13 @@ import { NextFunction, Request, Response } from "express";
 // Create OAuth 2.0 server
 const server = oauth2orize.createServer();
 
-server.serializeClient((client, done) => done(null, client.id));
+server.serializeClient((client, done) => {
+  console.log("serializeClient: ", client)
+  return done(null, client.id)
+});
 
 server.deserializeClient((id, done) => {
+  console.log(`deserializeClient: `, id)
   clientService.findById(id).then((client: any) => {
     done(null, client)
   }).catch((error: any) => {
@@ -25,8 +29,8 @@ server.deserializeClient((id, done) => {
 const issueTokens = async (userId: string, clientId: string) => {
 
   const user = await userService.findById(userId)
-  const accessToken = getUid(256);
-  const refreshToken = getUid(256);
+  const accessToken = getUid(250);
+  const refreshToken = getUid(250);
   await accessTokenService.save(accessToken, userId, clientId)
   await refreshTokenService.save(refreshToken, userId, clientId)
   const params = { username: user.user_name };
@@ -46,17 +50,26 @@ server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, done) => {
 
 
 server.grant(oauth2orize.grant.token((client, user, ares, done) => {
-  issueTokens(user.id, client.clientId)
+  console.log('grant issue token', client, user)
+  issueTokens(user.id, client.client_id).then((data) => {
+    return done(null, data.accessToken, data.params)
+  }).catch((error: any) => {
+    return done(error)
+  })
 }));
 
 
 server.exchange(oauth2orize.exchange.code((client, code, redirectUri, done) => {
+  console.log(`exchange code:`, client, code, redirectUri)
   authorizationService.find(code).then((authCode: any) => {
-    if (client.id !== authCode.clientId) return done(null, false);
-    if (redirectUri !== authCode.redirectUri) return done(null, false);
-    issueTokens(authCode.userId, client.clientId).then((data) => {
-      return done(null, data.accessToken, data.refreshToken)
+    if (client.id !== authCode.client_id) return done(null, false);
+    if (redirectUri !== authCode.redirect_uri) return done(null, false);
+    console.log("will issue token")
+    issueTokens(authCode.user_id, client.client_id).then((data) => {
+      console.log('Token issued.')
+      return done(null, data.accessToken, data.refreshToken, data.params)
     }).catch((error: any) => {
+      console.log(`Issue token error`, error)
       return done(error)
     });
   }).catch((error: any) => {
@@ -122,18 +135,20 @@ server.exchange(oauth2orize.exchange.refreshToken(async (client, oldRefreshToken
 
 export const authorization = [
   login.ensureLoggedIn("/login"),
-  server.authorization(async (clientId, redirectUri, done) => {
-    try {
-      const client = await clientService.findByClientId(clientId)
-
+  server.authorization((clientId, redirectUri, done) => {
+    clientService.findByClientId(clientId).then((client: any) => {
       if (client.redirect_uri != redirectUri) {
         return done(new Error("client redirect uri not matching"))
       }
-      //TODO: Not implementing apporval workflow
-      return done(null, true);
 
-    } catch (error: any) {
+      return done(null, client, redirectUri);
+    }).catch((error: any) => {
       return done(error);
+    })
+  }, (client, user, scope, type, areq, done) => {
+    //TODO: Need to implement apporval workflow
+    if (client.is_trusted) {
+      return done(null, true, null, null)
     }
   })
 ];
@@ -149,15 +164,15 @@ export const token = [
   server.errorHandler(),
 ];
 
-export const ensureLoggedInMiddleware =  (request: Request, response: Response, next: NextFunction) => {
-    if (!request?.session?.passport?.user) {
-      const errorObj = {
-        status: 401,
-        message: "You don't have access to view this resource",
-        responseCode: 'UNAUTHORIZED',
-        errorCode: 'UNAUTHORIZED',
-      };
-      return next(errorObj)
-    }
-    return next();
+export const ensureLoggedInMiddleware = (request: Request, response: Response, next: NextFunction) => {
+  if (!request?.session?.passport?.user) {
+    const errorObj = {
+      status: 401,
+      message: "You don't have access to view this resource",
+      responseCode: 'UNAUTHORIZED',
+      errorCode: 'UNAUTHORIZED',
+    };
+    return next(errorObj)
   }
+  return next();
+}
