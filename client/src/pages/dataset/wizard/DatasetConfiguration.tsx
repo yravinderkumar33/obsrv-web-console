@@ -58,8 +58,10 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
         try {
             const response = await fetchJsonSchema({ data: payload, config: { dataset } });
             dispatch(addState({ id: "jsonSchema", ...response }));
+            return response;
         } catch (err) {
             dispatch(error({ message: "Failed to Upload Data" }));
+            throw err;
         }
     };
 
@@ -71,9 +73,9 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
             if (dataset_id) {
                 dispatch(updateState({ id: pageMeta.pageId, state: { masterId: dataset_id } }));
             }
-            setShowWizard(true);
+            return data;
         } catch (err: any) {
-            dispatch(error({ message: "Failed to create dataset. Please try again later." }));
+            throw err;
         }
     }
 
@@ -85,15 +87,22 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                     uploadToUrl(item.presignedURL, files[index])
                 });
             }
-        } catch (err) { }
+        } catch (err) {
+            throw err;
+        }
     }
 
-    const onSubmit = (config: any) => {
+    const onSubmit = async (config: any) => {
         if ((data || files) && config) {
-            generateJSONSchema(data, config);
-            dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
-            createDraft(config);
-            setShowWizard(true);
+            try {
+                await uploadFiles(files);
+                await generateJSONSchema(data, config);
+                dispatch(addState({ id: pageMeta.pageId, state: { data, files, config, datasetType } }));
+                await createDraft(config);
+                setShowWizard(true);
+            } catch (err) {
+                dispatch(error({ message: "Failed to upload schema" }));
+            }
         } else {
             dispatch(error({ message: "Please fill the required fields" }));
         }
