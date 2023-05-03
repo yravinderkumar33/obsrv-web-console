@@ -2,9 +2,10 @@ import { Box, Chip, ChipProps, Stack, Typography, Paper, Tooltip } from '@mui/ma
 import MainCard from 'components/MainCard';
 import { RiseOutlined, FallOutlined } from '@ant-design/icons';
 import globalConfig from 'data/initialConfig';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const AnalyticsDataCard = (props: any) => {
-  const { color = 'primary', title, count, percentage, isLoss, children, description = '' } = props;
+  const { color = 'primary', title, count, percentage, isLoss, children, description = '', id } = props;
   return <Paper elevation={globalConfig.elevation} sx={{ height: '100%' }}>
     <Tooltip title={description}>
       <MainCard content={false} style={{ height: '100%' }}>
@@ -19,6 +20,9 @@ const AnalyticsDataCard = (props: any) => {
               </Typography>}
               {percentage && (
                 <Chip
+                  data-edataId={interactIds.chart.node}
+                  data-objectid={`Node Status: ${percentage}%`}
+                  data-objecttype={id}
                   variant="combined"
                   color={color}
                   icon={

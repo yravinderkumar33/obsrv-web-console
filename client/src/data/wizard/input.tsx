@@ -36,11 +36,9 @@ const dataFormatQues = {
             description: "Select this option if you wish to send multiple events at once for this dataset.",
             component: <>
                 <Button
-                id={interactIds.button.download}
                 data-edataid={interactIds.button.download}
-                data-edataType="INTERACT"
-                data-objectId="1.0.0"
-                data-objectType="button"
+                data-objectid="dataset:download:batchEvents"
+                data-objecttype="wizard:dataset"
                 onClick={_ => downloadBatchConfig()} variant="contained" startIcon={<DownloadOutlined />}>Download Sample Batch Event</Button>
             </>
         }

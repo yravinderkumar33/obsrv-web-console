@@ -120,10 +120,9 @@ const AddTransformationExpression = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        data-edataId={interactIds.button.icon.menu.close}
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="icon:close"
+                        data-edataid={interactIds.button.icon.menu.close}
+                        data-objectid="closeOutlined:addTransformation"
+                        data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
                             position: 'absolute',
@@ -143,16 +142,16 @@ const AddTransformationExpression = (props: any) => {
                         value && value.transformation === 'custom' && value.expression &&
                         <PreviewTransformation fieldName={value.column} expression={value.expression} />
                     }
-                    {_.get(value, 'transformation') === 'custom' && <Box><Button onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button></Box>}
+                    {_.get(value, 'transformation') === 'custom' && <Box><Button data-edataid="jsonata:editor:open"
+                        data-objectid="jsonata"
+                        data-objectType="dataset" onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button></Box>}
                 </Stack>
             </DialogContent>
             <DialogActions>
                 <Button 
-                id="button:add:transformation"
-                data-edataId={interactIds.dataset.edit.add.transformation}
-                data-edataType="INTERACT"
-                data-objectId={interactIds.object.id}
-                data-objectType="dataset:add:transformation"
+                data-edataid={interactIds.dataset.edit.add.transformation}
+                data-objectid={value}
+                data-objecttype="dataset"
                 variant="contained" autoFocus onClick={_ => updateTransformation()}>
                     Add
                 </Button>

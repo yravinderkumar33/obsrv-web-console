@@ -85,17 +85,15 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema 
                     <Box sx={{ width: '100%' }}>
                         <Tabs value={tabIndex} onChange={handleTabChange} variant="fullWidth">
                             <Tab
-                                data-edataId={interactIds.schema.upload}
-                                data-edataType="CLICK"
-                                data-objectId={interactIds.object.id}
-                                data-objectType="dataset"
+                                data-edataid={interactIds.schema.upload}
+                                data-objectid="uploadJSON"
+                                data-objecttype="dataset"
                                 label={allowSchema ? "Upload JSON Data/Schema" : "Upload JSON Data"}
                                 {...tabProps(0)} />
                             <Tab
-                                data-edataId={interactIds.schema.edit}
-                                data-edataType="CLICK"
-                                data-objectId={interactIds.object.id}
-                                data-objectType="dataset"
+                                data-edataid={interactIds.schema.edit}
+                                data-objectid="editJSON"
+                                data-objecttype="dataset"
                                 label={allowSchema ? "Paste/Edit JSON Data/Schema" : "Paste/Edit JSON Data"}
                                 {...tabProps(1)} />
                         </Tabs>

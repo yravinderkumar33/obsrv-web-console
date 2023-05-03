@@ -52,6 +52,9 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                     Review
                 </Typography>
                 <IconButtonWithTips
+                    data-edataid={interactIds.dataset.download}
+                    data-objectid="downloadSchema"
+                    data-objecttype="dataset"
                     tooltipText="Download Schema"
                     icon={<DownloadOutlined />}
                     handleClick={handleDownloadButton}
@@ -66,17 +69,19 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                 <Grid item xs={12}>
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
-                            <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                            <Button
+                            data-edataid={interactIds.dataset.create.publish}
+                            data-objectid="dataset:previous"
+                            data-objecttype="dataset"
+                             variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                 Previous
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
                             <Button 
-                            id="button"
-                            data-edataId={interactIds.dataset.create.publish}
-                            data-edataType="INTERACT"
-                            data-objectId={interactIds.object.id}
-                            data-objectType="buttonClick"
+                            data-edataid={interactIds.dataset.create.publish}
+                            data-objectid="dataset:save"
+                            data-objecttype="dataset"
                             variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>
