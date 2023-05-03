@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Grid, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material';
+import { Button, Divider, Grid, InputAdornment, InputLabel, OutlinedInput, Stack, Typography } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import IconButton from 'components/@extended/IconButton';
@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux';
 import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
 import { interactIds } from 'data/telemetry/interactIds';
+import Social from './Socials';
 
 const AuthLogin = () => {
   const dispatch = useDispatch();
@@ -103,6 +104,14 @@ const AuthLogin = () => {
                   </Button>
                 </AnimateButton>
               </Grid>
+              <Grid item xs={12}>
+                                <Divider>
+                                    <Typography variant="caption"> Login with</Typography>
+                                </Divider>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Social />
+                            </Grid>
             </Grid>
           </form>
         )}

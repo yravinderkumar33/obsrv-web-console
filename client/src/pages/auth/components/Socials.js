@@ -1,7 +1,7 @@
 
 import { useTheme } from '@mui/material/styles';
 import { useMediaQuery, Button, Stack } from '@mui/material';
-import socialButtons from 'data/login/socialButtons';
+import socialbuttons from 'data/login/socialbuttons';
 
 const Social = () => {
     const theme = useTheme();
@@ -14,7 +14,7 @@ const Social = () => {
             justifyContent={matchDownSM ? 'space-around' : 'space-between'}
             sx={{ '& .MuiButton-startIcon': { mr: matchDownSM ? 0 : 1, ml: matchDownSM ? 0 : -0.5 } }}
         >
-           {socialButtons.map((option) => (
+           {socialbuttons.map((option) => (
                                 <Button
                                             key={option.value}
                                             variant="outlined"
