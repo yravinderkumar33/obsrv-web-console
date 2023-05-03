@@ -47,6 +47,9 @@ const AuthLogin = () => {
                   <InputLabel htmlFor="email-login">User Name</InputLabel>
                   <OutlinedInput
                     id="email-login"
+                    data-edataid={interactIds.button.input.email}
+                    data-objectid="email-login"
+                    data-objecttype="login"
                     type="text"
                     value={values.username}
                     name="username"
@@ -81,7 +84,9 @@ const AuthLogin = () => {
                       <InputAdornment position="end">
                         <IconButton
                           id="input-password"
-                          data-edataId={showPassword ? interactIds.button.input.password.visible : interactIds.button.input.password.invisible}
+                          data-edataid={showPassword ? interactIds.button.input.password.visible : interactIds.button.input.password.invisible}
+                          data-objectid="input-password"
+                          data-objecttype="login"
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}

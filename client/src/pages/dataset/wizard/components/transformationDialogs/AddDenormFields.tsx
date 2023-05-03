@@ -101,11 +101,9 @@ const AddDenormField = (props: any) => {
                 Add Denorm Field
                 {onClose ? (
                     <IconButton
-                        id="iconButton"
-                        data-edataId={interactIds.button.icon.menu.close}
-                        data-edataType="CLICK"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="Button"
+                        data-edataid={interactIds.button.icon.menu.close}
+                        data-objectid="closeOutlined:denormField"
+                        data-objecttype="dataset"
                         aria-label="close"
                         onClick={onClose}
                         sx={{
@@ -126,11 +124,9 @@ const AddDenormField = (props: any) => {
             </DialogContent>
             <DialogActions>
                 <Button 
-                id="button"
-                data-edataId={interactIds.dataset.create.add.denorm}
-                data-edataType="CLICK"
-                data-objectId={interactIds.object.id}
-                data-objectType="button:dataset:field"
+                data-edataid={interactIds.dataset.create.add.denorm}
+                data-objectid={value}
+                data-objecttype="dataset"
                 variant="contained" autoFocus onClick={_ => addField()}>
                     Add Field
                 </Button>

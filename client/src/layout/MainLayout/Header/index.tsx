@@ -21,11 +21,7 @@ const Header = ({ open, handleDrawerToggle }: any) => {
    
             <Toolbar>
                 <IconButton
-                    id=""
-                    data-edataId={!open ? interactIds.button.icon.menu.open : interactIds.button.icon.menu.close}
-                    data-edataType="INTERACT"
-                    data-objectId={interactIds.object.id}
-                    data-objectType="iconButton"
+                    data-edataid={!open ? interactIds.button.icon.menu.open : interactIds.button.icon.menu.close}
                     aria-label="open drawer"
                     onClick={handleDrawerToggle}
                     edge="start"

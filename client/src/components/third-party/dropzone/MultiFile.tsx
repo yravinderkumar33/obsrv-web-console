@@ -76,11 +76,10 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
             >
                 <Stack {...(type === DropzopType.standard && { alignItems: 'center' })}>
                     <DropzoneWrapper
-                    id={DropzopType.default}
-                    data-edataId="add:files"
+                    data-edataid="add:files"
                     data-edataType="DRAG&DROP"
-                    data-objectId={interactIds.object.id}
-                    data-objectType="dataset"
+                    data-objectid={DropzopType.default}
+                    data-objecttype="dataset"
                         {...getRootProps()}
                         sx={{
                             ...(type === DropzopType.standard && {
@@ -102,11 +101,9 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                     </DropzoneWrapper>
                     {type === DropzopType.standard && files && files.length > 1 && (
                         <Button
-                        id={`${DropzopType.standard}:remove:multiple:files`}
-                        data-edataId={interactIds.file.remove.many}
-                        data-edataType="Click"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="dataset"
+                        data-edataid={interactIds.file.remove.many}
+                        data-objectid={`${DropzopType.standard}:remove:multiple:files`}
+                        data-objecttype="dataset"
                          variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
                             Remove all
                         </Button>
@@ -118,11 +115,9 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
             {type !== DropzopType.standard && files && files.length > 0 && (
                 <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ mt: 1.5 }}>
                     <Button
-                    id={`${DropzopType.default}:remove:multiple:files`}
-                    data-edataId={interactIds.file.remove.many}
-                    data-edataType="Click"
-                    data-objectId={interactIds.object.id}
-                    data-objectType="dataset"
+                    data-edataid={interactIds.file.remove.many}
+                    data-objectid={`${DropzopType.default}:remove:multiple:files`}
+                    data-objecttype="dataset"
                     color="inherit" size="small" onClick={onRemoveAll}>
                         Remove all
                     </Button>

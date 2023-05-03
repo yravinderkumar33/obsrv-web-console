@@ -44,10 +44,9 @@ const DatasetCreateEvents = () => {
                 </Grid>
                 <Grid item xs={12} sm={12}>
                     <Button
-                    id="send:events"
-                    data-edataId={interactIds.events.create}
-                    data-edataType="INTERACT"
-                    data-objectId={interactIds.object.id}
+                    data-edataid={interactIds.events.create}
+                    data-objectid="sendEvents"
+                    data-objecttype="dataset"
                     disabled={!data} variant="contained" onClick={(e: any) => pushEvents()}>Send Events</Button>
                 </Grid>
             </Grid>

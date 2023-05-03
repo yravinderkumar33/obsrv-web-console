@@ -84,10 +84,9 @@ const AddNewField = (props: any) => {
                 {onClose ? (
                     <IconButton
                         id="iconButton"
-                        data-edataId={interactIds.button.icon.menu.close}
-                        data-edataType="CLICK"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="icon:close"
+                        data-edataid={interactIds.button.icon.menu.close}
+                        data-objectid="closeOutlined:addNewField"
+                        data-objectType="dataset"
                         aria-label="close"
                         onClick={onClose}
                         sx={{
@@ -110,22 +109,18 @@ const AddNewField = (props: any) => {
                     }
                     <Box>
                         <Button 
-                        id="jsonata:editor"
-                        data-edataId="jsonata:editor:open"
-                        data-edataType="CLICK"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="dataset:jsonata"
+                        data-edataid="jsonata:editor:open"
+                        data-objectid="jsonata"
+                        data-objectType="dataset"
                         onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
                     </ Box>
                 </ Stack>
             </DialogContent>
             <DialogActions>
                 <Button 
-                id="update:button"
-                data-edataId={interactIds.dataset.edit.add.transformation}
-                data-edataType="CLICK"
-                data-objectId={interactIds.object.id}
-                data-objectType="dataset:transformation"
+                data-edataid={interactIds.dataset.edit.add.transformation}
+                data-objectid={value}
+                data-objectType="dataset"
                 variant="contained" onClick={_ => updateAdditionalField()}>
                     Add
                 </Button>

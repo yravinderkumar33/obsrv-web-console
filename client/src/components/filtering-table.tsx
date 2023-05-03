@@ -66,7 +66,9 @@ function FilteringTable({ columns, data, title = '' }: any) {
                             setGlobalFilter={setGlobalFilter}
                         />
                         <Button
-                        data-edataId={interactIds.dataset.create.add.transformation} data-edataType="INTERACT" data-objectId="1.0.0" data-objectType="addDataset"
+                        data-edataid={interactIds.dataset.create.add.transformation} 
+                        data-objectid="dataset:filter" 
+                        data-objecttype="dataset"
                         sx={{ mx: 1 }} variant="contained" onClick={e => navigate('/dataset/new')}>Add Dataset</Button>
                     </Grid>
 

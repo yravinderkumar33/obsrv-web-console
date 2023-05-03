@@ -67,11 +67,9 @@ const InputAccordion = (props: any) => {
                     {
                         actions.map((action: any) => {
                             return <Button
-                            id="input-button"
-                            data-edataId={`dataset:transformation:input:${action?.label}`}
-                            data-edataType="CLICK"
-                            data-objectId={interactIds.object.id}
-                            data-objectType="button"
+                            data-edataid={`dataset:transformation:input`}
+                            data-objectid={`input:${action?.label}`}
+                            data-objecttype="dataset"
                              key="one" variant={_transformationType === action?.value ? 'contained' : 'outlined'}>{action?.label}</Button>
                         })
                     }
@@ -82,11 +80,9 @@ const InputAccordion = (props: any) => {
             Header: 'Delete',
             Cell: ({ value, cell }: any) => {
                 return <IconButton 
-                id="icon-button"
-                data-edataId="delete"
-                data-edataType="CLICK"
-                data-objectId={interactIds.object.id}
-                data-objectType="iconButton"
+                data-edataid={interactIds.dataset.edit.delete.transformation}
+                data-objectid="deleteOutline"
+                data-objecttype="dataset"
                 variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
                     <DeleteOutlined />
                 </IconButton>
@@ -115,11 +111,9 @@ const InputAccordion = (props: any) => {
             {renderTable()}
             <Grid item xs={12}>
                 <Button 
-                id="button"
-                data-edataId={`input:${label}`}
-                data-edataType="CLICK"
-                data-objectId={interactIds.object.id}
-                data-objectType="open:dialog"
+                data-edataid={`dataset:input:${label}`}
+                data-objectid={label}
+                data-objecttype="dataset"
                 variant="outlined" onClick={_ => setDialogOpen(true)} >{label}</Button>
             </Grid>
             <Grid item xs={12}>

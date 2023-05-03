@@ -49,7 +49,7 @@ const MetricsDetails = (props: any) => {
                 return <Grid container rowSpacing={1} columnSpacing={1} key={`chart-${index}`} marginBottom={1}>
                     {
                         _.map(metadata, (meta, index) => {
-                            const { chart, description } = meta;
+                            const { chart, description} = meta;
                             return <Grid item xs={xs} sm={sm} md={md} lg={lg} key={`${index}-${Math.random()}`}>
                                 {React.cloneElement(chart, { description })}
                             </Grid>
@@ -62,11 +62,12 @@ const MetricsDetails = (props: any) => {
 
     const renderGrafanaIcon = () => {
         const link = _.get(metadata, 'links.grafana.link')
+        const id = _.get(metadata, 'id');
         if (!link) return null;
         return (
             <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
             <IconButton 
-            id="grafana" data-edataId={pageIds.metrics.infra} data-edataType="INTERACT" data-edataVersion="1.5.0"
+            data-edataid={pageIds.metrics.infra}
             color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
                 <Avatar alt="Gradana" src={grafanaIcon} />
             </IconButton>
