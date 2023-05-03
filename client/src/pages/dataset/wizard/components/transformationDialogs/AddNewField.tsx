@@ -13,7 +13,7 @@ import { error } from "services/toaster";
 import PreviewTransformation from "./PreviewTransform";
 
 export const openJsonAtaEditor = () => {
-    window.open('https://try.jsonata.org/', '__blank');
+    window.open('https://try.jsonata.org/', '__blank', 'noopener,noreferrer');
 }
 
 const AddNewField = (props: any) => {
@@ -112,7 +112,8 @@ const AddNewField = (props: any) => {
                     Add
                 </Button>
             </DialogActions>
-        </Box></>
+        </Box>
+    </>
 }
 
 export default AddNewField;
