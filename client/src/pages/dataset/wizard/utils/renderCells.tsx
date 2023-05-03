@@ -10,6 +10,7 @@ import {
     DeleteOutlined, InfoCircleOutlined,
 } from '@ant-design/icons';
 import * as _ from "lodash";
+import HtmlTooltip from "components/HtmlTooltip";
 
 const renderColumnCell = ({
     cell, setFlattenedData, persistState, value,
@@ -55,25 +56,23 @@ const renderColumnCell = ({
                 }
             </Box>
             {row.description &&
-                <Typography
-                    variant="body3"
-                    color="secondary"
-                    m={1}
-                    sx={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: "2",
-                        WebkitBoxOrient: "vertical",
-                        minWidth: 200,
-                        height: 40,
-                        maxHeight: 40,
-                        whiteSpace: 'nowrap',
-                    }}
-                    onClick={editDescription}
-                >
-                    {row.description}
-                </Typography>
+                <HtmlTooltip title={row.description} placement="top-start" arrow>
+                    <Typography
+                        variant="body3"
+                        color="secondary"
+                        m={1}
+                        sx={{
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            display: "-webkit-box",
+                            "-webkit-line-clamp": '2',
+                            "-webkit-box-orient": "vertical"
+                        }}
+                        onClick={editDescription}
+                    >
+                        {row.description}
+                    </Typography>
+                </HtmlTooltip>
             }
             <Dialog open={edit} onClose={handleClose}>
                 <DialogTitle
