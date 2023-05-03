@@ -7,10 +7,11 @@ export default {
         const authInfo = request?.authInfo as any
         const data = {
             id: user?.id,
-            name: user?.name,
+            name: user?.user_name,
             scope: authInfo?.scope,
-            email: user?.email
+            email: user?.email_address
         }
+        console.log(`user info:`, data, user)
         response.json(data);
     },
 };
