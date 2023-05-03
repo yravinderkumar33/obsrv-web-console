@@ -88,10 +88,9 @@ const AddPIIDialog = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        data-edataId={interactIds.button.icon.menu.close}
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="buttonClick"
+                        data-edataid={interactIds.button.icon.menu.close}
+                        data-objectid="closeOutlined:addPII"
+                        data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
                             position: 'absolute',
@@ -111,11 +110,9 @@ const AddPIIDialog = (props: any) => {
             </DialogContent>
             <DialogActions>
                 <Button 
-                id="button:add:pii"
-                data-edataId={interactIds.pii.add}
-                data-edataType="INTERACT"
-                data-objectId={interactIds.object.id}
-                data-objectType="buttonClick"
+                data-edataid={interactIds.pii.add}
+                data-objectid={value}
+                data-objecttype="dataset"
                 variant="contained" onClick={_ => updatePIIMeta()}>
                     Add
                 </Button>

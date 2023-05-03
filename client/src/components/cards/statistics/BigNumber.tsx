@@ -30,11 +30,10 @@ const BigNumberCard = ({ primary, secondary, iconPrimary, color, onClick }: Metr
   const primaryIcon = iconPrimary ? <IconPrimary fontSize="large" /> : null;
 
   return (
-    <Card 
-    data-edataId={interactIds.card.info}
-    data-edataType="INTERACT"
-    data-objectId={interactIds.object.id}
-    data-objectType={interactIds.card}
+    <Card
+    data-edataid={interactIds.card.info}
+    data-objectid={`metrics: ${primary} ${secondary}`}
+    data-objecttype="metrics"
     elevation={0} sx={{ background: color, position: 'relative', color: '#fff' }} onClick={onClick}>
       <CardContent>
         <IconWrapper>{primaryIcon}</IconWrapper>

@@ -59,24 +59,21 @@ const ConditionalCheckboxForm = (props: any) => {
         switch (type) {
             case "checkbox":
                 return <Checkbox 
-                id="button:checkbox"
-                data-edataId={interactIds.dataset.create.add.transformation}
-                data-edataType="CLICK"
-                data-objectType={`checkbox-${value}`}
+                data-edataid={interactIds.dataset.create.add.transformation}
+                data-objectid={`buttonCheckbox-${value}`}
+                data-objecttype="dataset"
                 name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
             case "radio":
                 return <Radio 
-                id="button:radio"
-                data-edataId={interactIds.dataset.create.add.transformation}
-                data-edataType="CLICK"
-                data-objectType={`radio-${value}`}
+                data-edataid={interactIds.dataset.create.add.transformation}
+                data-objectid={`buttonRadio-${value}`}
+                data-objecttype="dataset"
                 name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
             default:
                 return <Checkbox
-                id="button:checkbox"
-                data-edataId={interactIds.dataset.create.add.transformation}
-                data-edataType="CLICK"
-                data-objectType={`checkbox-${value}`}
+                data-edataid={interactIds.dataset.create.add.transformation}
+                data-objectid={`buttonCheckbox-${value}`}
+                data-objecttype="dataset"
                 name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
         }
     }

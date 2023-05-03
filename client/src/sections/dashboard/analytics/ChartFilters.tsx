@@ -62,17 +62,13 @@ const ApexWithFilters = (props: any) => {
             const variant = (_.get(transformedFilter, 'value') === filter) ? "filled" : "outlined";
             const color = _.get(filterMeta, 'color') || "primary"
             return <Chip 
-                    id={filterMeta.label}
-                    data-edataId={`${interactIds.chart.filter}:${title}:${filterMeta.label}`}
-                    data-edataType="CLICK"
-                    data-objectId={interactIds.object.id}
-                    data-objectType="metric:filter"
+                    data-edataid={interactIds.chart.filter}
+                    data-objectid={`${title}:${filterMeta.label}`}
+                    data-objecttype="chart"
                     label={<div
-                        id={filterMeta.label}
-                        data-edataId={`${interactIds.chart.filter}:${title}:${filterMeta.label}`}
-                        data-edataType="CLICK"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="metric:filter"
+                        data-edataid={interactIds.chart.filter}
+                        data-objectid={`${title}:${filterMeta.label}`}
+                        data-objecttype="chart"
                     >{filterMeta.label}</div>}
                     variant={variant} color={color} onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
         })

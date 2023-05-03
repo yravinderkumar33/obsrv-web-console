@@ -104,10 +104,9 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                     </Typography>
                                     <Chip
                                         id="chip"
-                                        data-edataId={interactIds.suggestions.required}
-                                        data-edataType="INTERACT"
-                                        data-objectId={interactIds.object.id}
-                                        data-objectType="chipClick"
+                                        data-edataid={interactIds.suggestions.required}
+                                        data-objectid={requiredFilter}
+                                        data-objecttype="dataset"
                                         onDelete={requiredFilter === "true" ? () => setRequiredFilter('') : undefined}
                                         onClick={() => setRequiredFilter("true")}
                                         label={'Review all fields marked as required'}
@@ -122,10 +121,9 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                     </Typography>
                                     <Chip
                                         id="chip"
-                                        data-edataId={interactIds.suggestions.optional}
-                                        data-edataType="INTERACT"
-                                        data-objectId={interactIds.object.id}
-                                        data-objectType="chipClick"
+                                        data-edataid={interactIds.suggestions.required}
+                                        data-objectid={requiredFilter}
+                                        data-objecttype="dataset"
                                         onDelete={requiredFilter === "false" ? () => setRequiredFilter('') : undefined}
                                         onClick={() => setRequiredFilter("false")}
                                         label={'Review all fields marked as optional'}

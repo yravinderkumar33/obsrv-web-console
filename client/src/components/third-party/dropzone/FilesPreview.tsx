@@ -82,10 +82,7 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
 
                         {onRemove && (
                             <IconButton
-                                data-edataId={interactIds.file.remove.one}
-                                data-edataType="INTERACT"
-                                data-objectId="1.0.0"
-                                data-objectType="iconButton"
+                                data-edataid={interactIds.file.remove.one}
                                 size="small"
                                 color="error"
                                 shape="rounded"

@@ -72,22 +72,18 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, default
                 <Stack direction="row" justifyContent="space-between">
                     <AnimateButton>
                         <Button 
-                        id="section:config:button"
-                        data-edataId="previous:section"
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="buttonClick"
+                        data-edataid="section:config"
+                        data-objectid="previousStep"
+                        data-objecttype="dataset"
                         variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                             Previous
                         </Button>
                     </AnimateButton>
                     <AnimateButton>
                         <Button 
-                        id="section:config:button"
-                        data-edataId="next:section"
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="buttonClick"
+                        data-edataid="section:config"
+                        data-objectid="nextStep"
+                        data-objecttype="dataset"
                         variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
                             Next
                         </Button>

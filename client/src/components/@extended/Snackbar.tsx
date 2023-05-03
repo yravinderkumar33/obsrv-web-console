@@ -71,19 +71,17 @@ const Snackbar = () => {
                         <>
                             <Button 
                             id="button"
-                            data-edataId={interactIds.button.snackbar.undo}
-                            data-edataType="INTERACT"
-                            data-objectId={interactIds.object.id}
-                            data-objectType={interactIds.button}
+                            data-edataid={interactIds.button.snackbar.undo}
+                            data-objectid="snackbar:undo"
+                            data-objecttype="snackbar"
                             color="secondary" size="small" onClick={handleClose}>
                                 UNDO
                             </Button>
                             <IconButton
                             id="iconButton"
-                            data-edataId={interactIds.button.snackbar.close}
-                            data-edataType="INTERACT"
-                            data-objectId={interactIds.object.id}
-                            data-objectType={interactIds.button}
+                            data-edataid={interactIds.button.snackbar.close}
+                            data-objectid="snackbar:close:icon"
+                            data-objecttype="snackbar"
                             size="small" aria-label="close" color="inherit" onClick={handleClose} sx={{ mt: 0.25 }}>
                                 <CloseOutlined />
                             </IconButton>
@@ -108,10 +106,9 @@ const Snackbar = () => {
                                 {actionButton !== false && (
                                     <Button
                                     id="button"
-                                    data-edataId={interactIds.button.snackbar.undo}
-                                    data-edataType="INTERACT"
-                                    data-objectId={interactIds.object.id}
-                                    data-objectType={interactIds.button}
+                                    data-edataid={interactIds.button.snackbar.undo}
+                                    data-objectid="snackbar:undo"
+                                    data-objecttype="snackbar"
                                      color={alert.color} size="small" onClick={handleClose}>
                                         UNDO
                                     </Button>
@@ -119,10 +116,9 @@ const Snackbar = () => {
                                 {close !== false && (
                                     <IconButton
                                     id="iconButton"
-                                    data-edataId={interactIds.button.snackbar.close}
-                                    data-edataType="INTERACT"
-                                    data-objectId={interactIds.object.id}
-                                    data-objectType={interactIds.button}
+                                    data-edataid={interactIds.button.snackbar.close}
+                                    data-objectid="snackbar:close:icon"
+                                    data-objecttype="snackbar"
                                         sx={{ mt: 0.25 }}
                                         size="small"
                                         aria-label="close"

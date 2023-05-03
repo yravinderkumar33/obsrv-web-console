@@ -34,11 +34,9 @@ function Error404() {
               The requested page does not exists.
             </Typography>
             <Button 
-            id="button:404"
-            data-edataId="button:error"
-            data-edataType="CLICK"
-            data-objectId={interactIds.object.id}
-            data-objectType="404"
+            data-edataid="button:home"
+            data-objectid={config.defaultPath}
+            data-objecttype="404"
             component={Link} to={config.defaultPath} variant="contained">
               Back To Home
             </Button>

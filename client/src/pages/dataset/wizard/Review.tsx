@@ -52,6 +52,9 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                     Review
                 </Typography>
                 <IconButtonWithTips
+                    data-edataid={interactIds.dataset.download}
+                    data-objectid="downloadSchema"
+                    data-objecttype="dataset"
                     tooltipText="Download Schema"
                     icon={<DownloadOutlined />}
                     handleClick={handleDownloadButton}
@@ -67,22 +70,18 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
                             <Button
-                            id="dataset:previous"
-                            data-edataId={interactIds.dataset.create.publish}
-                            data-edataType="CLICK"
-                            data-objectId={interactIds.object.id}
-                            data-objectType="dataset:review"
+                            data-edataid={interactIds.dataset.create.publish}
+                            data-objectid="dataset:previous"
+                            data-objecttype="dataset"
                              variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                 Previous
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
                             <Button 
-                            id="dataset:save"
-                            data-edataId={interactIds.dataset.create.publish}
-                            data-edataType="CLICK"
-                            data-objectId={interactIds.object.id}
-                            data-objectType="dataset:review"
+                            data-edataid={interactIds.dataset.create.publish}
+                            data-objectid="dataset:save"
+                            data-objecttype="dataset"
                             variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>

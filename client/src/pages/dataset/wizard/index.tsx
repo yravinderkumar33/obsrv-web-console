@@ -2,7 +2,7 @@ import { useState, ReactNode, useEffect } from 'react';
 import { Button, Step, Stepper, StepLabel, Typography, Box } from '@mui/material';
 import MainCard from 'components/MainCard';
 import DatasetConfiguration from './DatasetConfiguration';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { reset } from 'store/reducers/wizard';
 import ListColumns from './ListColumns';
 import Review from './Review';
@@ -126,32 +126,6 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
             {showWizard && stepper()}
             {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master-dataset" : "dataset"} />}
             {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
-            <MainCard title={null}
-                secondary={
-                    showWizard && <Box display="flex" justifyContent="space-between">
-                        <Button
-                        id="reset-button"
-                        data-edataId="dataset:reset:button"
-                        data-edataType="CLICK"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="dataset"
-                         onClick={(_) => resetState()}>
-                            Reset
-                        </Button>
-                        <Button 
-                        id="skip-button"
-                        data-edataId="dataset:skip:button"
-                        data-edataType="CLICK"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="dataset"
-                        onClick={(_) => handleNext()}>
-                            Skip
-                        </Button>
-                    </Box>
-                }>
-                {!showWizard && <DatasetConfiguration key={key} setShowWizard={setShowWizard} datasetType={master ? "master-dataset" : "dataset"} />}
-                {showWizard && getStepContent(activeStep, handleNext, handleBack, setErrorIndex, master, edit)}
-            </MainCard >
         </Box>
     );
 };

@@ -14,7 +14,7 @@ interface Props {
 const IconButtonWithTips = ({ tooltipText, handleClick = () => { }, tooltipProps, buttonProps, label, icon, }: Props) => {
     return (
         <HtmlTooltip title={tooltipText} {...tooltipProps}>
-            <Button id="" data-edataId={interactIds.button.icon.tooltip} data-edataType="INTERACT" data-objectId="1.0.0" data-objectType="iconButton" onClick={handleClick} startIcon={icon} {...buttonProps}>
+            <Button data-edataid={interactIds.button.icon.tooltip} data-objectid={`iconButton:${label}`} onClick={handleClick} startIcon={icon} {...buttonProps}>
                 <Typography variant="body2" color="text.primary">{label}</Typography>
             </Button>
         </HtmlTooltip>

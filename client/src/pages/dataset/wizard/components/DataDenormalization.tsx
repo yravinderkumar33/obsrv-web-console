@@ -109,11 +109,9 @@ const DataDenorm = (props: any) => {
             Header: 'Delete',
             Cell: ({ value, cell }: any) => {
                 return <IconButton
-                        id="iconButton"
-                        data-edataId={interactIds.masterDataset.create.delete.denorm}
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="iconButtonClick"
+                        data-edataid={interactIds.masterDataset.create.delete.denorm}
+                        data-objectid="delete"
+                        data-objecttype="masterDataset"
                          variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
                     <DeleteOutlined />
                 </IconButton>
@@ -129,11 +127,9 @@ const DataDenorm = (props: any) => {
                         There are no master datasets configured in the system. Please create one to setup data denormalization for the dataset.
                     </Alert>
                     <Box><Button 
-                        id="button"
-                        data-edataId={interactIds.masterDataset.create.add.denorm}
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="buttonClick"
+                        data-edataid={interactIds.masterDataset.create.add.denorm}
+                        data-objectid="createMasterDataset"
+                        data-objecttype="masterDataset"
                         variant="contained" onClick={_ => openCreateMasterDataset()}>Create Master Dataset</Button></Box>
                 </Stack>
             </Grid>
@@ -162,18 +158,14 @@ const DataDenorm = (props: any) => {
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="row">
                     <Box><Button 
-                            id="button"
-                            data-edataId={interactIds.masterDataset.create.add.denorm}
-                            data-edataType="INTERACT"
-                            data-objectId={interactIds.object.id}
-                            data-objectType="buttonClick"
+                            data-edataid={interactIds.masterDataset.create.add.denorm}
+                            data-objectid="addDenormField"
+                            data-objecttype="masterDataset"
                             variant="contained" onClick={_ => setDialogOpen(true)}>Add Denorm Field</Button> </Box>
                     <Box><Button 
-                        id="button"
-                        data-edataId={interactIds.masterDataset.create.add.denorm}
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="buttonClick"
+                        data-edataid={interactIds.masterDataset.create.add.denorm}
+                        data-objectid="createMasterDataset"
+                        data-objecttype="masterDataset"
                         variant="contained" onClick={_ => openCreateMasterDataset()}>Create New Master Dataset</Button></Box>
                 </Stack>
             </Grid>

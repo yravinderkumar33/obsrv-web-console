@@ -40,10 +40,7 @@ const MetricsPanel = () => {
                                     const { menuIcon, id, primaryLabel } = metric;
                                     const MenuIcon = menuIcon
                                     return <Tab 
-                                    data-edataId={primaryLabel}
-                                    data-edataType="Click"
-                                    data-objectId={interactIds.object.id}
-                                    data-objectType="Metrics"
+                                    data-edataid={`Metrics: ${primaryLabel}`}
                                     label={primaryLabel} id={id} icon={<MenuIcon />} iconPosition="start" aria-controls={`metrics-tabpanel-${index}`} key={index} />
                                 })}
                             </Tabs>
