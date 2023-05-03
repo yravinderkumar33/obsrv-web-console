@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Grid, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material';
+import { Button, Divider, Grid, InputAdornment, InputLabel, OutlinedInput, Stack, Typography } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import IconButton from 'components/@extended/IconButton';
@@ -9,28 +9,29 @@ import { useDispatch } from 'react-redux';
 import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
 import { interactIds } from 'data/telemetry/interactIds';
+import LoginSocialButton from './LoginSocialButton';
 
 const AuthLogin = () => {
-  const dispatch = useDispatch();
-  const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID || ""
-  const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI || ""
-  const [showPassword, setShowPassword] = React.useState(false);
-  const [searchParams] = useSearchParams();
+    const dispatch = useDispatch();
+    const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID || '';
+    const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI || '';
+    const [showPassword, setShowPassword] = React.useState(false);
+    const [searchParams] = useSearchParams();
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
+    const handleClickShowPassword = () => {
+        setShowPassword(!showPassword);
+    };
 
-  const handleMouseDownPassword = (event: React.SyntheticEvent) => {
-    event.preventDefault();
-  };
+    const handleMouseDownPassword = (event: React.SyntheticEvent) => {
+        event.preventDefault();
+    };
 
-  useEffect(() => {
-    const err = searchParams.get("err");
-    if (err) {
-      dispatch(error({ message: err }));
-    }
-  }, [])
+    useEffect(() => {
+        const err = searchParams.get('err');
+        if (err) {
+            dispatch(error({ message: err }));
+        }
+    }, []);
 
   return (
     <>
