@@ -39,7 +39,7 @@ const AuthLogin = () => {
         onSubmit={async () => { }}
       >
         {({ errors, handleBlur, handleChange, isSubmitting, touched, values }) => (
-          <form noValidate action='/api/oauth/authorize' method='post'>
+          <form noValidate action='/api/oauth/v1/login' method='post'>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Stack spacing={1}>
@@ -60,10 +60,6 @@ const AuthLogin = () => {
               <Grid item xs={12}>
                 <Stack spacing={1}>
                   <InputLabel htmlFor="password-login">Password</InputLabel>
-                  <input type="hidden" value={clientId} name="client_id" />
-                  <input type="hidden" value={redirectURI} name="redirect_uri" />
-                  <input type="hidden" value="code" name="response_type" />
-                  <input type="hidden" value="authorization_code" name="grant_type" />
                   <OutlinedInput
                     fullWidth
                     color={'primary'}

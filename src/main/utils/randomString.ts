@@ -3,7 +3,7 @@ const getRandomInt = (min: number, max: number) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export const getUid = (length: number) {
+export const getUid = (length: number) => {
     let uid = '';
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charsLength = chars.length;

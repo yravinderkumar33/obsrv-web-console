@@ -7,6 +7,7 @@ import accessTokenService from './../../services/oauthAccessTokens'
 import refreshTokenService from './../../services/oauthRefreshTokens'
 import authorizationService from './../../services/oauthAutorizationCodes'
 import { getUid } from './../../utils/randomString'
+import { NextFunction, Request, Response } from "express";
 
 // Create OAuth 2.0 server
 const server = oauth2orize.createServer();
@@ -106,26 +107,26 @@ server.exchange(oauth2orize.exchange.password((client, username, password, scope
 
 
 // issue new tokens and remove the old ones
-server.exchange(oauth2orize.exchange.refreshToken( async (client, oldRefreshToken, scope, done) => {
-    try {
-      const token = await refreshTokenService.find(oldRefreshToken) 
-      await accessTokenService.removeByUserIdAndClientId(token.userId, token.clientId);
-      await refreshTokenService.removeByUserIdAndClientId(token.userId, token.clientId);   
-      const {accessToken, refreshToken, params} = await issueTokens(token.user_id, client.id);
-      done(null, accessToken, refreshToken);
-    } catch (error: any) {
-      done(error)
-    }  
+server.exchange(oauth2orize.exchange.refreshToken(async (client, oldRefreshToken, scope, done) => {
+  try {
+    const token = await refreshTokenService.find(oldRefreshToken)
+    await accessTokenService.removeByUserIdAndClientId(token.userId, token.clientId);
+    await refreshTokenService.removeByUserIdAndClientId(token.userId, token.clientId);
+    const { accessToken, refreshToken, params } = await issueTokens(token.user_id, client.id);
+    done(null, accessToken, refreshToken);
+  } catch (error: any) {
+    done(error)
+  }
 }));
 
 
 export const authorization = [
-  login.ensureLoggedIn(),
+  login.ensureLoggedIn("/login"),
   server.authorization(async (clientId, redirectUri, done) => {
     try {
       const client = await clientService.findByClientId(clientId)
 
-      if(client.redirect_uri != redirectUri) {
+      if (client.redirect_uri != redirectUri) {
         return done(new Error("client redirect uri not matching"))
       }
       //TODO: Not implementing apporval workflow
@@ -138,7 +139,7 @@ export const authorization = [
 ];
 
 export const decision = [
-  login.ensureLoggedIn(),
+  login.ensureLoggedIn("/login"),
   server.decision(),
 ];
 
@@ -147,3 +148,16 @@ export const token = [
   server.token(),
   server.errorHandler(),
 ];
+
+export const ensureLoggedInMiddleware =  (request: Request, response: Response, next: NextFunction) => {
+    if (!request?.session?.passport?.user) {
+      const errorObj = {
+        status: 401,
+        message: "You don't have access to view this resource",
+        responseCode: 'UNAUTHORIZED',
+        errorCode: 'UNAUTHORIZED',
+      };
+      return next(errorObj)
+    }
+    return next();
+  }
