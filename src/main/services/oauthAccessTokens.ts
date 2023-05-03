@@ -3,6 +3,13 @@ const table = "oauth_access_tokens";
 
 const service = { 
    
+    async find(id: string): Promise<any> {
+        const accessTokens = await find(table, {id})
+        if(accessTokens.length >= 0) {
+            return Promise.resolve(accessTokens[0])
+        } 
+        return Promise.reject('access token not found')
+    },
     async findByUserIdAndClientId(userId: string, clientId: string): Promise<any> {
         const accessTokens = await find(table, {client_id: clientId, user_id: userId})
         if(accessTokens.length >= 0) {
