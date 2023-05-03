@@ -16,6 +16,7 @@ interface Props {
     limitHeight: boolean;
     tHeadHeight?: number;
     renderRowSubComponent: any;
+    styles?: any;
 }
 
 function SubRows({ row, rowProps, data, loading }: any) {
@@ -75,7 +76,7 @@ function SubRowAsync({ row, rowProps }: any) {
     return <SubRows row={row} rowProps={rowProps} data={data} loading={loading} />;
 }
 
-function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, tHeadHeight, renderRowSubComponent }: Props) {
+function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, tHeadHeight, renderRowSubComponent, styles = {} }: Props) {
     const tableSx = limitHeight ? { height: '35.563rem', overflowY: 'scroll' } : {};
 
     const { getTableProps, getTableBodyProps, headerGroups, prepareRow, rows, visibleColumns, } = useTable(
@@ -109,7 +110,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
                                     placement="top-start"
                                     arrow
                                 >
-                                    <TableCell sx={{ p: 0.5 }} {...column.getHeaderProps()}>
+                                    <TableCell sx={{ p: 0.5, ...styles }} {...column.getHeaderProps()}>
                                         <Typography variant="h5" textTransform='capitalize'>{column.render('Header')}</Typography>
                                     </TableCell>
                                 </HtmlTooltip>
@@ -121,7 +122,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
                     {headerGroups.map((group: any) => (
                         <TableRow {...group.getHeaderGroupProps()}>
                             {group.headers.map((column: any) => (
-                                <TableCell {...column.getHeaderProps([{ className: column.className }])}>
+                                <TableCell sx={{ ...styles }}{...column.getHeaderProps([{ className: column.className }])}>
                                     {column.canFilter ? column.render('Filter') : null}
                                 </TableCell>
                             ))}
@@ -145,7 +146,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
                                     {
                                         row.cells.map((cell: any) => (
                                             <TableCell
-                                                sx={cell.column.errorBg ? { ...bgColor(), p: 0.5 } : { p: 0.5 }}
+                                                sx={cell.column.errorBg ? { ...bgColor(), p: 0.5, ...styles } : { p: 0.5, ...styles }}
                                                 {...cell.getCellProps()}
                                             >
                                                 {cell.render('Cell')}
@@ -164,7 +165,7 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
     );
 }
 
-const ExpandingTable = ({ columns, data, updateMyData, skipPageReset, limitHeight, tHeadHeight }: any) => {
+const ExpandingTable = ({ columns, data, updateMyData, skipPageReset, limitHeight, tHeadHeight, styles = {} }: any) => {
     const renderRowSubComponent = useCallback(({ row, rowProps }: any) => <SubRowAsync row={row} rowProps={rowProps} />, []);
 
     return (
@@ -178,6 +179,7 @@ const ExpandingTable = ({ columns, data, updateMyData, skipPageReset, limitHeigh
                     skipPageReset={skipPageReset}
                     limitHeight={limitHeight}
                     tHeadHeight={tHeadHeight}
+                    styles={styles}
                 />
             </ScrollX>
         </MainCard>

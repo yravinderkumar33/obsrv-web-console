@@ -65,7 +65,6 @@ const renderColumnCell = ({
                         display: "-webkit-box",
                         WebkitLineClamp: "2",
                         WebkitBoxOrient: "vertical",
-                        maxWidth: 333,
                         minWidth: 200,
                         height: 40,
                         maxHeight: 40,

@@ -2,8 +2,9 @@ import { useTheme } from '@mui/material/styles';
 import { Box, List, ListItemText, ListItem, Typography, LinearProgress, LinearProgressProps } from '@mui/material';
 import IconButton from 'components/@extended/IconButton';
 import { DropzopType, FilePreviewProps } from 'types/dropzone';
-import { CloseCircleFilled, FileTextOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FileTextOutlined } from '@ant-design/icons';
 import { CustomFile } from 'types/dropzone';
+import { interactIds } from 'data/telemetry/interactIds';
 
 function LinearProgressWithLabel({ value, theme, ...props }: any) {
     return (
@@ -56,50 +57,6 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
             {files.map((file, index) => {
                 const { key, name, size, preview, type } = getDropzoneData(file, index);
 
-                if (showList) {
-                    return (
-                        <ListItem
-                            key={key}
-                            sx={{
-                                p: 0,
-                                m: 0.5,
-                                width: layoutType === DropzopType.standard ? 64 : 80,
-                                height: layoutType === DropzopType.standard ? 64 : 80,
-                                borderRadius: 1.25,
-                                position: 'relative',
-                                display: 'inline-flex',
-                                verticalAlign: 'text-top',
-                                border: `solid 1px ${theme.palette.divider}`,
-                                overflow: 'hidden'
-                            }}
-                        >
-                            {type?.includes('image') && <img alt="preview" src={preview} style={{ width: '100%' }} />}
-                            {!type?.includes('image') && <FileTextOutlined style={{ width: '100%', fontSize: '1.5rem' }} />}
-
-                            {onRemove && (
-                                <IconButton
-                                    size="small"
-                                    color="error"
-                                    shape="rounded"
-                                    onClick={() => onRemove(file)}
-                                    sx={{
-                                        fontSize: '0.875rem',
-                                        bgcolor: 'background.paper',
-                                        p: 0,
-                                        width: 'auto',
-                                        height: 'auto',
-                                        top: 2,
-                                        right: 2,
-                                        position: 'absolute'
-                                    }}
-                                >
-                                    <CloseCircleFilled />
-                                </IconButton>
-                            )}
-                        </ListItem>
-                    );
-                }
-
                 return (
                     <ListItem
                         key={key}
@@ -124,8 +81,19 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
                         <LinearProgressWithLabel value={100} theme={theme} />
 
                         {onRemove && (
-                            <IconButton sx={{ ml: 'auto' }} edge="end" size="small" onClick={() => onRemove(file)}>
-                                <CloseCircleFilled style={{ fontSize: '1.15rem' }} />
+                            <IconButton
+                                data-edataId={interactIds.file.remove.one}
+                                data-edataType="INTERACT"
+                                data-objectId="1.0.0"
+                                data-objectType="iconButton"
+                                size="small"
+                                color="error"
+                                shape="rounded"
+                                onClick={() => onRemove(file)}
+                                sx={{ ml: 'auto' }}
+                                edge="end"
+                            >
+                                <DeleteOutlined style={{ fontSize: '1rem' }} />
                             </IconButton>
                         )}
                     </ListItem>

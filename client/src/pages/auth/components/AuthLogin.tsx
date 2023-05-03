@@ -8,6 +8,7 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const AuthLogin = () => {
   const dispatch = useDispatch();
@@ -79,6 +80,8 @@ const AuthLogin = () => {
                     endAdornment={
                       <InputAdornment position="end">
                         <IconButton
+                          id="input-password"
+                          data-edataId={showPassword ? interactIds.button.input.password.visible : interactIds.button.input.password.invisible}
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}

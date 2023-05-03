@@ -88,6 +88,7 @@ const NavItem = ({ item, level }: any) => {
         >
             {itemIcon && (
                 <ListItemIcon
+                    id="navItem" data-edataId={item.title.props.id} data-edataType="INTERACT" data-objectId="1.2.0" data-objectType="listItemButton"
                     sx={{
                         minWidth: 28,
                         color: textColor,
@@ -118,7 +119,9 @@ const NavItem = ({ item, level }: any) => {
             {(drawerOpen || (!drawerOpen && level !== 1)) && (
                 <ListItemText
                     primary={
-                        <Typography variant="h6" sx={{ color: textColor }}>
+                        <Typography
+                            id="navItem" data-edataId={item.title.props.id} data-edataType="INTERACT" data-objectId="1.2.0" data-objectType="listItemButton"
+                            variant="h6" sx={{ color: textColor }}>
                             {item.title}
                         </Typography>
                     }
@@ -126,6 +129,7 @@ const NavItem = ({ item, level }: any) => {
             )}
             {(drawerOpen || (!drawerOpen && level !== 1)) && item.chip && (
                 <Chip
+                    id="navItem" data-edataId={item.title.props.id} data-edataType="INTERACT" data-objectId="1.2.0" data-objectType="listItemButton"
                     color={item.chip.color}
                     variant={item.chip.variant}
                     size={item.chip.size}

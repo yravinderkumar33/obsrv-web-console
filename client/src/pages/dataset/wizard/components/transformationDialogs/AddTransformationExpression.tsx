@@ -12,6 +12,7 @@ import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { v4 } from "uuid";
 import PreviewTransformation from "./PreviewTransform";
+import { interactIds } from "data/telemetry/interactIds";
 
 const AddTransformationExpression = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
@@ -119,6 +120,10 @@ const AddTransformationExpression = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
+                        data-edataId={interactIds.button.icon.menu.close}
+                        data-edataType="INTERACT"
+                        data-objectId={interactIds.object.id}
+                        data-objectType="icon:close"
                         onClick={onClose}
                         sx={{
                             position: 'absolute',
@@ -142,7 +147,13 @@ const AddTransformationExpression = (props: any) => {
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" autoFocus onClick={_ => updateTransformation()}>
+                <Button 
+                id="button:add:transformation"
+                data-edataId={interactIds.dataset.edit.add.transformation}
+                data-edataType="INTERACT"
+                data-objectId={interactIds.object.id}
+                data-objectType="dataset:add:transformation"
+                variant="contained" autoFocus onClick={_ => updateTransformation()}>
                     Add
                 </Button>
             </DialogActions>

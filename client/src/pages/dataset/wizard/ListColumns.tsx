@@ -3,11 +3,8 @@ import {
     Button, Grid, Box, Stack,
     Typography, Chip, useTheme
 } from '@mui/material';
-import MainCard from 'components/MainCard';
-import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
 import { CloseOutlined, FolderViewOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
-import ReactTable from 'components/react-table';
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
@@ -25,6 +22,7 @@ import WizardNavigator from './components/WizardNavigator';
 import { resetDataTypeResolve, updateDataType } from './utils/dataTypeUtil';
 import { renderActionsCell, renderColumnCell, renderDataTypeCell, renderRequiredCell } from './utils/renderCells';
 import ExpandingTable from 'components/ExpandingTable';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -313,18 +311,15 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 />
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <MainCard content={false}>
-                            <ScrollX>
-                                <ExpandingTable
-                                    columns={columns}
-                                    data={getNesting(sortBySuggestions(fetchNonDeletedData(flattenedData)), jsonSchema) as []}
-                                    updateMyData={updateMyData}
-                                    skipPageReset={skipPageReset}
-                                    limitHeight
-                                    tHeadHeight={52}
-                                />
-                            </ScrollX>
-                        </MainCard >
+                        <ExpandingTable
+                            columns={columns}
+                            data={getNesting(sortBySuggestions(fetchNonDeletedData(flattenedData)), jsonSchema) as []}
+                            updateMyData={updateMyData}
+                            skipPageReset={skipPageReset}
+                            limitHeight
+                            tHeadHeight={52}
+                            styles={{ '&.MuiTableCell-root': { border: '1px solid #D9D9D9', } }}
+                        />
                     </Grid>
                     <AlertDialog open={openAlertDialog} action={handleAlertDialogAction} handleClose={handleAlertDialogClose} context={alertDialogContext} />
                 </Grid>

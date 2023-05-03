@@ -12,6 +12,7 @@ import { druidQueries } from 'services/druid';
 import dayjs from 'dayjs';
 import chartMeta from 'data/charts';
 import * as _ from 'lodash';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const connectors = ["Kafka"];
 const alertDialogContext = { title: 'Delete Dataset', content: 'Are you sure you want to delete this dataset ?' };
@@ -206,17 +207,26 @@ const DatasetsList = ({ datasets }: any) => {
                     const row = cell?.row?.original || {};
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="View Metrics" onClick={(e: any) => navigateToPath(`/datasets/${row?.id}`)}>
-                            <IconButton disabled={row?.type !== "dataset"} color="primary" size="large">
+                            <IconButton
+                            id="datasets/view"
+                            data-edataId={interactIds.dataset.view}
+                             disabled={row?.type !== "dataset"} color="primary" size="large">
                                 < DashboardOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_id}`)}>
-                            <IconButton color="primary" size="large">
+                            <IconButton 
+                            id="datasets/create"
+                            data-edataId={interactIds.dataset.create.add.transformation}
+                            color="primary" size="large">
                                 <DatabaseOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
-                            <IconButton color="primary" size="large" disabled>
+                            <IconButton
+                            id="datasets/edit"
+                            data-edataId={interactIds.dataset.edit.add.transformation}
+                            color="primary" size="large" disabled>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

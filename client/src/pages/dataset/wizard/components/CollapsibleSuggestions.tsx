@@ -8,6 +8,7 @@ import { CheckCircleOutlined, FileSearchOutlined, InfoCircleOutlined } from '@an
 import * as _ from 'lodash';
 import { CardTitle } from 'components/styled/Cards';
 import SuggestionBox from 'components/SuggestionBox';
+import { interactIds } from 'data/telemetry/interactIds';
 
 interface Props {
     flattenedData: Array<Record<string, any>>;
@@ -102,6 +103,11 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                         {`${formatNumber(getRequiredFields.requiredCount)}/${formatNumber(getRequiredFields.totalCount)}`} are marked as required
                                     </Typography>
                                     <Chip
+                                        id="chip"
+                                        data-edataId={interactIds.suggestions.required}
+                                        data-edataType="INTERACT"
+                                        data-objectId={interactIds.object.id}
+                                        data-objectType="chipClick"
                                         onDelete={requiredFilter === "true" ? () => setRequiredFilter('') : undefined}
                                         onClick={() => setRequiredFilter("true")}
                                         label={'Review all fields marked as required'}
@@ -115,6 +121,11 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                         {`${formatNumber(getRequiredFields.notRequiredCount)}/${formatNumber(getRequiredFields.totalCount)}`} are marked as optional
                                     </Typography>
                                     <Chip
+                                        id="chip"
+                                        data-edataId={interactIds.suggestions.optional}
+                                        data-edataType="INTERACT"
+                                        data-objectId={interactIds.object.id}
+                                        data-objectType="chipClick"
                                         onDelete={requiredFilter === "false" ? () => setRequiredFilter('') : undefined}
                                         onClick={() => setRequiredFilter("false")}
                                         label={'Review all fields marked as optional'}

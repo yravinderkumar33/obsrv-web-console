@@ -11,6 +11,7 @@ import PlaceholderContent from './PlaceholderContent';
 
 // types
 import { CustomFile, DropzopType, UploadMultiFileProps } from 'types/dropzone';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
     outline: 'none',
@@ -75,6 +76,11 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
             >
                 <Stack {...(type === DropzopType.standard && { alignItems: 'center' })}>
                     <DropzoneWrapper
+                    id={DropzopType.default}
+                    data-edataId="add:files"
+                    data-edataType="DRAG&DROP"
+                    data-objectId={interactIds.object.id}
+                    data-objectType="dataset"
                         {...getRootProps()}
                         sx={{
                             ...(type === DropzopType.standard && {
