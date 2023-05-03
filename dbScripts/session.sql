@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS "obsrv.oauth_clients" (
   name VARCHAR(255),
   client_id VARCHAR(255) UNIQUE,
   client_secret VARCHAR(255),
+  redirect_uri VARCHAR(255),
   is_trusted BOOLEAN,
   created_on TIMESTAMP,
   last_updated_on TIMESTAMP NULL

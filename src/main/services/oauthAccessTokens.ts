@@ -10,8 +10,8 @@ const service = {
         } 
         return Promise.reject('access token not found')
       },
-      async save(id: string, clientId: string, redirectUri: string, userId: string, userName: string): Promise<any> {
-        await create(table, {id, client_id: clientId, redirect_uri: redirectUri, user_id: userId, user_name: userName});
+      async save(id: string,  userId: string, clientId: string): Promise<any> {
+        await create(table, {id, client_id: clientId, user_id: userId});
      },
      async removeByUserIdAndClientId (userId: string, clientId: string): Promise<any> {
         await destroy(table, {user_id: userId, client_id: clientId})
