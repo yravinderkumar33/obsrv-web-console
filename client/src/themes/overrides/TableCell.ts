@@ -24,7 +24,6 @@ export default function TableCell(theme: Theme) {
                 root: {
                     fontSize: '0.875rem',
                     padding: 12,
-                    border: '1px solid #D9D9D9',
                 },
                 sizeSmall: {
                     padding: 8

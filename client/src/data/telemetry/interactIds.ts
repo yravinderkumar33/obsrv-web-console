@@ -13,8 +13,7 @@ export const interactIds = {
       menu: {
         open: 'button:icon:menu:open',
         close: 'button:icon:menu:close'
-      } 
-  
+      }
     },
     scroll: 'button:scroll',
     snackbar: {
@@ -36,7 +35,7 @@ export const interactIds = {
     filter: 'chart:filter'
   },
   dataset: {
-    view:'dataset:view',
+    view: 'dataset:view',
     create: {
       add: {
         transformation: 'dataset:create:add:transformation',

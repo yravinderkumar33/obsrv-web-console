@@ -5,7 +5,7 @@ import { Alert } from "@mui/material";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
 import config from 'data/initialConfig';
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
 import { interactIds } from "data/telemetry/interactIds";
@@ -102,7 +102,7 @@ const ConditionalCheckboxForm = (props: any) => {
             if (!metadata) return null;
             const { form, description, component, value: type, ...rest } = metadata;
             return <>
-                {description && <Grid key={Math.random()} item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
+                {description && <Grid key={Math.random()} item xs={12}> <Alert sx={{ alignItems: 'center' }} color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
                 {form && (
                     <Grid item sm={12}>
                         <MUIForm

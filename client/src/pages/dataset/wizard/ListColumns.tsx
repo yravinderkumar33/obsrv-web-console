@@ -3,17 +3,14 @@ import {
     Button, Grid, Box, Stack,
     Typography, Chip, useTheme
 } from '@mui/material';
-import MainCard from 'components/MainCard';
-import ScrollX from 'components/ScrollX';
 import * as _ from 'lodash';
-import { CloseOutlined, FolderViewOutlined, } from '@ant-design/icons';
-import ReactTable from 'components/react-table';
+import { CloseOutlined, FolderViewOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
 import AlertDialog from 'components/AlertDialog';
 import { error } from 'services/toaster';
-import { areConflictsResolved, flattenSchema, updateJSONSchema } from 'services/json-schema';
+import { areConflictsResolved, flattenSchema, getNesting, updateJSONSchema } from 'services/json-schema';
 import { connect } from 'react-redux';
 import IconButtonWithTips from 'components/IconButtonWithTips';
 import { DefaultColumnFilter, SelectBooleanFilter, SelectColumnFilter } from 'utils/react-table';
@@ -24,6 +21,7 @@ import { CardTitle, GenericCard } from 'components/styled/Cards';
 import WizardNavigator from './components/WizardNavigator';
 import { resetDataTypeResolve, updateDataType } from './utils/dataTypeUtil';
 import { renderActionsCell, renderColumnCell, renderDataTypeCell, renderRequiredCell } from './utils/renderCells';
+import ExpandingTable from 'components/ExpandingTable';
 import { interactIds } from 'data/telemetry/interactIds';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
@@ -117,6 +115,22 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const columns = useMemo(
         () => [
             {
+                Header: () => null,
+                id: 'expander',
+                className: 'cell-center',
+                tipText: '',
+                editable: 'false',
+                Cell: ({ row }: any) => {
+                    const collapseIcon = row.isExpanded ? <DownOutlined /> : <RightOutlined />;
+                    return row.canExpand && (
+                        <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }} {...row.getToggleRowExpandedProps()}>
+                            {collapseIcon}
+                        </Box>
+                    );
+                },
+                SubCell: () => null
+            },
+            {
                 Header: 'Field',
                 accessor: 'column',
                 tipText: 'Name of the field.',
@@ -140,13 +154,13 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 editable: true,
                 Filter: DefaultColumnFilter,
                 filter: 'includes',
-                Cell: ({ value, cell }: any) => {
+                Cell: ({ value, cell, row }: any) => {
                     const pageData: any = useSelector((state: any) => state?.wizard?.pages[pageMeta.pageId].state?.schema);
                     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | HTMLElement | null>(null);
                     return renderDataTypeCell({
                         cell, value, pageData, anchorEl, setAnchorEl,
                         updateDataType, persistState, setFlattenedData,
-                        resetDataTypeResolve, validDatatypes
+                        resetDataTypeResolve, validDatatypes, disabled: row['canExpand'],
                     });
                 }
             },
@@ -158,9 +172,12 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 Filter: SelectBooleanFilter,
                 filter: 'equals',
                 customValue: requiredFieldFilters,
-                Cell: ({ value, cell, updateMyData }: any) => renderRequiredCell({
-                    cell, value, setFlattenedData, persistState,
-                })
+                Cell: ({ value, cell, updateMyData, row }: any) => {
+                    if (row.canExpand) return null;
+                    return renderRequiredCell({
+                        cell, value, setFlattenedData, persistState,
+                    })
+                }
             },
             {
                 Header: 'Actions',
@@ -169,9 +186,12 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 disableFilters: true,
                 Filter: SelectColumnFilter,
                 filter: 'equals',
-                Cell: ({ value, cell, ...rest }: any) => renderActionsCell({
-                    cell, value, setSelection, setOpenAlertDialog, theme,
-                })
+                Cell: ({ value, cell, row, ...rest }: any) => {
+                    if (row.canExpand) return null;
+                    return renderActionsCell({
+                        cell, value, setSelection, setOpenAlertDialog, theme,
+                    })
+                }
             },
         ],
         [requiredFieldFilters]
@@ -238,8 +258,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         if (jsonSchema) {
             const flattenedSchema = flattenSchema(jsonSchema) as any;
             const existingState = pageData?.state?.schema;
-            setFlattenedData(existingState || flattenedSchema);
-            persistState(existingState || flattenedSchema);
+            const data = existingState && existingState.length > 0 ? existingState : flattenedSchema;
+            setFlattenedData(data);
+            persistState(data);
             persistClientState();
             setSkipPageReset(false);
         }
@@ -290,18 +311,15 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 />
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <MainCard content={false}>
-                            <ScrollX>
-                                <ReactTable
-                                    columns={columns}
-                                    data={sortBySuggestions(fetchNonDeletedData(flattenedData)) as []}
-                                    updateMyData={updateMyData}
-                                    skipPageReset={skipPageReset}
-                                    limitHeight
-                                    tHeadHeight={52}
-                                />
-                            </ScrollX>
-                        </MainCard >
+                        <ExpandingTable
+                            columns={columns}
+                            data={getNesting(sortBySuggestions(fetchNonDeletedData(flattenedData)), jsonSchema) as []}
+                            updateMyData={updateMyData}
+                            skipPageReset={skipPageReset}
+                            limitHeight
+                            tHeadHeight={52}
+                            styles={{ '&.MuiTableCell-root': { border: '1px solid #D9D9D9', } }}
+                        />
                     </Grid>
                     <AlertDialog open={openAlertDialog} action={handleAlertDialogAction} handleClose={handleAlertDialogClose} context={alertDialogContext} />
                 </Grid>
