@@ -1,5 +1,5 @@
 import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { Alert, Button, Dialog, Grid, Typography} from "@mui/material";
+import { Alert, Button, Dialog, Grid, Typography } from "@mui/material";
 import MainCard from "components/MainCard"
 import BasicReactTable from "components/BasicReactTable";
 import ScrollX from "components/ScrollX";
@@ -111,7 +111,7 @@ const InputAccordion = (props: any) => {
 
     return <>
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
-            <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>
+            <Grid item xs={12}> <Alert sx={{ alignItems: 'center' }} color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>
             {renderTable()}
             <Grid item xs={12}>
                 <Button 
