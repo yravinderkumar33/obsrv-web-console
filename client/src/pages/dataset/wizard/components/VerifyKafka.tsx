@@ -39,11 +39,9 @@ const VerifyKafka = () => {
 
     return (
         <LoadingButton
-            id="loadingButton:kafka"
-            data-edataId={interactIds.kafka.verify}
-            data-edataType="INTERACT"
-            data-objectId={interactIds.object.id}
-            data-objectType="buttonClick"
+            data-edataid={interactIds.kafka.verify}
+            data-objectid="kafka:testConnection"
+            data-objecttype="dataset"
             onClick={_ => testConnection()}
             variant="contained"
             color={buttonColor}

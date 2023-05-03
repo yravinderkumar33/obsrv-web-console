@@ -37,11 +37,11 @@ const generateInteractEvent = ({ object, edata, eid }: any) => {
 export const globalInteractEventsHandler = (event: any) => {
   const target = _.get(event, 'target');
   const dataset = _.get(target, 'dataset');
-  if (!(target && dataset)) return;
+  if (!(target && Object.keys(dataset).length !== 0)) return;
   const { edataid, edatatype = 'CLICK', objectid, objecttype, objectversion = '1.0.0' } = dataset as Record<string, any>;
   const edata = { id: edataid || target.id, type: edatatype };
   const object = { ...(objectid && objecttype && { objectid, objecttype, objectversion }) };
-  generateInteractEvent({ edata, object, eid: "INTERACT" })
+  generateInteractEvent({ edata, object, eid: 'INTERACT' })
 }
 
 const generateImpressionEvent = ({ object, edata }: any) => {

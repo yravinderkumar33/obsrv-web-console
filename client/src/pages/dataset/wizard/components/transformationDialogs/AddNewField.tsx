@@ -11,6 +11,7 @@ import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import PreviewTransformation from "./PreviewTransform";
+import { interactIds } from "data/telemetry/interactIds";
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank', 'noopener,noreferrer');
@@ -82,6 +83,10 @@ const AddNewField = (props: any) => {
                 Add New Field
                 {onClose ? (
                     <IconButton
+                        id="iconButton"
+                        data-edataid={interactIds.button.icon.menu.close}
+                        data-objectid="closeOutlined:addNewField"
+                        data-objectType="dataset"
                         aria-label="close"
                         onClick={onClose}
                         sx={{
@@ -103,12 +108,20 @@ const AddNewField = (props: any) => {
                         <PreviewTransformation fieldName={value.column} expression={value.transformation} />
                     }
                     <Box>
-                        <Button onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
+                        <Button 
+                        data-edataid="jsonata:editor:open"
+                        data-objectid="jsonata"
+                        data-objectType="dataset"
+                        onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
                     </ Box>
                 </ Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" onClick={_ => updateAdditionalField()}>
+                <Button 
+                data-edataid={interactIds.dataset.edit.add.transformation}
+                data-objectid={value}
+                data-objectType="dataset"
+                variant="contained" onClick={_ => updateAdditionalField()}>
                     Add
                 </Button>
             </DialogActions>

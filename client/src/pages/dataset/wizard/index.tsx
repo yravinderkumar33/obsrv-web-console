@@ -2,13 +2,14 @@ import { useState, ReactNode, useEffect } from 'react';
 import { Button, Step, Stepper, StepLabel, Typography, Box } from '@mui/material';
 import MainCard from 'components/MainCard';
 import DatasetConfiguration from './DatasetConfiguration';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch} from 'react-redux';
 import { reset } from 'store/reducers/wizard';
 import ListColumns from './ListColumns';
 import Review from './Review';
 import * as _ from 'lodash';
 import SectionConfiguration from './components/SectionConfiguration';
 import { fetchDatasetsThunk } from 'store/middlewares';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Advanced', 'Review'];
 const masterSteps = ['Schema', 'Ingestion', 'Review'];

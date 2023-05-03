@@ -93,11 +93,9 @@ const AddRollup = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        id="iconButton:close"
-                        data-edataId={interactIds.button.icon.menu.close}
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="buttonClick"
+                        data-edataid={interactIds.button.icon.menu.close}
+                        data-objectid="closeCircleOutlined:addNewRollup"
+                        data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
                             position: 'absolute',
@@ -117,11 +115,9 @@ const AddRollup = (props: any) => {
             </DialogContent>
             <DialogActions>
                 <Button 
-                id="button:add:field"
-                data-edataId={interactIds.rollup.add}
-                data-edataType="INTERACT"
-                data-objectId={interactIds.object.id}
-                data-objectType="rollup"
+                data-edataid={interactIds.rollup.add}
+                data-objectid={value}
+                data-objecttype="dataset"
                 variant="contained" autoFocus onClick={_ => addField()}>
                     Add Field
                 </Button>

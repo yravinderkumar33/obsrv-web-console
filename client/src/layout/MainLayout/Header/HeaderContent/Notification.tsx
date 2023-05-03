@@ -95,7 +95,7 @@ const Notification = () => {
       <IconButton
         color="secondary"
         variant="light"
-        id="notification" data-edataId="notifications" data-edataType="INTERACT" data-objectId="1.0.0" data-objectType="iconButton"
+        data-edataid="notifications"
         sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor }}
         aria-label="open profile"
         ref={anchorRef}
