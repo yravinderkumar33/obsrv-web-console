@@ -1,4 +1,4 @@
-import { Box, Chip, ChipProps, Stack, Typography, Paper, Tooltip } from '@mui/material';
+import { Box, Chip, Stack, Typography, Paper, Tooltip } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { RiseOutlined, FallOutlined } from '@ant-design/icons';
 import globalConfig from 'data/initialConfig';
@@ -20,9 +20,6 @@ const AnalyticsDataCard = (props: any) => {
               </Typography>}
               {percentage && (
                 <Chip
-                  data-edataId={interactIds.chart.node}
-                  data-objectid={`Node Status: ${percentage}%`}
-                  data-objecttype={id}
                   variant="combined"
                   color={color}
                   icon={

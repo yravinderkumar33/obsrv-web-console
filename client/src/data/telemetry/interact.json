@@ -1,0 +1,20 @@
+{
+    "alert_contact_support": "alert:contact:support",
+    "alert_resolve": "alert:resolve",
+    "alert_dialog_cancel": "alert:dialog:cancel",
+    "alert_dialog_agree": "alert:dialog:agree",
+    "button_icon_tooltip": "button:icon:tooltip",
+    "sidebar_open": "sidebar:open",
+    "sidebar_close": "sidebar:close",
+    "button_scroll": "button:scroll",
+    "button_download_events": "button:download:events",
+    "password_visible": "login:password:visible",
+    "password_invisble": "login:password:invisible",
+    "chart_filter": "chart:filter",
+    "login": "login",
+    "login_google": "login:google",
+    "login_keycloak": "login:keycloak",
+    "grafana_navigate": "navigate:grafana",
+    "superset_navigate": "navigate:superset",
+    "notifications": "notifications"
+}

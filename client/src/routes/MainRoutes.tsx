@@ -17,10 +17,7 @@ const MainRoutes = {
     children: [
         {
             path: '/',
-            element: <HomePage />,
-            meta: {
-                
-            }
+            element: <HomePage />
         },
         {
             path: 'datasets',

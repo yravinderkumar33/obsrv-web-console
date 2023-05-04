@@ -6,13 +6,12 @@ import ScrollTop from 'components/ScrollTop';
 import Snackbar from 'components/@extended/Snackbar';
 import { useEffect } from 'react';
 import { addHttpRequestsInterceptor, errorInterceptor, responseInterceptor } from 'services/http';
-import { useNavigate, useLocation } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { globalInteractEventsHandler } from 'services/telemetry';
 
 const App = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
 
   useEffect(() => {

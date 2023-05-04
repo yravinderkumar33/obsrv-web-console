@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Divider, Grid, InputAdornment, InputLabel, OutlinedInput, Stack, Typography } from '@mui/material';
+import { Button, Divider, Grid, InputAdornment, InputLabel, OutlinedInput, Stack } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import IconButton from 'components/@extended/IconButton';
@@ -8,30 +8,30 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
-import { interactIds } from 'data/telemetry/interactIds';
 import LoginSocialButton from './LoginSocialButton';
+import interactEdataIds from 'data/telemetry/interact.json'
 
 const AuthLogin = () => {
-    const dispatch = useDispatch();
-    const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID || '';
-    const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI || '';
-    const [showPassword, setShowPassword] = React.useState(false);
-    const [searchParams] = useSearchParams();
+  const dispatch = useDispatch();
+  const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID || '';
+  const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI || '';
+  const [showPassword, setShowPassword] = React.useState(false);
+  const [searchParams] = useSearchParams();
 
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
+  const handleClickShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
 
-    const handleMouseDownPassword = (event: React.SyntheticEvent) => {
-        event.preventDefault();
-    };
+  const handleMouseDownPassword = (event: React.SyntheticEvent) => {
+    event.preventDefault();
+  };
 
-    useEffect(() => {
-        const err = searchParams.get('err');
-        if (err) {
-            dispatch(error({ message: err }));
-        }
-    }, []);
+  useEffect(() => {
+    const err = searchParams.get('err');
+    if (err) {
+      dispatch(error({ message: err }));
+    }
+  }, []);
 
   return (
     <>
@@ -47,10 +47,6 @@ const AuthLogin = () => {
                 <Stack spacing={1}>
                   <InputLabel htmlFor="email-login">User Name</InputLabel>
                   <OutlinedInput
-                    id="email-login"
-                    data-edataid={interactIds.button.input.email}
-                    data-objectid="email-login"
-                    data-objecttype="login"
                     type="text"
                     value={values.username}
                     name="username"
@@ -85,9 +81,7 @@ const AuthLogin = () => {
                       <InputAdornment position="end">
                         <IconButton
                           id="input-password"
-                          data-edataid={showPassword ? interactIds.button.input.password.visible : interactIds.button.input.password.invisible}
-                          data-objectid="input-password"
-                          data-objecttype="login"
+                          data-edataid={showPassword ? interactEdataIds.password_visible : interactEdataIds.password_invisble}
                           aria-label="toggle password visibility"
                           onClick={handleClickShowPassword}
                           onMouseDown={handleMouseDownPassword}
@@ -104,10 +98,13 @@ const AuthLogin = () => {
               </Grid>
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button data-edataid={interactEdataIds.login} disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
                     Login
                   </Button>
                 </AnimateButton>
+              </Grid>
+              <Grid item xs={12}>
+                <LoginSocialButton />
               </Grid>
             </Grid>
           </form>
