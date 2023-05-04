@@ -13,12 +13,10 @@ import { NextFunction, Request, Response } from "express";
 const server = oauth2orize.createServer();
 
 server.serializeClient((client, done) => {
-  console.log("serializeClient: ", client)
   return done(null, client.id)
 });
 
 server.deserializeClient((id, done) => {
-  console.log(`deserializeClient: `, id)
   clientService.findById(id).then((client: any) => {
     done(null, client)
   }).catch((error: any) => {
@@ -50,7 +48,6 @@ server.grant(oauth2orize.grant.code((client, redirectUri, user, ares, done) => {
 
 
 server.grant(oauth2orize.grant.token((client, user, ares, done) => {
-  console.log('grant issue token', client, user)
   issueTokens(user.id, client.client_id).then((data) => {
     return done(null, data.accessToken, data.params)
   }).catch((error: any) => {
@@ -60,16 +57,12 @@ server.grant(oauth2orize.grant.token((client, user, ares, done) => {
 
 
 server.exchange(oauth2orize.exchange.code((client, code, redirectUri, done) => {
-  console.log(`exchange code:`, client, code, redirectUri)
   authorizationService.find(code).then((authCode: any) => {
     if (client.id !== authCode.client_id) return done(null, false);
     if (redirectUri !== authCode.redirect_uri) return done(null, false);
-    console.log("will issue token")
     issueTokens(authCode.user_id, client.client_id).then((data) => {
-      console.log('Token issued.')
       return done(null, data.accessToken, data.refreshToken, data.params)
     }).catch((error: any) => {
-      console.log(`Issue token error`, error)
       return done(error)
     });
   }).catch((error: any) => {

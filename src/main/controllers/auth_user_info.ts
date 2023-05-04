@@ -11,7 +11,6 @@ export default {
             scope: authInfo?.scope,
             email: user?.email_address
         }
-        console.log(`user info:`, data, user)
         response.json(data);
     },
 };
