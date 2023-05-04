@@ -63,7 +63,6 @@ function SubRowAsync({ row, rowProps }: any) {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            // setData();
             setLoading(false);
         }, 500);
 
@@ -155,7 +154,8 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
                                         )
                                     }
                                 </TableRow>
-                                {row.isExpanded && renderRowSubComponent({ row, rowProps, visibleColumns })}
+                                {/* Enable for Asynchronously loading data */}
+                                {/* {row.isExpanded && renderRowSubComponent({ row, rowProps, visibleColumns })} */}
                             </Fragment>
                         );
                     })}

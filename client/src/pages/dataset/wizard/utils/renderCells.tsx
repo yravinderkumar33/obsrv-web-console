@@ -18,8 +18,8 @@ const renderColumnCell = ({
 }: any) => {
     const row = cell?.row?.original || {};
     const editDescription = () => {
-        setEdit((prevState: any) => !prevState);
         updateState();
+        setEdit((prevState: any) => !prevState);
     }
 
     const handleClose = () => {
@@ -34,9 +34,9 @@ const renderColumnCell = ({
         setFlattenedData((preState: Array<Record<string, any>>) => {
             const updatedValues = { ...row };
             const values = _.map(preState, state => {
-                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                    return { ...state, ...updatedValues, isModified: true, description: text };
-                else return state
+                if (_.get(state, 'column') === _.get(updatedValues, 'originalColumn'))
+                    return { ...state, ...updatedValues, isModified: true, description: text, column: _.get(updatedValues, 'originalColumn') };
+                else return state;
             });
             persistState(values);
             return values;
@@ -44,7 +44,7 @@ const renderColumnCell = ({
     }
 
     return (
-        <Box alignItems="baseline" maxWidth={537}>
+        <Box alignItems="baseline" maxWidth={537} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Typography variant="h6" m={1}>
                     {value}
@@ -60,15 +60,16 @@ const renderColumnCell = ({
                     <Typography
                         variant="body3"
                         color="secondary"
-                        m={1}
+                        mx={1}
                         sx={{
                             overflow: "hidden",
                             textOverflow: "ellipsis",
                             display: "-webkit-box",
                             "-webkit-line-clamp": '2',
-                            "-webkit-box-orient": "vertical"
+                            "-webkit-box-orient": "vertical",
+                            maxWidth: '95%'
                         }}
-                        onClick={editDescription}
+                        onClick={handleClose}
                     >
                         {row.description}
                     </Typography>
