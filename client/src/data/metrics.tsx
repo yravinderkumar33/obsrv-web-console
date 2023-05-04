@@ -238,7 +238,7 @@ export const metricsMetadata = [
                     },
                     {
                         description: "This chart shows the total number of events received today",
-                        chart: <ReportCard primary="0" secondary="Total Data Received (Today)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} suffix="Events" />
+                        chart: <ReportCard primary="0" secondary="Data Received (Today)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} suffix="Events" />
                     }
                 ]
             },

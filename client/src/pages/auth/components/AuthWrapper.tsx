@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Box, Grid } from '@mui/material';
 import AuthCard from './AuthCard';
 
-const AuthWrapper = ({ children }:any) => (
+const AuthWrapper = ({ children }: any) => (
     <Box sx={{ minHeight: '100vh' }}>
         <Grid container direction="column" justifyContent="center" sx={{ minHeight: '100vh' }}>
             <Grid item xs={12}>
