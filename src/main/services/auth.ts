@@ -4,9 +4,17 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import { BasicStrategy } from 'passport-http';
 import { Strategy as ClientPasswordStrategy } from 'passport-oauth2-client-password';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
+import { v4 } from "uuid";
+var KeyCloakStrategy = require('passport-keycloak-oauth2-oidc').Strategy;
 import userService from './oauthUsers';
 import clientService from './oauthClients';
 import accessTokenService from './oauthAccessTokens';
+import { User } from '../types';
+
+
+enum PROVIDERS {
+    KEYCLOAK = "keycloak"
+}
 
 passport.use(new LocalStrategy(
     (username, password, done) => {
@@ -64,4 +72,42 @@ passport.use(new BearerStrategy(
             return done(error)
         }
     }
+));
+
+passport.use(new KeyCloakStrategy({
+    clientID: 'myOauthClient',
+    realm: 'MyKeyCloakRealm',
+    publicClient: 'false',
+    clientSecret: 'SCWHeF9HgtJ5BjmJFruk2IW15a5auueq',
+    sslRequired: 'external',
+    authServerURL: 'http://localhost:8080/auth',
+    callbackURL: 'http://localhost:4000/api/auth/keycloak/callback'
+  },
+  (accessToken: string, refreshToken: string, profile: any, done: any) => {
+    if(!profile.email) {
+        return done(new Error("email is required field"))
+    }
+    // check if user exists then return user , otherwise create user and return the user
+    userService.find({email_address: profile.email}).then((user: any) => {
+        return done(null, user)
+    }).catch((error:any) => {
+        if(error === "user_not_found") {
+            const userInfo: User = {
+                id: v4(),
+                user_name: profile.email,
+                created_on: new Date().toISOString(),
+                provider: PROVIDERS.KEYCLOAK,
+                email_address: profile.email
+
+            }
+            userService.create(userInfo).then((user: User) => {
+                return done(null, user)
+            }).catch((error: any) => {
+                return done(error)
+            });
+        } else {
+            return done(error)
+        }
+    })
+  }
 ));

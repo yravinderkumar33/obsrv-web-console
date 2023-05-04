@@ -47,11 +47,35 @@ export default [
                             passport.authenticate('bearer', { session: false }),
                             controllers.get('auth:user:info')?.handler({}),
                         ],
-                    },
-                    
-                    
+                    }
                 ],
             },
+        ]
+        
+    },
+    {
+        path: 'auth',
+        routes: [
+            {
+                path: 'keycloak',
+                routes: [
+                    {
+                        path: '',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('keycloak', { scope: ['profile'] })
+                        ],
+                    },  
+                    {
+                        path: 'callback',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('keycloak', { successReturnToOrRedirect: '/', failureRedirect: '/login' })
+                        ],
+                    }
+                ]
+
+            }
         ],
     },
     {

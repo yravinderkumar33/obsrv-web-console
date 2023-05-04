@@ -45,12 +45,12 @@ CREATE TABLE IF NOT EXISTS "oauth_clients" (
 
  CREATE TABLE IF NOT EXISTS "oauth_users" (
   id VARCHAR(255) PRIMARY KEY,
-  user_name VARCHAR(255) UNIQUE,
-  password VARCHAR(255),
+  user_name VARCHAR(255),
+  password VARCHAR(255) NULL,
   first_name VARCHAR(255) NULL,
   last_name VARCHAR(255) NULL,
   provider VARCHAR(255) NULL,
-  email_address VARCHAR(255) NULL,
+  email_address VARCHAR(255) UNIQUE,
   mobile_number VARCHAR(255) NULL,
   created_on TIMESTAMP,
   last_updated_on TIMESTAMP NULL

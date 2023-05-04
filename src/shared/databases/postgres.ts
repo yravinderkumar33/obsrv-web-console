@@ -6,7 +6,7 @@ const postGresConnectionString = process.env.POSTGRES_CONNECTION_STRING
 
 const pool = new Pool({ connectionString: postGresConnectionString });
 
-const create = async (table: string, data: IPostgres): Promise<QueryResult<IPostgres>> => {
+const create = async (table: string, data: IPostgres): Promise<IPostgres> => {
     const fields = Object.keys(data);
     const values = Object.values(data);
 
@@ -17,7 +17,7 @@ const create = async (table: string, data: IPostgres): Promise<QueryResult<IPost
 
     const result = await pool.query<IPostgres>(query);
 
-    return result;
+    return result.rows[0];
 };
 
 const find = async (table: string, conditions: IPostgres, jsonbType: Array<string> = [], arrayType: Array<string> = []): Promise<IPostgres[]> => {
