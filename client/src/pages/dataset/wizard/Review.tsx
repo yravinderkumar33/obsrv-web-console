@@ -15,13 +15,19 @@ import { updateJSONSchema } from 'services/json-schema';
 import { downloadJsonFile } from 'utils/downloadUtils';
 import { interactIds } from 'data/telemetry/interactIds';
 
-const Final = ({ handleNext, handleBack, index, master }: any) => {
+import useImpression from 'hooks/useImpression';
+import pageIds from 'data/telemetry/pageIds';
+
+const Final = ({ handleBack, master, edit }: any) => {
     const storeState: any = useSelector((state: any) => state);
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const jsonSchema = _.get(wizardState, 'pages.jsonSchema.schema');
     const flattenedData = _.get(wizardState, ['pages', 'columns', 'state', 'schema']);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const pageIdPrefix = _.get(pageIds, [master ? 'masterdataset' : 'dataset', edit ? 'edit' : 'create']);;
+    useImpression({ type: "view", pageid: `${pageIdPrefix}:review` });
 
     const handleDownloadButton = () => {
         if (jsonSchema && flattenedData) {
@@ -41,9 +47,7 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
         }
     }
 
-    const gotoPreviousSection = () => {
-        handleBack();
-    }
+    const gotoPreviousSection = () => handleBack();
 
     return (
         <>
@@ -70,19 +74,19 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
                             <Button
-                            data-edataid={interactIds.dataset.create.publish}
-                            data-objectid="dataset:previous"
-                            data-objecttype="dataset"
-                             variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                                data-edataid={interactIds.dataset.create.publish}
+                                data-objectid="dataset:previous"
+                                data-objecttype="dataset"
+                                variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                 Previous
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
-                            <Button 
-                            data-edataid={interactIds.dataset.create.publish}
-                            data-objectid="dataset:save"
-                            data-objecttype="dataset"
-                            variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
+                            <Button
+                                data-edataid={interactIds.dataset.create.publish}
+                                data-objectid="dataset:save"
+                                data-objecttype="dataset"
+                                variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>
                         </AnimateButton>
