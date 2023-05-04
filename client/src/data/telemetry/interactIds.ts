@@ -13,8 +13,7 @@ export const interactIds = {
       menu: {
         open: 'button:icon:menu:open',
         close: 'button:icon:menu:close'
-      } 
-  
+      }
     },
     scroll: 'button:scroll',
     snackbar: {
@@ -26,17 +25,19 @@ export const interactIds = {
       password: {
         visible: 'button:input:password:visible',
         invisible: 'button:input:password:invisible'
-      }
-    }
+      },
+      email: 'button:input:email'
+    },
   },
   card: {
     info: 'card:info'
   },
   chart: {
-    filter: 'chart:filter'
+    filter: 'chart:filter',
+    node: 'node:running:status'
   },
   dataset: {
-    view:'dataset:view',
+    view: 'dataset:view',
     create: {
       add: {
         transformation: 'dataset:create:add:transformation',
@@ -48,6 +49,7 @@ export const interactIds = {
       },
       publish: 'dataset:create:publish'
     },
+    download: 'dataset:download',
     edit: {
       add: {
         transformation: 'dataset:edit:add:transformation',
@@ -58,7 +60,8 @@ export const interactIds = {
         denorm: 'dataset:edit:delete:denorm'
       },
       publish: 'dataset:edit:publish'
-    }
+    },
+    reset: 'dataset:reset'
   },
   description: {
     edit: 'description:edit'
@@ -67,6 +70,7 @@ export const interactIds = {
     create: 'events:create'
   },
   file: {
+    add: 'file:add',
     remove: {
       one: 'file:remove:one',
       many: 'file:remove:many'

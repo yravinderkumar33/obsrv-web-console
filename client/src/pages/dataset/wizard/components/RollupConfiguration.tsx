@@ -68,11 +68,9 @@ const RollupConfiguration = (props: any) => {
             Header: 'Actions',
             Cell: ({ value, cell }: any) => {
                 return <IconButton 
-                        id="rollupButton"
-                        data-edataId={interactIds.rollup.delete}
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="rollupButton"
+                        data-edataid={interactIds.rollup.delete}
+                        data-objectid="deleteRollup"
+                        data-objecttype="dataset"
                         variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
                     <DeleteOutlined />
                 </IconButton>
@@ -125,11 +123,9 @@ const RollupConfiguration = (props: any) => {
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="row">
                     <Box><Button 
-                    id="rollupButton"
-                    data-edataId={interactIds.rollup.add}
-                    data-edataType="INTERACT"
-                    data-objectId={interactIds.object.id}
-                    data-objectType="rollupButton"
+                    data-edataid={interactIds.rollup.add}
+                    data-objectid="addRollup"
+                    data-objecttype="dataset"
                         variant="outlined" onClick={_ => setDialogOpen(true)}>Add New Rollup</Button> </Box>
                 </Stack>
             </Grid>

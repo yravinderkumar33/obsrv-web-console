@@ -1,4 +1,4 @@
-import { Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack } from '@mui/material';
 import AuthLogin from 'pages/auth/components/AuthLogin';
 import AuthWrapper from './components/AuthWrapper';
 import Logo from 'components/logo';
@@ -9,7 +9,6 @@ const Login = () => (
             <Grid item xs={12}>
                 <Stack direction="column" justifyContent="center" alignItems="center" sx={{ mb: { xs: -0.5, sm: 0.5 } }}>
                     <Logo />
-                    {/* <Typography variant="h3">Login</Typography> */}
                 </Stack>
             </Grid>
             <Grid item xs={12}>

@@ -19,10 +19,10 @@ const AlertDialog = ({ handleClose, action = null, open = false, context = {} }:
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button data-edataId={interactIds.alert.dialog.cancel} data-edataType="INTERACT" data-objectId="1.0.0" data-objectType="alertDialog" color="error" onClick={e => handleClose()}>
+                    <Button data-edataid={interactIds.alert.dialog.cancel} data-objectid="dialog:cancel" data-objecttype="alertDialog" color="error" onClick={e => handleClose()}>
                         Cancel
                     </Button>
-                    <Button data-edataId={interactIds.alert.dialog.agree} data-edataType="INTERACT" data-objectId="1.0.0" data-objectType="alertDialog" variant="contained" onClick={handleAction} autoFocus>
+                    <Button data-edataid={interactIds.alert.dialog.agree} data-objectid="dialog:agree" data-objecttype="alertDialog" variant="contained" onClick={handleAction} autoFocus>
                         Agree
                     </Button>
                 </DialogActions>

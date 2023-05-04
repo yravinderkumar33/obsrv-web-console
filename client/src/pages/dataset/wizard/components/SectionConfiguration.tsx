@@ -11,9 +11,10 @@ import { sections as allSections } from 'data/wizard';
 import { updateClientState } from 'services/dataset';
 import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
-import { interactIds } from 'data/telemetry/interactIds';
+import useImpression from 'hooks/useImpression';
+import pageIds from 'data/telemetry/pageIds';
 
-const SectionsConfiguration = ({ handleNext, handleBack, index, section, defaultExpanded, master }: any) => {
+const SectionsConfiguration = ({ handleNext, handleBack, index, section, master, edit }: any) => {
     const sections = _.get(allSections, section) || [];
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const jsonSchemaData = _.get(wizardState, 'pages.columns.state.schema') || [];
@@ -21,6 +22,10 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, default
     const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => { setExpanded(isExpanded ? panel : false) };
     const dispatch = useDispatch();
     const [queryParams] = useSearchParams();
+
+    const pageIdPrefix = _.get(pageIds, [master ? 'masterdataset' : 'dataset', edit ? 'edit' : 'create']);
+    const pageIdSuffix = _.get(pageIds, [master ? 'masterdataset' : 'dataset', 'pages', section]);
+    useImpression({ type: "view", pageid: `${pageIdPrefix}:${pageIdSuffix}` });
 
     const predicate = (section: Record<string, any>) => {
         const isMasterFromParam = queryParams.get("master");
@@ -71,24 +76,20 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, default
             <Grid item xs={12}>
                 <Stack direction="row" justifyContent="space-between">
                     <AnimateButton>
-                        <Button 
-                        id="section:config:button"
-                        data-edataId="previous:section"
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="buttonClick"
-                        variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                        <Button
+                            data-edataid="section:config"
+                            data-objectid="previousStep"
+                            data-objecttype="dataset"
+                            variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                             Previous
                         </Button>
                     </AnimateButton>
                     <AnimateButton>
-                        <Button 
-                        id="section:config:button"
-                        data-edataId="next:section"
-                        data-edataType="INTERACT"
-                        data-objectId={interactIds.object.id}
-                        data-objectType="buttonClick"
-                        variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
+                        <Button
+                            data-edataid="section:config"
+                            data-objectid="nextStep"
+                            data-objecttype="dataset"
+                            variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
                             Next
                         </Button>
                     </AnimateButton>

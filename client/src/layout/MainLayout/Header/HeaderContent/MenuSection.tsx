@@ -1,9 +1,10 @@
-import { useTheme } from '@mui/material/styles';
+import * as _ from 'lodash';
 import { Box, Avatar, Tooltip } from '@mui/material';
 import IconButton from 'components/@extended/IconButton';
 import grafanaIcon from 'assets/images/icons/grafana_icon.svg';
 import supersetIcon from 'assets/images/icons/superset_logo.png';
 import { useMemo } from 'react';
+import edataIds from 'data/telemetry/interact.json'
 
 const MegaMenuSection = () => {
 
@@ -16,11 +17,13 @@ const MegaMenuSection = () => {
     const buttons = useMemo(() => [
         {
             icon: grafanaIcon,
+            edataId: "grafana_navigate",
             tooltip: 'Navigate to Grafana Dashboard',
             url: process.env.REACT_APP_GRAFANA_URL
         },
         {
             icon: supersetIcon,
+            edataId: "superset_navigate",
             tooltip: 'Navigate to Superset Dashboard',
             url: process.env.REACT_APP_SUPERSET_URL
         }
@@ -31,14 +34,12 @@ const MegaMenuSection = () => {
             {
                 buttons.map((button, index) => {
                     return <Tooltip title={button.tooltip} key={index}>
-                       
-
-                        <IconButton 
-                        id="menuIcon" data-edataId="icon:navigation" data-edataType="INTERACT" data-objectId="1.0.0" data-objectType="iconButton"
-                        color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: 'transparent', ml: 0.75 }} onClick={_ => navigate(button.url)}>
+                        <IconButton
+                            data-edataid={_.get(edataIds, button.edataId)}
+                            color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: 'transparent', ml: 0.75 }} onClick={_ => navigate(button.url)}>
                             <Avatar sx={{ width: 30, height: 30 }} src={button.icon}></Avatar>
                         </IconButton>
-                       
+
                     </Tooltip>
                 })
             }

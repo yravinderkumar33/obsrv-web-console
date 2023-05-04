@@ -55,7 +55,10 @@ const DatasetsList = ({ datasets }: any) => {
             return <CircularProgress size={20} color="success" />;
         }
 
-        return <div>{asyncData}</div>;
+        return <div data-edataid=""
+            data-objectid=""
+            data-objecttype='datasetLive'
+        >{asyncData}</div>;
     }
 
 
@@ -99,7 +102,11 @@ const DatasetsList = ({ datasets }: any) => {
                     const row = cell?.row?.original || {};
                     return <Grid container spacing={1} justifyContent="center">
                         <Grid item>
-                            <Chip color={'success'} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" /></Grid>
+                            <Chip
+                                data-edataid='dataset:live'
+                                data-objectid={value}
+                                data-objecttype="datasetLive"
+                                color={'success'} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" /></Grid>
                     </Grid>
                 }
             },
@@ -111,7 +118,11 @@ const DatasetsList = ({ datasets }: any) => {
                     const row = cell?.row?.original || {};
                     return <Grid container spacing={1} justifyContent="center">
                         <Grid item>
-                            <Chip color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" />          </Grid>
+                            <Chip
+                                data-edataid='dataset:live'
+                                data-objectid={value}
+                                data-objecttype='dataset'
+                                color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" />          </Grid>
                     </Grid>
                 }
             },
@@ -208,25 +219,31 @@ const DatasetsList = ({ datasets }: any) => {
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="View Metrics" onClick={(e: any) => navigateToPath(`/datasets/${row?.id}`)}>
                             <IconButton
-                            id="datasets/view"
-                            data-edataId={interactIds.dataset.view}
-                             disabled={row?.type !== "dataset"} color="primary" size="large">
+                                id="datasets/view"
+                                data-edataid={interactIds.dataset.view}
+                                data-objectid="datasets/view"
+                                data-objecttype="datasetLive"
+                                disabled={row?.type !== "dataset"} color="primary" size="large">
                                 < DashboardOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_id}`)}>
-                            <IconButton 
-                            id="datasets/create"
-                            data-edataId={interactIds.dataset.create.add.transformation}
-                            color="primary" size="large">
+                            <IconButton
+                                id="datasets/create"
+                                data-edataid={interactIds.dataset.create.add.transformation}
+                                data-objectid="datasets/create"
+                                data-objecttype="datasetLive"
+                                color="primary" size="large">
                                 <DatabaseOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
                             <IconButton
-                            id="datasets/edit"
-                            data-edataId={interactIds.dataset.edit.add.transformation}
-                            color="primary" size="large" disabled>
+                                id="datasets/edit"
+                                data-edataid={interactIds.dataset.edit.add.transformation}
+                                data-objectid="datasets/edit"
+                                data-objecttype="datasetLive"
+                                color="primary" size="large" disabled>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

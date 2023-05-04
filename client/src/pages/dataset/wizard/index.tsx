@@ -2,16 +2,18 @@ import { useState, ReactNode, useEffect } from 'react';
 import { Button, Step, Stepper, StepLabel, Typography, Box } from '@mui/material';
 import MainCard from 'components/MainCard';
 import DatasetConfiguration from './DatasetConfiguration';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { reset } from 'store/reducers/wizard';
 import ListColumns from './ListColumns';
 import Review from './Review';
 import * as _ from 'lodash';
 import SectionConfiguration from './components/SectionConfiguration';
 import { fetchDatasetsThunk } from 'store/middlewares';
+import useImpression from 'hooks/useImpression';
+import pageIds from 'data/telemetry/pageIds';
 
 const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Advanced', 'Review'];
-const masterSteps = ['Schema', 'Ingestion', 'Review'];
+const masterSteps = ['Schema', 'Input', 'Review'];
 
 const getStepContent = (step: number, handleNext: () => void, handleBack: () => void, setErrorIndex: (i: number | null) => void, master: boolean, edit: boolean) => {
     if (master) {
@@ -21,7 +23,7 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
             case 1:
                 return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={1} section="input" edit={edit} master={master} />
             case 2:
-                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} master={master} />
+                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={2} master={master} edit={edit} />
             default:
                 throw new Error('Unknown step');
         }
@@ -38,7 +40,7 @@ const getStepContent = (step: number, handleNext: () => void, handleBack: () => 
             case 4:
                 return <SectionConfiguration handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={4} section="advanced" edit={edit} />
             case 5:
-                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={5} />
+                return <Review handleBack={handleBack} handleNext={handleNext} setErrorIndex={setErrorIndex} index={5} edit={edit} />
             default:
                 throw new Error('Unknown step');
         }
@@ -49,6 +51,7 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
     const [activeStep, setActiveStep] = useState(0);
     const [showWizard, setShowWizard] = useState(false);
     const [errorIndex, setErrorIndex] = useState<number | null>(null);
+    useImpression({ type: "view", pageid: _.get(pageIds, [master ? 'masterdataset' : 'dataset', edit ? 'edit' : 'create']) });
 
     const dispatch = useDispatch();
 

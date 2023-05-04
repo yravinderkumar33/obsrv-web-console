@@ -12,17 +12,20 @@ import { Avatar } from '@mui/material';
 import { navigateToGrafana } from 'services/grafana';
 import { useTheme } from '@mui/material';
 import grafanaIcon from 'assets/images/icons/grafana_icon.svg';
-import { pageIds } from 'data/telemetry/pageIds';
+import pageIds from 'data/telemetry/pageIds';
+import useImpression from 'hooks/useImpression';
 
 const MetricsDetails = (props: any) => {
-    const theme = useTheme();
-    const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
     const { id } = props;
+    const theme = useTheme();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const params = useParams();
     const [metadata, setmetadata] = useState<Record<string, any>>();
+
+    const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
     const metricId = id || _.get(params, 'metricId');
+    useImpression({ type: "detail", pageid: _.get(pageIds, ['metrics', metricId]) });
 
     const navigateToHome = ({ errMsg }: any) => {
         navigate('/');
@@ -62,15 +65,16 @@ const MetricsDetails = (props: any) => {
 
     const renderGrafanaIcon = () => {
         const link = _.get(metadata, 'links.grafana.link')
+        const id = _.get(metadata, 'id');
         if (!link) return null;
         return (
             <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
-            <IconButton 
-            id="grafana" data-edataId={pageIds.metrics.infra} data-edataType="INTERACT" data-edataVersion="1.5.0"
-            color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
-                <Avatar alt="Gradana" src={grafanaIcon} />
-            </IconButton>
-        </Tooltip>
+                <IconButton
+                    data-edataid={pageIds.metrics.infra}
+                    color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
+                    <Avatar alt="Gradana" src={grafanaIcon} />
+                </IconButton>
+            </Tooltip>
         );
     }
 

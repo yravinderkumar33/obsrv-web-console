@@ -109,23 +109,21 @@ const DraftDatasetsList = ({ datasets }: any) => {
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
                             <IconButton
-                            id="dataset/publish"
-                            data-edataId={interactIds.dataset.create.publish}
-                            data-edataType="INTERACT"
-                            data-objectId={interactIds.object.id}
-                            data-objectType="iconButtonClick"
-                             color="primary" size="large" disabled={status !== "ready_to_publish"}>
+                                id="dataset/publish"
+                                data-edataid={interactIds.dataset.create.publish}
+                                data-objectid="dataset/publish"
+                                data-objecttype="datasetDraft"
+                                color="primary" size="large" disabled={status !== "ready_to_publish"}>
                                 < PlayCircleOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
                             <IconButton
-                            id="dataset/edit"
-                            data-edataId={interactIds.dataset.edit.add.transformation}
-                            data-edataType="INTERACT"
-                            data-objectId={interactIds.object.id}
-                            data-objectType="iconButtonClick"
-                            color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
+                                id="dataset/edit"
+                                data-edataid={interactIds.dataset.edit.add.transformation}
+                                data-objectid="dataset/edit"
+                                data-objecttype="datasetDraft"
+                                color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

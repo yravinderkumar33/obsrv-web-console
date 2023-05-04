@@ -38,6 +38,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        id: "nodeRunningStatus",
                         description: "Nodes Running Status",
                         chart: <AnalyticsDataCard title="Nodes Status">
                             <Stack spacing={4} direction="column" justifyContent="space-around" height={'auto'} >
@@ -47,6 +48,7 @@ export const metricsMetadata = [
                         </AnalyticsDataCard>
                     },
                     {
+                        id: "cpuUsge",
                         description: "Current CPU Usage Percent",
                         chart: <AnalyticsDataCard title="CPU Usage">
                             <GaugeChart query={_.get(chartMeta, 'cpu_usage_radial.query')} />
@@ -54,6 +56,7 @@ export const metricsMetadata = [
                         </AnalyticsDataCard>
                     },
                     {
+                        id:"memoryUsage",
                         description: "Current Memory Usage Percent",
                         chart: <AnalyticsDataCard title="Memory Usage">
                             <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
@@ -62,6 +65,7 @@ export const metricsMetadata = [
                         </AnalyticsDataCard>
                     },
                     {
+                        id:"diskUsage",
                         description: "Current Disk Usage Percent",
                         chart: <AnalyticsDataCard title="Disk Usage">
                             <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
@@ -79,18 +83,21 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        id: 'cpuUsage',
                         description: "This chart typically displays the percentage of a computer's central processing unit (CPU) that is currently being utilized. The chart may show a live update of the CPU usage over time, or display a historical record of usage over a specified period.",
                         chart: <ApexWithFilters title="CPU Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
+                        id: 'memoryUsage',
                         description: "This chart is a graphical representation of the amount of memory being used by a computer system at a given time. The chart typically displays the amount of memory usage as a percentage of the total available memory, with the horizontal axis representing time and the vertical axis representing memory usage percentage",
                         chart: <ApexWithFilters title="Memory Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_memory')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
+                        id: 'diskUsage',
                         description: "This is a graphical representation of the amount of disk space being used across a cluster",
                         chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
                             <ApexChart metadata={_.get(chartMeta, 'instance_disk')} interval={1140}></ApexChart>
@@ -107,6 +114,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
+                        id: 'incidents/alerts',
                         description: "This table shows the currently active infrastructure alerts within the cluster",
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]}>
                             <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "infra" } })} />
@@ -230,7 +238,7 @@ export const metricsMetadata = [
                     },
                     {
                         description: "This chart shows the total number of events received today",
-                        chart: <ReportCard primary="0" secondary="Total Data Received (Today)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} suffix="Events" />
+                        chart: <ReportCard primary="0" secondary="Data Received (Today)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'totalEventsProcessedToday.query')} suffix="Events" />
                     }
                 ]
             },

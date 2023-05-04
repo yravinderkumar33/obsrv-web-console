@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { useTheme } from '@mui/material/styles';
 import { Box, Toolbar, useMediaQuery } from '@mui/material';
 import Drawer from './Drawer';
 import Header from './Header';
-import navigation from 'menu-items';
-import Breadcrumbs from 'components/@extended/Breadcrumbs';
 
 import { openDrawer } from 'store/reducers/menu';
 

@@ -4,9 +4,9 @@ import { AppBar, AppBarProps, Toolbar, useMediaQuery } from '@mui/material';
 import AppBarStyled from './AppBarStyled';
 import HeaderContent from './HeaderContent';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
-import { ReactNode, useEffect, useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import IconButton from 'components/@extended/IconButton';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds from 'data/telemetry/interact.json'
 
 const Header = ({ open, handleDrawerToggle }: any) => {
     const theme = useTheme();
@@ -15,28 +15,21 @@ const Header = ({ open, handleDrawerToggle }: any) => {
     const headerContent = useMemo(() => <HeaderContent />, []);
     const iconBackColorOpen = 'grey.200';
 
-    
-
     const mainHeader: ReactNode = (
-   
-            <Toolbar>
-                <IconButton
-                    id=""
-                    data-edataId={!open ? interactIds.button.icon.menu.open : interactIds.button.icon.menu.close}
-                    data-edataType="INTERACT"
-                    data-objectId={interactIds.object.id}
-                    data-objectType="iconButton"
-                    aria-label="open drawer"
-                    onClick={handleDrawerToggle}
-                    edge="start"
-                    color="secondary"
-                    variant="light"
-                    sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor, ml: { xs: 0, lg: -2 } }}
-                >
-                    {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-                </IconButton>
-                {headerContent}
-            </Toolbar>
+        <Toolbar>
+            <IconButton
+                data-edataid={!open ? interactIds.sidebar_open : interactIds.sidebar_close}
+                aria-label="open drawer"
+                onClick={handleDrawerToggle}
+                edge="start"
+                color="secondary"
+                variant="light"
+                sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor, ml: { xs: 0, lg: -2 } }}
+            >
+                {!open ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            </IconButton>
+            {headerContent}
+        </Toolbar>
     );
 
     const appBar: AppBarProps = {
