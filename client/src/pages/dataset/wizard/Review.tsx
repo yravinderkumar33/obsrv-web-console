@@ -56,7 +56,7 @@ const Final = ({ handleBack, master, edit }: any) => {
                     Review
                 </Typography>
                 <IconButtonWithTips
-                    data-edataid={`dataset:download:JSON`}
+                    data-edataid={`${master ? 'masterDataset': 'dataset'}:download:JSON`}
                     data-objectid="downloadSchema"
                     data-objecttype={master ? 'masterDataset': 'dataset'}
                     tooltipText="Download Schema"
@@ -74,7 +74,7 @@ const Final = ({ handleBack, master, edit }: any) => {
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
                             <Button
-                                data-edataid={`dataset:review:${edit? 'edit':'create'}`}
+                                data-edataid={`${master ? 'masterDataset': 'dataset'}:review:${edit? 'edit':'create'}`}
                                 data-objectid="previous"
                                 data-objecttype={master ? 'masterDataset' : 'dataset'}
                                 variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
@@ -83,7 +83,7 @@ const Final = ({ handleBack, master, edit }: any) => {
                         </AnimateButton>
                         <AnimateButton>
                             <Button
-                                data-edataid={`dataset:review:${edit? 'edit':'create'}`}
+                                data-edataid={`${master ? 'masterDataset': 'dataset'}:review:${edit? 'edit':'create'}`}
                                 data-objectid="saveDataset"
                                 data-objecttype={master ? 'masterDataset' : 'dataset'}
                                 variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>

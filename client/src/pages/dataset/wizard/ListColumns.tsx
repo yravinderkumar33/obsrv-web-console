@@ -296,7 +296,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         />
                         )}
                         {filterByChip &&
-                            <Button data-edataId="dataset:list:columns" data-objectId="closeOutlined:clearFilter" data-objectType={master ? 'masterDataset': 'dataset'}  size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
+                            <Button data-edataid={`${master ? 'masterDataset': 'dataset'}:list:columns`} data-objecid="closeOutlined:clearFilter" data-objecttype={master ? 'masterDataset': 'dataset'}  size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
                                 Clear filters
                             </Button>
                         }
