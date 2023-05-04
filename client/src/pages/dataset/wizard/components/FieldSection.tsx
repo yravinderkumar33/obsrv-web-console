@@ -35,7 +35,7 @@ const FieldSection = (props: any) => {
         if (master && noMasterNav) return null;
         return <Grid item xs={12}>
             <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
-                {navigation?.next && <Button data-edataid={`dataset:step:${index}:${section}`} data-objectid={_.startCase(navigation.next)} data-objecttype={master ? 'masterDataset' : 'master'} variant="outlined" endIcon={<ArrowRightOutlined />} onClick={_ => navigate()}>{_.startCase(navigation.next)}</Button>}
+                {navigation?.next && <Button data-edataid={`${master ? 'masterDataset' : 'master'}:step:${index}:${section}`} data-objectid={_.startCase(navigation.next)} data-objecttype={master ? 'masterDataset' : 'master'} variant="outlined" endIcon={<ArrowRightOutlined />} onClick={_ => navigate()}>{_.startCase(navigation.next)}</Button>}
             </Stack>
         </Grid>
     }

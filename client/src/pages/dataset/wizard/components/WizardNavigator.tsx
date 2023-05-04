@@ -6,7 +6,7 @@ const WizardNavigator = ({ showPrevious, gotoPreviousSection, gotoNextSection, e
     <Stack direction="row" justifyContent={showPrevious ? 'flex-end' : 'space-between'}>
         {!showPrevious && gotoPreviousSection &&
             <AnimateButton>
-                <Button data-edataId="dataset:list:columns:previous" data-objectId="previous" data-objectType={master ? 'masterDataset' : 'dataset'} variant="contained" sx={{ my: 1, mx: 1, width: 230, height: 44 }} type="button" onClick={gotoPreviousSection}>
+                <Button data-edataid={`${master ? 'masterDataset' : 'dataset'}:list:columns:previous`} data-objectid="previous" data-objecttype={master ? 'masterDataset' : 'dataset'} variant="contained" sx={{ my: 1, mx: 1, width: 230, height: 44 }} type="button" onClick={gotoPreviousSection}>
                     <Typography variant="h5">Previous</Typography>
                 </Button>
             </AnimateButton>
@@ -14,14 +14,14 @@ const WizardNavigator = ({ showPrevious, gotoPreviousSection, gotoNextSection, e
         <Box display="flex" justifyContent="space-evenly" alignItems="center">
             {enableDownload && handleDownload &&
                 <AnimateButton>
-                    <Button data-edataId="dataset:list:columns:download" data-objectId="downloadJSON" data-objectType={master ? 'masterDataset' : 'dataset'} startIcon={<DownloadOutlined style={{ fontSize: '1.25rem' }} />} sx={{ my: 1, mx: 1, width: 278, height: 44 }} type="button" onClick={handleDownload} variant='outlined'>
+                    <Button data-edataid={`${master ? 'masterDataset' : 'dataset'}:list:columns:previous`} data-objectid="downloadJSON" data-objecttype={master ? 'masterDataset' : 'dataset'} startIcon={<DownloadOutlined style={{ fontSize: '1.25rem' }} />} sx={{ my: 1, mx: 1, width: 278, height: 44 }} type="button" onClick={handleDownload} variant='outlined'>
                         <Typography variant="h5">Download JSON Schema</Typography>
                     </Button>
                 </AnimateButton>
             }
             {gotoNextSection &&
                 <AnimateButton>
-                    <Button data-edataId="dataset:list:proceed" data-objectId="proceed" data-objectType={master ? 'masterDataset' : 'dataset'} variant="contained" sx={{ my: 1, mx: 1, width: 230, height: 44 }} type="button" onClick={gotoNextSection}>
+                    <Button data-edataid="dataset:list:proceed" data-objectid="proceed" data-objecttype={master ? 'masterDataset' : 'dataset'} variant="contained" sx={{ my: 1, mx: 1, width: 230, height: 44 }} type="button" onClick={gotoNextSection}>
                         <Typography variant="h5">Proceed</Typography>
                     </Button>
                 </AnimateButton>

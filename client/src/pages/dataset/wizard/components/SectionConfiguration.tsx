@@ -77,7 +77,7 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
                 <Stack direction="row" justifyContent="space-between">
                     <AnimateButton>
                         <Button
-                            data-edataid={`dataset:section:config:${section}`}
+                            data-edataid={`${master ? 'masterDataset': 'dataset'}:section:config:${section}`}
                             data-objectid="previous"
                             data-objecttype={master ? 'masterDataset': 'dataset'}
                             variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
@@ -86,7 +86,7 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
                     </AnimateButton>
                     <AnimateButton>
                         <Button
-                            data-edataid={`dataset:section:config:${section}`}
+                            data-edataid={`${master ? 'masterDataset': 'dataset'}:section:config:${section}`}
                             data-objectid="next"
                             data-objecttype={master ? 'masterDataset': 'dataset'}
                             variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>

@@ -144,7 +144,7 @@ const AddTransformationExpression = (props: any) => {
                     }
                     {_.get(value, 'transformation') === 'custom' && <Box><Button data-edataid="jsonata:editor:open"
                         data-objectid="jsonata"
-                        data-objectType="dataset" onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button></Box>}
+                        data-objecttype="dataset" onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button></Box>}
                 </Stack>
             </DialogContent>
             <DialogActions>
