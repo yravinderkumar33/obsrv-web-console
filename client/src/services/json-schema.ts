@@ -25,6 +25,39 @@ const addRequiredFields = (
     })
 }
 
+export const getNesting = (payload: any, jsonSchemaData: any) => {
+    const data = _.reduce(payload, (acc: any, current: any) => {
+        const { column } = current;
+        const [parent]: any = _.split(column, '.');
+        const existing = acc[parent] || [];
+        acc[parent] = [...existing, current];
+        return acc;
+    }, {});
+    return nestedToColumns(data, jsonSchemaData);
+}
+
+export const nestedToColumns = (payload: any, jsonSchemaData: any) => {
+    return _.reduce(payload, (acc: any, current: any) => {
+        const property = current;
+        const existing = acc || [];
+        if (_.values(property).length === 1) {
+            acc = [...existing, ...property];
+        }
+        else if (property.length > 1) {
+            const subRows = property;
+            const [element] = property;
+            const [parent] = _.split(element?.column, ".");
+            const data = {
+                column: parent,
+                type: _.get(jsonSchemaData, ['properties', parent, 'type']),
+                subRows,
+            }
+            acc = [...existing, data];
+        }
+        return acc;
+    }, []);
+}
+
 const flatten = (schemaObject: Record<string, any>) => {
     let schemaObjectData = schemaObject;
     const result: Record<string, any> = {};
@@ -56,67 +89,6 @@ export const flattenSchema = (schema: Record<string, any>) => {
     return _.map(flattend, (value, key) => ({ column: key, ...value }))
 }
 
-const modifyRequired = (schemaPropertiesObject: any, requiredPath: any, required: any, requiredKey: any) => {
-    const previousValue = _.get(schemaPropertiesObject, requiredPath) || [];
-    const previousRequired = _.get(previousValue, 'required') || [];
-    if (required)
-        _.set(schemaPropertiesObject, requiredPath, { ...previousValue, required: [...previousRequired, requiredKey] });
-    if (!required)
-        _.set(schemaPropertiesObject, requiredPath, { ...previousValue, required: _.pull(previousRequired, requiredKey) });
-}
-
-export const checkIfRequired = (schemaPropertiesObject: any, originalRequired: string[],
-    key: string, required: boolean
-) => {
-    const jsonKey = key.replace('properties.', '');
-    if (jsonKey.includes(".")) {
-        const path = jsonKey.split(".");
-        const actualKey = _.last(path);
-        const keyType = _.get(schemaPropertiesObject, [path[0], 'type']);
-        if (keyType === "array") {
-            const requiredPath = [path[0], 'items'].join(".");
-            modifyRequired(schemaPropertiesObject, requiredPath, required, actualKey);
-        }
-        else if (keyType === "object") {
-            const requiredPath = path[0];
-            modifyRequired(schemaPropertiesObject, requiredPath, required, actualKey);
-        }
-        return [...originalRequired];
-    }
-    else if (!required) return _.pull(originalRequired, jsonKey);
-    else if (_.includes(originalRequired, key)) return originalRequired;
-    else return [...originalRequired, jsonKey];
-}
-
-export const deleteItemFromSchema = (valueFromOriginalPayload: any, key: string) => {
-    _.unset(valueFromOriginalPayload, key);
-}
-
-export const updateJSONSchema = (original: any, updatePayload: any) => {
-    const clonedOriginal = _.cloneDeep(original);
-    _.forEach(updatePayload, (values, key) => {
-        let valueFromOriginalPayload = clonedOriginal[key];
-        if (valueFromOriginalPayload) {
-            const modifiedRows = _.filter(values, ['isModified', true]);
-            _.forEach(modifiedRows, row => {
-                const { isDeleted = false, required = true, key, type } = row;
-                if (isDeleted)
-                    deleteItemFromSchema(valueFromOriginalPayload, key);
-                else {
-                    _.set(valueFromOriginalPayload, key, { type: type });
-                    if (required && !clonedOriginal.schema.required) {
-                        clonedOriginal.schema.required = [];
-                        _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.properties, clonedOriginal.schema.required, key, required));
-                    } else if (required && clonedOriginal.schema.required) {
-                        _.set(clonedOriginal, 'schema.required', checkIfRequired(clonedOriginal.schema.properties, clonedOriginal.schema.required, key, required));
-                    }
-                }
-            })
-        }
-    });
-    return clonedOriginal;
-}
-
 export const checkForCriticalSuggestion = (suggestions: any) => _.some(suggestions, suggestion => {
     return _.includes(['must-fix'], suggestion?.severity?.toLowerCase())
 })
@@ -129,4 +101,58 @@ export const isResolved = (payload: Record<string, any>) => {
 
 export const areConflictsResolved = (payload: Array<any>) => {
     return _.every(payload, isResolved);
+}
+
+const getPathToRequiredKey = (schema: Record<string, any>, schemaKeyPath: string, schemaKey: string) => {
+    const regExStr = `properties.${schemaKey}`;
+    const regex = `(.${regExStr})`;
+    const [pathToRequiredKey] = _.split(schemaKeyPath, new RegExp(regex, 'g'));
+    if (pathToRequiredKey === schemaKeyPath) return 'required'
+    return `${pathToRequiredKey}.required`
+}
+
+const changeRequiredPropertyInSchema = (schema: Record<string, any>, schemaKeyPath: string, required: boolean) => {
+    const schemaKey = _.last(_.split(schemaKeyPath, '.'));
+    if (schemaKey) {
+        const pathToRequiredProperty = getPathToRequiredKey(schema, schemaKeyPath, schemaKey);
+        let existingRequiredKeys = _.get(schema, pathToRequiredProperty) || [];
+        if (required) {
+            // add to required property.
+            const updatedRequiredKeys = _.includes(existingRequiredKeys, schemaKey) ? existingRequiredKeys : [...existingRequiredKeys, schemaKey];
+            _.set(schema, pathToRequiredProperty, updatedRequiredKeys);
+        } else {
+            // remove from required property.
+            const updatedRequiredKeys = _.difference(existingRequiredKeys, [schemaKey]);
+            _.set(schema, pathToRequiredProperty, updatedRequiredKeys);
+        }
+    }
+}
+
+const deleteItemFromSchema = (schema: Record<string, any>, schemaKeyPath: string, required: boolean) => {
+    if (_.has(schema, schemaKeyPath)) {
+        _.unset(schema, schemaKeyPath);
+        changeRequiredPropertyInSchema(schema, schemaKeyPath, required);
+    }
+}
+
+const updateTypeInSchema = (schema: Record<string, any>, schemaPath: string, type: string) => {
+    if (_.has(schema, schemaPath)) {
+        const existing = _.get(schema, schemaPath);
+        _.set(schema, schemaPath, { ...existing, type });
+    }
+}
+
+export const updateJSONSchema = (schema: Record<string, any>, updatePayload: Record<string, any>) => {
+    const clonedOriginal = _.cloneDeep(schema);
+    const modifiedRows = _.filter(updatePayload, ['isModified', true]);
+    _.forEach(modifiedRows, modifiedRow => {
+        const { isDeleted = false, required = false, key, type } = modifiedRow;
+        if (isDeleted) {
+            deleteItemFromSchema(clonedOriginal, key, false);
+        } else {
+            updateTypeInSchema(clonedOriginal, key, type);
+            changeRequiredPropertyInSchema(clonedOriginal, key, required);
+        }
+    });
+    return clonedOriginal;
 }

@@ -13,6 +13,7 @@ import IconButtonWithTips from 'components/IconButtonWithTips';
 import { DownloadOutlined } from '@ant-design/icons';
 import { updateJSONSchema } from 'services/json-schema';
 import { downloadJsonFile } from 'utils/downloadUtils';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const Final = ({ handleNext, handleBack, index, master }: any) => {
     const storeState: any = useSelector((state: any) => state);
@@ -23,8 +24,10 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
     const navigate = useNavigate();
 
     const handleDownloadButton = () => {
-        const data = updateJSONSchema(jsonSchema, flattenedData);
-        downloadJsonFile(data, 'json-schema');
+        if (jsonSchema && flattenedData) {
+            const data = updateJSONSchema(jsonSchema, flattenedData);
+            downloadJsonFile(data, 'json-schema');
+        }
     }
 
     const publish = async () => {
@@ -49,6 +52,9 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                     Review
                 </Typography>
                 <IconButtonWithTips
+                    data-edataid={interactIds.dataset.download}
+                    data-objectid="downloadSchema"
+                    data-objecttype="dataset"
                     tooltipText="Download Schema"
                     icon={<DownloadOutlined />}
                     handleClick={handleDownloadButton}
@@ -63,12 +69,20 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                 <Grid item xs={12}>
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
-                            <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                            <Button
+                            data-edataid={interactIds.dataset.create.publish}
+                            data-objectid="dataset:previous"
+                            data-objecttype="dataset"
+                             variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                 Previous
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
-                            <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
+                            <Button 
+                            data-edataid={interactIds.dataset.create.publish}
+                            data-objectid="dataset:save"
+                            data-objecttype="dataset"
+                            variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>
                         </AnimateButton>

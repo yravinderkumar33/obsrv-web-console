@@ -8,18 +8,19 @@ import { useDropzone } from 'react-dropzone';
 // project import
 import RejectionFiles from './RejectionFiles';
 import PlaceholderContent from './PlaceholderContent';
-import FilesPreview from './FilesPreview';
 
 // types
 import { CustomFile, DropzopType, UploadMultiFileProps } from 'types/dropzone';
+import { interactIds } from 'data/telemetry/interactIds';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
     outline: 'none',
-    padding: theme.spacing(5, 1),
+    padding: theme.spacing(3, 1),
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.background.paper,
     border: `1px dashed ${theme.palette.secondary.main}`,
-    '&:hover': { opacity: 0.72, cursor: 'pointer' }
+    '&:hover': { opacity: 0.72, cursor: 'pointer' },
+    maxHeight: 128,
 }));
 
 // ==============================|| UPLOAD - MULTIPLE FILE ||============================== //
@@ -63,23 +64,22 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
         onFileRemove && onFileRemove(null);
     };
 
-    const onRemove = (file: File | string) => {
-        const filteredItems = files && files.filter((_file) => _file !== file);
-        setFieldValue('files', filteredItems);
-        onFileRemove && onFileRemove(filteredItems);
-    };
-
     return (
         <>
             <Box
                 sx={{
                     width: '100%',
                     ...(type === DropzopType.standard && { width: 'auto', display: 'flex' }),
-                    ...sx
+                    ...sx,
+                    maxHeight: 128
                 }}
             >
                 <Stack {...(type === DropzopType.standard && { alignItems: 'center' })}>
                     <DropzoneWrapper
+                    data-edataid="add:files"
+                    data-edatatype="DRAG&DROP"
+                    data-objectid={DropzopType.default}
+                    data-objecttype="dataset"
                         {...getRootProps()}
                         sx={{
                             ...(type === DropzopType.standard && {
@@ -100,18 +100,25 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                         <PlaceholderContent type={type} />
                     </DropzoneWrapper>
                     {type === DropzopType.standard && files && files.length > 1 && (
-                        <Button variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
+                        <Button
+                        data-edataid={interactIds.file.remove.many}
+                        data-objectid={`${DropzopType.standard}:remove:multiple:files`}
+                        data-objecttype="dataset"
+                         variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
                             Remove all
                         </Button>
                     )}
                 </Stack>
                 {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
-                {files && files.length > 0 && <FilesPreview files={files} showList={showList} onRemove={onRemove} type={type} />}
             </Box>
 
             {type !== DropzopType.standard && files && files.length > 0 && (
                 <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ mt: 1.5 }}>
-                    <Button color="inherit" size="small" onClick={onRemoveAll}>
+                    <Button
+                    data-edataid={interactIds.file.remove.many}
+                    data-objectid={`${DropzopType.default}:remove:multiple:files`}
+                    data-objecttype="dataset"
+                    color="inherit" size="small" onClick={onRemoveAll}>
                         Remove all
                     </Button>
                     {/* <Button size="small" variant="contained" onClick={() => onUpload(files)}>

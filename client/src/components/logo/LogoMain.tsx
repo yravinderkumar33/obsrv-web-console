@@ -6,7 +6,9 @@ const LogoMain = ({ reverse, ...others }: { reverse?: boolean }) => {
   const theme = useTheme();
   return (
     <>
-      <img src={theme.palette.mode === 'dark' ? logo : logo} alt="Obsrv" width="150" style={{margin: 'auto'}}/>
+      <img 
+      data-edataid="obsrv:logo"
+      src={theme.palette.mode === 'dark' ? logo : logo} alt="Obsrv" width="150" style={{margin: 'auto'}}/>
     </>
   );
 };

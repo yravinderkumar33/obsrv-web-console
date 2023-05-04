@@ -41,10 +41,12 @@ export function DefaultColumnFilter({ column: { filterValue, Header, setFilter }
             fullWidth
             value={filterValue || ''}
             onChange={(e) => {
-                setFilter(e.target.value || undefined); 
+                setFilter(e.target.value || undefined);
             }}
-            placeholder={Header}
+            placeholder={`Search by ${Header}`}
             size="small"
+            sx={{ height: 40 }}
+            InputProps={{ sx: { height: '100%' } }}
         />
     );
 }
@@ -79,18 +81,21 @@ export function SelectColumnFilter({ column: { filterValue, setFilter, preFilter
 
 export function SelectBooleanFilter({ column: { filterValue, setFilter, preFilteredRows, id, customValue } }: any) {
     const filterVal = useMemo(() => {
-        if (customValue !== '') {
-            let value = customValue !== '' ? JSON.parse(customValue) : null;
-            return value;
+        if (filterValue !== undefined && filterValue !== null) {
+            let value = filterValue !== '' ? JSON.parse(filterValue) : null;
+            if (value === null) return "";
+            else if (value) return 'true';
+            else if (!value) return 'false';
         }
-        else return null;
-    }, [customValue]);
+        else return "";
+    }, [filterValue]);
 
     useEffect(() => {
-        if (filterVal !== null) {
-            setFilter(filterVal);
+        if (customValue !== null) {
+            let value = customValue !== '' ? JSON.parse(customValue) : null;
+            setFilter(value);
         }
-    }, [filterVal]);
+    }, [customValue]);
 
     const handleChange = (value: string) => {
         let parsedValue = value !== '' ? JSON.parse(value) : null;
@@ -99,10 +104,11 @@ export function SelectBooleanFilter({ column: { filterValue, setFilter, preFilte
 
     return (
         <Select
-            value={`${filterValue === null || filterValue === undefined ? '' : filterVal}`}
+            value={filterVal}
             size="small"
             fullWidth
             displayEmpty
+            sx={{ height: 40 }}
         >
             <MenuItem onClick={() => handleChange("")} value="">All</MenuItem>
             <MenuItem onClick={() => handleChange("true")} value="true">Yes</MenuItem>

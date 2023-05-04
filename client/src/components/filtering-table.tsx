@@ -9,6 +9,7 @@ import {
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router';
 import { Typography } from '@mui/material';
+import { interactIds } from 'data/telemetry/interactIds';
 
 function FilteringTable({ columns, data, title = '' }: any) {
     const filterTypes = useMemo(() => renderFilterTypes, []);
@@ -64,7 +65,11 @@ function FilteringTable({ columns, data, title = '' }: any) {
                             globalFilter={state.globalFilter}
                             setGlobalFilter={setGlobalFilter}
                         />
-                        <Button sx={{ mx: 1 }} variant="contained" onClick={e => navigate('/dataset/new')}>Add Dataset</Button>
+                        <Button
+                        data-edataid={interactIds.dataset.create.add.transformation} 
+                        data-objectid="dataset:filter" 
+                        data-objecttype="dataset"
+                        sx={{ mx: 1 }} variant="contained" onClick={e => navigate('/dataset/new')}>Add Dataset</Button>
                     </Grid>
 
 

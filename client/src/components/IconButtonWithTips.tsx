@@ -1,21 +1,22 @@
-import { IconButton } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import HtmlTooltip from "./HtmlTooltip";
-
+import { interactIds } from "data/telemetry/interactIds";
 
 interface Props {
     tooltipText: string;
     handleClick?: () => void;
-    icon: React.ReactElement<any, any>;
+    icon: any;
     buttonProps?: any;
     tooltipProps?: any;
+    label?: string;
 }
 
-const IconButtonWithTips = ({ tooltipText, handleClick = () => { }, icon, tooltipProps, buttonProps }: Props) => {
+const IconButtonWithTips = ({ tooltipText, handleClick = () => { }, tooltipProps, buttonProps, label, icon, }: Props) => {
     return (
         <HtmlTooltip title={tooltipText} {...tooltipProps}>
-            <IconButton onClick={handleClick} {...buttonProps}>
-                {icon}
-            </IconButton>
+            <Button data-edataid={interactIds.button.icon.tooltip} data-objectid={`iconButton:${label}`} onClick={handleClick} startIcon={icon} {...buttonProps}>
+                <Typography variant="body2" color="text.primary">{label}</Typography>
+            </Button>
         </HtmlTooltip>
     );
 }

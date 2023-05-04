@@ -91,9 +91,11 @@ const Notification = () => {
 
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75, zIndex: 1 }}>
+
       <IconButton
         color="secondary"
         variant="light"
+        data-edataid="notifications"
         sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor }}
         aria-label="open profile"
         ref={anchorRef}

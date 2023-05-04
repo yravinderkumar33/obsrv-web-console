@@ -12,6 +12,7 @@ import { Avatar } from '@mui/material';
 import { navigateToGrafana } from 'services/grafana';
 import { useTheme } from '@mui/material';
 import grafanaIcon from 'assets/images/icons/grafana_icon.svg';
+import { pageIds } from 'data/telemetry/pageIds';
 
 const MetricsDetails = (props: any) => {
     const theme = useTheme();
@@ -48,7 +49,7 @@ const MetricsDetails = (props: any) => {
                 return <Grid container rowSpacing={1} columnSpacing={1} key={`chart-${index}`} marginBottom={1}>
                     {
                         _.map(metadata, (meta, index) => {
-                            const { chart, description } = meta;
+                            const { chart, description} = meta;
                             return <Grid item xs={xs} sm={sm} md={md} lg={lg} key={`${index}-${Math.random()}`}>
                                 {React.cloneElement(chart, { description })}
                             </Grid>
@@ -61,12 +62,17 @@ const MetricsDetails = (props: any) => {
 
     const renderGrafanaIcon = () => {
         const link = _.get(metadata, 'links.grafana.link')
+        const id = _.get(metadata, 'id');
         if (!link) return null;
-        return <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
-            <IconButton color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
+        return (
+            <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
+            <IconButton 
+            data-edataid={pageIds.metrics.infra}
+            color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
                 <Avatar alt="Gradana" src={grafanaIcon} />
             </IconButton>
         </Tooltip>
+        );
     }
 
     return (

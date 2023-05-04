@@ -1,4 +1,4 @@
-import * as _ from 'lodash-es';
+import * as _ from 'lodash';
 
 export const totalVsRunningNodes = (response: any) => {
     const [runningNodes, totalNodes] = response;

@@ -1,13 +1,16 @@
-// ==============================|| OVERRIDES - TYPOGRAPHY ||============================== //
+// // ==============================|| OVERRIDES - TYPOGRAPHY ||============================== //
 
 export default function Typography() {
-  return {
-    MuiTypography: {
-      styleOverrides: {
-        gutterBottom: {
-          marginBottom: 12
+    return {
+        MuiTypography: {
+            variantMapping: {
+                body3: 'p',
+            },
+            styleOverrides: {
+                gutterBottom: {
+                    marginBottom: 12
+                }
+            }
         }
-      }
-    }
-  };
+    };
 }

@@ -6,6 +6,7 @@ import { useState } from "react";
 import * as _ from 'lodash';
 import { Stack } from "@mui/material";
 import { useSelector } from "react-redux";
+import { interactIds } from "data/telemetry/interactIds";
 
 const aggregateFunctions = [
     {
@@ -92,6 +93,9 @@ const AddRollup = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
+                        data-edataid={interactIds.button.icon.menu.close}
+                        data-objectid="closeCircleOutlined:addNewRollup"
+                        data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
                             position: 'absolute',
@@ -110,7 +114,11 @@ const AddRollup = (props: any) => {
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" autoFocus onClick={_ => addField()}>
+                <Button 
+                data-edataid={interactIds.rollup.add}
+                data-objectid={value}
+                data-objecttype="dataset"
+                variant="contained" autoFocus onClick={_ => addField()}>
                     Add Field
                 </Button>
             </DialogActions>

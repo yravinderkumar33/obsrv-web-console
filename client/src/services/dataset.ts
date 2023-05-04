@@ -18,8 +18,8 @@ const formatDenormFields = (denormFields: any) => {
         const final = _.map(denormFields, (item: any) => ({
             "column": item.denorm_out_field,
             "type": "json",
-            "key": `properties.${item.denorm_out_field}`,
-            "ref": `properties.${item.denorm_out_field}`,
+            "key": `properties.${_.get(item, 'denorm_out_field')}`,
+            "ref": `properties.${_.get(item, 'denorm_out_field')}`,
             "isModified": true,
             "required": false,
         }));
@@ -33,8 +33,8 @@ const formatNewFields = (newFields: any) => {
         const final = _.map(newFields, (item: any) => ({
             "column": item.column,
             "type": "string",
-            "key": `properties.${item.column}`,
-            "ref": `properties.${item.column}`,
+            "key": `properties.${_.get(item, 'column')}`,
+            "ref": `properties.${_.get(item, 'column')}`,
             "isModified": true,
             "required": false,
         }));
@@ -81,7 +81,6 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
     const { schema, state } = data;
     const validate = _.get(state, 'pages.dataValidation.formFieldSelection') || {};
     const extractionConfig = _.get(state, 'pages.dataFormat.value');
-
 
     const validation_config = {
         validate: validate !== "none",
@@ -161,7 +160,7 @@ export const saveTransformations = async (payload: any) => {
     return http.post(`${apiEndpoints.transformationsConfig}`, payload);
 }
 
-const connectorInfoToDraft = async (state: Record<string, any>, master: any) => {
+const saveConnectorMetadata = async (state: Record<string, any>, master: any) => {
     const data = _.get(state, ['wizard', 'pages', 'dataSource', 'value']) || {};
     const datasetId = _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'masterId']);
     if (datasetId && _.get(data, 'type') === 'kafka') {
@@ -178,7 +177,7 @@ const connectorInfoToDraft = async (state: Record<string, any>, master: any) => 
 }
 
 export const publishDataset = async (state: Record<string, any>, storeState: any, master: any) => {
-    await connectorInfoToDraft(storeState, master);
+    await saveConnectorMetadata(storeState, master);
     const jsonSchema = _.get(state, 'pages.jsonSchema');
     const timestampCol = _.get(state, 'pages.timestamp.indexCol') || "syncts";
     let denormFields = _.get(state, 'pages.denorm.values') || [];
@@ -187,7 +186,7 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
     newFields = formatNewFields(newFields);
     const updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema')] };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
-    const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
+    await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
     let ingestionPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), ...denormFields, ...newFields] };
     if (timestampCol === "syncts")
         ingestionPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject, ...denormFields, ...newFields] };
@@ -195,7 +194,6 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
     const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedIngestionPayload, state }, config: {} });
     return saveDatasource({ data: { state, storeState, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
 }
-
 
 export const sendEvents = (datasetId: string | undefined, payload: any) => {
     return http.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, {});

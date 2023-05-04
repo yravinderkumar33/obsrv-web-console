@@ -5,9 +5,10 @@ import { Alert } from "@mui/material";
 import { InfoCircleOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
 import config from 'data/initialConfig';
-import { useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
+import { interactIds } from "data/telemetry/interactIds";
 const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
@@ -57,11 +58,23 @@ const ConditionalCheckboxForm = (props: any) => {
         const { name, value } = metadata;
         switch (type) {
             case "checkbox":
-                return <Checkbox name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
+                return <Checkbox 
+                data-edataid={interactIds.dataset.create.add.transformation}
+                data-objectid={`buttonCheckbox-${value}`}
+                data-objecttype="dataset"
+                name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
             case "radio":
-                return <Radio name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
+                return <Radio 
+                data-edataid={interactIds.dataset.create.add.transformation}
+                data-objectid={`buttonRadio-${value}`}
+                data-objecttype="dataset"
+                name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
             default:
-                return <Checkbox name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
+                return <Checkbox
+                data-edataid={interactIds.dataset.create.add.transformation}
+                data-objectid={`buttonCheckbox-${value}`}
+                data-objecttype="dataset"
+                name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
         }
     }
 
@@ -86,7 +99,7 @@ const ConditionalCheckboxForm = (props: any) => {
             if (!metadata) return null;
             const { form, description, component, value: type, ...rest } = metadata;
             return <>
-                {description && <Grid key={Math.random()} item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
+                {description && <Grid key={Math.random()} item xs={12}> <Alert sx={{ alignItems: 'center' }} color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
                 {form && (
                     <Grid item sm={12}>
                         <MUIForm

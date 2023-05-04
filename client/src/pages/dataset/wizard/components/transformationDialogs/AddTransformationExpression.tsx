@@ -12,6 +12,7 @@ import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { v4 } from "uuid";
 import PreviewTransformation from "./PreviewTransform";
+import { interactIds } from "data/telemetry/interactIds";
 
 const AddTransformationExpression = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
@@ -119,6 +120,9 @@ const AddTransformationExpression = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
+                        data-edataid={interactIds.button.icon.menu.close}
+                        data-objectid="closeOutlined:addTransformation"
+                        data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
                             position: 'absolute',
@@ -138,11 +142,17 @@ const AddTransformationExpression = (props: any) => {
                         value && value.transformation === 'custom' && value.expression &&
                         <PreviewTransformation fieldName={value.column} expression={value.expression} />
                     }
-                    {_.get(value, 'transformation') === 'custom' && <Box><Button onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button></Box>}
+                    {_.get(value, 'transformation') === 'custom' && <Box><Button data-edataid="jsonata:editor:open"
+                        data-objectid="jsonata"
+                        data-objectType="dataset" onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button></Box>}
                 </Stack>
             </DialogContent>
             <DialogActions>
-                <Button variant="contained" autoFocus onClick={_ => updateTransformation()}>
+                <Button 
+                data-edataid={interactIds.dataset.edit.add.transformation}
+                data-objectid={value}
+                data-objecttype="dataset"
+                variant="contained" autoFocus onClick={_ => updateTransformation()}>
                     Add
                 </Button>
             </DialogActions>
