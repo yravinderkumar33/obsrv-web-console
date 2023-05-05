@@ -10,6 +10,8 @@ import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
 import LoginSocialButton from './LoginSocialButton';
 import interactEdataIds from 'data/telemetry/interact.json'
+import { generateStartEvent } from 'services/telemetry';
+import pageIds from 'data/telemetry/pageIds';
 
 const AuthLogin = () => {
   const dispatch = useDispatch();
@@ -98,7 +100,14 @@ const AuthLogin = () => {
               </Grid>
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button data-edataid={interactEdataIds.login} disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button onClick={() => {
+                    generateStartEvent({
+                      edata: {
+                      type: "App",
+                      pageid: pageIds.login,
+                    }, object: {}
+                  });
+                  }} data-edataid={interactEdataIds.login} disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
                     Login
                   </Button>
                 </AnimateButton>
