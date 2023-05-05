@@ -56,9 +56,9 @@ const Final = ({ handleBack, master, edit }: any) => {
                     Review
                 </Typography>
                 <IconButtonWithTips
-                    data-edataid={interactIds.dataset.download}
+                    data-edataid={`${master ? 'masterDataset': 'dataset'}:download:JSON`}
                     data-objectid="downloadSchema"
-                    data-objecttype="dataset"
+                    data-objecttype={master ? 'masterDataset': 'dataset'}
                     tooltipText="Download Schema"
                     icon={<DownloadOutlined />}
                     handleClick={handleDownloadButton}
@@ -74,18 +74,18 @@ const Final = ({ handleBack, master, edit }: any) => {
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
                             <Button
-                                data-edataid={interactIds.dataset.create.publish}
-                                data-objectid="dataset:previous"
-                                data-objecttype="dataset"
+                                data-edataid={`${master ? 'masterDataset': 'dataset'}:review:${edit? 'edit':'create'}`}
+                                data-objectid="previous"
+                                data-objecttype={master ? 'masterDataset' : 'dataset'}
                                 variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                 Previous
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
                             <Button
-                                data-edataid={interactIds.dataset.create.publish}
-                                data-objectid="dataset:save"
-                                data-objecttype="dataset"
+                                data-edataid={`${master ? 'masterDataset': 'dataset'}:review:${edit? 'edit':'create'}`}
+                                data-objectid="saveDataset"
+                                data-objecttype={master ? 'masterDataset' : 'dataset'}
                                 variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>

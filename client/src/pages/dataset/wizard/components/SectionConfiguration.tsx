@@ -4,9 +4,6 @@ import * as _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
 import FieldSection from './FieldSection';
-import { Stack } from '@mui/material';
-import AnimateButton from 'components/@extended/AnimateButton';
-import { Button } from '@mui/material';
 import { sections as allSections } from 'data/wizard';
 import { updateClientState } from 'services/dataset';
 import { error } from 'services/toaster';
@@ -77,8 +74,11 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
             <Grid item xs={12}>
                 <WizardNavigator
                     showPrevious={true}
-                    gotoPreviousSection={gotoPreviousSection}
+                    pageId='section:config'
+                    master={master}
+                    section={section}
                     gotoNextSection={gotoNextSection}
+                    gotoPreviousSection={gotoPreviousSection}
                 />
             </Grid>
         </Grid>

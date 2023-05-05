@@ -283,6 +283,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                             Filter Suggestion by:
                         </Typography>
                         {columnFilters.map((filter) => <Chip
+                            data-edataid="dataset:list:columns"
+                            data-objectid={`filter: ${filter.label}`}
+                            data-objecttype={master ? 'masterDataset' : 'dataset'}
                             key={filter.label}
                             aria-label='filter-button'
                             clickable
@@ -295,7 +298,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         />
                         )}
                         {filterByChip &&
-                            <Button size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
+                            <Button data-edataid={`${master ? 'masterDataset' : 'dataset'}:list:columns`} data-objecid="closeOutlined:clearFilter" data-objecttype={master ? 'masterDataset' : 'dataset'} size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
                                 Clear filters
                             </Button>
                         }
@@ -332,7 +335,10 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 </Grid>
             </GenericCard>
             <WizardNavigator
+                pageId={'list:columns'}
+                master={master}
                 showPrevious={false}
+                gotoPreviousSection={gotoPreviousSection}
                 gotoNextSection={gotoNextSection}
                 enableDownload
                 handleDownload={handleDownloadButton}
