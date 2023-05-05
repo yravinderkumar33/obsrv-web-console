@@ -49,11 +49,6 @@ const TimestampSelection = (props: any) => {
 
     return <>
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
-            <Grid item xs={12}>
-                <Alert color="info" icon={<InfoCircleOutlined />}>
-                    {description}
-                </Alert>
-            </Grid>
             <Grid item xs={4}>
                 <MUIForm initialValues={existingState || {}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 6 }} />
             </Grid>
