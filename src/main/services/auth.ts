@@ -94,7 +94,7 @@ passport.use(new KeyCloakStrategy({
         if(error === "user_not_found") {
             const userInfo: User = {
                 id: v4(),
-                user_name: profile.email,
+                user_name: profile.username,
                 created_on: new Date().toISOString(),
                 provider: PROVIDERS.KEYCLOAK,
                 email_address: profile.email
