@@ -12,6 +12,7 @@ import LoginSocialButton from './LoginSocialButton';
 import interactEdataIds from 'data/telemetry/interact.json'
 import { generateStartEvent } from 'services/telemetry';
 import pageIds from 'data/telemetry/pageIds';
+import useImpression from 'hooks/useImpression';
 
 const AuthLogin = () => {
   const dispatch = useDispatch();
@@ -19,6 +20,8 @@ const AuthLogin = () => {
   const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI || '';
   const [showPassword, setShowPassword] = React.useState(false);
   const [searchParams] = useSearchParams();
+
+  useImpression({ type: "view", pageid: pageIds.login });
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
