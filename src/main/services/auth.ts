@@ -10,6 +10,7 @@ import userService from './oauthUsers';
 import clientService from './oauthClients';
 import accessTokenService from './oauthAccessTokens';
 import { User } from '../types';
+import appConfig from '../../shared/resources/appConfig';
 
 
 enum PROVIDERS {
@@ -75,13 +76,13 @@ passport.use(new BearerStrategy(
 ));
 
 passport.use(new KeyCloakStrategy({
-    clientID: 'myOauthClient',
-    realm: 'MyKeyCloakRealm',
-    publicClient: 'false',
-    clientSecret: 'SCWHeF9HgtJ5BjmJFruk2IW15a5auueq',
-    sslRequired: 'external',
-    authServerURL: 'http://localhost:8080/auth',
-    callbackURL: 'http://localhost:4000/api/auth/keycloak/callback'
+    clientID: appConfig.AUTH.KEYCLOAK.CLIENT_ID,
+    realm: appConfig.AUTH.KEYCLOAK.REALM,
+    publicClient: appConfig.AUTH.KEYCLOAK.PUBLIC_CLIENT,
+    clientSecret: appConfig.AUTH.KEYCLOAK.CLIENT_SECRET,
+    sslRequired: appConfig.AUTH.KEYCLOAK.SSL_REQUIRED,
+    authServerURL: appConfig.AUTH.KEYCLOAK.URL,
+    callbackURL: `${appConfig.APP_BASE_URL}/api/auth/keycloak/callback`
   },
   (accessToken: string, refreshToken: string, profile: any, done: any) => {
     if(!profile.email) {
@@ -94,7 +95,7 @@ passport.use(new KeyCloakStrategy({
         if(error === "user_not_found") {
             const userInfo: User = {
                 id: v4(),
-                user_name: profile.username,
+                user_name: profile.email,
                 created_on: new Date().toISOString(),
                 provider: PROVIDERS.KEYCLOAK,
                 email_address: profile.email

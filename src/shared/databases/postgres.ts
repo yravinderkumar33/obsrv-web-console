@@ -4,7 +4,7 @@ import { IPostgres } from './../types';
 
 const postGresConnectionString = process.env.POSTGRES_CONNECTION_STRING
 
-const pool = new Pool({ connectionString: postGresConnectionString });
+export const pool = new Pool({ connectionString: postGresConnectionString });
 
 const create = async (table: string, data: IPostgres): Promise<IPostgres> => {
     const fields = Object.keys(data);

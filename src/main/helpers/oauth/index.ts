@@ -9,7 +9,6 @@ import authorizationService from './../../services/oauthAutorizationCodes'
 import { getUid } from './../../utils/randomString'
 import { NextFunction, Request, Response } from "express";
 
-// Create OAuth 2.0 server
 const server = oauth2orize.createServer();
 
 server.serializeClient((client, done) => {

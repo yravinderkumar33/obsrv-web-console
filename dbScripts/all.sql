@@ -13,14 +13,14 @@ CREATE TABLE IF NOT EXISTS "oauth_access_tokens" (
   id VARCHAR(255) PRIMARY KEY,
   user_id VARCHAR(255),
   client_id VARCHAR(255),
-  created_on TIMESTAMP
+  created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS "oauth_refresh_tokens" (
   id VARCHAR(255) PRIMARY KEY,
   user_id VARCHAR(255),
   client_id VARCHAR(255),
-  created_on TIMESTAMP
+  created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS "oauth_authorization_codes" (
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS "oauth_authorization_codes" (
   redirect_uri VARCHAR(255),
   user_id VARCHAR(255),
   user_name VARCHAR(255),
-  created_on TIMESTAMP
+  created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS "oauth_clients" (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS "oauth_clients" (
   client_secret VARCHAR(255),
   redirect_uri VARCHAR(255),
   is_trusted BOOLEAN,
-  created_on TIMESTAMP,
+  created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_updated_on TIMESTAMP NULL
 );
 
@@ -52,6 +52,6 @@ CREATE TABLE IF NOT EXISTS "oauth_clients" (
   provider VARCHAR(255) NULL,
   email_address VARCHAR(255) UNIQUE,
   mobile_number VARCHAR(255) NULL,
-  created_on TIMESTAMP,
+  created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_updated_on TIMESTAMP NULL
 );

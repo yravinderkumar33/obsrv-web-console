@@ -4,16 +4,14 @@ import session from 'express-session';
 import proxies from './main/proxies';
 import mountProxies from './main/utils/proxy';
 import passport from 'passport';
-import pg from 'pg';
+import { pool } from './shared/databases/postgres';
 import pgSession from 'connect-pg-simple';
 
 const app = express();
 const sessionSecret: any = process.env.SESSION_SECRET
-const postGresConnectionString = process.env.POSTGRES_CONNECTION_STRING
-const pgPool: any = new pg.Pool({connectionString: postGresConnectionString});
 const PostgresqlStore = pgSession(session)
 const sessionStore: any = new PostgresqlStore({
-  pool: pgPool,
+  pool: pool,
   tableName: 'user_session'
 })
 app.use(
@@ -31,6 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
-import './main/services/auth';
+import './main/services/auth'; // Don't change this import position in file
+
 
 export default app;

@@ -2,6 +2,7 @@ const env = process.env;
 
 export default {
   APP_NAME: env.APP_NAME || 'obsrv-web-console',
+  APP_BASE_URL: env.OAUTH_WEB_CONSOLE_URL || "http://localhost:4000",
   PORT: env.PORT || 3000,
   ENV: env.ENV || 'development',
   PROMETHEUS: {
@@ -24,5 +25,15 @@ export default {
   },
   SUPERSET: {
     URL: env.SUPERSET_URL || "http://localhost:8088"
+  },
+  AUTH: {
+    KEYCLOAK: {
+      URL: env.AUTH_KEYCLOAK_SERVER_URL || "http://localhost:8080/auth",
+      REALM: env.AUTH_KEYCLOAK_REALM || "MyKeyCloakRealm",
+      CLIENT_ID: env.AUTH_KEYCLOAK_CLIENT_ID || "myOauthClient",
+      CLIENT_SECRET: env.AUTH_KEYCLOAK_CLIENT_SECRET || "SCWHeF9HgtJ5BjmJFruk2IW15a5auueq",
+      PUBLIC_CLIENT: env.AUTH_KEYCLOAK_PUBLIC_CLIENT || "false",
+      SSL_REQUIRED: env.AUTH_KEYCLOAK_SSL_REQUIRED || "external"
+    }
   }
 };
