@@ -86,7 +86,7 @@ const AddNewField = (props: any) => {
                         id="iconButton"
                         data-edataid={interactIds.button.icon.menu.close}
                         data-objectid="closeOutlined:addNewField"
-                        data-objectType="dataset"
+                        data-objecttype="dataset"
                         aria-label="close"
                         onClick={onClose}
                         sx={{
@@ -111,7 +111,7 @@ const AddNewField = (props: any) => {
                         <Button 
                         data-edataid="jsonata:editor:open"
                         data-objectid="jsonata"
-                        data-objectType="dataset"
+                        data-objecttype="dataset"
                         onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
                     </ Box>
                 </ Stack>
@@ -120,7 +120,7 @@ const AddNewField = (props: any) => {
                 <Button 
                 data-edataid={interactIds.dataset.edit.add.transformation}
                 data-objectid={value}
-                data-objectType="dataset"
+                data-objecttype="dataset"
                 variant="contained" onClick={_ => updateAdditionalField()}>
                     Add
                 </Button>
