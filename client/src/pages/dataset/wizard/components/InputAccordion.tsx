@@ -80,7 +80,7 @@ const InputAccordion = (props: any) => {
             Header: 'Delete',
             Cell: ({ value, cell }: any) => {
                 return <IconButton 
-                data-edataid={interactIds.add_dataset_transformation}
+                data-edataid={interactIds.delete_dataset_transformation}
                 data-objectid="deleteOutlined:datasetCell"
                 data-objecttype="dataset"
                 variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>

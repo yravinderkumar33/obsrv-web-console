@@ -109,7 +109,7 @@ const DataDenorm = (props: any) => {
             Header: 'Delete',
             Cell: ({ value, cell }: any) => {
                 return <IconButton
-                        data-edataid={`${interactIds.add_dataset_denorm}:master`}
+                        data-edataid={`${interactIds.delete_daatset_denorm}:master`}
                         data-objectid="deleteOutlined:masterDataset"
                         data-objecttype="masterDataset"
                          variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
@@ -158,7 +158,7 @@ const DataDenorm = (props: any) => {
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="row">
                     <Box><Button 
-                            data-edataid={`${interactIds.add_dataset_denorm}:master`}
+                            data-edataid={`${interactIds.add_dataset_denorm_field}:master`}
                             data-objectid="addDenormField"
                             data-objecttype="masterDataset"
                             variant="contained" onClick={_ => setDialogOpen(true)}>Add Denorm Field</Button> </Box>
