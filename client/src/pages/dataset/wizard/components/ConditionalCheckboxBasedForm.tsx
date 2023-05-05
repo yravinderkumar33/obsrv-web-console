@@ -91,7 +91,7 @@ const ConditionalCheckboxForm = (props: any) => {
         const { name, value, label, description, disabled = false } = option;
         return (
             <Box display="flex" alignItems="center">
-                <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={getFormType(option)} label={label} />
+                <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={getFormType(option)} label={label} disableTypography />
                 {description && renderDescription(description)}
             </Box>
         );
