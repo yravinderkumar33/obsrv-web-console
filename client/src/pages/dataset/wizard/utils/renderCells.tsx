@@ -48,7 +48,7 @@ const renderColumnCell = ({
         <Box alignItems="baseline" maxWidth={537} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Typography variant="h6" my={1}>
-                    {value}
+                    {cell?.row?.depth > 0 ? '- ' : ''}{value}
                 </Typography>
                 {!row.description &&
                     <Button sx={{ fontWeight: 500 }} onClick={handleClose} startIcon={<PlusOutlined style={{ fontSize: '1.25rem', strokeWidth: 25, stroke: theme.palette.primary.main }} />}>

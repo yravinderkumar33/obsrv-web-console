@@ -1,5 +1,5 @@
-import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { Alert, Button, Dialog, Grid, Typography } from "@mui/material";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Button, Dialog, Grid, Typography } from "@mui/material";
 import MainCard from "components/MainCard"
 import BasicReactTable from "components/BasicReactTable";
 import ScrollX from "components/ScrollX";
@@ -13,6 +13,7 @@ import { deleteTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { addState } from "store/reducers/wizard";
 import { interactIds } from "data/telemetry/interactIds";
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 const { spacing } = config;
 
 const InputAccordion = (props: any) => {
@@ -107,16 +108,18 @@ const InputAccordion = (props: any) => {
 
     return <>
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
-            <Grid item xs={12}> <Alert sx={{ alignItems: 'center' }} color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>
             {renderTable()}
-            <Grid item xs={12}>
+            <Grid item xs={12} textAlign="end">
                 <Button
                     data-edataid={`dataset:input:${label}`}
                     data-objectid={label}
                     data-objecttype="dataset"
-                    variant="outlined" onClick={_ => setDialogOpen(true)}
+                    onClick={_ => setDialogOpen(true)}
+                    startIcon={<AddOutlinedIcon fontSize="large" />}
                 >
-                    {label}
+                    <Typography variant="body2" fontWeight="500">
+                        {label}
+                    </Typography>
                 </Button>
             </Grid>
             <Grid item xs={12}>

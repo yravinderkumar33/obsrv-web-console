@@ -1,6 +1,6 @@
-import { CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle, Popover } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle, Popover, Typography } from "@mui/material";
 import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
@@ -10,7 +10,6 @@ import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
-import PreviewTransformation from "./PreviewTransform";
 import { interactIds } from "data/telemetry/interactIds";
 import JSONataPlayground from "components/JSONataPlayground";
 
@@ -99,8 +98,10 @@ const AddNewField = (props: any) => {
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
-            <DialogTitle id="alert-dialog-title">
-                Add New Field
+            <DialogTitle component={Box} display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h5">
+                    Add New Field
+                </Typography>
                 {onClose ? (
                     <IconButton
                         id="iconButton"
@@ -110,37 +111,42 @@ const AddNewField = (props: any) => {
                         aria-label="close"
                         onClick={onClose}
                         sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseCircleOutlined />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2} margin={1}>
+                <Stack spacing={2} my={1}>
                     <MUIForm initialValues={formInitialValues} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
-                    <Box>
-                        <Button
-                            data-edataid="jsonata:editor:open"
-                            data-objectid="jsonata"
-                            data-objecttype="dataset"
-                            onClick={handleClick} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
-                    </ Box>
                 </ Stack>
             </DialogContent>
-            <DialogActions>
+            <DialogActions sx={{ px: 4 }}>
+                <Box mx={2}>
+                    <Button
+                        data-edataid="jsonata:editor:open"
+                        data-objectid="jsonata"
+                        data-objecttype="dataset"
+                        onClick={handleClick}
+                    >
+                        <Typography variant="h5">
+                            Try Out
+                        </Typography>
+                    </Button>
+                </Box>
                 <Button
                     data-edataid={interactIds.dataset.edit.add.transformation}
                     data-objectid={value}
                     data-objecttype="dataset"
-                    variant="contained" onClick={_ => updateAdditionalField()}
+                    variant="contained"
+                    onClick={_ => updateAdditionalField()}
                     disabled={value.column === '' || !value.column || value.transformation === '' || !value.transformation}
                 >
-                    Add
+                    <Typography variant="h5">
+                        Add
+                    </Typography>
                 </Button>
             </DialogActions>
             <Popover

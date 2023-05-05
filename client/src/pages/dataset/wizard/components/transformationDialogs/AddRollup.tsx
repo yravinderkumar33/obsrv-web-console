@@ -1,6 +1,6 @@
-import { CloseCircleOutlined } from "@ant-design/icons";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
@@ -88,8 +88,10 @@ const AddRollup = (props: any) => {
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', height: 'auto', maxWidth: "100%", }}>
-            <DialogTitle id="alert-dialog-title">
-                Add New Rollup
+            <DialogTitle component={Box} display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h5">
+                    Add New Rollup
+                </Typography>
                 {onClose ? (
                     <IconButton
                         aria-label="close"
@@ -98,28 +100,29 @@ const AddRollup = (props: any) => {
                         data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseCircleOutlined />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2} margin={1}>
+                <Stack spacing={2} my={1}>
                     <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
                 </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button 
-                data-edataid={interactIds.rollup.add}
-                data-objectid={value}
-                data-objecttype="dataset"
-                variant="contained" autoFocus onClick={_ => addField()}>
-                    Add Field
+            <DialogActions sx={{ px: 4 }}>
+                <Button
+                    data-edataid={interactIds.rollup.add}
+                    data-objectid={value}
+                    data-objecttype="dataset"
+                    variant="contained"
+                    onClick={_ => addField()}
+                >
+                    <Typography variant="h5">
+                        Add Field
+                    </Typography>
                 </Button>
             </DialogActions>
         </Box>

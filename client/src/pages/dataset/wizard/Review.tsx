@@ -14,7 +14,6 @@ import { DownloadOutlined } from '@ant-design/icons';
 import { updateJSONSchema } from 'services/json-schema';
 import { downloadJsonFile } from 'utils/downloadUtils';
 import { interactIds } from 'data/telemetry/interactIds';
-
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
 
@@ -56,11 +55,11 @@ const Final = ({ handleBack, master, edit }: any) => {
                     Review
                 </Typography>
                 <IconButtonWithTips
-                    data-edataid={`${master ? 'masterDataset': 'dataset'}:download:JSON`}
+                    data-edataid={`${master ? 'masterDataset' : 'dataset'}:download:JSON`}
                     data-objectid="downloadSchema"
-                    data-objecttype={master ? 'masterDataset': 'dataset'}
+                    data-objecttype={master ? 'masterDataset' : 'dataset'}
                     tooltipText="Download Schema"
-                    icon={<DownloadOutlined />}
+                    icon={<DownloadOutlined style={{ fontSize: '1.25rem' }} />}
                     handleClick={handleDownloadButton}
                     buttonProps={{ size: "large", sx: { color: "#000" } }}
                     tooltipProps={{ arrow: true }}
@@ -74,7 +73,7 @@ const Final = ({ handleBack, master, edit }: any) => {
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
                             <Button
-                                data-edataid={`${master ? 'masterDataset': 'dataset'}:review:${edit? 'edit':'create'}`}
+                                data-edataid={`${master ? 'masterDataset' : 'dataset'}:review:${edit ? 'edit' : 'create'}`}
                                 data-objectid="previous"
                                 data-objecttype={master ? 'masterDataset' : 'dataset'}
                                 variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
@@ -83,7 +82,7 @@ const Final = ({ handleBack, master, edit }: any) => {
                         </AnimateButton>
                         <AnimateButton>
                             <Button
-                                data-edataid={`${master ? 'masterDataset': 'dataset'}:review:${edit? 'edit':'create'}`}
+                                data-edataid={`${master ? 'masterDataset' : 'dataset'}:review:${edit ? 'edit' : 'create'}`}
                                 data-objectid="saveDataset"
                                 data-objecttype={master ? 'masterDataset' : 'dataset'}
                                 variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
