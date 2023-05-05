@@ -15,7 +15,7 @@ import { checkUniqueId, getUrls, uploadToUrl, createDraftDataset } from 'service
 import { fetchJsonSchema } from 'services/json-schema';
 import FilesPreview from 'components/third-party/dropzone/FilesPreview';
 import { CardTitle, GenericCard } from 'components/styled/Cards';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds  from 'data/telemetry/interact.json';
 
 const idCheck = async (value: any, resolve: any) => {
     const data = await checkUniqueId(value);
@@ -152,9 +152,6 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                         <Grid item xs={12} sm={6} lg={6}>
                                             <HtmlTooltip title="Name of the dataset" arrow placement='top-start'>
                                                 <TextField
-                                                    data-edataid={interactIds.dataset.view}
-                                                    data-objectid={values.name}
-                                                    data-objecttype="datasetCreate"
                                                     name={'name'}
                                                     label={'Dataset Name'}
                                                     onBlur={handleBlur}
@@ -174,9 +171,6 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                         <Grid item xs={12} sm={6} lg={6}>
                                             <HtmlTooltip title="ID for the dataset - for querying" arrow placement='top-start'>
                                                 <TextField
-                                                    data-edataid={interactIds.dataset.view}
-                                                    data-objectid={values.dataset_id}
-                                                    data-objecttype="dataset"
                                                     name={'dataset_id'}
                                                     label={'Dataset ID'}
                                                     onBlur={handleBlur}
@@ -208,7 +202,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                         <Box display="flex" justifyContent="space-between">
                                             <Typography variant="h5" gutterBottom>Files Uploaded</Typography>
                                             <Button 
-                                            data-edataid={interactIds.dataset.view}
+                                            data-edataid={interactIds.dataset_configuration}
                                             data-objectid="removeDataset"
                                             data-objecttype="dataset"
                                             onClick={onRemoveAll}>Remove all</Button>
@@ -219,7 +213,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                 <Box display="flex" justifyContent="flex-end">
                                     <AnimateButton>
                                         <Button 
-                                        data-edataid={interactIds.dataset.view}
+                                        data-edataid={interactIds.dataset_configuration}
                                         data-objectid="createSchema"
                                         data-objecttype="dataset"
                                         disabled={!(files || data)} variant="contained" sx={{ my: 2, ml: 1 }} type="submit">

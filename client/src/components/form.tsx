@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Radio, Select, Stack, TextField, ToggleButtonGroup, Tooltip } from '@mui/material';
 import { Formik, Field, Form } from 'formik';
 import { ToggleButton } from '@mui/material';
+import interactIds from 'data/telemetry/interact.json';
 
 const useStyles = makeStyles((theme: any) => ({
     formControl: { margin: theme.spacing(1), minWidth: 120 },
@@ -127,7 +128,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                         <InputLabel >{label}</InputLabel>
                                                         <Select 
                                                         name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
-                                                            {selectOptions.map((option: any) => (<MenuItem data-edataid={`form:select:${option.value}`} value={option.value}>{option.label}</MenuItem>))}
+                                                            {selectOptions.map((option: any) => (<MenuItem data-edataid={`${interactIds.form_select_option}:${option.label}`} value={option.value}>{option.label}</MenuItem>))}
                                                         </Select>
                                                     </FormControl>
                                                 </Tooltip>
@@ -160,7 +161,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                         <ToggleButtonGroup exclusive color="info" aria-label="text alignment" onChange={handleChange}>
                                                             {
                                                                 selectOptions.map((option: any, index: number) => {
-                                                                    return <ToggleButton data-edataid={`form:buttonGroup:${name}:${option.value}`} key={index} id={name} value={option.value} aria-label="first">
+                                                                    return <ToggleButton data-edataid={`${interactIds.form_button}:${name}:${option.value}`} key={index} id={name} value={option.value} aria-label="first">
                                                                         {option?.label}
                                                                     </ToggleButton>
                                                                 })

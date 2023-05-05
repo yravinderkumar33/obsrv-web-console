@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { InfoCircleOutlined } from "@ant-design/icons";
 import globalConfig from 'data/initialConfig';
 import dayjs from 'dayjs';
-import { interactIds } from "data/telemetry/interactIds";
+import interactIds  from "data/telemetry/interact.json";
 import menu from "store/reducers/menu";
 
 const transformFilter = (filter: Record<string, any>) => {
@@ -62,11 +62,11 @@ const ApexWithFilters = (props: any) => {
             const variant = (_.get(transformedFilter, 'value') === filter) ? "filled" : "outlined";
             const color = _.get(filterMeta, 'color') || "primary"
             return <Chip 
-                    data-edataid={interactIds.chart.filter}
+                    data-edataid={interactIds.chart_filter}
                     data-objectid={`${title}:${filterMeta.label}`}
                     data-objecttype="chart"
                     label={<div
-                        data-edataid={interactIds.chart.filter}
+                        data-edataid={interactIds.chart_filter}
                         data-objectid={`${title}:${filterMeta.label}`}
                         data-objecttype="chart"
                     >{filterMeta.label}</div>}

@@ -8,7 +8,7 @@ import config from 'data/initialConfig';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
-import { interactIds } from "data/telemetry/interactIds";
+import interactIds  from "data/telemetry/interact.json";
 const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
@@ -59,19 +59,19 @@ const ConditionalCheckboxForm = (props: any) => {
         switch (type) {
             case "checkbox":
                 return <Checkbox 
-                data-edataid={interactIds.dataset.create.add.transformation}
+                data-edataid={interactIds.add_dataset_transformation}
                 data-objectid={`buttonCheckbox-${value}`}
                 data-objecttype="dataset"
                 name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
             case "radio":
                 return <Radio 
-                data-edataid={interactIds.dataset.create.add.transformation}
+                data-edataid={interactIds.add_dataset_transformation}
                 data-objectid={`buttonRadio-${value}`}
                 data-objecttype="dataset"
                 name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
             default:
                 return <Checkbox
-                data-edataid={interactIds.dataset.create.add.transformation}
+                data-edataid={interactIds.add_dataset_transformation}
                 data-objectid={`buttonCheckbox-${value}`}
                 data-objecttype="dataset"
                 name={name} className="size-medium" value={value} onChange={handleParentFormChange} />

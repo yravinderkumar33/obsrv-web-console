@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import { Card, CardContent, Grid, Typography } from '@mui/material';
 
 import { GenericCardProps } from 'types/root';
-import { interactIds } from 'data/telemetry/interactIds';
 
 const IconWrapper = styled('div')({
   position: 'absolute',
@@ -31,9 +30,6 @@ const BigNumberCard = ({ primary, secondary, iconPrimary, color, onClick }: Metr
 
   return (
     <Card
-    data-edataid={interactIds.card.info}
-    data-objectid={`metrics: ${primary} ${secondary}`}
-    data-objecttype="metrics"
     elevation={0} sx={{ background: color, position: 'relative', color: '#fff' }} onClick={onClick}>
       <CardContent>
         <IconWrapper>{primaryIcon}</IconWrapper>

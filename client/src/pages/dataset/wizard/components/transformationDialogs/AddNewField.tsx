@@ -11,7 +11,7 @@ import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import PreviewTransformation from "./PreviewTransform";
-import { interactIds } from "data/telemetry/interactIds";
+import  interactIds  from "data/telemetry/interact.json";
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank', 'noopener,noreferrer');
@@ -84,7 +84,7 @@ const AddNewField = (props: any) => {
                 {onClose ? (
                     <IconButton
                         id="iconButton"
-                        data-edataid={interactIds.button.icon.menu.close}
+                        data-edataid={interactIds.sidebar_close}
                         data-objectid="closeOutlined:addNewField"
                         data-objecttype="dataset"
                         aria-label="close"
@@ -109,7 +109,7 @@ const AddNewField = (props: any) => {
                     }
                     <Box>
                         <Button 
-                        data-edataid="jsonata:editor:open"
+                        data-edataid={interactIds.jsonata}
                         data-objectid="jsonata"
                         data-objecttype="dataset"
                         onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
@@ -118,7 +118,7 @@ const AddNewField = (props: any) => {
             </DialogContent>
             <DialogActions>
                 <Button 
-                data-edataid={interactIds.dataset.edit.add.transformation}
+                data-edataid={interactIds.add_dataset}
                 data-objectid={value}
                 data-objecttype="dataset"
                 variant="contained" onClick={_ => updateAdditionalField()}>

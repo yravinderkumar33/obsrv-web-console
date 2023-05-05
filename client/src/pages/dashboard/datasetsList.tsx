@@ -12,7 +12,7 @@ import { druidQueries } from 'services/druid';
 import dayjs from 'dayjs';
 import chartMeta from 'data/charts';
 import * as _ from 'lodash';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds  from 'data/telemetry/interact.json';
 
 const connectors = ["Kafka"];
 const alertDialogContext = { title: 'Delete Dataset', content: 'Are you sure you want to delete this dataset ?' };
@@ -55,10 +55,7 @@ const DatasetsList = ({ datasets }: any) => {
             return <CircularProgress size={20} color="success" />;
         }
 
-        return <div data-edataid=""
-            data-objectid=""
-            data-objecttype='datasetLive'
-        >{asyncData}</div>;
+        return {asyncData};
     }
 
 
@@ -103,8 +100,8 @@ const DatasetsList = ({ datasets }: any) => {
                     return <Grid container spacing={1} justifyContent="center">
                         <Grid item>
                             <Chip
-                                data-edataid='dataset:live'
-                                data-objectid={value}
+                                data-edataid={`${interactIds.view_live_dataset}:${value}`}
+                                data-objectid={`live:dataset:type:${value}`}
                                 data-objecttype="datasetLive"
                                 color={'success'} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" /></Grid>
                     </Grid>
@@ -119,9 +116,9 @@ const DatasetsList = ({ datasets }: any) => {
                     return <Grid container spacing={1} justifyContent="center">
                         <Grid item>
                             <Chip
-                                data-edataid='dataset:live'
-                                data-objectid={value}
-                                data-objecttype='dataset'
+                                data-edataid={`${interactIds.view_live_dataset}:${value}`}
+                                data-objectid={`live:dataset:status:${value}`}
+                                data-objecttype="datasetLive"
                                 color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" />          </Grid>
                     </Grid>
                 }
@@ -219,9 +216,8 @@ const DatasetsList = ({ datasets }: any) => {
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="View Metrics" onClick={(e: any) => navigateToPath(`/datasets/${row?.id}`)}>
                             <IconButton
-                                id="datasets/view"
-                                data-edataid={interactIds.dataset.view}
-                                data-objectid="datasets/view"
+                                data-edataid={interactIds.view_live_dataset}
+                                data-objectid="dashboardOutlined:view:metrics"
                                 data-objecttype="datasetLive"
                                 disabled={row?.type !== "dataset"} color="primary" size="large">
                                 < DashboardOutlined />
@@ -229,9 +225,8 @@ const DatasetsList = ({ datasets }: any) => {
                         </Tooltip>
                         <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_id}`)}>
                             <IconButton
-                                id="datasets/create"
-                                data-edataid={interactIds.dataset.create.add.transformation}
-                                data-objectid="datasets/create"
+                                data-edataid={interactIds.view_live_dataset}
+                                data-objectid="databaseOutlined:create:events"
                                 data-objecttype="datasetLive"
                                 color="primary" size="large">
                                 <DatabaseOutlined />
@@ -239,9 +234,8 @@ const DatasetsList = ({ datasets }: any) => {
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
                             <IconButton
-                                id="datasets/edit"
-                                data-edataid={interactIds.dataset.edit.add.transformation}
-                                data-objectid="datasets/edit"
+                                data-edataid={interactIds.view_live_dataset}
+                                data-objectid="editOutlined:dataset"
                                 data-objecttype="datasetLive"
                                 color="primary" size="large" disabled>
                                 <EditOutlined />
