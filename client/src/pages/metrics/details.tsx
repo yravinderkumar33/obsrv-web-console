@@ -12,17 +12,20 @@ import { Avatar } from '@mui/material';
 import { navigateToGrafana } from 'services/grafana';
 import { useTheme } from '@mui/material';
 import grafanaIcon from 'assets/images/icons/grafana_icon.svg';
-import { pageIds } from 'data/telemetry/pageIds';
+import pageIds from 'data/telemetry/pageIds';
+import useImpression from 'hooks/useImpression';
 
 const MetricsDetails = (props: any) => {
-    const theme = useTheme();
-    const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
     const { id } = props;
+    const theme = useTheme();
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const params = useParams();
     const [metadata, setmetadata] = useState<Record<string, any>>();
+
+    const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
     const metricId = id || _.get(params, 'metricId');
+    useImpression({ type: "detail", pageid: _.get(pageIds, ['metrics', metricId]) });
 
     const navigateToHome = ({ errMsg }: any) => {
         navigate('/');
@@ -49,7 +52,7 @@ const MetricsDetails = (props: any) => {
                 return <Grid container rowSpacing={1} columnSpacing={1} key={`chart-${index}`} marginBottom={1}>
                     {
                         _.map(metadata, (meta, index) => {
-                            const { chart, description} = meta;
+                            const { chart, description } = meta;
                             return <Grid item xs={xs} sm={sm} md={md} lg={lg} key={`${index}-${Math.random()}`}>
                                 {React.cloneElement(chart, { description })}
                             </Grid>
@@ -66,12 +69,12 @@ const MetricsDetails = (props: any) => {
         if (!link) return null;
         return (
             <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
-            <IconButton 
-            data-edataid={pageIds.metrics.infra}
-            color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
-                <Avatar alt="Gradana" src={grafanaIcon} />
-            </IconButton>
-        </Tooltip>
+                <IconButton
+                    data-edataid={pageIds.metrics.infra}
+                    color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
+                    <Avatar alt="Gradana" src={grafanaIcon} />
+                </IconButton>
+            </Tooltip>
         );
     }
 

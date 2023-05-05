@@ -22,7 +22,8 @@ import WizardNavigator from './components/WizardNavigator';
 import { resetDataTypeResolve, updateDataType } from './utils/dataTypeUtil';
 import { renderActionsCell, renderColumnCell, renderDataTypeCell, renderRequiredCell } from './utils/renderCells';
 import ExpandingTable from 'components/ExpandingTable';
-import { interactIds } from 'data/telemetry/interactIds';
+import useImpression from 'hooks/useImpression';
+import pageIds from 'data/telemetry/pageIds';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -50,7 +51,7 @@ const columnFilters: columnFilter[] = [
     }
 ];
 
-const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState, edit }: any) => {
+const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState, edit, master = false }: any) => {
     const [selection, setSelection] = useState<Record<string, any>>({});
     const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
@@ -62,6 +63,10 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     const [requiredFieldFilters, setRequiredFieldFilters] = useState<string>('');
     const jsonSchema = _.get(wizardState, 'pages.jsonSchema.schema');
     const theme = useTheme();
+
+    const pageIdPrefix = _.get(pageIds, [master ? 'masterdataset' : 'dataset', edit ? 'edit' : 'create']);
+    const pageIdSuffix = _.get(pageIds, [master ? 'masterdataset' : 'dataset', 'pages', 'schema']);
+    useImpression({ type: "view", pageid: `${pageIdPrefix}:${pageIdSuffix}` });
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
         const column = cellValue?.column;
@@ -276,6 +281,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                             Filter Suggestion by:
                         </Typography>
                         {columnFilters.map((filter) => <Chip
+                            data-edataid="dataset:list:columns"
+                            data-objectid={`filter: ${filter.label}`}
+                            data-objecttype={master ? 'masterDataset': 'dataset'}
                             key={filter.label}
                             aria-label='filter-button'
                             clickable
@@ -288,7 +296,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         />
                         )}
                         {filterByChip &&
-                            <Button size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
+                            <Button data-edataid={`${master ? 'masterDataset': 'dataset'}:list:columns`} data-objecid="closeOutlined:clearFilter" data-objecttype={master ? 'masterDataset': 'dataset'}  size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
                                 Clear filters
                             </Button>
                         }
@@ -325,6 +333,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 </Grid>
             </GenericCard>
             <WizardNavigator
+                master={master}
                 showPrevious={edit}
                 gotoPreviousSection={gotoPreviousSection}
                 gotoNextSection={gotoNextSection}

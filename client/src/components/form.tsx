@@ -55,7 +55,6 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     render={() => <>
                                                         <Tooltip title={tooltip}>
                                                             <TextField
-                                                                data-edataId={`form:text:${_.get(values, [name])}`}
                                                                 value={_.get(values, [name])}
                                                                 onChange={handleChange}
                                                                 variant="outlined"
@@ -77,7 +76,6 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     render={() => <>
                                                         <Tooltip title={tooltip}>
                                                             <TextField
-                                                                data-edataId={`form:number:${_.get(values, [name])}`}
                                                                 value={_.get(values, [name])}
                                                                 onChange={handleChange}
                                                                 variant="outlined"
@@ -128,9 +126,8 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     <FormControl fullWidth key={name} className={classes.formControl} required={required} disabled={disabled}>
                                                         <InputLabel >{label}</InputLabel>
                                                         <Select 
-                                                        data-edataId="form:select"
                                                         name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
-                                                            {selectOptions.map((option: any) => (<MenuItem data-edataId={`form:select:${option.value}`} value={option.value}>{option.label}</MenuItem>))}
+                                                            {selectOptions.map((option: any) => (<MenuItem data-edataid={`form:select:${option.value}`} value={option.value}>{option.label}</MenuItem>))}
                                                         </Select>
                                                     </FormControl>
                                                 </Tooltip>
@@ -163,7 +160,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                         <ToggleButtonGroup exclusive color="info" aria-label="text alignment" onChange={handleChange}>
                                                             {
                                                                 selectOptions.map((option: any, index: number) => {
-                                                                    return <ToggleButton data-edataId={`form:buttonGroup:${name}:${option.value}`} key={index} id={name} value={option.value} aria-label="first">
+                                                                    return <ToggleButton data-edataid={`form:buttonGroup:${name}:${option.value}`} key={index} id={name} value={option.value} aria-label="first">
                                                                         {option?.label}
                                                                     </ToggleButton>
                                                                 })

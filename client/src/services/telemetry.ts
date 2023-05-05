@@ -44,7 +44,7 @@ export const globalInteractEventsHandler = (event: any) => {
   generateInteractEvent({ edata, object, eid: 'INTERACT' })
 }
 
-const generateImpressionEvent = ({ object, edata }: any) => {
+export const generateImpressionEvent = ({ object, edata }: any) => {
   const defaultPayload = getOptions();
   const event = { ...defaultPayload, eid: "IMPRESSION", object, edata };
   logEvent(event);

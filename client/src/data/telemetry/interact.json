@@ -16,5 +16,6 @@
     "login_keycloak": "login:keycloak",
     "grafana_navigate": "navigate:grafana",
     "superset_navigate": "navigate:superset",
-    "notifications": "notifications"
+    "notifications": "notifications",
+    "dataset_list_columns": "dataset:list:columns"
 }

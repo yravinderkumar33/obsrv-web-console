@@ -152,7 +152,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                         <Grid item xs={12} sm={6} lg={6}>
                                             <HtmlTooltip title="Name of the dataset" arrow placement='top-start'>
                                                 <TextField
-                                                    data-edataId={interactIds.dataset.view}
+                                                    data-edataid={interactIds.dataset.view}
                                                     data-objectid={values.name}
                                                     data-objecttype="datasetCreate"
                                                     name={'name'}
@@ -174,7 +174,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                         <Grid item xs={12} sm={6} lg={6}>
                                             <HtmlTooltip title="ID for the dataset - for querying" arrow placement='top-start'>
                                                 <TextField
-                                                    data-edataId={interactIds.dataset.view}
+                                                    data-edataid={interactIds.dataset.view}
                                                     data-objectid={values.dataset_id}
                                                     data-objecttype="dataset"
                                                     name={'dataset_id'}
@@ -208,7 +208,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                         <Box display="flex" justifyContent="space-between">
                                             <Typography variant="h5" gutterBottom>Files Uploaded</Typography>
                                             <Button 
-                                            data-edataId={interactIds.dataset.view}
+                                            data-edataid={interactIds.dataset.view}
                                             data-objectid="removeDataset"
                                             data-objecttype="dataset"
                                             onClick={onRemoveAll}>Remove all</Button>
@@ -219,7 +219,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                 <Box display="flex" justifyContent="flex-end">
                                     <AnimateButton>
                                         <Button 
-                                        data-edataId={interactIds.dataset.view}
+                                        data-edataid={interactIds.dataset.view}
                                         data-objectid="createSchema"
                                         data-objecttype="dataset"
                                         disabled={!(files || data)} variant="contained" sx={{ my: 2, ml: 1 }} type="submit">
