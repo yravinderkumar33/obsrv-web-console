@@ -1,14 +1,14 @@
 import MUIForm from "components/form";
 import * as _ from 'lodash';
-import { Checkbox, FormControlLabel, FormGroup, Grid, Radio, Stack } from "@mui/material";
-import { Alert } from "@mui/material";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Checkbox, FormControlLabel, FormGroup, Grid, Radio, Stack, Box, Typography } from "@mui/material";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useFormik } from "formik";
 import config from 'data/initialConfig';
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
 import { interactIds } from "data/telemetry/interactIds";
+import HtmlTooltip from "components/HtmlTooltip";
 const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
@@ -58,34 +58,48 @@ const ConditionalCheckboxForm = (props: any) => {
         const { name, value } = metadata;
         switch (type) {
             case "checkbox":
-                return <Checkbox 
-                data-edataid={interactIds.dataset.create.add.transformation}
-                data-objectid={`buttonCheckbox-${value}`}
-                data-objecttype="dataset"
-                name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
+                return <Checkbox
+                    data-edataid={interactIds.dataset.create.add.transformation}
+                    data-objectid={`buttonCheckbox-${value}`}
+                    data-objecttype="dataset"
+                    name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
             case "radio":
-                return <Radio 
-                data-edataid={interactIds.dataset.create.add.transformation}
-                data-objectid={`buttonRadio-${value}`}
-                data-objecttype="dataset"
-                name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
+                return <Radio
+                    data-edataid={interactIds.dataset.create.add.transformation}
+                    data-objectid={`buttonRadio-${value}`}
+                    data-objecttype="dataset"
+                    name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
             default:
                 return <Checkbox
-                data-edataid={interactIds.dataset.create.add.transformation}
-                data-objectid={`buttonCheckbox-${value}`}
-                data-objecttype="dataset"
-                name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
+                    data-edataid={interactIds.dataset.create.add.transformation}
+                    data-objectid={`buttonCheckbox-${value}`}
+                    data-objecttype="dataset"
+                    name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
         }
     }
 
+    const renderDescription = (description: string) => {
+        if (description.length > 50) return (
+            <HtmlTooltip title={description}>
+                <InfoOutlinedIcon fontSize="small" color="primary" />
+            </HtmlTooltip>
+        );
+        return (<Typography variant="body2" color="secondary">{`(${description})`}</Typography>);
+    }
+
     const renderFormControl = (option: Record<string, any>) => {
-        const { name, value, label, disabled = false } = option;
-        return <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={getFormType(option)} label={label} />
+        const { name, value, label, description, disabled = false } = option;
+        return (
+            <Box display="flex" alignItems="center">
+                <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={getFormType(option)} label={label} />
+                {description && renderDescription(description)}
+            </Box>
+        );
     }
 
     const renderForm = () => <form onSubmit={formik.handleSubmit}>
         <FormGroup>
-            <Stack direction="row" spacing={spacing} justifyContent={justifyContents}>
+            <Stack direction="column" spacing={spacing} justifyContent={justifyContents}>
                 {fields.map(renderFormControl)}
             </Stack>
         </FormGroup>
@@ -97,9 +111,8 @@ const ConditionalCheckboxForm = (props: any) => {
         return _.map(values, (value: any) => {
             const metadata = _.find(fields, ['value', value]);
             if (!metadata) return null;
-            const { form, description, component, value: type, ...rest } = metadata;
+            const { form, description, component, formComponent, value: type, ...rest } = metadata;
             return <>
-                {description && <Grid key={Math.random()} item xs={12}> <Alert sx={{ alignItems: 'center' }} color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
                 {form && (
                     <Grid item sm={12}>
                         <MUIForm
@@ -107,11 +120,12 @@ const ConditionalCheckboxForm = (props: any) => {
                             initialValues={{ type, ..._.get(existingState, 'value') }}
                             onSubmit={(value: any) => onSubmission(value)}
                             fields={form}
-                            size={{ sm: 6, xs: 6, lg: 6 }}
+                            size={{ sm: 4, xs: 4, lg: 4 }}
+                            formComponent={formComponent}
                         />
                     </Grid>)
                 }
-                {component && <Grid item sm={12}> {component}</Grid>}
+                {component && <Grid item sm={12}>{component}</Grid>}
             </>
         })
     }

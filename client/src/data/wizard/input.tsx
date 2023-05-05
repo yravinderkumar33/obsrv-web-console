@@ -36,10 +36,10 @@ const dataFormatQues = {
             description: "Select this option if you wish to send multiple events at once for this dataset.",
             component: <>
                 <Button
-                data-edataid={interactIds.button.download}
-                data-objectid="dataset:download:batchEvents"
-                data-objecttype="wizard:dataset"
-                onClick={_ => downloadBatchConfig()} variant="contained" startIcon={<DownloadOutlined />}>Download Sample Batch Event</Button>
+                    data-edataid={interactIds.button.download}
+                    data-objectid="dataset:download:batchEvents"
+                    data-objecttype="wizard:dataset"
+                    onClick={_ => downloadBatchConfig()} variant="contained" startIcon={<DownloadOutlined />}>Download Sample Batch Event</Button>
             </>
         }
     ]
@@ -65,7 +65,7 @@ const datasourceQues = {
             selected: true,
             required: true,
             disabled: true,
-            description: "API input is by enabled for all the datasets.",
+            description: "API input is by enabled for all datasets.",
             form: null
         },
         {
@@ -75,7 +75,7 @@ const datasourceQues = {
             required: true,
             form: forms.input_kafka,
             description: "Load streaming data in real-time from Apache Kafka. Configure topic name and list of Kafka brokers in the form: <BROKER_1>:<PORT_1>,<BROKER_2>:<PORT_2>,...",
-            component: <VerifyKafka />,
+            formComponent: <VerifyKafka />,
         },
     ]
 }

@@ -9,7 +9,7 @@ const useStyles = makeStyles((theme: any) => ({
     selectEmpty: { marginTop: theme.spacing(2) },
 }));
 
-const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, subscribeErrors = null, size = {}, enableReinitialize = false, }: any) => {
+const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, subscribeErrors = null, size = {}, enableReinitialize = false, formComponent = null }: any) => {
     const classes: any = useStyles;
     let { xs = 12, sm = 12, lg = 12 } = size;
 
@@ -127,9 +127,9 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                 <Tooltip title={tooltip}>
                                                     <FormControl fullWidth key={name} className={classes.formControl} required={required} disabled={disabled}>
                                                         <InputLabel >{label}</InputLabel>
-                                                        <Select 
-                                                        data-edataId="form:select"
-                                                        name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
+                                                        <Select
+                                                            data-edataId="form:select"
+                                                            name={name} id={name} label={label} value={_.get(values, name)} onChange={handleChange}>
                                                             {selectOptions.map((option: any) => (<MenuItem data-edataId={`form:select:${option.value}`} value={option.value}>{option.label}</MenuItem>))}
                                                         </Select>
                                                     </FormControl>
@@ -178,6 +178,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                 }
                             })}
                             {children}
+                            <Grid item xs={xs} sm={sm} lg={lg}>{formComponent && formComponent}</Grid>
                         </Grid>
                     </Form>
                 )

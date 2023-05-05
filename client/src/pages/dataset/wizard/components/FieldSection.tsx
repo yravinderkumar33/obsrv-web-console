@@ -45,7 +45,6 @@ const FieldSection = (props: any) => {
             <Grid item xs={12}>
                 {_.has(rest, 'component') && React.cloneElement(rest.component, { ...props })}
             </Grid>
-            {renderNavigation()}
         </Grid>
     }
 
