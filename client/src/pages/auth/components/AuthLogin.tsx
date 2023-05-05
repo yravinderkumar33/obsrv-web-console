@@ -31,6 +31,15 @@ const AuthLogin = () => {
     event.preventDefault();
   };
 
+  const startEvent = (event: any) => {
+    generateStartEvent({
+      edata: {
+        type: interactEdataIds.login,
+        pageid: pageIds.login,
+      }, object: {}
+    });
+  }
+
   useEffect(() => {
     const err = searchParams.get('err');
     if (err) {
@@ -103,14 +112,7 @@ const AuthLogin = () => {
               </Grid>
               <Grid item xs={12}>
                 <AnimateButton>
-                  <Button onClick={() => {
-                    generateStartEvent({
-                      edata: {
-                      type: interactEdataIds.login,
-                      pageid: pageIds.login,
-                    }, object: {}
-                  });
-                  }} data-edataid={interactEdataIds.login} disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                  <Button onClick={startEvent} data-edataid={interactEdataIds.login} disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
                     Login
                   </Button>
                 </AnimateButton>

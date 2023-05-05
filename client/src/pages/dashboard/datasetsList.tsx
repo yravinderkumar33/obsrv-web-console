@@ -225,7 +225,7 @@ const DatasetsList = ({ datasets }: any) => {
                         </Tooltip>
                         <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_id}`)}>
                             <IconButton
-                                data-edataid={interactIds.view_live_dataset}
+                                data-edataid={interactIds.create_live_dataset_events}
                                 data-objectid="databaseOutlined:create:events"
                                 data-objecttype="datasetLive"
                                 color="primary" size="large">
@@ -234,7 +234,7 @@ const DatasetsList = ({ datasets }: any) => {
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
                             <IconButton
-                                data-edataid={interactIds.view_live_dataset}
+                                data-edataid={interactIds.edit_live_dataset}
                                 data-objectid="editOutlined:dataset"
                                 data-objecttype="datasetLive"
                                 color="primary" size="large" disabled>

@@ -109,7 +109,7 @@ const DraftDatasetsList = ({ datasets }: any) => {
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
                             <IconButton
-                                data-edataid={interactIds.view_draft_dataset}
+                                data-edataid={interactIds.publish_draft_dataset}
                                 data-objectid={`play:publish:dataset:${row.dataset_id}`}
                                 data-objecttype="datasetDraft"
                                 color="primary" size="large" disabled={status !== "ready_to_publish"}>
@@ -118,7 +118,7 @@ const DraftDatasetsList = ({ datasets }: any) => {
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
                             <IconButton
-                                data-edataid={interactIds.view_draft_dataset}
+                                data-edataid={interactIds.edit_draft_dataset}
                                 data-objectid={`editOutlined:edit:dataset:${row.dataset_id}`}
                                 data-objecttype="datasetDraft"
                                 color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
