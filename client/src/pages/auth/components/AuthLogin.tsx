@@ -106,7 +106,7 @@ const AuthLogin = () => {
                   <Button onClick={() => {
                     generateStartEvent({
                       edata: {
-                      type: "App",
+                      type: interactEdataIds.login,
                       pageid: pageIds.login,
                     }, object: {}
                   });

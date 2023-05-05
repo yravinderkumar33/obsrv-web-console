@@ -55,7 +55,7 @@ const DatasetsList = ({ datasets }: any) => {
             return <CircularProgress size={20} color="success" />;
         }
 
-        return {asyncData};
+        return <div>{asyncData}</div>;
     }
 
 
