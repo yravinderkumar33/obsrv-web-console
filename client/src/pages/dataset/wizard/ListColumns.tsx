@@ -4,7 +4,9 @@ import {
     Typography, Chip, useTheme
 } from '@mui/material';
 import * as _ from 'lodash';
-import { CloseOutlined, FolderViewOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
+import { CloseOutlined, FolderViewOutlined } from '@ant-design/icons';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
@@ -126,9 +128,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 tipText: '',
                 editable: 'false',
                 Cell: ({ row }: any) => {
-                    const collapseIcon = row.isExpanded ? <DownOutlined /> : <RightOutlined />;
+                    const collapseIcon = row.isExpanded ? <ExpandMoreIcon /> : <ChevronRightIcon />;
                     return row.canExpand && (
-                        <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }} {...row.getToggleRowExpandedProps()}>
+                        <Box sx={{ fontSize: '1rem', color: 'text.secondary' }} {...row.getToggleRowExpandedProps()}>
                             {collapseIcon}
                         </Box>
                     );

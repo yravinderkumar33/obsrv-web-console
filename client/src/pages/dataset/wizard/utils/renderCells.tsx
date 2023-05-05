@@ -46,7 +46,7 @@ const renderColumnCell = ({
     return (
         <Box alignItems="baseline" maxWidth={537} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Typography variant="h6" m={1}>
+                <Typography variant="h6" my={1}>
                     {value}
                 </Typography>
                 {!row.description &&
@@ -156,7 +156,7 @@ const renderDataTypeCell = ({
     );
 
     return (
-        <Box position="relative" maxWidth={180} display='block' alignItems="center" m={1}>
+        <Box position="relative" maxWidth={180} display='block' alignItems="center" my={1}>
             {row?.oneof && !isResolved &&
                 <Button startIcon={<InfoCircleOutlined />} color="error" onClick={handleSuggestions} sx={{ mx: 1 }}>
                     <Typography variant="caption">Recommended Change</Typography>
