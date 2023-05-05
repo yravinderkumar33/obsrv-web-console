@@ -1,4 +1,3 @@
-const fs = require('fs');
 const path = require('path');
 const rimRaf = require('rimraf');
 const { exec } = require('child_process');
@@ -27,16 +26,14 @@ const buildWebConsole = async ({ path }) => {
 }
 
 const copyBuildFiles = () => {
-    const command = 'cp -r ./client/build/* ./src/public/'
+    const command = 'cp -r ./client/build ./src/build'
     return execute({ command })
 }
 
 (async () => {
     try {
-        await rimRaf(['./client/node_modules']);
         await buildWebConsole({ path: clientPath });
         await copyBuildFiles();
-        await rimRaf('./client/node_modules');
     } catch (error) {
         console.log(error?.message);
         process.exit(0)
