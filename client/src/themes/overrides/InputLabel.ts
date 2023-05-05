@@ -9,7 +9,7 @@ export default function InputLabel(theme: Theme) {
             styleOverrides: {
                 root: {
                     color: theme.palette.grey[600],
-                    overflow: 'unset',
+                    // overflow: 'unset',
                 },
                 outlined: {
                     lineHeight: '0.8em',

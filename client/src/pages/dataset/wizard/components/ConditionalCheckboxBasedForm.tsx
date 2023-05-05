@@ -111,8 +111,9 @@ const ConditionalCheckboxForm = (props: any) => {
         return _.map(values, (value: any) => {
             const metadata = _.find(fields, ['value', value]);
             if (!metadata) return null;
-            const { form, description, component, formComponent, value: type, ...rest } = metadata;
+            const { form, description, component, formComponent, topComponent, value: type, ...rest } = metadata;
             return <>
+                {topComponent && <Grid item sm={12}>{topComponent}</Grid>}
                 {form && (
                     <Grid item sm={12}>
                         <MUIForm

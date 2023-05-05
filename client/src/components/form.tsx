@@ -31,7 +31,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                 subscribeErrors && subscribeErrors(errors);
                 return (
                     <Form>
-                        <Grid container spacing={3} alignItems="baseline">
+                        <Grid container spacing={3} alignItems="center">
                             {fields.map((field: any) => {
                                 const {
                                     name, tooltip = '', label, type, dependsOn = null,
@@ -41,7 +41,9 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
 
                                 if (dependsOn) {
                                     const { key, value } = dependsOn;
-                                    if (!(_.get(values, [key]) === value)) {
+                                    console.log(key, value);
+                                    console.log(_.includes(_.get(values, key), value));
+                                    if (!_.includes(_.get(values, key), value) && !(_.get(values, [key]) === value)) {
                                         return null
                                     }
                                 }

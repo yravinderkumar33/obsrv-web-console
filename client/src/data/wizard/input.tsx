@@ -1,5 +1,5 @@
-import { DownloadOutlined } from '@ant-design/icons';
-import { Button } from '@mui/material';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import { Button, Typography } from '@mui/material';
 import { forms } from 'data/forms'
 import ConditionalCheckboxForm from "pages/dataset/wizard/components/ConditionalCheckboxBasedForm";
 import { downloadJSONFile } from 'services/utils';
@@ -34,12 +34,20 @@ const dataFormatQues = {
             required: true,
             form: forms.input_batch,
             description: "Select this option if you wish to send multiple events at once for this dataset.",
-            component: <>
+            topComponent: <>
                 <Button
                     data-edataid={interactIds.button.download}
                     data-objectid="dataset:download:batchEvents"
                     data-objecttype="wizard:dataset"
-                    onClick={_ => downloadBatchConfig()} variant="contained" startIcon={<DownloadOutlined />}>Download Sample Batch Event</Button>
+                    onClick={_ => downloadBatchConfig()}
+                    variant="text"
+                    sx={{ my: 0.5, fontSize: '1.25rem' }}
+                    startIcon={<FileDownloadOutlinedIcon fontSize='inherit' />}
+                >
+                    <Typography variant="h6">
+                        Download Sample Batch Event
+                    </Typography>
+                </Button>
             </>
         }
     ]

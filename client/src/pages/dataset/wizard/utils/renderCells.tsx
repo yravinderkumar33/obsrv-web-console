@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import * as _ from "lodash";
 import HtmlTooltip from "components/HtmlTooltip";
+import { VerticalOverflowText } from "components/styled/Typography";
 
 const renderColumnCell = ({
     cell, setFlattenedData, persistState, value,
@@ -57,22 +58,13 @@ const renderColumnCell = ({
             </Box>
             {row.description &&
                 <HtmlTooltip title={row.description} placement="top-start" arrow>
-                    <Typography
+                    <VerticalOverflowText
                         variant="body3"
                         color="secondary"
-                        mx={1}
-                        sx={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            display: "-webkit-box",
-                            "-webkit-line-clamp": '2',
-                            "-webkit-box-orient": "vertical",
-                            maxWidth: '95%'
-                        }}
                         onClick={handleClose}
                     >
                         {row.description}
-                    </Typography>
+                    </VerticalOverflowText>
                 </HtmlTooltip>
             }
             <Dialog open={edit} onClose={handleClose}>

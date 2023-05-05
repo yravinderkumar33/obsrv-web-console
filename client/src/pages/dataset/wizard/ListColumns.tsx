@@ -332,8 +332,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 </Grid>
             </GenericCard>
             <WizardNavigator
-                showPrevious={edit}
-                gotoPreviousSection={gotoPreviousSection}
+                showPrevious={false}
                 gotoNextSection={gotoNextSection}
                 enableDownload
                 handleDownload={handleDownloadButton}

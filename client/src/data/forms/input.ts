@@ -1,5 +1,3 @@
-import { confirmationOptions } from "./common"
-
 export const kafkaForm = [
     {
         name: "topic",
@@ -26,25 +24,24 @@ export const batchForm = [
         required: true
     },
     {
-        name: "dedupeRequired",
-        label: "Dedupe Batch ?",
-        type: 'select',
-        tooltip: 'Select if you want to dedupe batch or not ?',
-        selectOptions: confirmationOptions
-    },
-    {
         name: "batchId",
-        label: "Batch ID",
+        label: "Batch Identifier",
         type: 'text',
         required: true,
-        dependsOn: {
-            key: "dedupeRequired",
+    },
+    {
+        name: "dedupeRequired",
+        label: "Enable Deduplication",
+        type: 'checkbox',
+        tooltip: 'Select if you want to dedupe batch or not ?',
+        selectOptions: [{
+            label: 'Enable Deduplication',
             value: 'yes'
-        }
+        }]
     },
     {
         name: "dedupePeriod",
-        label: "Dedupe Period in Minutes",
+        label: "Deduplication Period (Minutes)",
         type: 'number',
         required: true,
         dependsOn: {
