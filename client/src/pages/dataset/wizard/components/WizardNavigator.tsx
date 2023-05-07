@@ -3,7 +3,7 @@ import { Stack, Typography, Box, } from '@mui/material';
 import AnimateButton from 'components/@extended/AnimateButton';
 import { StandardWidthButton } from 'components/styled/Buttons';
 
-const WizardNavigator = ({ pageId, showPrevious, gotoPreviousSection, gotoNextSection, enableDownload, handleDownload, master, section = undefined, }: any) => (
+const WizardNavigator = ({ pageId, showPrevious, gotoPreviousSection, gotoNextSection, enableDownload, handleDownload, master, section = undefined, nextDisabled = true }: any) => (
     <Stack direction="row" justifyContent={showPrevious ? 'space-between' : 'flex-end'}>
         {showPrevious && gotoPreviousSection &&
             <AnimateButton>
@@ -45,6 +45,7 @@ const WizardNavigator = ({ pageId, showPrevious, gotoPreviousSection, gotoNextSe
                         variant="contained"
                         type="button"
                         onClick={gotoNextSection}
+                        disabled={nextDisabled}
                     >
                         <Typography variant="h5">Proceed</Typography>
                     </StandardWidthButton>

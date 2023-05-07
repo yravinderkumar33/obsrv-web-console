@@ -41,8 +41,6 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
 
                                 if (dependsOn) {
                                     const { key, value } = dependsOn;
-                                    console.log(key, value);
-                                    console.log(_.includes(_.get(values, key), value));
                                     if (!_.includes(_.get(values, key), value) && !(_.get(values, [key]) === value)) {
                                         return null
                                     }

@@ -98,7 +98,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         }
     }
 
-    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData } }));
+    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData }, error: areConflictsResolved(data || flattenedData) }));
 
     const gotoNextSection = () => {
         const data = deleteFilter();
@@ -342,6 +342,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 gotoNextSection={gotoNextSection}
                 enableDownload
                 handleDownload={handleDownloadButton}
+                nextDisabled={!areConflictsResolved(flattenedData)}
             />
         </>
     );

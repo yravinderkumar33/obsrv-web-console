@@ -1,6 +1,5 @@
 import { useState, ReactNode, useEffect } from 'react';
-import { Button, Step, Stepper, StepLabel, Typography, Box } from '@mui/material';
-import MainCard from 'components/MainCard';
+import { Step, Stepper, StepLabel, Typography, Box } from '@mui/material';
 import DatasetConfiguration from './DatasetConfiguration';
 import { useDispatch } from 'react-redux';
 import { reset } from 'store/reducers/wizard';
