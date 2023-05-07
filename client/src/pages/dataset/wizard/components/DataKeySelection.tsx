@@ -1,8 +1,7 @@
 import MUIForm from "components/form";
 import { useEffect, useState } from "react";
 import * as _ from 'lodash';
-import { Alert, Grid } from "@mui/material";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
 import config from 'data/initialConfig';
@@ -49,11 +48,6 @@ const DataKeySelection = (props: any) => {
 
     return <>
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
-            <Grid item xs={12}>
-                <Alert color="info" icon={<InfoCircleOutlined />}>
-                    {description}
-                </Alert>
-            </Grid>
             <Grid item xs={4}>
                 <MUIForm initialValues={existingState || {}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 6 }} />
             </Grid>

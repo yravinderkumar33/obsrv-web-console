@@ -1,6 +1,6 @@
 import { makeStyles } from '@mui/styles';
 import * as _ from 'lodash';
-import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Radio, Select, Stack, TextField, ToggleButtonGroup, Tooltip } from '@mui/material';
+import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormGroup, FormLabel, Grid, InputLabel, MenuItem, Radio, Select, Stack, TextField, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
 import { Formik, Field, Form } from 'formik';
 import { ToggleButton } from '@mui/material';
 
@@ -111,6 +111,9 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                             <Grid item xs={xs} sm={sm} lg={lg} key={name}>
                                                 <Tooltip title={tooltip}>
                                                     <FormGroup>
+                                                        <Typography variant="h6" fontWeight="500" aria-label='form-label' gutterBottom>
+                                                            {label}
+                                                        </Typography>
                                                         <Stack direction="row" spacing={1}>
                                                             {selectOptions.map((option: any) => {
                                                                 const { value, label } = option;
@@ -177,7 +180,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                 }
                             })}
                             {children}
-                            <Grid item xs={xs} sm={sm} lg={lg}>{formComponent && formComponent}</Grid>
+                            {formComponent && <Grid item xs={xs} sm={sm} lg={lg}>{formComponent}</Grid>}
                         </Grid>
                     </Form>
                 )

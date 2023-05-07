@@ -9,8 +9,8 @@ import { KeyedObject } from 'types/root';
 
 
 const headerSX = {
-    px: 2.5,
-    py: 1,
+    px: 0,
+    py: 0,
     '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
 };
 
@@ -30,6 +30,7 @@ export interface MainCardProps extends KeyedObject {
     shadow?: string;
     elevation?: number;
     title?: ReactNode | string;
+    tagLine?: string;
     modal?: boolean;
 }
 
@@ -49,6 +50,7 @@ const MainCard = forwardRef(
             shadow,
             sx = {},
             title,
+            tagLine,
             modal = false,
             ...others
         }: MainCardProps,
@@ -89,16 +91,25 @@ const MainCard = forwardRef(
                 {!darkTitle && title && (
                     <CardHeader
                         sx={headerSX}
-                        titleTypographyProps={{ variant: 'subtitle1' }}
+                        titleTypographyProps={{ variant: 'h5' }}
                         title={title}
                         action={secondary}
                         subheader={subheader}
                     />
                 )}
                 {darkTitle && title && <CardHeader sx={headerSX} title={<Typography variant="h4">{title}</Typography>} action={secondary} />}
+                {tagLine && (
+                    <CardHeader
+                        sx={{ ...headerSX, py: 1 }}
+                        titleTypographyProps={{ variant: 'body2', color: 'secondary' }}
+                        title={tagLine}
+                        action={secondary}
+                        subheader={subheader}
+                    />
+                )}
                 {title && divider && <Divider />}
 
-            
+
                 {content && <CardContent sx={contentSX}>{children}</CardContent>}
                 {!content && children}
             </Card>

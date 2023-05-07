@@ -2,8 +2,6 @@ import MUIForm from "components/form";
 import { useEffect, useState } from "react";
 import * as _ from 'lodash';
 import { Grid } from "@mui/material";
-import { Alert } from "@mui/material";
-import { InfoCircleOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import config from 'data/initialConfig';
 import { addState } from "store/reducers/wizard";
@@ -38,9 +36,7 @@ const ConditionalForm = (props: any) => {
 
     return <>
         <Grid container rowSpacing={spacing}>
-            {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             <Grid item xs={6}> <MUIForm initialValues={response} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={[question]} /></Grid>
-            {_.get(config, 'description') && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {_.get(config, 'description')}</Alert></Grid>}
             {_.get(config, 'form') ? <Grid item sm={12}> <MUIForm subscribe={setChildFormValues} initialValues={childFormValue} onSubmit={(value: any) => onSubmission(value)} fields={_.get(config, 'form')} size={_.get(config, 'size')} /></Grid> : null}
         </Grid>
     </>

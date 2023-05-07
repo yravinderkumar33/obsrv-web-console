@@ -22,7 +22,7 @@ export const sections = [
         id: 'pii',
         title: 'PII Fields',
         description: 'PII is sensitive information that needs to be protected and kept secure to prevent identity theft, fraud, or other types of harm.  PII fields are often identified and tagged to ensure that appropriate controls are in place to protect the data',
-        component: <InputAccordion actions={actions} label={'Add PII'} dialog={< AddPIIDialog />} />,
+        component: <InputAccordion actions={actions} label={'Add PII Field'} dialog={< AddPIIDialog />} />,
         icon: FieldTimeOutlined,
         navigation: {
             next: 'transformation'
