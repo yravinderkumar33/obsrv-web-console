@@ -1,7 +1,6 @@
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle, Popover, Typography } from "@mui/material";
-import MUIForm from "components/form";
+import { Button, Grid, IconButton, TextField, Tooltip } from "@mui/material";
+import { Box, DialogContent, DialogTitle, Popover, Typography } from "@mui/material";
 import { useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
@@ -13,6 +12,7 @@ import { error } from "services/toaster";
 import { interactIds } from "data/telemetry/interactIds";
 import JSONataPlayground from "components/JSONataPlayground";
 import * as yup from "yup";
+import { useFormik } from 'formik';
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank', 'noopener,noreferrer');
@@ -23,12 +23,25 @@ const AddNewField = (props: any) => {
     const [value, subscribe] = useState<any>({});
     const [evaluationData, setEvaluationData] = useState<string>('');
     const [transformErrors, setTransformErrors] = useState<boolean>(false);
-    const [setFieldValue, fieldValueSetter] = useState<any>({});
     const dispatch = useDispatch();
     const onSubmission = (value: any) => { };
     const pushStateToStore: any = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
+    const newFieldForm: any = useFormik({
+        initialValues: {
+            "column": "",
+            "transformation": ""
+        },
+        onSubmit: (values) => {
+            onSubmission(values);
+        },
+        validationSchema: yup.object().shape({
+            column: yup.string().required("This field is required"),
+            transformation: yup.string().required("This field is required"),
+        }),
+        enableReinitialize: true,
+    });
 
     const saveTransformation = async (payload: any, updateStateData: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
@@ -65,7 +78,7 @@ const AddNewField = (props: any) => {
         }
     }
 
-    const fields = [
+    const fields: any = [
         {
             name: "column",
             label: "Field Name",
@@ -83,22 +96,12 @@ const AddNewField = (props: any) => {
         }
     ];
 
-    const formInitialValues = {
-        "column": "",
-        "transformation": ""
-    }
-
-    const validationSchema = yup.object().shape({
-        column: yup.string().required("This field is required"),
-        transformation: yup.string().required("This field is required"),
-    });
-
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
 
     const handleClose = () => {
-        // if (!transformErrors) setFieldValue("transformation", evaluationData);
+        if (!transformErrors) newFieldForm.setFieldValue("transformation", evaluationData);
         setAnchorEl(null);
     };
 
@@ -126,35 +129,57 @@ const AddNewField = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={formInitialValues} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                    <form onSubmit={newFieldForm.handleSubmit}>
+                        <Grid container spacing={1}>
+                            <Grid item xs={12}>
+                                {fields.map((item: any) => (
+                                    <Tooltip title={item.label} key={item.name}>
+                                        <TextField
+                                            value={newFieldForm.values[item.name]}
+                                            onChange={newFieldForm.handleChange}
+                                            name={item.name}
+                                            label={item.label}
+                                            sx={{ m: 1 }}
+                                            variant="outlined"
+                                            fullWidth
+                                            autoComplete="off"
+                                            onBlur={newFieldForm.handleBlur}
+                                            error={Boolean(newFieldForm.errors[item.name])}
+                                            helperText={newFieldForm.touched[item.name] && newFieldForm.errors[item.name] && String(newFieldForm.errors[item.name]) || item.helperText}
+                                        />
+                                    </Tooltip>
+                                ))}
+                            </Grid>
+                            <Grid item xs={12} display="flex" alignItems="center" justifyContent="flex-end">
+                                <Box mx={2}>
+                                    <Button
+                                        data-edataid="jsonata:editor:open"
+                                        data-objectid="jsonata"
+                                        data-objecttype="dataset"
+                                        onClick={handleClick}
+                                    >
+                                        <Typography variant="h5">
+                                            Try Out
+                                        </Typography>
+                                    </Button>
+                                </Box>
+                                <Button
+                                    data-edataid={interactIds.dataset.edit.add.transformation}
+                                    data-objectid={value}
+                                    data-objecttype="dataset"
+                                    variant="contained"
+                                    type="submit"
+                                    onClick={_ => updateAdditionalField()}
+                                >
+                                    <Typography variant="h5">
+                                        Add
+                                    </Typography>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </form>
                 </ Stack>
             </DialogContent>
-            <DialogActions sx={{ px: 4 }}>
-                <Box mx={2}>
-                    <Button
-                        data-edataid="jsonata:editor:open"
-                        data-objectid="jsonata"
-                        data-objecttype="dataset"
-                        onClick={handleClick}
-                    >
-                        <Typography variant="h5">
-                            Try Out
-                        </Typography>
-                    </Button>
-                </Box>
-                <Button
-                    data-edataid={interactIds.dataset.edit.add.transformation}
-                    data-objectid={value}
-                    data-objecttype="dataset"
-                    variant="contained"
-                    onClick={_ => updateAdditionalField()}
-                    disabled={value.column === '' || !value.column || value.transformation === '' || !value.transformation}
-                >
-                    <Typography variant="h5">
-                        Add
-                    </Typography>
-                </Button>
-            </DialogActions>
             <Popover
                 id={id}
                 open={open}

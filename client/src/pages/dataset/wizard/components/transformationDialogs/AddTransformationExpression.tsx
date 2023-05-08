@@ -24,7 +24,7 @@ const AddTransformationExpression = (props: any) => {
     });
     const [evaluationData, setEvaluationData] = useState<string>('');
     const [transformErrors, setTransformErrors] = useState<boolean>(false);
-    const [setFieldValue, fieldValueSetter] = useState<any>({});
+    const [updateValues, setUpdateValues] = useState<any>(null);
 
     const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
@@ -133,7 +133,7 @@ const AddTransformationExpression = (props: any) => {
     };
 
     const handleClose = () => {
-        // if (!transformErrors) setFieldValue("transformation", evaluationData);
+        if (!transformErrors) updateValues('expression', evaluationData);
         setAnchorEl(null);
     };
 
@@ -160,7 +160,15 @@ const AddTransformationExpression = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                    <MUIForm
+                        initialValues={{}}
+                        subscribe={subscribe}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={fields}
+                        size={{ xs: 12 }}
+                        validationSchema={validationSchema}
+                        customUpdate={setUpdateValues}
+                    />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>

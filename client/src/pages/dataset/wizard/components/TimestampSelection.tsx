@@ -72,6 +72,7 @@ const TimestampSelection = (props: any) => {
             <Grid item xs={4}>
                 <MUIForm
                     initialValues={existingState || {}}
+                    enableReinitialize={true}
                     subscribe={subscribe}
                     onSubmit={(value: any) => onSubmission(value)}
                     fields={fields}

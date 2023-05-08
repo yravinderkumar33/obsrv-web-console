@@ -85,7 +85,7 @@ const AddPIIDialog = (props: any) => {
     const validationSchema = yup.object().shape({
         column: yup.string().required("This field is required"),
         transformation: yup.string().required("This field is required"),
-    })
+    });
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
