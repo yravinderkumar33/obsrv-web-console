@@ -13,8 +13,6 @@ import interactEdataIds from 'data/telemetry/interact.json'
 
 const AuthLogin = () => {
   const dispatch = useDispatch();
-  const clientId = process.env.REACT_APP_OAUTH_CLIENT_ID || '';
-  const redirectURI = process.env.REACT_APP_WEB_CONSOLE_REDIRECT_URI || '';
   const [showPassword, setShowPassword] = React.useState(false);
   const [searchParams] = useSearchParams();
 

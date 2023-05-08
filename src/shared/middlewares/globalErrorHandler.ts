@@ -9,6 +9,11 @@ export default {
 
     const { id = 'api' } = request.responsePayload || {};
 
+    if (request.url.includes("oauth/v1/login")) {
+      console.log(error);
+      return response.redirect(`/login?err=Invalid Credentials`);
+    }
+
     response.status(status).json(transform({ id, responseCode, params: { err: errorCode, errmsg: message } }));
   },
 };
