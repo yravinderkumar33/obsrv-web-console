@@ -79,7 +79,7 @@ const TimestampSelection = (props: any) => {
                     validationSchema={validationSchema}
                 />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={4} ml={1}>
                 <FormControlLabel label='Show All Fields'
                     control={<Checkbox className="size-medium" checked={showAllFields} onChange={handleChange} />}
                 />
