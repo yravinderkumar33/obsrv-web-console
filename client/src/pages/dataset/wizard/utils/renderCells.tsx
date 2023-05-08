@@ -45,7 +45,7 @@ const renderColumnCell = ({
     }
 
     return (
-        <Box alignItems="baseline" maxWidth={537} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
+        <Box alignItems="baseline" maxWidth={'40vw'} minWidth={'40vw'} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
                 <HtmlTooltip title={value}>
                     <Typography variant="h6" my={1} maxWidth={'70%'} textOverflow='ellipsis' overflow='hidden' whiteSpace='nowrap'>
