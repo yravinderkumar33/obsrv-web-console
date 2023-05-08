@@ -67,7 +67,7 @@ const FieldSection = (props: any) => {
     }
 
     const renderBox = () => {
-        return <MainCard title={title} tagLine={description} sx={{ py: 3, px: 2 }}>
+        return <MainCard title={title} tagLine={description} headerSX={{ p: 0, px: 2, pt: 3, }}>
             {sectionDetails()}
         </ MainCard>
     }

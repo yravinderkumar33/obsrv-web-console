@@ -50,10 +50,7 @@ const Final = ({ handleBack, master, edit }: any) => {
 
     return (
         <>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="h4">
-                    Review
-                </Typography>
+            <Box display="flex" justifyContent="flex-end" alignItems="center">
                 <IconButtonWithTips
                     data-edataid={`${master ? 'masterDataset' : 'dataset'}:download:JSON`}
                     data-objectid="downloadSchema"

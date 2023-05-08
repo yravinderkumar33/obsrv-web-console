@@ -145,7 +145,7 @@ const DataDenorm = (props: any) => {
 
     const renderSelectionTable = () => {
         return <>
-            <MainCard content={false}>
+            <MainCard content={false} headerSX={{}}>
                 <ScrollX>
                     <BasicReactTable columns={columns} data={selection} striped={true} />
                 </ScrollX>

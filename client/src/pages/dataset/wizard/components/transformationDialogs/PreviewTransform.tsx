@@ -33,7 +33,7 @@ const PreviewTransformation = ({ fieldName, expression, title = 'Preview Transfo
 
     if (fieldName && expression)
         return (
-            <MainCard content={false} title={title} secondary={
+            <MainCard content={false} title={title} headerSX={{}} secondary={
                 <IconButtonWithTips
                     tooltipText="Collapse Preview"
                     icon={<FolderViewOutlined />}

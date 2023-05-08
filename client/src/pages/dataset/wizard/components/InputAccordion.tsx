@@ -98,7 +98,7 @@ const InputAccordion = (props: any) => {
     const renderTable = () => {
         if (!_.get(selection, 'length')) return null;
         return <Grid item xs={12}>
-            <MainCard content={false}>
+            <MainCard content={false} headerSX={{}}>
                 <ScrollX>
                     <BasicReactTable columns={columns} data={selection} striped={true} />
                 </ScrollX>

@@ -8,9 +8,10 @@ import { Card, CardContent, CardHeader, Divider, Typography, CardProps, CardHead
 import { KeyedObject } from 'types/root';
 
 
-const headerSX = {
-    px: 0,
-    py: 0,
+const defaultHeaderSX = {
+    px: 2.5,
+    py: 1,
+    minHeight: 50,
     '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
 };
 
@@ -43,6 +44,7 @@ const MainCard = forwardRef(
             subheader,
             content = true,
             contentSX = { px: 3 },
+            headerSX = { ...defaultHeaderSX },
             darkTitle,
             divider = true,
             elevation,
@@ -100,7 +102,7 @@ const MainCard = forwardRef(
                 {darkTitle && title && <CardHeader sx={headerSX} title={<Typography variant="h4">{title}</Typography>} action={secondary} />}
                 {tagLine && (
                     <CardHeader
-                        sx={{ ...headerSX, py: 1 }}
+                        sx={{ ...headerSX, pt: 1, pb: 3 }}
                         titleTypographyProps={{ variant: 'body2', color: 'secondary' }}
                         title={tagLine}
                         action={secondary}
