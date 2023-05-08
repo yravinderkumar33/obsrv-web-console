@@ -212,6 +212,7 @@ const AddTransformationExpression = (props: any) => {
                     evaluationData={evaluationData}
                     setEvaluationData={setEvaluationData}
                     setTransformErrors={setTransformErrors}
+                    transformErrors={transformErrors}
                 />
             </Popover>
         </Box>

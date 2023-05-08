@@ -80,7 +80,7 @@ const options = {
     },
 };
 
-const JSONataPlayground = ({ handleClose, evaluationData, setEvaluationData, setTransformErrors }: any) => {
+const JSONataPlayground = ({ handleClose, evaluationData, setEvaluationData, transformErrors, setTransformErrors }: any) => {
     const stringifyWithFormat = (data: any) => {
         return JSON.stringify(data, null, 4);
     }
@@ -115,13 +115,19 @@ const JSONataPlayground = ({ handleClose, evaluationData, setEvaluationData, set
         if (!evaluationData) {
             const message = '^^ Enter a JSONata expression in the box above ^^';
             setPreviewData(message);
+            setTransformErrors(false);
         } else {
             const ata: any = JSONata(evaluationData);
             try {
                 const data: any = await ata.evaluate(JSON.parse(sampleData));
-                if (!data) setPreviewData("No match");
-                else setPreviewData(stringifyWithFormat(data));
-                setTransformErrors(false);
+                if (!data) {
+                    setPreviewData("No match");
+                    setTransformErrors(true);
+                }
+                else {
+                    setPreviewData(stringifyWithFormat(data));
+                    setTransformErrors(false);
+                }
             } catch (err: any) {
                 setPreviewData(err.message || String(err));
                 setTransformErrors(true);
@@ -180,6 +186,7 @@ const JSONataPlayground = ({ handleClose, evaluationData, setEvaluationData, set
                                 value={previewData}
                                 options={options}
                                 onChange={undefined}
+                                className={transformErrors ? "error-class" : ""}
                             />
                         </Pane>
                     </SplitPane>
