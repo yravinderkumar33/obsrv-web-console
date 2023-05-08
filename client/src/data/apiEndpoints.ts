@@ -18,5 +18,5 @@ export default {
     alerts: "/alertmanager/api/v2/alerts",
     prometheusRead: "/prom/api/v1/query",
     prometheusReadRange: "/prom/api/v1/query_range",
-    logout: "/api/oauth/logout"
+    logout: "/api/oauth/v1/logout"
 }

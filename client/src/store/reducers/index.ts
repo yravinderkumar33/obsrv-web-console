@@ -7,7 +7,8 @@ import snackbar from './snackbar';
 import config from './config';
 import dataset from './dataset';
 import wizard from './wizard';
-import alerts from './alerts'
+import alerts from './alerts';
+import systemSettings from './systemSettings';
 
 const reducers = combineReducers({
   menu,
@@ -15,7 +16,8 @@ const reducers = combineReducers({
   config,
   dataset,
   wizard,
-  alerts
+  alerts,
+  systemSettings
 });
 
 export default reducers;

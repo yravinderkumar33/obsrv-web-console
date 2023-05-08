@@ -113,7 +113,9 @@ const DraftDatasetsList = ({ datasets }: any) => {
                                 data-edataid={interactIds.dataset.create.publish}
                                 data-objectid="dataset/publish"
                                 data-objecttype="datasetDraft"
-                                color="primary" size="large" disabled={status !== "ready_to_publish"}>
+                                color="primary" 
+                                size="large" 
+                                disabled={status !== "ready_for_publish"}>
                                 < PlayCircleOutlined />
                             </IconButton>
                         </Tooltip>
@@ -123,7 +125,9 @@ const DraftDatasetsList = ({ datasets }: any) => {
                                 data-edataid={interactIds.dataset.edit.add.transformation}
                                 data-objectid="dataset/edit"
                                 data-objecttype="datasetDraft"
-                                color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
+                                color="primary" 
+                                size="large" 
+                                onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>
