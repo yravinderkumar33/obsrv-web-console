@@ -57,14 +57,6 @@ const datasourceQues = {
     type: 'checkbox',
     justifyContents: 'flex-start',
     name: 'datasource',
-    defaultValues: {
-        datasource: {
-            extractionKey: "events",
-            batchId: "123",
-            dedupeRequired: "yes",
-            dedupePeriod: 7
-        }
-    },
     fields: [
         {
             name: "datasource",
@@ -104,7 +96,7 @@ export const sections = [
         id: 'dataSource',
         title: 'Input Data Sources',
         description: 'Read data from a wide variety of data sources. Batch and Real time data integration.',
-        component: <ConditionalCheckboxForm {...datasourceQues} />,
+        component: <ConditionalCheckboxForm key="datasource" {...datasourceQues} />,
         componentType: 'box',
         navigation: {
             next: 'dataFormat'
@@ -114,6 +106,6 @@ export const sections = [
         id: 'dataFormat',
         title: 'Input Data Formats',
         description: 'Decide how the data is ingested into the system.',
-        component: <ConditionalCheckboxForm {...dataFormatQues} />
+        component: <ConditionalCheckboxForm key="dataformat" {...dataFormatQues} />
     }
 ];

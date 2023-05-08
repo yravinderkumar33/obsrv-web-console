@@ -6,14 +6,13 @@ import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { addState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
-import { openJsonAtaEditor } from "./AddNewField";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { v4 } from "uuid";
-import PreviewTransformation from "./PreviewTransform";
 import { interactIds } from "data/telemetry/interactIds";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import JSONataPlayground from "components/JSONataPlayground";
+import * as yup from "yup";
 
 const AddTransformationExpression = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
@@ -64,6 +63,16 @@ const AddTransformationExpression = (props: any) => {
             </>,
         }
     ];
+
+    const validationSchema = yup.object().shape({
+        column: yup.string().required("This field is required"),
+        transformation: yup.string().required("This field is required"),
+        expression: yup.string().when(
+            'transformation', {
+            is: 'custom',
+            then: yup.string().required("This field is required"),
+        }),
+    });
 
     const saveTransformation = async (payload: any, updateStateData: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
@@ -151,11 +160,7 @@ const AddTransformationExpression = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
-                    {/* {
-                        value && value.transformation === 'custom' && value.expression &&
-                        <PreviewTransformation fieldName={value.column} expression={value.expression} />
-                    } */}
+                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
