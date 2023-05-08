@@ -28,22 +28,27 @@ const ConditionalForm = (props: any) => {
             const data = _.map(form, (item) => { validations[item.name] = item.validationSchema });
             const validationSchemas = yup.object().shape(validations);
             setConfig({ form, description, size, validationSchemas });
-            return form;
+            return true;
         } else {
             setConfig({});
-            return null
+            subscribeErrors(null);
+            return false;
         };
     }
 
-    const persistState = (state: Record<string, any>, error?: any) => dispatch(addState({ id, ...state, error: error || _.keys(formErrors).length > 0 }));
+    const persistState = (state: Record<string, any>, error?: any) => dispatch(addState({ id, ...state, error: error }));
 
     useEffect(() => {
         const data = selectForm();
-        const errorData = () => {
-            if (!data) { subscribeErrors(null); return false; }
-            else { subscribeErrors({ 'error': true }); return { 'error': true }; }
+        if (!data) {
+            persistState({ questionSelection: response, optionSelection: childFormValue }, false);
+            return;
         }
-        persistState({ questionSelection: response, optionSelection: childFormValue }, errorData());
+        else {
+            subscribeErrors({ 'error': true });
+            persistState({ questionSelection: response, optionSelection: childFormValue }, { 'error': true });
+            return;
+        }
     }, [selectedOption, childFormValue]);
 
     return <>

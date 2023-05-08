@@ -1,11 +1,13 @@
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Button, Grid, IconButton, TextField, Tooltip } from "@mui/material";
-import { Box, DialogContent, DialogTitle, Popover, Typography } from "@mui/material";
+import {
+    Grid, IconButton, TextField, Tooltip, Box,
+    DialogContent, Stack, DialogTitle, Popover,
+    Typography
+} from "@mui/material";
 import { useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { addState, updateState } from "store/reducers/wizard";
-import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
@@ -13,6 +15,7 @@ import { interactIds } from "data/telemetry/interactIds";
 import JSONataPlayground from "components/JSONataPlayground";
 import * as yup from "yup";
 import { useFormik } from 'formik';
+import { StandardWidthButton } from 'components/styled/Buttons';
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank', 'noopener,noreferrer');
@@ -154,29 +157,31 @@ const AddNewField = (props: any) => {
                             </Grid>
                             <Grid item xs={12} display="flex" alignItems="center" justifyContent="flex-end">
                                 <Box mx={2}>
-                                    <Button
+                                    <StandardWidthButton
                                         data-edataid="jsonata:editor:open"
                                         data-objectid="jsonata"
                                         data-objecttype="dataset"
                                         onClick={handleClick}
+                                        sx={{ width: 'auto' }}
                                     >
                                         <Typography variant="h5">
                                             Try Out
                                         </Typography>
-                                    </Button>
+                                    </StandardWidthButton>
                                 </Box>
-                                <Button
+                                <StandardWidthButton
                                     data-edataid={interactIds.dataset.edit.add.transformation}
                                     data-objectid={newFieldForm.values}
                                     data-objecttype="dataset"
                                     variant="contained"
                                     onClick={_ => updateAdditionalField()}
                                     size="large"
+                                    sx={{ width: 'auto' }}
                                 >
                                     <Typography variant="h5">
                                         Add
                                     </Typography>
-                                </Button>
+                                </StandardWidthButton>
                             </Grid>
                         </Grid>
                     </form>

@@ -57,7 +57,7 @@ export const batchForm = [
         },
         validationSchema: yup.number().when(
             'dedupeRequired', {
-            is: (option: any) => option.includes('yes'),
+            is: (option: any) => { if (option) return option.includes('yes'); else return false; },
             then: yup.number().required('This field is required')
         }),
     }

@@ -1,17 +1,19 @@
-import { Button, IconButton, Typography } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    Stack, IconButton, Typography, Box, DialogActions,
+    DialogContent, DialogTitle,
+} from "@mui/material";
 import MUIForm from "components/form";
 import { useMemo, useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { addState } from "store/reducers/wizard";
-import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { interactIds } from "data/telemetry/interactIds";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import * as yup from "yup";
+import { StandardWidthButton } from "components/styled/Buttons";
 
 const AddPIIDialog = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
@@ -125,18 +127,19 @@ const AddPIIDialog = (props: any) => {
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
-                <Button
+                <StandardWidthButton
                     data-edataid={interactIds.pii.add}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained"
                     onClick={_ => updatePIIMeta()}
                     size="large"
+                    sx={{ width: 'auto' }}
                 >
                     <Typography variant="h5">
                         Add
                     </Typography>
-                </Button>
+                </StandardWidthButton>
             </DialogActions>
         </Box></>
 }

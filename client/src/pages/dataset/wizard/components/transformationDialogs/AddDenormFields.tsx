@@ -1,15 +1,17 @@
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import {
+    Box, DialogActions, DialogContent, DialogTitle,
+    Typography, IconButton, Stack
+} from "@mui/material";
 import MUIForm from "components/form";
 import { useEffect, useState } from "react";
 import * as _ from 'lodash';
-import { Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { error } from "services/toaster";
 import { updateDenormConfig } from "services/dataset";
 import { interactIds } from "data/telemetry/interactIds";
 import * as yup from "yup";
+import { StandardWidthButton } from 'components/styled/Buttons';
 
 const AddDenormField = (props: any) => {
     const { selection, redisConfig, onClose, setSelection, persistState, masterDatasets = [] } = props;
@@ -134,19 +136,19 @@ const AddDenormField = (props: any) => {
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
-                <Button
+                <StandardWidthButton
                     data-edataid={interactIds.dataset.create.add.denorm}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained"
-                    autoFocus
                     onClick={_ => addField()}
                     size="large"
+                    sx={{ width: 'auto' }}
                 >
                     <Typography variant="h5">
                         Add Field
                     </Typography>
-                </Button>
+                </StandardWidthButton>
             </DialogActions>
         </Box>
     </>

@@ -1,4 +1,7 @@
-import { Box, Typography, AccordionDetails, Accordion, AccordionSummary, useTheme, Button, Grid } from '@mui/material';
+import {
+    Box, Typography, AccordionDetails, Accordion,
+    AccordionSummary, useTheme, Button, Grid
+} from '@mui/material';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import React from 'react';

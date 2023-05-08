@@ -1,13 +1,13 @@
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle, Typography, Stack } from "@mui/material";
 import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
-import { Stack } from "@mui/material";
 import { useSelector } from "react-redux";
 import { interactIds } from "data/telemetry/interactIds";
 import * as yup from "yup";
+import { StandardWidthButton } from 'components/styled/Buttons';
 
 const aggregateFunctions = [
     {
@@ -135,18 +135,19 @@ const AddRollup = (props: any) => {
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
-                <Button
+                <StandardWidthButton
                     data-edataid={interactIds.rollup.add}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained"
                     onClick={_ => addField()}
                     size="large"
+                    sx={{ width: 'auto' }}
                 >
                     <Typography variant="h5">
                         Add Field
                     </Typography>
-                </Button>
+                </StandardWidthButton>
             </DialogActions>
         </Box>
     </>

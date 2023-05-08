@@ -14,7 +14,7 @@ const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
     const dispatch = useDispatch();
-    const { id, type = "checkbox", justifyContents = 'flex-start', fields, name } = props;
+    const { id, type = "checkbox", justifyContents = 'flex-start', fields, name, display = "column" } = props;
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || {});
     const [childFormValue, setChildFormValues] = useState<any>({});
     const [errors, subscribeErrors] = useState<any>(null);
@@ -49,9 +49,9 @@ const ConditionalCheckboxForm = (props: any) => {
 
     useEffect(() => {
         onSubmission(formValues);
-        if (!existingState && _.keys(existingState).length > 1 && formValues[id].length > 1 && _.keys(childFormValue).length <= 1) subscribeErrors({ 'error': true });
+        if (_.keys(existingState).length < 1 && formValues[id].length > 1 && _.keys(childFormValue).length <= 1) subscribeErrors({ 'error': true });
         persist();
-    }, [formValues, childFormValue]);
+    }, [formValues, childFormValue,]);
 
     const handleParentFormChange = (e: any) => {
         formik.handleChange(e);
@@ -104,7 +104,7 @@ const ConditionalCheckboxForm = (props: any) => {
 
     const renderForm = () => <form onSubmit={formik.handleSubmit}>
         <FormGroup>
-            <Stack direction="column" spacing={spacing} justifyContent={justifyContents}>
+            <Stack direction={display} spacing={spacing} justifyContent={justifyContents}>
                 {fields.map(renderFormControl)}
             </Stack>
         </FormGroup>

@@ -32,7 +32,6 @@ const dataValidation = {
     type: 'radio',
     justifyContents: 'flex-start',
     name: 'dataValidation',
-    display: 'flex',
     fields: [
         {
             name: "dataValidation",

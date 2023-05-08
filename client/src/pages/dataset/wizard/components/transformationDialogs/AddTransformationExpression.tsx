@@ -1,5 +1,7 @@
-import { Button, IconButton, Popover, Typography } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    IconButton, Popover, Typography,
+    Box, DialogActions, DialogContent, DialogTitle
+} from "@mui/material";
 import MUIForm from "components/form";
 import { useMemo, useState } from "react";
 import * as _ from 'lodash';
@@ -13,6 +15,7 @@ import { interactIds } from "data/telemetry/interactIds";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import JSONataPlayground from "components/JSONataPlayground";
 import * as yup from "yup";
+import { StandardWidthButton } from "components/styled/Buttons";
 
 const AddTransformationExpression = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
@@ -178,28 +181,30 @@ const AddTransformationExpression = (props: any) => {
             <DialogActions sx={{ px: 4 }}>
                 {_.get(value, 'transformation') === 'custom' &&
                     <Box mx={2}>
-                        <Button data-edataid="jsonata:editor:open"
+                        <StandardWidthButton data-edataid="jsonata:editor:open"
                             data-objectid="jsonata"
                             data-objecttype="dataset"
                             onClick={handleClick}
+                            sx={{ width: 'auto' }}
                         >
                             <Typography variant="h5">
                                 Try Out
                             </Typography>
-                        </Button>
+                        </StandardWidthButton>
                     </Box>}
-                <Button
+                <StandardWidthButton
                     data-edataid={interactIds.dataset.edit.add.transformation}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained" autoFocus
                     onClick={_ => updateTransformation()}
                     size="large"
+                    sx={{ width: 'auto' }}
                 >
                     <Typography variant="h5">
                         Add
                     </Typography>
-                </Button>
+                </StandardWidthButton>
             </DialogActions>
             <Popover
                 id={id}
