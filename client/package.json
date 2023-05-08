@@ -2,7 +2,7 @@
     "name": "sunbird-obsrv",
     "version": "1.2.0",
     "private": true,
-    "proxy": "http://localhost:3000",
+    "proxy": "http://localhost:4000",
     "dependencies": {
         "@ant-design/colors": "^6.0.0",
         "@ant-design/icons": "^4.7.0",
