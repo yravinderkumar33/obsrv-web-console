@@ -1,5 +1,3 @@
-
-import { confirmationOptions } from "data/forms/common";
 import ConditionalForm from "pages/dataset/wizard/components/ConditionalForm";
 import { forms } from 'data/forms';
 import * as _ from 'lodash';
@@ -11,9 +9,12 @@ const dedupeQues = {
     question: {
         name: "dedupe",
         label: "Dedupe Events ?",
-        type: 'select',
+        type: 'checkbox',
         required: true,
-        selectOptions: confirmationOptions
+        selectOptions: [{
+            label: 'Enable Deduplication',
+            value: 'yes'
+        }],
     },
     options: {
         yes: {
@@ -31,6 +32,7 @@ const dataValidation = {
     type: 'radio',
     justifyContents: 'flex-start',
     name: 'dataValidation',
+    display: 'flex',
     fields: [
         {
             name: "dataValidation",

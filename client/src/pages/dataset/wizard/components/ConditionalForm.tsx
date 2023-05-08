@@ -29,7 +29,10 @@ const ConditionalForm = (props: any) => {
             const validationSchemas = yup.object().shape(validations);
             setConfig({ form, description, size, validationSchemas });
             return form;
-        } else return null;
+        } else {
+            setConfig({});
+            return null
+        };
     }
 
     const persistState = (state: Record<string, any>, error?: any) => dispatch(addState({ id, ...state, error: error || _.keys(formErrors).length > 0 }));
