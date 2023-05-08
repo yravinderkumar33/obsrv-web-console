@@ -7,6 +7,7 @@ import * as _ from 'lodash';
 import { Stack } from "@mui/material";
 import { useSelector } from "react-redux";
 import { interactIds } from "data/telemetry/interactIds";
+import * as yup from "yup";
 
 const aggregateFunctions = [
     {
@@ -75,6 +76,16 @@ const AddRollup = (props: any) => {
         }
     ];
 
+    const validationSchema = yup.object().shape({
+        field: yup.string().required("This field is required"),
+        aggregateFunction: yup.string().required("This field is required"),
+        rollupFields: yup.array()
+            .min(1, "This field requires atleast 1 property")
+            .required("This field is required")
+            .nullable(),
+        rollupFieldName: yup.string().required("This field is required"),
+    });
+
     const addField = () => {
         if (_.size(value) === fields.length) {
             setSelection((preState: any) => {
@@ -109,7 +120,7 @@ const AddRollup = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>

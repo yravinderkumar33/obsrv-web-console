@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { error } from "services/toaster";
 import { updateDenormConfig } from "services/dataset";
 import { interactIds } from "data/telemetry/interactIds";
+import * as yup from "yup";
 
 const AddDenormField = (props: any) => {
     const { selection, redisConfig, onClose, setSelection, persistState, masterDatasets = [] } = props;
@@ -64,6 +65,13 @@ const AddDenormField = (props: any) => {
         },
     ];
 
+    const validationSchema = yup.object().shape({
+        denorm_key: yup.string().required("This field is required"),
+        redis_db: yup.string().required("This field is required"),
+        denorm_out_field: yup.string().required("This field is required"),
+    });
+
+
     const updateDenormFields = async (payload: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the config" }));
         try {
@@ -118,7 +126,7 @@ const AddDenormField = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>

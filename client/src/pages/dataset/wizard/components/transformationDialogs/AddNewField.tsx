@@ -12,6 +12,7 @@ import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { interactIds } from "data/telemetry/interactIds";
 import JSONataPlayground from "components/JSONataPlayground";
+import * as yup from "yup";
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank', 'noopener,noreferrer');
@@ -87,6 +88,11 @@ const AddNewField = (props: any) => {
         "transformation": ""
     }
 
+    const validationSchema = yup.object().shape({
+        column: yup.string().required("This field is required"),
+        transformation: yup.string().required("This field is required"),
+    });
+
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
     };
@@ -120,7 +126,7 @@ const AddNewField = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={formInitialValues} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                    <MUIForm initialValues={formInitialValues} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
                 </ Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
