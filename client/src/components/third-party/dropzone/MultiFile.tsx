@@ -6,12 +6,12 @@ import { Box, Button, Stack } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 
 // project import
-import RejectionFiles from './RejectionFiles';
 import PlaceholderContent from './PlaceholderContent';
 
 // types
 import { CustomFile, DropzopType, UploadMultiFileProps } from 'types/dropzone';
 import { interactIds } from 'data/telemetry/interactIds';
+import { useEffect } from 'react';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
     outline: 'none',
@@ -25,7 +25,7 @@ const DropzoneWrapper = styled('div')(({ theme }) => ({
 
 // ==============================|| UPLOAD - MULTIPLE FILE ||============================== //
 
-const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, sx, onUpload, maxFileSize = 5242880, ...other }: UploadMultiFileProps) => {
+const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, sx, onUpload, maxFileSize = 5242880, subscribeErrors = null, ...other }: UploadMultiFileProps) => {
     const { onFileRemove } = other || {};
     const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
         multiple: true,
@@ -59,6 +59,10 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
         maxSize: maxFileSize,
     });
 
+    useEffect(() => {
+        subscribeErrors && subscribeErrors(fileRejections);
+    }, [fileRejections]);
+
     const onRemoveAll = () => {
         setFieldValue('files', null);
         onFileRemove && onFileRemove(null);
@@ -76,10 +80,10 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
             >
                 <Stack {...(type === DropzopType.standard && { alignItems: 'center' })}>
                     <DropzoneWrapper
-                    data-edataid="add:files"
-                    data-edatatype="DRAG&DROP"
-                    data-objectid={DropzopType.default}
-                    data-objecttype="dataset"
+                        data-edataid="add:files"
+                        data-edatatype="DRAG&DROP"
+                        data-objectid={DropzopType.default}
+                        data-objecttype="dataset"
                         {...getRootProps()}
                         sx={{
                             ...(type === DropzopType.standard && {
@@ -101,24 +105,23 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                     </DropzoneWrapper>
                     {type === DropzopType.standard && files && files.length > 1 && (
                         <Button
-                        data-edataid={interactIds.file.remove.many}
-                        data-objectid={`${DropzopType.standard}:remove:multiple:files`}
-                        data-objecttype="dataset"
-                         variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
+                            data-edataid={interactIds.file.remove.many}
+                            data-objectid={`${DropzopType.standard}:remove:multiple:files`}
+                            data-objecttype="dataset"
+                            variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
                             Remove all
                         </Button>
                     )}
                 </Stack>
-                {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
             </Box>
 
             {type !== DropzopType.standard && files && files.length > 0 && (
                 <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ mt: 1.5 }}>
                     <Button
-                    data-edataid={interactIds.file.remove.many}
-                    data-objectid={`${DropzopType.default}:remove:multiple:files`}
-                    data-objecttype="dataset"
-                    color="inherit" size="small" onClick={onRemoveAll}>
+                        data-edataid={interactIds.file.remove.many}
+                        data-objectid={`${DropzopType.default}:remove:multiple:files`}
+                        data-objecttype="dataset"
+                        color="inherit" size="small" onClick={onRemoveAll}>
                         Remove all
                     </Button>
                     {/* <Button size="small" variant="contained" onClick={() => onUpload(files)}>

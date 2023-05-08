@@ -18,7 +18,6 @@ const ConditionalCheckboxForm = (props: any) => {
     const onSubmission = (value: any) => { };
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || ({}));
     const [childFormValue, setChildFormValues] = useState<any>({});
-    const [errors, setErrors] = useState<any>(null);
 
     const filterPredicate = (field: any) => {
         if (_.includes(_.get(existingState, 'formFieldSelection'), _.get(field, 'value'))) return true;
@@ -37,7 +36,7 @@ const ConditionalCheckboxForm = (props: any) => {
         }
     }
 
-    const persistState = (state: Record<string, any>) => dispatch(addState({ id, ...state, errors: errors }));
+    const persistState = (state: Record<string, any>) => dispatch(addState({ id, ...state }));
     const formik = useFormik({ initialValues: getInitialValues(), onSubmit: values => { } });
     const formValues = formik.values;
 
@@ -127,7 +126,6 @@ const ConditionalCheckboxForm = (props: any) => {
                             fields={form}
                             size={{ sm: 4, xs: 4, lg: 4 }}
                             formComponent={formComponent}
-                            subscribeErrors={setErrors}
                             validationSchema={validationSchemas}
                         />
                     </Grid>)

@@ -20,11 +20,9 @@ export const openJsonAtaEditor = () => {
 
 const AddNewField = (props: any) => {
     const { id, data, onClose, selection, setSelection, mainDatasetId, } = props;
-    const [value, subscribe] = useState<any>({});
     const [evaluationData, setEvaluationData] = useState<string>('');
     const [transformErrors, setTransformErrors] = useState<boolean>(false);
     const dispatch = useDispatch();
-    const onSubmission = (value: any) => { };
     const pushStateToStore: any = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
     const open = Boolean(anchorEl);
@@ -60,7 +58,7 @@ const AddNewField = (props: any) => {
     }
 
     const updateAdditionalField = () => {
-        const { column, transformation } = value;
+        const { column, transformation } = newFieldForm.values;
         if (column && transformation) {
             const uuid = v4();
             const updatedColumnMetadata = { column, transformation, isModified: true, _transformationType: "custom", id: uuid, }
@@ -104,6 +102,8 @@ const AddNewField = (props: any) => {
         if (!transformErrors) newFieldForm.setFieldValue("transformation", evaluationData);
         setAnchorEl(null);
     };
+
+    const onSubmission = (values: any) => { updateAdditionalField() };
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
@@ -165,11 +165,10 @@ const AddNewField = (props: any) => {
                                 </Box>
                                 <Button
                                     data-edataid={interactIds.dataset.edit.add.transformation}
-                                    data-objectid={value}
+                                    data-objectid={newFieldForm.values}
                                     data-objecttype="dataset"
                                     variant="contained"
                                     type="submit"
-                                    onClick={_ => updateAdditionalField()}
                                 >
                                     <Typography variant="h5">
                                         Add
