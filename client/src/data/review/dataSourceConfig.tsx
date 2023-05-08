@@ -12,7 +12,6 @@ const displayBatchColumns = [
     { id: 'extractionKey', label: 'Extraction Key' },
     { id: 'batchId', label: 'Batch ID' },
     { id: 'dedupeRequired', label: 'Dedupe Required' },
-    { id: 'dedupeKey', label: 'Dedupe Key' },
     { id: 'dedupePeriod', label: 'Dedupe Period' },
 ];
 
@@ -28,7 +27,7 @@ const Preview = () => {
                 <Chip size='medium' label={_.capitalize(item)} sx={{ mx: 0.5 }} color="success" variant="filled" />
             ))}
         </Box>
-        <TableContainer>
+        {dataSourceConfig.formFieldSelection.includes('kafka') && <TableContainer>
             <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                 <TableHead>
                     <TableRow>
@@ -52,6 +51,7 @@ const Preview = () => {
                 </TableBody>
             </Table>
         </TableContainer>
+        }
     </MainCard >;
 
     const dataFormatTable = () => <MainCard content={false} title="Data Format Configurations" sx={{ my: 2 }}>
