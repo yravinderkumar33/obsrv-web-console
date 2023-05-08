@@ -6,6 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Editor from '@monaco-editor/react';
 import { useSelector } from "react-redux";
 import JSONata from 'jsonata';
+import * as _ from "lodash";
 
 const Pane = styled(Box)({
     width: '100%',
@@ -84,7 +85,7 @@ const JSONataPlayground = ({ handleClose, evaluationData, setEvaluationData, set
         return JSON.stringify(data, null, 4);
     }
     const jsonData: any = useSelector((state: any) => state?.wizard?.pages?.datasetConfiguration?.state?.data || {});
-    const [sampleData, setSampleData] = useState<string>(stringifyWithFormat(jsonData));
+    const [sampleData, setSampleData] = useState<string>(stringifyWithFormat(_.first(jsonData)));
     const [previewData, setPreviewData] = useState<string>('');
 
     useEffect(() => {
