@@ -9,7 +9,7 @@ import DataDenorm from "pages/dataset/wizard/components/DataDenormalization";
 
 const dedupeQues = {
     question: {
-        name: "dedupeEvents",
+        name: "dedupe",
         label: "Dedupe Events ?",
         type: 'select',
         required: true,
@@ -30,10 +30,10 @@ const dedupeQues = {
 const dataValidation = {
     type: 'radio',
     justifyContents: 'flex-start',
-    name: 'validateType',
+    name: 'dataValidation',
     fields: [
         {
-            name: "validateType",
+            name: "dataValidation",
             label: "None",
             value: "none",
             required: true,
@@ -41,7 +41,7 @@ const dataValidation = {
             form: null
         },
         {
-            name: "validateType",
+            name: "dataValidation",
             label: "Strict",
             value: "Strict",
             selected: true,
@@ -50,7 +50,7 @@ const dataValidation = {
             form: null
         },
         {
-            name: "validateType",
+            name: "dataValidation",
             label: "Ignore New Fields",
             value: "IgnoreNewFields",
             required: true,
@@ -58,13 +58,13 @@ const dataValidation = {
             description: "Skip validation for the new fields added.",
         },
         {
-            name: "validateType",
+            name: "dataValidation",
             label: "Auto Index New Fields",
             value: "DiscardNewFields",
             required: true,
             form: null,
             description: "Auto index new fields added",
-        }
+        },
     ]
 }
 

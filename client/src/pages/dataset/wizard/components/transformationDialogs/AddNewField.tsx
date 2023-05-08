@@ -58,6 +58,7 @@ const AddNewField = (props: any) => {
     }
 
     const updateAdditionalField = () => {
+        if (Object.keys(newFieldForm.errors).length > 1) { onSubmission({}); return; }
         const { column, transformation } = newFieldForm.values;
         if (column && transformation) {
             const uuid = v4();

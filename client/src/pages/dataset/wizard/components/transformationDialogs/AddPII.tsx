@@ -17,6 +17,7 @@ const AddPIIDialog = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
+    const [errors, subscribeErrors] = useState<any>(null);
 
     const filteredData = _.filter(data, payload => {
         if (_.find(selection, ['column', _.get(payload, 'column')])) return false;
@@ -46,6 +47,7 @@ const AddPIIDialog = (props: any) => {
     }
 
     const updatePIIMeta = () => {
+        if (Object.keys(errors).length > 1) { onSubmission({}); return; }
         const { column, transformation } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
@@ -110,7 +112,15 @@ const AddPIIDialog = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                    <MUIForm
+                        initialValues={{}}
+                        subscribe={subscribe}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={fields}
+                        size={{ xs: 12 }}
+                        validationSchema={validationSchema}
+                        subscribeErrors={subscribeErrors}
+                    />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>

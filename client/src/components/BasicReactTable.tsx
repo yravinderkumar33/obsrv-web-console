@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { useTable } from 'react-table';
 
-function BasicReactTable({ columns, data, striped }: any) {
+function BasicReactTable({ columns, data, striped, header = false }: any) {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
         data
@@ -9,15 +9,17 @@ function BasicReactTable({ columns, data, striped }: any) {
 
     return (
         <Table {...getTableProps()}>
-            <TableHead>
-                {headerGroups.map((headerGroup) => (
-                    <TableRow {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map((column: any) => (
-                            <TableCell {...column.getHeaderProps([{ className: column.className }])}>{column.render('Header')}</TableCell>
-                        ))}
-                    </TableRow>
-                ))}
-            </TableHead>
+            {header &&
+                (<TableHead>
+                    {headerGroups.map((headerGroup) => (
+                        <TableRow {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column: any) => (
+                                <TableCell {...column.getHeaderProps([{ className: column.className }])}>{column.render('Header')}</TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableHead>)
+            }
             <TableBody {...getTableBodyProps()} {...(striped && { className: 'striped' })}>
                 {rows.map((row, i) => {
                     prepareRow(row);

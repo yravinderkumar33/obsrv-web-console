@@ -25,6 +25,7 @@ const AddTransformationExpression = (props: any) => {
     const [evaluationData, setEvaluationData] = useState<string>('');
     const [transformErrors, setTransformErrors] = useState<boolean>(false);
     const [updateValues, setUpdateValues] = useState<any>(null);
+    const [formErrors, subscribeErrors] = useState<any>(null);
 
     const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
@@ -91,6 +92,7 @@ const AddTransformationExpression = (props: any) => {
     }
 
     const updateTransformation = () => {
+        if (Object.keys(formErrors).length > 1) { onSubmission({}); return; }
         const { column, transformation, expression } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
@@ -168,6 +170,7 @@ const AddTransformationExpression = (props: any) => {
                         size={{ xs: 12 }}
                         validationSchema={validationSchema}
                         customUpdate={setUpdateValues}
+                        subscribeErrors={subscribeErrors}
                     />
                 </Stack>
             </DialogContent>

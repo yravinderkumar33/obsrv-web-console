@@ -11,7 +11,7 @@ import { error } from 'services/toaster';
 const { spacing } = config;
 
 const FieldSection = (props: any) => {
-    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, master, section, noMasterNav, ...rest } = props;
+    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, master, section, noMasterNav, noGrid = false, ...rest } = props;
     const theme = useTheme();
     const open = (id === expanded);
     const clientState: any = useSelector((state: any) => state?.wizard);
@@ -41,11 +41,14 @@ const FieldSection = (props: any) => {
     }
 
     const sectionDetails = () => {
-        return <Grid container rowSpacing={spacing} columnSpacing={spacing}>
-            <Grid item xs={12}>
-                {_.has(rest, 'component') && React.cloneElement(rest.component, { ...props })}
+        if (noGrid) return (_.has(rest, 'component') && React.cloneElement(rest.component, { ...props }));
+        return (
+            <Grid container rowSpacing={spacing} columnSpacing={spacing}>
+                <Grid item xs={12}>
+                    {_.has(rest, 'component') && React.cloneElement(rest.component, { ...props })}
+                </Grid>
             </Grid>
-        </Grid>
+        );
     }
 
     const renderAccordion = () => {
@@ -60,7 +63,7 @@ const FieldSection = (props: any) => {
                     <Typography variant='body2' sx={{ color: 'text.secondary' }}>{description}</Typography>
                 </Stack>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={noGrid ? { p: 0 } : {}}>
                 {sectionDetails()}
             </AccordionDetails>
         </Accordion>

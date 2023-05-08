@@ -38,6 +38,7 @@ const AddRollup = (props: any) => {
     const onSubmission = (value: any) => { };
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const jsonSchemaCols: any = _.get(wizardState, ['pages', 'columns', 'state', 'schema']) || [];
+    const [formErrors, subscribeErrors] = useState<any>(null);
 
     const fields = [
         {
@@ -87,6 +88,7 @@ const AddRollup = (props: any) => {
     });
 
     const addField = () => {
+        if (Object.keys(formErrors).length > 1) { onSubmission({}); return; }
         if (_.size(value) === fields.length) {
             setSelection((preState: any) => {
                 const data = [...preState, value];
@@ -120,7 +122,15 @@ const AddRollup = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                    <MUIForm
+                        initialValues={{}}
+                        subscribe={subscribe}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={fields}
+                        size={{ xs: 12 }}
+                        validationSchema={validationSchema}
+                        subscribeErrors={subscribeErrors}
+                    />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>

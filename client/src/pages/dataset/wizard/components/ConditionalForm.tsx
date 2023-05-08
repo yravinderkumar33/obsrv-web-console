@@ -15,10 +15,10 @@ const ConditionalForm = (props: any) => {
     const { questionSelection, optionSelection } = existingState;
     const [response, subscribe] = useState<any>(questionSelection || {});
     const [childFormValue, setChildFormValues] = useState<any>(optionSelection || {});
+    const [formErrors, subscribeErrors] = useState<any>(null);
     const selectedOption = _.get(response, _.get(question, 'name'));
     const onSubmission = (value: any) => { };
     const [config, setConfig] = useState<any>({});
-
 
     const selectForm = () => {
         const optionMeta = _.get(options, [selectedOption]);
@@ -28,20 +28,37 @@ const ConditionalForm = (props: any) => {
             const data = _.map(form, (item) => { validations[item.name] = item.validationSchema });
             const validationSchemas = yup.object().shape(validations);
             setConfig({ form, description, size, validationSchemas });
-        }
+            return form;
+        } else return null;
     }
 
-    const persistState = (state: Record<string, any>) => dispatch(addState({ id, ...state }));
+    const persistState = (state: Record<string, any>, error?: any) => dispatch(addState({ id, ...state, error: error || _.keys(formErrors).length > 0 }));
 
     useEffect(() => {
-        selectForm();
-        persistState({ questionSelection: response, optionSelection: childFormValue });
+        const data = selectForm();
+        const errorData = () => {
+            if (!data) { subscribeErrors(null); return false; }
+            else { subscribeErrors({ 'error': true }); return { 'error': true }; }
+        }
+        persistState({ questionSelection: response, optionSelection: childFormValue }, errorData());
     }, [selectedOption, childFormValue]);
 
     return <>
         <Grid container rowSpacing={spacing}>
             <Grid item xs={6}> <MUIForm initialValues={response} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={[question]} /></Grid>
-            {_.get(config, 'form') ? <Grid item sm={12}> <MUIForm subscribe={setChildFormValues} initialValues={childFormValue} onSubmit={(value: any) => onSubmission(value)} fields={_.get(config, 'form')} size={_.get(config, 'size')} validationSchema={_.get(config, 'validationSchemas')} /></Grid> : null}
+            {_.get(config, 'form') ? (
+                <Grid item sm={12}>
+                    <MUIForm
+                        subscribe={setChildFormValues}
+                        initialValues={childFormValue}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={_.get(config, 'form')}
+                        size={_.get(config, 'size')}
+                        validationSchema={_.get(config, 'validationSchemas')}
+                        subscribeErrors={subscribeErrors}
+                    />
+                </Grid>
+            ) : null}
         </Grid>
     </>
 }

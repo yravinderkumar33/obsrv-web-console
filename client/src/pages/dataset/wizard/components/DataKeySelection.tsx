@@ -7,6 +7,7 @@ import { addState } from "store/reducers/wizard";
 import config from 'data/initialConfig';
 import { updateDataset } from "services/dataset";
 import { error } from "services/toaster";
+import * as yup from "yup";
 const { spacing } = config;
 
 const DataKeySelection = (props: any) => {
@@ -15,11 +16,12 @@ const DataKeySelection = (props: any) => {
     const existingState = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]));
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const jsonSchema = _.get(wizardState, 'pages.jsonSchema');
-
+    const [formErrors, subscribeErrors] = useState<any>(null);
     const indexColumns = Object.entries(_.get(jsonSchema, ['schema', 'properties'])).map(([key, value]) => ({ label: _.capitalize(key), value: key }));
     const [value, subscribe] = useState<any>({});
 
-    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
+    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values, error: _.keys(formErrors).length > 0 }));
+    const setStoreToError = () => dispatch(addState({ id, ...existingState || {}, error: existingState ? false : true }));
     const onSubmission = (value: any) => { };
 
     useEffect(() => {
@@ -36,20 +38,36 @@ const DataKeySelection = (props: any) => {
         dataKey && updateIndexCol(dataKey);
     }, [value]);
 
+    useEffect(() => {
+        setStoreToError();
+    }, []);
+
     const fields = [
         {
             name: "dataKey",
             label: "Select Data key Field",
-            type: 'select',
+            type: 'autocomplete',
             required: true,
             selectOptions: indexColumns
         }
     ]
 
+    const validationSchema = yup.object().shape({
+        dataKey: yup.string().required("This field is required"),
+    });
+
     return <>
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
             <Grid item xs={4}>
-                <MUIForm initialValues={existingState || {}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 6 }} />
+                <MUIForm
+                    initialValues={existingState || {}}
+                    subscribe={subscribe}
+                    onSubmit={(value: any) => onSubmission(value)}
+                    fields={fields}
+                    size={{ xs: 6 }}
+                    subscribeErrors={subscribeErrors}
+                    validationSchema={validationSchema}
+                />
             </Grid>
         </Grid>
     </>

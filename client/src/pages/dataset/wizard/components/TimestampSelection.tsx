@@ -20,9 +20,15 @@ const TimestampSelection = (props: any) => {
     const indexColumns = Object.entries(_.get(jsonSchema, 'configurations.indexConfiguration.index')).map(([key, value]) => ({ label: value, value: key }));
     const [value, subscribe] = useState<any>({});
     const [showAllFields, setShowAllFields] = useState<boolean>(false);
+    const [formErrors, subscribeErrors] = useState<any>({ 'error': true });
 
-    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
+    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values, error: _.keys(formErrors).length > 0 }));
+    const setStoreToError = () => dispatch(addState({ id, ...existingState || {}, error: existingState ? false : true }));
     const onSubmission = (value: any) => { };
+
+    useEffect(() => {
+        setStoreToError();
+    }, []);
 
     useEffect(() => {
         const updateIndexCol = async (timestampCol: string) => {
@@ -78,6 +84,7 @@ const TimestampSelection = (props: any) => {
                     fields={fields}
                     size={{ xs: 6 }}
                     validationSchema={validationSchema}
+                    subscribeErrors={subscribeErrors}
                 />
             </Grid>
             <Grid item xs={4} ml={1}>

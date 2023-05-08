@@ -56,7 +56,8 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
         const currenState: any = _.cloneDeep(wizardState?.pages);
         const sectionIds: any = _.map(renderData, 'id');
         const error = _.map(sectionIds, (item: any) => _.get(currenState[item], 'error'));
-        return _.every(error, (item) => item === false)
+        const data = _.every(error, (item) => item === false || item === undefined);
+        return data;
     }
 
     const gotoNextSection = () => {
@@ -68,7 +69,7 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
         persistClientState();
     };
 
-    const persistClientState = async () => {
+    const persistClientState: any = async () => {
         try {
             await updateClientState({ clientState: wizardState });
         } catch (err) {

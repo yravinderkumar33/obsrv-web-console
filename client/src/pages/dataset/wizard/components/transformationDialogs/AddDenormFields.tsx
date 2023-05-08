@@ -20,6 +20,7 @@ const AddDenormField = (props: any) => {
     const jsonSchemaCols = _.get(wizardState, 'pages.columns.state.schema') || [];
     const [masterDatasetSchema, setMasterDatasetSchema] = useState<any>([]);
     const datasetId: string = useSelector((state: any) => _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'config', 'dataset_id']));
+    const [formErrors, subscribeErrors] = useState<any>(null);
 
     useEffect(() => {
         const { redis_db } = value;
@@ -97,9 +98,11 @@ const AddDenormField = (props: any) => {
     }
 
     const addField = () => {
+        if (Object.keys(formErrors).length > 1) { onSubmission({}); return; }
         if (_.size(value) === fields.length) {
             updateDenormFields(value);
             onClose();
+            return;
         }
     }
 
@@ -126,7 +129,7 @@ const AddDenormField = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} subscribeErrors={subscribeErrors} />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
