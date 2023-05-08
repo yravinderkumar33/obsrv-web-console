@@ -137,6 +137,7 @@ const AddDenormField = (props: any) => {
                     variant="contained"
                     autoFocus
                     onClick={_ => addField()}
+                    size="large"
                 >
                     <Typography variant="h5">
                         Add Field

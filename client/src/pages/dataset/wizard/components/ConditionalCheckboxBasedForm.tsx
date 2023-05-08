@@ -15,9 +15,9 @@ const { spacing } = config;
 const ConditionalCheckboxForm = (props: any) => {
     const dispatch = useDispatch();
     const { id, type = "checkbox", justifyContents = 'flex-start', fields, name } = props;
-    const onSubmission = (value: any) => { };
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || ({}));
     const [childFormValue, setChildFormValues] = useState<any>({});
+    const [errors, subscribeErrors] = useState<any>(null);
 
     const filterPredicate = (field: any) => {
         if (_.includes(_.get(existingState, 'formFieldSelection'), _.get(field, 'value'))) return true;
@@ -42,16 +42,21 @@ const ConditionalCheckboxForm = (props: any) => {
 
     const persist = () => {
         const formFieldSelection = _.get(formValues, [name]);
-        persistState({ formFieldSelection, value: { ...childFormValue } });
+        persistState({ formFieldSelection, value: { ...childFormValue, }, error: _.keys(errors).length > 0 });
     }
 
+    const onSubmission = (value: any) => { };
+
     useEffect(() => {
+        onSubmission(formValues);
+        if (formValues[id].length > 1 && Object.keys(childFormValue).length <= 1) subscribeErrors({ 'error': true });
         persist();
     }, [formValues, childFormValue]);
 
     const handleParentFormChange = (e: any) => {
         formik.handleChange(e);
         setChildFormValues({});
+        subscribeErrors(null);
     }
 
     const getFormType = (metadata: Record<string, any>) => {
@@ -127,6 +132,7 @@ const ConditionalCheckboxForm = (props: any) => {
                             size={{ sm: 4, xs: 4, lg: 4 }}
                             formComponent={formComponent}
                             validationSchema={validationSchemas}
+                            subscribeErrors={subscribeErrors}
                         />
                     </Grid>)
                 }

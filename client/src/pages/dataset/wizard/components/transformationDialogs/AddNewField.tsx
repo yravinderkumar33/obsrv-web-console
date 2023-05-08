@@ -169,6 +169,7 @@ const AddNewField = (props: any) => {
                                     data-objecttype="dataset"
                                     variant="contained"
                                     type="submit"
+                                    size="large"
                                 >
                                     <Typography variant="h5">
                                         Add

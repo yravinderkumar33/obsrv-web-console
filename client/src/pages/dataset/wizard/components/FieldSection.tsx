@@ -106,4 +106,4 @@ const FieldSection = (props: any) => {
     </>
 }
 
-export default FieldSection
+export default FieldSection;

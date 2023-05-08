@@ -190,6 +190,7 @@ const AddTransformationExpression = (props: any) => {
                     data-objecttype="dataset"
                     variant="contained" autoFocus
                     onClick={_ => updateTransformation()}
+                    size="large"
                 >
                     <Typography variant="h5">
                         Add

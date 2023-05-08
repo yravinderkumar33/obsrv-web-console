@@ -50,6 +50,14 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
             />
         );
     }
+    const renderData = sections.filter(predicate);
+
+    const verifyErrorsResolved = () => {
+        const currenState: any = _.cloneDeep(wizardState?.pages);
+        const sectionIds: any = _.map(renderData, 'id');
+        const error = _.map(sectionIds, (item: any) => _.get(currenState[item], 'error'));
+        return _.every(error, (item) => item === false)
+    }
 
     const gotoNextSection = () => {
         handleNext()
@@ -70,7 +78,7 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
 
     return <>
         <Grid container>
-            <Grid item xs={12}>{sections.filter(predicate).map(renderSection)}</Grid>
+            <Grid item xs={12}>{renderData.map(renderSection)}</Grid>
             <Grid item xs={12}>
                 <WizardNavigator
                     showPrevious={true}
@@ -79,6 +87,7 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
                     section={section}
                     gotoNextSection={gotoNextSection}
                     gotoPreviousSection={gotoPreviousSection}
+                    nextDisabled={!verifyErrorsResolved()}
                 />
             </Grid>
         </Grid>

@@ -120,6 +120,7 @@ const AddPIIDialog = (props: any) => {
                     data-objecttype="dataset"
                     variant="contained"
                     onClick={_ => updatePIIMeta()}
+                    size="large"
                 >
                     <Typography variant="h5">
                         Add
