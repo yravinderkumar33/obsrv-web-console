@@ -52,7 +52,6 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const [files, setFiles] = useState(filesState);
     const initialValues = pageData?.state?.config || { name: '', dataset_id: '' };
     const [formErrors, setFormErrors] = useState<any>(null);
-    console.log(formErrors);
 
     const generateJSONSchema = async (data: Array<any>, config: Record<string, any>) => {
         const dataset = _.get(config, 'name');

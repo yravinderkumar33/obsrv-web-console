@@ -92,7 +92,8 @@ const AddTransformationExpression = (props: any) => {
     }
 
     const updateTransformation = () => {
-        if (Object.keys(formErrors).length > 1) { onSubmission({}); return; }
+        onSubmission({});
+        if (_.keys(formErrors).length > 0) { return; }
         const { column, transformation, expression } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {

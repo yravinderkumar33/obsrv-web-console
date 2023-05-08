@@ -88,7 +88,8 @@ const AddRollup = (props: any) => {
     });
 
     const addField = () => {
-        if (Object.keys(formErrors).length > 1) { onSubmission({}); return; }
+        onSubmission({});
+        if (_.keys(formErrors).length > 0) { return; }
         if (_.size(value) === fields.length) {
             setSelection((preState: any) => {
                 const data = [...preState, value];

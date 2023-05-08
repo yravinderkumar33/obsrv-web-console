@@ -58,7 +58,8 @@ const AddNewField = (props: any) => {
     }
 
     const updateAdditionalField = () => {
-        if (Object.keys(newFieldForm.errors).length > 1) { onSubmission({}); return; }
+        onSubmission({});
+        if (_.keys(newFieldForm.errors).length > 0) { return; }
         const { column, transformation } = newFieldForm.values;
         if (column && transformation) {
             const uuid = v4();
@@ -104,7 +105,7 @@ const AddNewField = (props: any) => {
         setAnchorEl(null);
     };
 
-    const onSubmission = (values: any) => { updateAdditionalField() };
+    const onSubmission = (values: any) => { };
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
@@ -169,7 +170,7 @@ const AddNewField = (props: any) => {
                                     data-objectid={newFieldForm.values}
                                     data-objecttype="dataset"
                                     variant="contained"
-                                    type="submit"
+                                    onClick={_ => updateAdditionalField()}
                                     size="large"
                                 >
                                     <Typography variant="h5">

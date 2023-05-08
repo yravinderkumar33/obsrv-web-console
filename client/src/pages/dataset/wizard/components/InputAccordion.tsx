@@ -59,7 +59,7 @@ const InputAccordion = (props: any) => {
             accessor: 'column',
             Cell: ({ value, cell }: any) => {
                 return (
-                    <Box minWidth="50vw" maxWidth="50vw">
+                    <Box minWidth="35vw" maxWidth="35vw">
                         <Typography variant="h5">
                             {value}
                         </Typography>
@@ -76,7 +76,7 @@ const InputAccordion = (props: any) => {
                 const row = cell?.row?.original || {};
                 const _transformationType = row?._transformationType;
                 if (_.get(actions, 'length') < 2 && _transformationType === 'custom') return renderExpression(row);
-                return <ButtonGroup variant="outlined" aria-label="outlined button group" sx={{ minWidth: "25vw", maxWidth: "25vw" }}>
+                return <ButtonGroup variant="outlined" aria-label="outlined button group" sx={{ minWidth: "20vw", maxWidth: "20vw" }}>
                     {
                         actions.map((action: any) => {
                             return (

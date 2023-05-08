@@ -111,9 +111,9 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     return <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={<Checkbox onBlur={form.handleBlur} name={name} className="size-medium" checked={_.includes(_.get(form.values, name), value)} value={value} onChange={form.handleChange} />} label={label} />
                                                 })}
                                             </Stack>
-                                            <FormHelperText error={Boolean(form.errors[name])}>{form.touched[name] && form.errors[name] && String(form.errors[name]) || helpText}</FormHelperText>
                                         </FormGroup>
                                     </Tooltip>
+                                    <FormHelperText error={Boolean(form.errors[name])}>{form.touched[name] && form.errors[name] && String(form.errors[name]) || helpText}</FormHelperText>
                                 </Grid>
                             );
                         case 'radio':
@@ -127,12 +127,12 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                             <Stack direction="row" spacing={1}>
                                                 {selectOptions.map((option: any) => {
                                                     const { value, label } = option;
-                                                    return <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={<Radio onBlur={form.handleBlur} name={name} className="size-medium" checked={value === _.get(form.values, name)} value={value} onChange={form.handleChange} />} label={label} />
+                                                    return <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={<Radio onBlur={form.handleBlur} name={name} className="size-medium" checked={value === _.get(form.values, name)} value={value} onChange={form.handleChange} required={required} />} label={label} />
                                                 })}
                                             </Stack>
-                                            <FormHelperText error={Boolean(form.errors[name])}>{form.touched[name] && form.errors[name] && String(form.errors[name]) || helpText}</FormHelperText>
                                         </FormGroup>
                                     </Tooltip>
+                                    <FormHelperText error={Boolean(form.errors[name])}>{form.touched[name] && form.errors[name] && String(form.errors[name]) || helpText}</FormHelperText>
                                 </Grid>
                             );
                         case 'select':
@@ -145,9 +145,9 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                 name={name} id={name} label={label} value={_.get(form.values, name)} onChange={form.handleChange} onBlur={form.handleBlur}>
                                                 {selectOptions.map((option: any) => (<MenuItem data-edataid={`form:select:${option.value}`} value={option.value}>{option.label}</MenuItem>))}
                                             </Select>
-                                            <FormHelperText error={Boolean(form.errors[name])}>{form.touched[name] && form.errors[name] && String(form.errors[name]) || helpText}</FormHelperText>
                                         </FormControl>
                                     </Tooltip>
+                                    <FormHelperText error={Boolean(form.errors[name])}>{form.touched[name] && form.errors[name] && String(form.errors[name]) || helpText}</FormHelperText>
                                 </Grid>
                             );
                         case 'autocomplete':
@@ -186,9 +186,9 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                                     })
                                                 }
                                             </ToggleButtonGroup>
-                                            <FormHelperText error={Boolean(form.errors[name])}>{form.touched[name] && form.errors[name] && String(form.errors[name]) || helpText}</FormHelperText>
                                         </FormControl>
                                     </Tooltip>
+                                    <FormHelperText error={Boolean(form.errors[name])}>{form.touched[name] && form.errors[name] && String(form.errors[name]) || helpText}</FormHelperText>
                                 </Grid>
                             );
                         default:

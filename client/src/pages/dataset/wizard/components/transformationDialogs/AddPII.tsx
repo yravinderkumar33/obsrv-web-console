@@ -47,7 +47,8 @@ const AddPIIDialog = (props: any) => {
     }
 
     const updatePIIMeta = () => {
-        if (Object.keys(errors).length > 1) { onSubmission({}); return; }
+        onSubmission({});
+        if (_.keys(errors).length > 0) { return; }
         const { column, transformation } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {

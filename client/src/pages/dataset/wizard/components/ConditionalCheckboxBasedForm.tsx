@@ -15,7 +15,7 @@ const { spacing } = config;
 const ConditionalCheckboxForm = (props: any) => {
     const dispatch = useDispatch();
     const { id, type = "checkbox", justifyContents = 'flex-start', fields, name } = props;
-    const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || ({}));
+    const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || {});
     const [childFormValue, setChildFormValues] = useState<any>({});
     const [errors, subscribeErrors] = useState<any>(null);
 
@@ -49,7 +49,7 @@ const ConditionalCheckboxForm = (props: any) => {
 
     useEffect(() => {
         onSubmission(formValues);
-        if (formValues[id].length > 1 && Object.keys(childFormValue).length <= 1) subscribeErrors({ 'error': true });
+        if (!existingState && _.keys(existingState).length > 1 && formValues[id].length > 1 && _.keys(childFormValue).length <= 1) subscribeErrors({ 'error': true });
         persist();
     }, [formValues, childFormValue]);
 
