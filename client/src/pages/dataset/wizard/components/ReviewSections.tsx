@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Grid } from '@mui/material';
 import * as _ from 'lodash';
-import { useSelector } from 'react-redux';
-import { IWizard } from 'types/formWizard';
 import FieldSection from './FieldSection';
 import { reviewSections as allSections } from 'data/review';
 

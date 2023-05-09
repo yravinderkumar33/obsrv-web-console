@@ -6,12 +6,12 @@ import { Box, Button, Stack } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 
 // project import
-import RejectionFiles from './RejectionFiles';
 import PlaceholderContent from './PlaceholderContent';
 
 // types
 import { CustomFile, DropzopType, UploadMultiFileProps } from 'types/dropzone';
 import interactIds  from 'data/telemetry/interact.json';
+import { useEffect } from 'react';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
     outline: 'none',
@@ -25,7 +25,7 @@ const DropzoneWrapper = styled('div')(({ theme }) => ({
 
 // ==============================|| UPLOAD - MULTIPLE FILE ||============================== //
 
-const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, sx, onUpload, maxFileSize = 5242880, ...other }: UploadMultiFileProps) => {
+const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, sx, onUpload, maxFileSize = 5242880, subscribeErrors = null, ...other }: UploadMultiFileProps) => {
     const { onFileRemove } = other || {};
     const { getRootProps, getInputProps, isDragActive, isDragReject, fileRejections } = useDropzone({
         multiple: true,
@@ -58,6 +58,10 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
         },
         maxSize: maxFileSize,
     });
+
+    useEffect(() => {
+        subscribeErrors && subscribeErrors(fileRejections);
+    }, [fileRejections]);
 
     const onRemoveAll = () => {
         setFieldValue('files', null);
@@ -109,7 +113,6 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                         </Button>
                     )}
                 </Stack>
-                {fileRejections.length > 0 && <RejectionFiles fileRejections={fileRejections} />}
             </Box>
 
             {type !== DropzopType.standard && files && files.length > 0 && (

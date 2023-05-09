@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { FormHelperText, Grid, Stack } from '@mui/material';
-import { Formik } from 'formik';
+import { Grid, Stack } from '@mui/material';
+import { useFormik } from 'formik';
 import * as yup from 'yup';
 import UploadMultiFile from 'components/third-party/dropzone/MultiFile';
 import { useDispatch } from 'react-redux';
@@ -36,7 +36,7 @@ function TabPanel(props: any) {
     );
 }
 
-const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema = false }: any) => {
+const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema = false, subscribeErrors = null, }: any) => {
     const dispatch = useDispatch();
     const [tabIndex, setTabIndex] = useState(0);
 
@@ -44,10 +44,13 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema 
         setTabIndex(newValue);
     };
 
-    const form = {
-        initialState: { files },
-        onSubmit(values: any) { }
-    }
+    const form: any = useFormik({
+        initialValues: { files },
+        onSubmit: (values: any) => { },
+        validationSchema: yup.object().shape({
+            files: yup.mixed().required('File is a required.')
+        }),
+    });
 
     const onUpload = async (files: any) => {
         try {
@@ -98,40 +101,24 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema 
                                 {...tabProps(1)} />
                         </Tabs>
                         <TabPanel value={tabIndex} index={0}>
-                            <Formik
-                                initialValues={form.initialState}
-                                onSubmit={(values: any) => {
-                                    form.onSubmit(values);
-                                }}
-                                validationSchema={yup.object().shape({
-                                    files: yup.mixed().required('File is a required.')
-                                })}
-                            >
-                                {({ values, handleSubmit, setFieldValue, touched, errors }: any) => (
-                                    <form onSubmit={handleSubmit}>
-                                        <Grid container spacing={3}>
-                                            <Grid item xs={12}>
-                                                <Stack spacing={1.5} alignItems="center">
-                                                    <UploadMultiFile
-                                                        showList={false}
-                                                        setFieldValue={setFieldValue}
-                                                        files={values.files}
-                                                        error={touched.files && !!errors.files}
-                                                        onUpload={onUpload}
-                                                        onFileRemove={onFileRemove}
-                                                        maxFileSize={maxFileSize}
-                                                    />
-                                                    {touched.files && errors.files && (
-                                                        <FormHelperText error>
-                                                            {errors?.files}
-                                                        </FormHelperText>
-                                                    )}
-                                                </Stack>
-                                            </Grid>
-                                        </Grid>
-                                    </form>
-                                )}
-                            </Formik>
+                            <form onSubmit={form.handleSubmit}>
+                                <Grid container spacing={3}>
+                                    <Grid item xs={12}>
+                                        <Stack spacing={1.5} alignItems="center">
+                                            <UploadMultiFile
+                                                showList={false}
+                                                setFieldValue={form.setFieldValue}
+                                                files={form.values.files}
+                                                error={form.touched.files && !!form.errors.files}
+                                                onUpload={onUpload}
+                                                onFileRemove={onFileRemove}
+                                                maxFileSize={maxFileSize}
+                                                subscribeErrors={subscribeErrors}
+                                            />
+                                        </Stack>
+                                    </Grid>
+                                </Grid>
+                            </form>
                         </TabPanel>
                         <TabPanel value={tabIndex} index={1}>
                             <PasteData initialData={data} onChange={onDataPaste}></PasteData>

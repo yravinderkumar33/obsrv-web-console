@@ -58,3 +58,8 @@
 .Resizer.disabled:hover {
     border-color: transparent;
 }
+
+.error-class .mtk1 {
+    color: #E92A21;
+    font-weight: 500;
+}

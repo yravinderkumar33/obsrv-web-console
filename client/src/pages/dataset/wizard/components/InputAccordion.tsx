@@ -1,5 +1,5 @@
 import { DeleteOutlined } from "@ant-design/icons";
-import { Button, Dialog, Grid, Typography } from "@mui/material";
+import { ButtonGroup, Box, Button, Dialog, Grid, Typography } from "@mui/material";
 import MainCard from "components/MainCard"
 import BasicReactTable from "components/BasicReactTable";
 import ScrollX from "components/ScrollX";
@@ -7,7 +7,6 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import IconButton from "components/@extended/IconButton";
 import config from 'data/initialConfig';
-import { ButtonGroup } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTransformations } from "services/dataset";
 import { error } from "services/toaster";
@@ -55,37 +54,58 @@ const InputAccordion = (props: any) => {
 
     const columns = [
         {
-            Header: 'Column Name', accessor: 'column'
+            Header: () => null,
+            accessor: 'column',
+            Cell: ({ value, cell }: any) => {
+                return (
+                    <Box minWidth="35vw" maxWidth="35vw">
+                        <Typography variant="h5">
+                            {value}
+                        </Typography>
+                    </Box>
+                );
+            }
         },
         {
-            Header: 'Transformation',
-            accessor: 'age',
+            Header: () => null,
+            id: 'transformation',
+            className: 'cell-center',
+            accessor: 'transformation',
             Cell: ({ value, cell }: any) => {
                 const row = cell?.row?.original || {};
                 const _transformationType = row?._transformationType;
                 if (_.get(actions, 'length') < 2 && _transformationType === 'custom') return renderExpression(row);
-                return <ButtonGroup variant="outlined" aria-label="outlined button group">
+                return <ButtonGroup variant="outlined" aria-label="outlined button group" sx={{ minWidth: "20vw", maxWidth: "20vw" }}>
                     {
                         actions.map((action: any) => {
-                            return <Button
-                            data-edataid={interactIds.add_dataset_transformation}
-                            data-objectid={`input:${action?.label}`}
-                            data-objecttype="dataset"
-                             key="one" variant={_transformationType === action?.value ? 'contained' : 'outlined'}>{action?.label}</Button>
+                            return (
+                                <Button
+                                    data-edataid={interactIds.add_dataset_transformation}
+                                    data-objectid={`input:${action?.label}`}
+                                    data-objecttype="dataset"
+                                    size="large"
+                                    key="one"
+                                    variant={_transformationType === action?.value ? 'contained' : 'outlined'}
+                                >
+                                    {action?.label}
+                                </Button>
+                            );
                         })
                     }
                 </ButtonGroup>
             }
         },
         {
-            Header: 'Delete',
+            Header: () => null,
+            id: 'actions',
             Cell: ({ value, cell }: any) => {
-                return <IconButton 
-                data-edataid={interactIds.delete_dataset_transformation}
-                data-objectid="deleteOutlined:datasetCell"
-                data-objecttype="dataset"
-                variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
-                    <DeleteOutlined />
+                return <IconButton
+                    data-edataid={interactIds.delete_dataset_transformation}
+                    data-objectid="deleteOutlined:datasetCell"
+                    data-objecttype="dataset"
+                    onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}
+                >
+                    <DeleteOutlined style={{ fontSize: '1.25rem' }} />
                 </IconButton>
             }
         }
@@ -98,18 +118,18 @@ const InputAccordion = (props: any) => {
     const renderTable = () => {
         if (!_.get(selection, 'length')) return null;
         return <Grid item xs={12}>
-            <MainCard content={false}>
+            <MainCard content={false} headerSX={{}}>
                 <ScrollX>
-                    <BasicReactTable columns={columns} data={selection} striped={true} />
+                    <BasicReactTable header={false} columns={columns} data={selection} striped={true} />
                 </ScrollX>
             </MainCard >
         </Grid>
     }
 
     return <>
+        {renderTable()}
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
-            {renderTable()}
-            <Grid item xs={12} textAlign="end">
+            <Grid item xs={12} textAlign="end" my={2}>
                 <Button
                     data-edataid={`${interactIds.add_dataset_transformation}:${label}`}
                     data-objectid={label}

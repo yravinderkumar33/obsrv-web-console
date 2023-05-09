@@ -72,10 +72,10 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
                         <FileTextOutlined style={{ width: '30px', fontSize: '1.15rem', marginRight: 4 }} />
 
                         <ListItemText
-                            primary={<Typography variant="body1">{typeof file === 'string' ? file : name}</Typography>}
+                            primary={<Typography textOverflow="ellipsis" overflow="hidden" variant="body1">{typeof file === 'string' ? file : name}</Typography>}
                             primaryTypographyProps={{ variant: 'subtitle2' }}
                             secondaryTypographyProps={{ variant: 'caption' }}
-                            sx={{ mr: 2, maxWidth: 200, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+                            sx={{ mr: 2, maxWidth: 250, overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
                         />
 
                         <LinearProgressWithLabel value={100} theme={theme} />

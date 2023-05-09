@@ -24,6 +24,7 @@ export const sections = [
         description: 'PII is sensitive information that needs to be protected and kept secure to prevent identity theft, fraud, or other types of harm.  PII fields are often identified and tagged to ensure that appropriate controls are in place to protect the data',
         component: <InputAccordion key="pii" actions={actions} label={'Add PII Field'} dialog={< AddPIIDialog />} />,
         icon: FieldTimeOutlined,
+        noGrid: true,
         navigation: {
             next: 'transformation'
         }
@@ -33,6 +34,7 @@ export const sections = [
         title: 'Fields Transformation',
         description: 'Field transformations allows users to manipulate and transform data during ingestion or query time. Custom Expressions specify a set of column transformations to be performed on input data',
         component: <InputAccordion key="transformation" actions={[...actions, { label: 'JSONata', component: '', value: 'custom' }]} label={'Add Transformation'} dialog={< AddTransformationExpression />} />,
+        noGrid: true,
         navigation: {
             next: 'additionalFields'
         }
@@ -41,6 +43,7 @@ export const sections = [
         id: 'additionalFields',
         title: 'Additional Fields',
         description: 'Create New Columns by applying custom transformation expressions',
-        component: <InputAccordion key="additional" actions={[{ label: 'JSONata', component: '', value: 'custom' }]} label={'Add New Field'} dialog={< AddNewField />} />
-    }
+        component: <InputAccordion key="additional" actions={[{ label: 'JSONata', component: '', value: 'custom' }]} label={'Add New Field'} dialog={< AddNewField />} />,
+        noGrid: true,
+    },
 ];

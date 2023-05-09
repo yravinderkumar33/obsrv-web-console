@@ -1,5 +1,7 @@
-import { Button, IconButton, Popover, Typography } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    IconButton, Popover, Typography,
+    Box, DialogActions, DialogContent, DialogTitle
+} from "@mui/material";
 import MUIForm from "components/form";
 import { useMemo, useState } from "react";
 import * as _ from 'lodash';
@@ -13,6 +15,7 @@ import  interactIds  from "data/telemetry/interact.json";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import JSONataPlayground from "components/JSONataPlayground";
 import * as yup from "yup";
+import { StandardWidthButton } from "components/styled/Buttons";
 
 const AddTransformationExpression = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
@@ -24,7 +27,8 @@ const AddTransformationExpression = (props: any) => {
     });
     const [evaluationData, setEvaluationData] = useState<string>('');
     const [transformErrors, setTransformErrors] = useState<boolean>(false);
-    const [setFieldValue, fieldValueSetter] = useState<any>({});
+    const [updateValues, setUpdateValues] = useState<any>(null);
+    const [formErrors, subscribeErrors] = useState<any>(null);
 
     const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
@@ -91,6 +95,8 @@ const AddTransformationExpression = (props: any) => {
     }
 
     const updateTransformation = () => {
+        onSubmission({});
+        if (_.keys(formErrors).length > 0) { return; }
         const { column, transformation, expression } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
@@ -133,7 +139,7 @@ const AddTransformationExpression = (props: any) => {
     };
 
     const handleClose = () => {
-        // if (!transformErrors) setFieldValue("transformation", evaluationData);
+        if (!transformErrors) updateValues('expression', evaluationData);
         setAnchorEl(null);
     };
 
@@ -160,33 +166,45 @@ const AddTransformationExpression = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                    <MUIForm
+                        initialValues={{}}
+                        subscribe={subscribe}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={fields}
+                        size={{ xs: 12 }}
+                        validationSchema={validationSchema}
+                        customUpdate={setUpdateValues}
+                        subscribeErrors={subscribeErrors}
+                    />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
                 {_.get(value, 'transformation') === 'custom' &&
                     <Box mx={2}>
-                        <Button data-edataid="jsonata:editor:open"
+                        <StandardWidthButton data-edataid="jsonata:editor:open"
                             data-objectid="jsonata"
                             data-objecttype="dataset"
                             onClick={handleClick}
+                            sx={{ width: 'auto' }}
                         >
                             <Typography variant="h5">
                                 Try Out
                             </Typography>
-                        </Button>
+                        </StandardWidthButton>
                     </Box>}
-                <Button
+                <StandardWidthButton
                     data-edataid={interactIds.add_dataset_transformation}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained" autoFocus
                     onClick={_ => updateTransformation()}
+                    size="large"
+                    sx={{ width: 'auto' }}
                 >
                     <Typography variant="h5">
                         Add
                     </Typography>
-                </Button>
+                </StandardWidthButton>
             </DialogActions>
             <Popover
                 id={id}
@@ -204,6 +222,7 @@ const AddTransformationExpression = (props: any) => {
                     evaluationData={evaluationData}
                     setEvaluationData={setEvaluationData}
                     setTransformErrors={setTransformErrors}
+                    transformErrors={transformErrors}
                 />
             </Popover>
         </Box>

@@ -1,22 +1,25 @@
-import { Button, IconButton, Typography } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    Stack, IconButton, Typography, Box, DialogActions,
+    DialogContent, DialogTitle,
+} from "@mui/material";
 import MUIForm from "components/form";
 import { useMemo, useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { addState } from "store/reducers/wizard";
-import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import  interactIds  from "data/telemetry/interact.json";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import * as yup from "yup";
+import { StandardWidthButton } from "components/styled/Buttons";
 
 const AddPIIDialog = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
+    const [errors, subscribeErrors] = useState<any>(null);
 
     const filteredData = _.filter(data, payload => {
         if (_.find(selection, ['column', _.get(payload, 'column')])) return false;
@@ -46,6 +49,8 @@ const AddPIIDialog = (props: any) => {
     }
 
     const updatePIIMeta = () => {
+        onSubmission({});
+        if (_.keys(errors).length > 0) { return; }
         const { column, transformation } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
@@ -85,7 +90,7 @@ const AddPIIDialog = (props: any) => {
     const validationSchema = yup.object().shape({
         column: yup.string().required("This field is required"),
         transformation: yup.string().required("This field is required"),
-    })
+    });
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
@@ -110,21 +115,31 @@ const AddPIIDialog = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                    <MUIForm
+                        initialValues={{}}
+                        subscribe={subscribe}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={fields}
+                        size={{ xs: 12 }}
+                        validationSchema={validationSchema}
+                        subscribeErrors={subscribeErrors}
+                    />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
-                <Button
+                <StandardWidthButton
                     data-edataid={interactIds.add_dataset_pii}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained"
                     onClick={_ => updatePIIMeta()}
+                    size="large"
+                    sx={{ width: 'auto' }}
                 >
                     <Typography variant="h5">
                         Add
                     </Typography>
-                </Button>
+                </StandardWidthButton>
             </DialogActions>
         </Box></>
 }

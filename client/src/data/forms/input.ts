@@ -43,7 +43,7 @@ export const batchForm = [
             label: 'Enable Deduplication',
             value: 'yes'
         }],
-        validationSchema: yup.array().required('This field is required'),
+        validationSchema: yup.array().optional(),
     },
     {
         name: "dedupePeriod",
@@ -55,7 +55,11 @@ export const batchForm = [
             key: "dedupeRequired",
             value: 'yes'
         },
-        validationSchema: yup.number().required('This field is required'),
+        validationSchema: yup.number().when(
+            'dedupeRequired', {
+            is: (option: any) => { if (option) return option.includes('yes'); else return false; },
+            then: yup.number().required('This field is required')
+        }),
     }
 ]
 

@@ -31,7 +31,7 @@ const Final = ({ handleBack, master, edit }: any) => {
 
     const handleDownloadButton = () => {
         if (jsonSchema && flattenedData) {
-            const data = updateJSONSchema(jsonSchema, flattenedData);
+            const data = updateJSONSchema(jsonSchema, { schema: flattenedData });
             downloadJsonFile(data, 'json-schema');
         }
     }
@@ -51,10 +51,7 @@ const Final = ({ handleBack, master, edit }: any) => {
 
     return (
         <>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="h4">
-                    Review
-                </Typography>
+            <Box display="flex" justifyContent="flex-end" alignItems="center">
                 <IconButtonWithTips
                     data-edataid={`${master ? 'masterDataset': 'dataset'}:${interactIds.download_JSON}`}
                     data-objectid="downloadSchema"

@@ -72,7 +72,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     useImpression({ type: "view", pageid: `${pageIdPrefix}:${pageIdSuffix}` });
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
-        const column = cellValue?.column;
+        const column = cellValue?.originalColumn;
         if (column) {
             setFlattenedData((preState: Array<Record<string, any>>) => {
                 const data = _.map(preState, payload => {
@@ -99,7 +99,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         }
     }
 
-    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData }, error: areConflictsResolved(data || flattenedData) }));
+    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData }, error: !areConflictsResolved(data || flattenedData) }));
 
     const gotoNextSection = () => {
         const data = deleteFilter();
@@ -207,7 +207,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
 
     const handleDownloadButton = () => {
         if (jsonSchema && flattenedData) {
-            const data = updateJSONSchema(jsonSchema, flattenedData);
+            const data = updateJSONSchema(jsonSchema, { schema: flattenedData });
             downloadJsonFile(data, 'json-schema');
         }
     }

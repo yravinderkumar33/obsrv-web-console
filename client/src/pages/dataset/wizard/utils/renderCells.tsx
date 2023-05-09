@@ -45,7 +45,7 @@ const renderColumnCell = ({
     }
 
     return (
-        <Box alignItems="baseline" maxWidth={537} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
+        <Box alignItems="baseline" maxWidth={'40vw'} minWidth={'40vw'} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
                 <HtmlTooltip title={value}>
                     <Typography variant="h6" my={1} maxWidth={'70%'} textOverflow='ellipsis' overflow='hidden' whiteSpace='nowrap'>
@@ -258,8 +258,8 @@ const renderRequiredCell = ({
         setFlattenedData((preState: Array<Record<string, any>>) => {
             const updatedValues = { ...row };
             const values = _.map(preState, state => {
-                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                    return { ...state, ...updatedValues, isModified: true, required: e.target.checked };
+                if (_.get(state, 'column') === _.get(updatedValues, 'originalColumn'))
+                    return { ...state, ...updatedValues, isModified: true, required: e.target.checked, column: _.get(updatedValues, 'originalColumn') };
                 else return state
             });
             persistState(values);

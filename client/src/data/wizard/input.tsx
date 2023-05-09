@@ -13,12 +13,12 @@ const downloadBatchConfig = () => {
 }
 
 const dataFormatQues = {
-    name: 'isBatch',
+    name: 'dataFormat',
     justifyContents: 'flex-start',
     type: 'checkbox',
     fields: [
         {
-            name: "isBatch",
+            name: "dataFormat",
             label: "Individual Events",
             value: "no",
             required: true,
@@ -28,7 +28,7 @@ const dataFormatQues = {
             form: null
         },
         {
-            name: "isBatch",
+            name: "dataFormat",
             label: "Batch Mode",
             value: "yes",
             required: true,
@@ -57,10 +57,10 @@ const dataFormatQues = {
 const datasourceQues = {
     type: 'checkbox',
     justifyContents: 'flex-start',
-    name: 'datasource',
+    name: 'dataSource',
     fields: [
         {
-            name: "datasource",
+            name: "dataSource",
             label: "API",
             value: "api",
             selected: true,
@@ -70,7 +70,7 @@ const datasourceQues = {
             form: null
         },
         {
-            name: "datasource",
+            name: "dataSource",
             label: "Kafka",
             value: "kafka",
             required: true,
@@ -97,7 +97,7 @@ export const sections = [
         id: 'dataSource',
         title: 'Input Data Sources',
         description: 'Read data from a wide variety of data sources. Batch and Real time data integration.',
-        component: <ConditionalCheckboxForm key="datasource" {...datasourceQues} />,
+        component: <ConditionalCheckboxForm key="dataSource" {...datasourceQues} />,
         componentType: 'box',
         navigation: {
             next: 'dataFormat'
@@ -107,6 +107,6 @@ export const sections = [
         id: 'dataFormat',
         title: 'Input Data Formats',
         description: 'Decide how the data is ingested into the system.',
-        component: <ConditionalCheckboxForm key="dataformat" {...dataFormatQues} />
+        component: <ConditionalCheckboxForm key="dataFormat" {...dataFormatQues} />
     }
 ];

@@ -1,13 +1,13 @@
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
-import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
+import { IconButton } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle, Typography, Stack } from "@mui/material";
 import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
-import { Stack } from "@mui/material";
 import { useSelector } from "react-redux";
 import  interactIds  from "data/telemetry/interact.json";
 import * as yup from "yup";
+import { StandardWidthButton } from 'components/styled/Buttons';
 
 const aggregateFunctions = [
     {
@@ -38,6 +38,7 @@ const AddRollup = (props: any) => {
     const onSubmission = (value: any) => { };
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const jsonSchemaCols: any = _.get(wizardState, ['pages', 'columns', 'state', 'schema']) || [];
+    const [formErrors, subscribeErrors] = useState<any>(null);
 
     const fields = [
         {
@@ -87,6 +88,8 @@ const AddRollup = (props: any) => {
     });
 
     const addField = () => {
+        onSubmission({});
+        if (_.keys(formErrors).length > 0) { return; }
         if (_.size(value) === fields.length) {
             setSelection((preState: any) => {
                 const data = [...preState, value];
@@ -120,21 +123,31 @@ const AddRollup = (props: any) => {
             </DialogTitle>
             <DialogContent>
                 <Stack spacing={2} my={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                    <MUIForm
+                        initialValues={{}}
+                        subscribe={subscribe}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={fields}
+                        size={{ xs: 12 }}
+                        validationSchema={validationSchema}
+                        subscribeErrors={subscribeErrors}
+                    />
                 </Stack>
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
-                <Button
+                <StandardWidthButton
                     data-edataid={interactIds.add_dataset_field}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained"
                     onClick={_ => addField()}
+                    size="large"
+                    sx={{ width: 'auto' }}
                 >
                     <Typography variant="h5">
                         Add Field
                     </Typography>
-                </Button>
+                </StandardWidthButton>
             </DialogActions>
         </Box>
     </>

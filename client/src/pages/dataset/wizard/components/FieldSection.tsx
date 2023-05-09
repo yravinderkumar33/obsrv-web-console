@@ -1,4 +1,7 @@
-import { Box, Typography, AccordionDetails, Accordion, AccordionSummary, useTheme, Button, Grid } from '@mui/material';
+import {
+    Box, Typography, AccordionDetails, Accordion,
+    AccordionSummary, useTheme, Button, Grid
+} from '@mui/material';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import React from 'react';
@@ -11,7 +14,7 @@ import { error } from 'services/toaster';
 const { spacing } = config;
 
 const FieldSection = (props: any) => {
-    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, master, section, noMasterNav, ...rest } = props;
+    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, master, section, noMasterNav, noGrid = false, ...rest } = props;
     const theme = useTheme();
     const open = (id === expanded);
     const clientState: any = useSelector((state: any) => state?.wizard);
@@ -41,11 +44,14 @@ const FieldSection = (props: any) => {
     }
 
     const sectionDetails = () => {
-        return <Grid container rowSpacing={spacing} columnSpacing={spacing}>
-            <Grid item xs={12}>
-                {_.has(rest, 'component') && React.cloneElement(rest.component, { ...props })}
+        if (noGrid) return (_.has(rest, 'component') && React.cloneElement(rest.component, { ...props }));
+        return (
+            <Grid container rowSpacing={spacing} columnSpacing={spacing}>
+                <Grid item xs={12}>
+                    {_.has(rest, 'component') && React.cloneElement(rest.component, { ...props })}
+                </Grid>
             </Grid>
-        </Grid>
+        );
     }
 
     const renderAccordion = () => {
@@ -60,14 +66,14 @@ const FieldSection = (props: any) => {
                     <Typography variant='body2' sx={{ color: 'text.secondary' }}>{description}</Typography>
                 </Stack>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails sx={noGrid ? { p: 0 } : {}}>
                 {sectionDetails()}
             </AccordionDetails>
         </Accordion>
     }
 
     const renderBox = () => {
-        return <MainCard title={title} tagLine={description} sx={{ py: 3, px: 2 }}>
+        return <MainCard title={title} tagLine={description} headerSX={{ p: 0, px: 2, pt: 3, }}>
             {sectionDetails()}
         </ MainCard>
     }
@@ -106,4 +112,4 @@ const FieldSection = (props: any) => {
     </>
 }
 
-export default FieldSection
+export default FieldSection;

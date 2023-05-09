@@ -26,7 +26,7 @@ export const validateDataForm = [
 export const dedupeForm = [
     {
         name: "dedupeKey",
-        label: "Dedupe Field",
+        label: "Select Dedupe Field",
         type: 'text',
         tooltip: "Column based on which you want to enable the dedupe",
         required: true,
@@ -34,7 +34,7 @@ export const dedupeForm = [
     },
     {
         name: "dedupePeriod",
-        label: "Dedupe Period in Minutes",
+        label: "Select Dedupe Period (Minutes)",
         type: 'number',
         required: true,
         validationSchema: yup.number().required('This field is required'),

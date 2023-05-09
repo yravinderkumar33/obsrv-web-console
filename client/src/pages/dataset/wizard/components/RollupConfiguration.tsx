@@ -1,13 +1,11 @@
 import { DeleteOutlined } from "@ant-design/icons"
 import { Box, Chip, FormControl, FormHelperText, Grid, MenuItem, Select, TextField, Typography } from "@mui/material"
-import { Button } from "@mui/material"
-import { Stack } from "@mui/system"
+import { Button, Stack, Dialog } from "@mui/material"
 import BasicReactTable from "components/BasicReactTable"
 import MainCard from "components/MainCard"
 import ScrollX from "components/ScrollX"
 import { useEffect, useState } from "react"
 import config from 'data/initialConfig';
-import { Dialog } from "@mui/material"
 import IconButton from "components/@extended/IconButton";
 import * as _ from 'lodash';
 import initialConfig from 'data/initialConfig'
@@ -109,7 +107,7 @@ const RollupConfiguration = (props: any) => {
 
     const renderSelectionTable = () => {
         return <>
-            <MainCard content={false}>
+            <MainCard content={false} headerSX={{}}>
                 <ScrollX>
                     <BasicReactTable columns={columns} data={selection} striped={true} />
                 </ScrollX>

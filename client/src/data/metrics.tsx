@@ -42,7 +42,7 @@ export const metricsMetadata = [
                         description: "Nodes Running Status",
                         chart: <AnalyticsDataCard title="Nodes Status">
                             <Stack spacing={4} direction="column" justifyContent="space-around" height={'auto'} >
-                                <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" fontSize={'8vh'} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
+                                <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" fontSize={'8vh'} mt={1} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
                                 <AsyncLabel align="center" variant="caption" color="textSecondary" suffix='Nodes Running'></AsyncLabel>
                             </Stack>
                         </AnalyticsDataCard>
