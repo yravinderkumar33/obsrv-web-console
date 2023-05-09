@@ -80,7 +80,9 @@ export const prepareConfigurationsBySection = (payload: Record<string, any>[], m
 export const saveDataset = ({ data = {}, config, master }: any) => {
     const { schema, state } = data;
     const validate = _.get(state, 'pages.dataValidation.formFieldSelection') || {};
-    const extractionConfig = _.get(state, 'pages.dataFormat.value');
+    const extractionConfig = _.get(state, 'pages.dataFormat.value') || {};
+    const dedupeConfig = _.get(state, 'pages.dedupe.optionSelection') || {};
+    const enableDedupe = _.get(state, 'pages.dedupe.questionSelection.dedupe') || [];
 
     const validation_config = {
         validate: validate !== "none",
@@ -92,16 +94,16 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
         batch_id: _.get(extractionConfig, 'batchId'),
         extraction_key: _.get(extractionConfig, 'extractionKey'),
         dedup_config: {
-            dedup_key: _.get(extractionConfig, 'dedupeKey'),
+            dedup_key: _.get(extractionConfig, 'batchId'),
             dedup_period: _.get(extractionConfig, 'dedupePeriod'),
-            drop_duplicates: true
+            drop_duplicates: (_.get(extractionConfig, 'dedupeRequired') && _.get(extractionConfig, 'dedupeRequired').includes("yes")),
         }
     };
 
     const dedup_config = {
-        dedup_key: _.get(extractionConfig, 'dedupeKey'),
-        dedup_period: _.get(extractionConfig, 'dedupePeriod'),
-        drop_duplicates: true
+        dedup_key: _.get(dedupeConfig, 'dedupeKey'),
+        dedup_period: _.get(dedupeConfig, 'dedupePeriod'),
+        drop_duplicates: enableDedupe.includes("yes"),
     }
 
     const router_config = {

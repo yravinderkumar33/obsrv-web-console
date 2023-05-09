@@ -258,8 +258,8 @@ const renderRequiredCell = ({
         setFlattenedData((preState: Array<Record<string, any>>) => {
             const updatedValues = { ...row };
             const values = _.map(preState, state => {
-                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                    return { ...state, ...updatedValues, isModified: true, required: e.target.checked };
+                if (_.get(state, 'column') === _.get(updatedValues, 'originalColumn'))
+                    return { ...state, ...updatedValues, isModified: true, required: e.target.checked, column: _.get(updatedValues, 'originalColumn') };
                 else return state
             });
             persistState(values);

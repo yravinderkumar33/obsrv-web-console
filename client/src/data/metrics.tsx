@@ -42,7 +42,7 @@ export const metricsMetadata = [
                         description: "Nodes Running Status",
                         chart: <AnalyticsDataCard title="Nodes Status">
                             <Stack spacing={4} direction="column" justifyContent="space-around" height={'auto'} >
-                                <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" fontSize={'8vh'} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
+                                <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" fontSize={'8vh'} mt={1} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
                                 <AsyncLabel align="center" variant="caption" color="textSecondary" suffix='Nodes Running'></AsyncLabel>
                             </Stack>
                         </AnalyticsDataCard>
@@ -56,7 +56,7 @@ export const metricsMetadata = [
                         </AnalyticsDataCard>
                     },
                     {
-                        id:"memoryUsage",
+                        id: "memoryUsage",
                         description: "Current Memory Usage Percent",
                         chart: <AnalyticsDataCard title="Memory Usage">
                             <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
@@ -65,7 +65,7 @@ export const metricsMetadata = [
                         </AnalyticsDataCard>
                     },
                     {
-                        id:"diskUsage",
+                        id: "diskUsage",
                         description: "Current Disk Usage Percent",
                         chart: <AnalyticsDataCard title="Disk Usage">
                             <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />

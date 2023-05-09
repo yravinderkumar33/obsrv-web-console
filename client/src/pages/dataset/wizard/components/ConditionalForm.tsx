@@ -41,12 +41,19 @@ const ConditionalForm = (props: any) => {
     useEffect(() => {
         const data = selectForm();
         if (!data) {
+            onSubmission({});
             persistState({ questionSelection: response, optionSelection: childFormValue }, false);
             return;
         }
         else {
-            subscribeErrors({ 'error': true });
-            persistState({ questionSelection: response, optionSelection: childFormValue }, { 'error': true });
+            const dataPresent = _.map(childFormValue, (item: any) => item === '' || !item);
+            if (!_.includes(dataPresent, true)) {
+                subscribeErrors(null);
+                persistState({ questionSelection: response, optionSelection: childFormValue }, false);
+            } else {
+                subscribeErrors({ 'error': true });
+                persistState({ questionSelection: response, optionSelection: childFormValue }, { 'error': true });
+            }
             return;
         }
     }, [selectedOption, childFormValue]);

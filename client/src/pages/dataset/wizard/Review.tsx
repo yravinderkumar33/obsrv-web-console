@@ -30,7 +30,7 @@ const Final = ({ handleBack, master, edit }: any) => {
 
     const handleDownloadButton = () => {
         if (jsonSchema && flattenedData) {
-            const data = updateJSONSchema(jsonSchema, flattenedData);
+            const data = updateJSONSchema(jsonSchema, { schema: flattenedData });
             downloadJsonFile(data, 'json-schema');
         }
     }

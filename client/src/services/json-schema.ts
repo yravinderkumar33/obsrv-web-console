@@ -145,22 +145,20 @@ const deleteItemFromSchema = (schema: Record<string, any>, schemaKeyPath: string
 }
 
 const updateTypeInSchema = (schema: Record<string, any>, schemaPath: string, type: string) => {
-    if (_.has(schema, schemaPath)) {
-        const existing = _.get(schema, schemaPath);
-        _.set(schema, schemaPath, { ...existing, type });
-    }
+    const existing = _.get(schema, schemaPath);
+    _.set(schema, schemaPath, { ...existing, type });
 }
 
 export const updateJSONSchema = (schema: Record<string, any>, updatePayload: Record<string, any>) => {
     const clonedOriginal = _.cloneDeep(schema);
-    const modifiedRows = _.filter(updatePayload, ['isModified', true]);
+    const modifiedRows = _.filter(_.get(updatePayload, 'schema'), ['isModified', true]);
     _.forEach(modifiedRows, modifiedRow => {
         const { isDeleted = false, required = false, key, type } = modifiedRow;
         if (isDeleted) {
-            deleteItemFromSchema(clonedOriginal, key, false);
+            deleteItemFromSchema(clonedOriginal, `schema.${key}`, false);
         } else {
-            updateTypeInSchema(clonedOriginal, key, type);
-            changeRequiredPropertyInSchema(clonedOriginal, key, required);
+            updateTypeInSchema(clonedOriginal, `schema.${key}`, type);
+            changeRequiredPropertyInSchema(clonedOriginal, `schema.${key}`, required);
         }
     });
     return clonedOriginal;
