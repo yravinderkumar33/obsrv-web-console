@@ -98,7 +98,7 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
                     labelProps.error = true;
                 }
                 return (
-                    <Step key={Math.random()} onClick={() => setActiveStep(index)}>
+                    <Step key={Math.random()}>
                         <StepLabel {...labelProps}>{label}</StepLabel>
                     </Step>
                 );
