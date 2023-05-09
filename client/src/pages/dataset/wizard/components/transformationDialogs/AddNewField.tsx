@@ -1,6 +1,6 @@
-import { CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle, Popover, Typography } from "@mui/material";
 import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
@@ -10,8 +10,9 @@ import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
-import PreviewTransformation from "./PreviewTransform";
 import  interactIds  from "data/telemetry/interact.json";
+import JSONataPlayground from "components/JSONataPlayground";
+import * as yup from "yup";
 
 export const openJsonAtaEditor = () => {
     window.open('https://try.jsonata.org/', '__blank', 'noopener,noreferrer');
@@ -20,9 +21,14 @@ export const openJsonAtaEditor = () => {
 const AddNewField = (props: any) => {
     const { id, data, onClose, selection, setSelection, mainDatasetId, } = props;
     const [value, subscribe] = useState<any>({});
+    const [evaluationData, setEvaluationData] = useState<string>('');
+    const [transformErrors, setTransformErrors] = useState<boolean>(false);
+    const [setFieldValue, fieldValueSetter] = useState<any>({});
     const dispatch = useDispatch();
     const onSubmission = (value: any) => { };
-    const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
+    const pushStateToStore: any = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const open = Boolean(anchorEl);
 
     const saveTransformation = async (payload: any, updateStateData: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
@@ -75,12 +81,33 @@ const AddNewField = (props: any) => {
                 Ex: $sum(Product.(Price * Quantity)) <br /> FirstName & " " & Surname
             </>,
         }
-    ]
+    ];
+
+    const formInitialValues = {
+        "column": "",
+        "transformation": ""
+    }
+
+    const validationSchema = yup.object().shape({
+        column: yup.string().required("This field is required"),
+        transformation: yup.string().required("This field is required"),
+    });
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        // if (!transformErrors) setFieldValue("transformation", evaluationData);
+        setAnchorEl(null);
+    };
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
-            <DialogTitle id="alert-dialog-title">
-                Add New Field
+            <DialogTitle component={Box} display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h5">
+                    Add New Field
+                </Typography>
                 {onClose ? (
                     <IconButton
                         id="iconButton"
@@ -90,41 +117,62 @@ const AddNewField = (props: any) => {
                         aria-label="close"
                         onClick={onClose}
                         sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseCircleOutlined />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2} margin={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
-                    {
-                        value.column && value.transformation &&
-                        <PreviewTransformation fieldName={value.column} expression={value.transformation} />
-                    }
-                    <Box>
-                        <Button 
+                <Stack spacing={2} my={1}>
+                    <MUIForm initialValues={formInitialValues} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
+                </ Stack>
+            </DialogContent>
+            <DialogActions sx={{ px: 4 }}>
+                <Box mx={2}>
+                    <Button
                         data-edataid={interactIds.jsonata}
                         data-objectid="jsonata"
                         data-objecttype="dataset"
-                        onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button>
-                    </ Box>
-                </ Stack>
-            </DialogContent>
-            <DialogActions>
-                <Button 
-                data-edataid={interactIds.add_dataset}
-                data-objectid={value}
-                data-objecttype="dataset"
-                variant="contained" onClick={_ => updateAdditionalField()}>
-                    Add
+                        onClick={handleClick}
+                    >
+                        <Typography variant="h5">
+                            Try Out
+                        </Typography>
+                    </Button>
+                </Box>
+                <Button
+                    data-edataid={interactIds.add_dataset}
+                    data-objectid={value}
+                    data-objecttype="dataset"
+                    variant="contained"
+                    onClick={_ => updateAdditionalField()}
+                    disabled={value.column === '' || !value.column || value.transformation === '' || !value.transformation}
+                >
+                    <Typography variant="h5">
+                        Add
+                    </Typography>
                 </Button>
             </DialogActions>
+            <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                PaperProps={{ sx: { height: '100%', width: '100%', overflow: 'hidden' } }}
+            >
+                <JSONataPlayground
+                    handleClose={handleClose}
+                    evaluationData={evaluationData}
+                    setEvaluationData={setEvaluationData}
+                    setTransformErrors={setTransformErrors}
+                />
+            </Popover>
         </Box>
     </>
 }

@@ -1,4 +1,4 @@
-import { BugFilled, DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons"
+import { BugFilled, DeleteOutlined } from "@ant-design/icons"
 import { Box, Grid, Typography } from "@mui/material"
 import { Alert, Button } from "@mui/material"
 import { Stack } from "@mui/system"
@@ -123,14 +123,16 @@ const DataDenorm = (props: any) => {
         return <>
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="column" justifyContent="center" alignItems="center">
-                    <Alert color="error" icon={<BugFilled />}>
+                    <Alert color="error" icon={<BugFilled />} sx={{ alignItems: "center" }}>
                         There are no master datasets configured in the system. Please create one to setup data denormalization for the dataset.
                     </Alert>
                     <Box><Button 
                         data-edataid={`${interactIds.add_dataset_denorm}:master`}
                         data-objectid="createMasterDataset"
                         data-objecttype="masterDataset"
-                        variant="contained" onClick={_ => openCreateMasterDataset()}>Create Master Dataset</Button></Box>
+                         onClick={_ => openCreateMasterDataset()}><Typography variant="h5">
+                         Create Master Dataset
+                     </Typography></Button></Box>
                 </Stack>
             </Grid>
         </>
@@ -157,16 +159,26 @@ const DataDenorm = (props: any) => {
             </Grid>
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="row">
-                    <Box><Button 
+                    <Box>
+                        <Button
                             data-edataid={`${interactIds.add_dataset_denorm_field}:master`}
                             data-objectid="addDenormField"
                             data-objecttype="masterDataset"
-                            variant="contained" onClick={_ => setDialogOpen(true)}>Add Denorm Field</Button> </Box>
+                            variant="contained" onClick={_ => setDialogOpen(true)}
+                            >
+                                <Typography variant="h5">
+                                Add Denorm Field
+                            </Typography>
+                        </Button>
+                         </Box>
                     <Box><Button 
                         data-edataid={`${interactIds.add_dataset_denorm}:master`}
                         data-objectid="createMasterDataset"
                         data-objecttype="masterDataset"
-                        variant="contained" onClick={_ => openCreateMasterDataset()}>Create New Master Dataset</Button></Box>
+                        variant="contained" onClick={_ => openCreateMasterDataset()}>
+                            <Typography variant="h5">
+                        Create New Master Dataset
+                    </Typography></Button></Box>
                 </Stack>
             </Grid>
             <Grid item xs={12}>
@@ -186,7 +198,6 @@ const DataDenorm = (props: any) => {
 
     return <>
         <Grid container rowSpacing={spacing}>
-            {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             {masterDatasetsExists ? masterDatasetFound() : masterDatasetNotFound()}
         </Grid>
     </>

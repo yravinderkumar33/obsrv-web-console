@@ -4,7 +4,9 @@ import {
     Typography, Chip, useTheme
 } from '@mui/material';
 import * as _ from 'lodash';
-import { CloseOutlined, FolderViewOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
+import { CloseOutlined, FolderViewOutlined } from '@ant-design/icons';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
@@ -97,7 +99,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         }
     }
 
-    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData } }));
+    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData }, error: areConflictsResolved(data || flattenedData) }));
 
     const gotoNextSection = () => {
         const data = deleteFilter();
@@ -127,9 +129,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 tipText: '',
                 editable: 'false',
                 Cell: ({ row }: any) => {
-                    const collapseIcon = row.isExpanded ? <DownOutlined /> : <RightOutlined />;
+                    const collapseIcon = row.isExpanded ? <ExpandMoreIcon /> : <ChevronRightIcon />;
                     return row.canExpand && (
-                        <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }} {...row.getToggleRowExpandedProps()}>
+                        <Box sx={{ fontSize: '1rem', color: 'text.secondary' }} {...row.getToggleRowExpandedProps()}>
                             {collapseIcon}
                         </Box>
                     );
@@ -285,7 +287,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         <Chip
                             data-edataid={interactIds.dataset_list_columns}
                             data-objectid={`filter: ${filter.label}`}
-                            data-objecttype={master ? 'masterDataset': 'dataset'}
+                            data-objecttype={master ? 'masterDataset' : 'dataset'}
                             key={filter.label}
                             aria-label='filter-button'
                             clickable
@@ -298,7 +300,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         />
                         )}
                         {filterByChip &&
-                            <Button data-edataid={`${master ? 'masterDataset': 'dataset'}:list:columns`} data-objecid="closeOutlined:clearFilter" data-objecttype={master ? 'masterDataset': 'dataset'}  size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
+                            <Button data-edataid={`${master ? 'masterDataset' : 'dataset'}:list:columns`} data-objecid="closeOutlined:clearFilter" data-objecttype={master ? 'masterDataset' : 'dataset'} size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
                                 Clear filters
                             </Button>
                         }
@@ -338,12 +340,14 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 </Grid>
             </GenericCard>
             <WizardNavigator
+                pageId={'list:columns'}
                 master={master}
-                showPrevious={edit}
+                showPrevious={false}
                 gotoPreviousSection={gotoPreviousSection}
                 gotoNextSection={gotoNextSection}
                 enableDownload
                 handleDownload={handleDownloadButton}
+                nextDisabled={!areConflictsResolved(flattenedData)}
             />
         </>
     );

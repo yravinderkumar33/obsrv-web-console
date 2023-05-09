@@ -41,16 +41,25 @@ export const nestedToColumns = (payload: any, jsonSchemaData: any) => {
         const property = current;
         const existing = acc || [];
         if (_.values(property).length === 1) {
-            acc = [...existing, ...property];
+            let [data] = property;
+            data = { ...data, originalColumn: data.column };
+            acc = [...existing, data];
         }
         else if (property.length > 1) {
             const subRows = property;
             const [element] = property;
             const [parent] = _.split(element?.column, ".");
+            const subRowsData = subRows.map((item: any) => (
+                {
+                    ...item,
+                    column: item.column.replace(`${parent}.`, ''),
+                    originalColumn: item.column,
+                }
+            ));
             const data = {
                 column: parent,
                 type: _.get(jsonSchemaData, ['properties', parent, 'type']),
-                subRows,
+                subRows: subRowsData,
             }
             acc = [...existing, data];
         }

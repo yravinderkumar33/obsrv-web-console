@@ -1,12 +1,13 @@
-import { CloseCircleOutlined } from "@ant-design/icons";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, DialogActions, DialogContent, DialogTitle, Typography } from "@mui/material";
 import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
 import { Stack } from "@mui/material";
 import { useSelector } from "react-redux";
 import  interactIds  from "data/telemetry/interact.json";
+import * as yup from "yup";
 
 const aggregateFunctions = [
     {
@@ -75,6 +76,16 @@ const AddRollup = (props: any) => {
         }
     ];
 
+    const validationSchema = yup.object().shape({
+        field: yup.string().required("This field is required"),
+        aggregateFunction: yup.string().required("This field is required"),
+        rollupFields: yup.array()
+            .min(1, "This field requires atleast 1 property")
+            .required("This field is required")
+            .nullable(),
+        rollupFieldName: yup.string().required("This field is required"),
+    });
+
     const addField = () => {
         if (_.size(value) === fields.length) {
             setSelection((preState: any) => {
@@ -88,8 +99,10 @@ const AddRollup = (props: any) => {
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', height: 'auto', maxWidth: "100%", }}>
-            <DialogTitle id="alert-dialog-title">
-                Add New Rollup
+            <DialogTitle component={Box} display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h5">
+                    Add New Rollup
+                </Typography>
                 {onClose ? (
                     <IconButton
                         aria-label="close"
@@ -98,28 +111,29 @@ const AddRollup = (props: any) => {
                         data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseCircleOutlined />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2} margin={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                <Stack spacing={2} my={1}>
+                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
                 </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button 
-                data-edataid={interactIds.add_dataset_field}
-                data-objectid={value}
-                data-objecttype="dataset"
-                variant="contained" autoFocus onClick={_ => addField()}>
-                    Add Field
+            <DialogActions sx={{ px: 4 }}>
+                <Button
+                    data-edataid={interactIds.add_dataset_field}
+                    data-objectid={value}
+                    data-objecttype="dataset"
+                    variant="contained"
+                    onClick={_ => addField()}
+                >
+                    <Typography variant="h5">
+                        Add Field
+                    </Typography>
                 </Button>
             </DialogActions>
         </Box>

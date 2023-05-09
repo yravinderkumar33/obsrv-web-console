@@ -2,55 +2,101 @@ import commonMiddlewares from '../../shared/middlewares';
 import controllers from '../controllers';
 import schemaValidator from '../middlewares/schemaValidator';
 import authMiddleware from '../middlewares/auth';
-import { oauthServer } from '../auth/auth'
+import passport from 'passport';
+import { authorization, token } from '../helpers/oauth';
 
 export default [
     {
-        path: 'oauth',
+        path: "oauth",
         routes: [
             {
-                path: 'authorize',
-                method: 'POST',
-                middlewares: [
-                    commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.read' }),
-                    controllers.get('auth:read')?.handler({})
+                path: 'v1',
+                routes: [
+                    {
+                        path: 'login',
+                        method: 'POST',
+                        middlewares: [
+                            passport.authenticate('local', { successReturnToOrRedirect: '/', failureRedirect: '/login' })
+                        ],
+                    },
+                    {
+                        path: 'logout',
+                        method: 'GET',
+                        middlewares: [
+                            controllers.get('auth:logout')?.handler({}),
+                        ],
+                    },
+                    {
+                        path: 'authorize',
+                        method: 'GET',
+                        middlewares: [
+                            authorization
+                        ],
+                    },
+                    {
+                        path: 'token',
+                        method: 'POST',
+                        middlewares: [
+                            token
+                        ],
+                    },
+                    {
+                        path: 'userinfo',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('bearer', { session: false }),
+                            controllers.get('auth:user:info')?.handler({}),
+                        ],
+                    }
                 ],
             },
-            {
-                path: 'authorize',
-                method: 'GET',
-                middlewares: [
-                    commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.read' }),
-                    controllers.get('auth:read')?.handler({})
-                ],
-            },
-            {
-                path: 'token',
-                method: 'POST',
-                middlewares: [
-                    commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.token' }),
-                    controllers.get('auth:token')?.handler({})
-                ],
-            },
-            {
-                path: 'user-details',
-                method: 'get',
-                middlewares: [
-                    commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.user.read' }),
-                    oauthServer.authenticate(),
-                    controllers.get('auth:user')?.handler({})
-                ],
-            },
-            {
-                path: 'logout',
-                method: 'get',
-                middlewares: [
-                    commonMiddlewares.get('set:metadata')?.handler({ id: 'api.auth.user.logout' }),
-                    controllers.get('auth:logout')?.handler({})
-                ],
-            },
-            
         ]
+        
+    },
+    {
+        path: 'auth',
+        routes: [
+            {
+                path: 'keycloak',
+                routes: [
+                    {
+                        path: '',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('keycloak', { scope: ['profile'] })
+                        ],
+                    },  
+                    {
+                        path: 'callback',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('keycloak', { successReturnToOrRedirect: '/', failureRedirect: '/login' })
+                        ],
+                    }
+                ]
+
+            },
+            {
+                path: 'google',
+                routes: [
+                    {
+                        path: '',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('google', { scope: ['profile','email'] })
+                        ],
+                    },  
+                    {
+                        path: 'callback',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('google', { successReturnToOrRedirect: '/', failureRedirect: '/login' })
+                        ],
+                    }
+                ]
+
+            }
+        ],
     },
     {
         path: 'report',

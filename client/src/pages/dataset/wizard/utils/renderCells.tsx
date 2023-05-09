@@ -10,6 +10,8 @@ import {
     DeleteOutlined, InfoCircleOutlined,
 } from '@ant-design/icons';
 import * as _ from "lodash";
+import HtmlTooltip from "components/HtmlTooltip";
+import { VerticalOverflowText } from "components/styled/Typography";
 
 const renderColumnCell = ({
     cell, setFlattenedData, persistState, value,
@@ -17,8 +19,8 @@ const renderColumnCell = ({
 }: any) => {
     const row = cell?.row?.original || {};
     const editDescription = () => {
-        setEdit((prevState: any) => !prevState);
         updateState();
+        setEdit((prevState: any) => !prevState);
     }
 
     const handleClose = () => {
@@ -33,9 +35,9 @@ const renderColumnCell = ({
         setFlattenedData((preState: Array<Record<string, any>>) => {
             const updatedValues = { ...row };
             const values = _.map(preState, state => {
-                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                    return { ...state, ...updatedValues, isModified: true, description: text };
-                else return state
+                if (_.get(state, 'column') === _.get(updatedValues, 'originalColumn'))
+                    return { ...state, ...updatedValues, isModified: true, description: text, column: _.get(updatedValues, 'originalColumn') };
+                else return state;
             });
             persistState(values);
             return values;
@@ -43,11 +45,13 @@ const renderColumnCell = ({
     }
 
     return (
-        <Box alignItems="baseline" maxWidth={537}>
+        <Box alignItems="baseline" maxWidth={537} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Typography variant="h6" m={1}>
-                    {value}
-                </Typography>
+                <HtmlTooltip title={value}>
+                    <Typography variant="h6" my={1} maxWidth={'70%'} textOverflow='ellipsis' overflow='hidden' whiteSpace='nowrap'>
+                        {cell?.row?.depth > 0 ? '- ' : ''}{value}
+                    </Typography>
+                </HtmlTooltip>
                 {!row.description &&
                     <Button sx={{ fontWeight: 500 }} onClick={handleClose} startIcon={<PlusOutlined style={{ fontSize: '1.25rem', strokeWidth: 25, stroke: theme.palette.primary.main }} />}>
                         Description
@@ -55,25 +59,15 @@ const renderColumnCell = ({
                 }
             </Box>
             {row.description &&
-                <Typography
-                    variant="body3"
-                    color="secondary"
-                    m={1}
-                    sx={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: "2",
-                        WebkitBoxOrient: "vertical",
-                        minWidth: 200,
-                        height: 40,
-                        maxHeight: 40,
-                        whiteSpace: 'nowrap',
-                    }}
-                    onClick={editDescription}
-                >
-                    {row.description}
-                </Typography>
+                <HtmlTooltip title={row.description} placement="top-start" arrow>
+                    <VerticalOverflowText
+                        variant="body3"
+                        color="secondary"
+                        onClick={handleClose}
+                    >
+                        {row.description}
+                    </VerticalOverflowText>
+                </HtmlTooltip>
             }
             <Dialog open={edit} onClose={handleClose}>
                 <DialogTitle
@@ -81,9 +75,11 @@ const renderColumnCell = ({
                     justifyContent="space-between"
                     alignItems="center"
                 >
-                    <Typography mx={2}>
-                        {value}
-                    </Typography>
+                    <HtmlTooltip title={value}>
+                        <Typography mx={2} maxWidth={'70%'} textOverflow='ellipsis' overflow='hidden' whiteSpace='nowrap'>
+                            {value}
+                        </Typography>
+                    </HtmlTooltip>
                     <CloseCircleOutlined onClick={handleClose} />
                 </DialogTitle>
                 <DialogContent>
@@ -156,7 +152,7 @@ const renderDataTypeCell = ({
     );
 
     return (
-        <Box position="relative" maxWidth={180} display='block' alignItems="center" m={1}>
+        <Box position="relative" maxWidth={180} display='block' alignItems="center" my={1}>
             {row?.oneof && !isResolved &&
                 <Button startIcon={<InfoCircleOutlined />} color="error" onClick={handleSuggestions} sx={{ mx: 1 }}>
                     <Typography variant="caption">Recommended Change</Typography>

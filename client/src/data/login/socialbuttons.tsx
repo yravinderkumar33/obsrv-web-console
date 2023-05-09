@@ -18,6 +18,7 @@ export default [
                 },
                 object: {}
             });
+            window.open("/api/auth/google", "_self")
         }
     },
     {
@@ -33,6 +34,7 @@ export default [
                 },
                 object: {}
             });
+            window.open("/api/auth/keycloak", "_self")
         }
     }
 ]

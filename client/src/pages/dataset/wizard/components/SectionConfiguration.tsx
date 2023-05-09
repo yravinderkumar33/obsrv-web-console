@@ -4,15 +4,13 @@ import * as _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
 import FieldSection from './FieldSection';
-import { Stack } from '@mui/material';
-import AnimateButton from 'components/@extended/AnimateButton';
-import { Button } from '@mui/material';
 import { sections as allSections } from 'data/wizard';
 import { updateClientState } from 'services/dataset';
 import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
+import WizardNavigator from './WizardNavigator';
 
 const SectionsConfiguration = ({ handleNext, handleBack, index, section, master, edit }: any) => {
     const sections = _.get(allSections, section) || [];
@@ -74,26 +72,14 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
         <Grid container>
             <Grid item xs={12}>{sections.filter(predicate).map(renderSection)}</Grid>
             <Grid item xs={12}>
-                <Stack direction="row" justifyContent="space-between">
-                    <AnimateButton>
-                        <Button
-                            data-edataid={`${master ? 'masterDataset': 'dataset'}:section:config:${section}`}
-                            data-objectid="previous"
-                            data-objecttype={master ? 'masterDataset': 'dataset'}
-                            variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
-                            Previous
-                        </Button>
-                    </AnimateButton>
-                    <AnimateButton>
-                        <Button
-                            data-edataid={`${master ? 'masterDataset': 'dataset'}:section:config:${section}`}
-                            data-objectid="next"
-                            data-objecttype={master ? 'masterDataset': 'dataset'}
-                            variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
-                            Next
-                        </Button>
-                    </AnimateButton>
-                </Stack>
+                <WizardNavigator
+                    showPrevious={true}
+                    pageId='section:config'
+                    master={master}
+                    section={section}
+                    gotoNextSection={gotoNextSection}
+                    gotoPreviousSection={gotoPreviousSection}
+                />
             </Grid>
         </Grid>
     </>;

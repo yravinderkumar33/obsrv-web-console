@@ -3,6 +3,7 @@ export interface IRoute {
   routes?: IRoute[];
   method?: string;
   middlewares?: Function[];
+  pathPrefix?: string
 }
 
 export interface IController {
@@ -54,5 +55,9 @@ export interface IProxy {
   path: string,
   name: string;
   handler: (config: Record<string, any>) => Function;
+  [key: string]: any;
+}
+
+export interface IPostgres {
   [key: string]: any;
 }

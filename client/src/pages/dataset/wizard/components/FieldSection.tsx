@@ -45,16 +45,19 @@ const FieldSection = (props: any) => {
             <Grid item xs={12}>
                 {_.has(rest, 'component') && React.cloneElement(rest.component, { ...props })}
             </Grid>
-            {renderNavigation()}
         </Grid>
     }
 
     const renderAccordion = () => {
         return <Accordion expanded={open} onChange={handleChange(id)} square={false}>
-            <AccordionSummary aria-controls="panel1bh-content" id="panel1bh-header">
+            <AccordionSummary
+                aria-controls="panel1bh-content"
+                id="panel1bh-header"
+                sx={{ px: 2, py: 3 }}
+            >
                 <Stack direction="column" spacing={spacing} alignItems="center">
-                    <Typography sx={{ width: '100%', flexShrink: 0 }}> {title}</Typography>
-                    {!open && <Typography variant='caption' sx={{ color: 'text.secondary' }}>{description}</Typography>}
+                    <Typography sx={{ width: '100%', flexShrink: 0 }} variant="h5">{title}</Typography>
+                    <Typography variant='body2' sx={{ color: 'text.secondary' }}>{description}</Typography>
                 </Stack>
             </AccordionSummary>
             <AccordionDetails>
@@ -64,7 +67,7 @@ const FieldSection = (props: any) => {
     }
 
     const renderBox = () => {
-        return <MainCard title={title}>
+        return <MainCard title={title} tagLine={description} sx={{ py: 3, px: 2 }}>
             {sectionDetails()}
         </ MainCard>
     }
@@ -94,7 +97,7 @@ const FieldSection = (props: any) => {
                     },
                     '& .Mui-expanded': {
                         color: theme.palette.primary.main
-                    }
+                    },
                 }
             }}
         >

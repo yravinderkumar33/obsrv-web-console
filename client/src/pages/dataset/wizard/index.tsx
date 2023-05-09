@@ -1,6 +1,5 @@
 import { useState, ReactNode, useEffect } from 'react';
-import { Button, Step, Stepper, StepLabel, Typography, Box } from '@mui/material';
-import MainCard from 'components/MainCard';
+import { Step, Stepper, StepLabel, Typography, Box } from '@mui/material';
 import DatasetConfiguration from './DatasetConfiguration';
 import { useDispatch } from 'react-redux';
 import { reset } from 'store/reducers/wizard';
@@ -115,7 +114,7 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
                     labelProps.error = true;
                 }
                 return (
-                    <Step key={Math.random()} onClick={() => setActiveStep(index)}>
+                    <Step key={Math.random()}>
                         <StepLabel {...labelProps}>{label}</StepLabel>
                     </Step>
                 );

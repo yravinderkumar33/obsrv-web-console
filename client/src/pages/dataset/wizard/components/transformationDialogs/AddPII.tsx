@@ -1,5 +1,4 @@
-import { CloseCircleOutlined } from "@ant-design/icons";
-import { Button, IconButton } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import MUIForm from "components/form";
 import { useMemo, useState } from "react";
@@ -11,6 +10,8 @@ import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import  interactIds  from "data/telemetry/interact.json";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import * as yup from "yup";
 
 const AddPIIDialog = (props: any) => {
     const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
@@ -79,12 +80,19 @@ const AddPIIDialog = (props: any) => {
             required: true,
             selectOptions: actions
         }
-    ]
+    ];
+
+    const validationSchema = yup.object().shape({
+        column: yup.string().required("This field is required"),
+        transformation: yup.string().required("This field is required"),
+    })
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
-            <DialogTitle id="alert-dialog-title">
-                Add PII Field
+            <DialogTitle component={Box} display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h5">
+                    Add PII Field
+                </Typography>
                 {onClose ? (
                     <IconButton
                         aria-label="close"
@@ -93,28 +101,29 @@ const AddPIIDialog = (props: any) => {
                         data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseCircleOutlined />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2} margin={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                <Stack spacing={2} my={1}>
+                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} />
                 </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button 
-                data-edataid={interactIds.add_dataset_pii}
-                data-objectid={value}
-                data-objecttype="dataset"
-                variant="contained" onClick={_ => updatePIIMeta()}>
-                    Add
+            <DialogActions sx={{ px: 4 }}>
+                <Button
+                    data-edataid={interactIds.add_dataset_pii}
+                    data-objectid={value}
+                    data-objecttype="dataset"
+                    variant="contained"
+                    onClick={_ => updatePIIMeta()}
+                >
+                    <Typography variant="h5">
+                        Add
+                    </Typography>
                 </Button>
             </DialogActions>
         </Box></>

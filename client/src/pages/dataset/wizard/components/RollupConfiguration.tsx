@@ -1,6 +1,6 @@
-import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons"
-import { Box, Chip, FormControl, FormHelperText, Grid, MenuItem, Select, TextField } from "@mui/material"
-import { Alert, Button } from "@mui/material"
+import { DeleteOutlined } from "@ant-design/icons"
+import { Box, Chip, FormControl, FormHelperText, Grid, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Button } from "@mui/material"
 import { Stack } from "@mui/system"
 import BasicReactTable from "components/BasicReactTable"
 import MainCard from "components/MainCard"
@@ -121,12 +121,17 @@ const RollupConfiguration = (props: any) => {
         return <>
             <Grid item xs={12}> {_.get(selection, 'length') ? renderSelectionTable() : null}</Grid>
             <Grid item xs={12}>
-                <Stack spacing={spacing} direction="row">
-                    <Box><Button 
-                    data-edataid={interactIds.add_dataset_rollup}
-                    data-objectid="addRollup"
-                    data-objecttype="dataset"
-                        variant="outlined" onClick={_ => setDialogOpen(true)}>Add New Rollup</Button> </Box>
+                <Stack spacing={spacing} direction="row" justifyContent="flex-end">
+                    <Button
+                        data-edataid={interactIds.add_dataset_rollup}
+                        data-objectid="addRollup"
+                        data-objecttype="dataset"
+                        onClick={_ => setDialogOpen(true)}
+                    >
+                        <Typography variant="body2" fontWeight="500">
+                            Add New Rollup
+                        </Typography>
+                    </Button>
                 </Stack>
             </Grid>
             <Grid item xs={12}>
@@ -143,7 +148,6 @@ const RollupConfiguration = (props: any) => {
 
     return <>
         <Grid container rowSpacing={2}>
-            {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             {renderRollupGranulatiry()}
             {renderRollupConfigTable()}
         </Grid>

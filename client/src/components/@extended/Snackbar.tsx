@@ -97,6 +97,7 @@ const Snackbar = () => {
                     open={open}
                     autoHideDuration={3000}
                     onClose={handleClose}
+                    sx={{ alignItems: 'center' }}
                 >
                     <Alert
                         variant={alert.variant}
