@@ -10,7 +10,7 @@ import ApexWithFilters from "sections/dashboard/analytics/ChartFilters";
 import filters from 'data/chartFilters';
 import AsyncLabel from "components/cards/statistics/AsyncLabel";
 import { totalVsRunningNodes, percentageUsage, cpuPercentageUsage, backupStatus, alertsFilterByLabels } from 'services/transformers';
-import { Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import GrafanaChart from "sections/dashboard/analytics/GrafanaEmbedded";
 import IngestionCharts from "sections/dashboard/analytics/IngestionCharts";
 
@@ -41,35 +41,56 @@ export const metricsMetadata = [
                         id: "nodeRunningStatus",
                         description: "Nodes Running Status",
                         chart: <AnalyticsDataCard title="Nodes Status">
-                            <Stack spacing={4} direction="column" justifyContent="space-around" height={'auto'} >
-                                <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" fontSize={'8vh'} mt={1} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
-                                <AsyncLabel align="center" variant="caption" color="textSecondary" suffix='Nodes Running'></AsyncLabel>
-                            </Stack>
+                            <Grid container height="100%">
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={2}>
+                                    <AsyncLabel align="center" variant="h3" fontSize={'8vh'} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
+                                </Grid>
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={1}>
+                                    <AsyncLabel align="center" verticalAlign="flex-end" variant="body2" color="secondary" suffix='Nodes Running' />
+                                </Grid>
+                            </Grid>
                         </AnalyticsDataCard>
                     },
                     {
                         id: "cpuUsge",
                         description: "Current CPU Usage Percent",
                         chart: <AnalyticsDataCard title="CPU Usage">
-                            <GaugeChart query={_.get(chartMeta, 'cpu_usage_radial.query')} />
-                            <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'cpu_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'totalCPU.query')]} transformer={cpuPercentageUsage}></AsyncLabel>
+                            <Grid container height="100%">
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={2}>
+                                    <GaugeChart query={_.get(chartMeta, 'cpu_usage_radial.query')} />
+                                </Grid>
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={1}>
+                                    <AsyncLabel align="center" variant="body2" color="secondary" query={[_.get(chartMeta, 'cpu_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'totalCPU.query')]} transformer={cpuPercentageUsage}></AsyncLabel>
+                                </Grid>
+                            </Grid>
                         </AnalyticsDataCard>
                     },
                     {
                         id: "memoryUsage",
                         description: "Current Memory Usage Percent",
                         chart: <AnalyticsDataCard title="Memory Usage">
-                            <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
-                            <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'memory_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
-
+                            <Grid container height="100%">
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={2}>
+                                    <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
+                                </Grid>
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={1}>
+                                    <AsyncLabel align="center" variant="body2" color="textSecondary" query={[_.get(chartMeta, 'memory_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
+                                </Grid>
+                            </Grid>
                         </AnalyticsDataCard>
                     },
                     {
                         id: "diskUsage",
                         description: "Current Disk Usage Percent",
                         chart: <AnalyticsDataCard title="Disk Usage">
-                            <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
-                            <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'disk_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
+                            <Grid container height="100%">
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={2}>
+                                    <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
+                                </Grid>
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={1}>
+                                    <AsyncLabel align="center" variant="body2" color="textSecondary" query={[_.get(chartMeta, 'disk_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage} />
+                                </Grid>
+                            </Grid>
                         </AnalyticsDataCard>
                     },
                 ]
