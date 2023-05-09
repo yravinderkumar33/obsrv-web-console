@@ -48,7 +48,7 @@ const ReportCard = ({ primary, suffix, secondary, iconPrimary, color, query, des
     return (
         <Paper elevation={globalConfig.elevation}>
             <Tooltip title={description}>
-                <MainCard content={false}>
+                <MainCard>
                     <Grid container justifyContent="space-between" alignItems="center" color={_.get(theme, ['palette', colorType, 'dark'])}>
                         <Grid item>
                             <Stack spacing={1}>
