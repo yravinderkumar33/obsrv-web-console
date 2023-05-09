@@ -47,7 +47,7 @@ const ConditionalForm = (props: any) => {
         }
         else {
             const dataPresent = _.map(childFormValue, (item: any) => item === '' || !item);
-            if (!_.includes(dataPresent, true)) {
+            if (_.size(dataPresent) > 0 && !_.includes(dataPresent, true)) {
                 subscribeErrors(null);
                 persistState({ questionSelection: response, optionSelection: childFormValue }, false);
             } else {

@@ -40,17 +40,26 @@ const ConditionalCheckboxForm = (props: any) => {
     const formik = useFormik({ initialValues: getInitialValues(), onSubmit: values => { } });
     const formValues = formik.values;
 
-    const persist = () => {
+    const persist = (error: any) => {
         const formFieldSelection = _.get(formValues, [name]);
-        persistState({ formFieldSelection, value: { ...childFormValue, }, error: _.keys(errors).length > 0 });
+        persistState({ formFieldSelection, value: { ...childFormValue, }, error: error });
     }
 
     const onSubmission = (value: any) => { };
 
     useEffect(() => {
         onSubmission(formValues);
-        if (_.keys(existingState).length < 1 && formValues[id].length > 1 && _.keys(childFormValue).length <= 1) subscribeErrors({ 'error': true });
-        persist();
+        const dataPresent = _.map(childFormValue, (item: any) => item === '' || !item);
+        if (formValues[id].length > 1 && _.size(dataPresent) > 1 && !_.includes(dataPresent, true)) {
+            subscribeErrors(null);
+            persist(false);
+        } else if (formValues[id].length === 1) {
+            subscribeErrors(null);
+            persist(false);
+        } else {
+            subscribeErrors({ 'error': true });
+            persist({ 'error': true });
+        }
     }, [formValues, childFormValue,]);
 
     const handleParentFormChange = (e: any) => {
