@@ -22,7 +22,6 @@ const MetricsDetails = (props: any) => {
     const navigate = useNavigate();
     const params = useParams();
     const [metadata, setmetadata] = useState<Record<string, any>>();
-
     const iconBackColor = theme.palette.mode === 'dark' ? 'background.default' : 'grey.100';
     const metricId = id || _.get(params, 'metricId');
     useImpression({ type: "detail", pageid: _.get(pageIds, ['metrics', metricId]) });

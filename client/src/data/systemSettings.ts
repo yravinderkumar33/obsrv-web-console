@@ -6,50 +6,58 @@ export default [
         "category": "ENVIRONMENT",
         "key": "systemEnv",
         "value": env,
-        "type": "SYSTEM"
+        "type": "SYSTEM",
+        "description": "Current environment"
     },
     {
         "category": "KAFKA",
         "key": "defaultTopicPartitions",
         "value": "4",
-        "type": "SYSTEM"
+        "type": "SYSTEM",
+        "description": "This setting is used to configure default topic partition"
     },
     {
         "category": "KAFKA",
         "key": "defaultTopicRetentions",
         "value": "5",
-        "type": "SYSTEM"
+        "type": "SYSTEM",
+        "description": "This setting is used to configure default topic retention"
     },
     {
         "category": "KAFKA",
         "key": "defaultReplicationFactor",
         "value": "2",
-        "type": "SYSTEM"
+        "type": "SYSTEM",
+        "description": "This setting is used to configure default replication factor"
     },
     {
         "category": "KAFKA",
         "key": "maxBatchEventSizeInMb",
         "value": "2",
-        "type": "UserDefined"
+        "type": "UserDefined",
+        "description": "This setting is used to configure max batch event size in Mb"
+
     },
     {
         "category": "KAFKA",
         "key": "maxEventSizeInMb",
         "value": "1",
-        "type": "SYSTEM"
+        "type": "SYSTEM",
+        "description": "This setting is used to configure max event size in Mb"
+
     },
     {
         "category": "DATA_API",
         "key": "entryTopicMasterDataset",
         "value": `${env
-        }.masterdata.ingest`,
+            }.masterdata.ingest`,
         "type": "SYSTEM"
     },
     {
         "category": "DATA_API",
         "key": "entryTopicDataset",
         "value": `${env
-        }.ingest`,
+            }.ingest`,
         "type": "SYSTEM"
     },
     {
@@ -191,7 +199,7 @@ export default [
         "type": "SYSTEM"
     },
     {
-        "category": "nodeOfNodes",
+        "category": "BACKUP",
         "key": "metricsStoreBackupFrequency",
         "value": "DAILY",
         "type": "SYSTEM"
