@@ -55,3 +55,5 @@ CREATE TABLE IF NOT EXISTS "oauth_clients" (
   created_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   last_updated_on TIMESTAMP NULL
 );
+
+INSERT INTO "oauth_users" ("id", "user_name", "password", "first_name", "last_name", "email_address", "created_on", "last_updated_on") VALUES ('1', 'obsrv_admin', 'enDoPvTAxFSd', 'obsrv', 'admin', 'admin@obsrv.in', NOW(), NOW());
