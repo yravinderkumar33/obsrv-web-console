@@ -34,6 +34,10 @@ export default {
       CLIENT_SECRET: env.AUTH_KEYCLOAK_CLIENT_SECRET || "SCWHeF9HgtJ5BjmJFruk2IW15a5auueq",
       PUBLIC_CLIENT: env.AUTH_KEYCLOAK_PUBLIC_CLIENT || "false",
       SSL_REQUIRED: env.AUTH_KEYCLOAK_SSL_REQUIRED || "external"
+    },
+    GOOGLE: {
+      CLIENT_ID: env.AUTH_GOOGLE_CLIENT_ID || "test-google-client",
+      CLIENT_SECRET: env.AUTH_GOOGLE_CLIENT_SECRET || "test-google-client-secret",
     }
   }
 };

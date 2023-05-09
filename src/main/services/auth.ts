@@ -6,6 +6,7 @@ import { Strategy as ClientPasswordStrategy } from 'passport-oauth2-client-passw
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import { v4 } from "uuid";
 var KeyCloakStrategy = require('passport-keycloak-oauth2-oidc').Strategy;
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import userService from './oauthUsers';
 import clientService from './oauthClients';
 import accessTokenService from './oauthAccessTokens';
@@ -14,8 +15,11 @@ import appConfig from '../../shared/resources/appConfig';
 
 
 enum PROVIDERS {
-    KEYCLOAK = "keycloak"
+    KEYCLOAK = "keycloak",
+    GOOGLE = "google"
 }
+
+const emailAddressErrorMessage = "email address is required field for authentication";
 
 passport.use(new LocalStrategy(
     (username, password, done) => {
@@ -61,8 +65,8 @@ passport.use(new BearerStrategy(
             if (token.user_id) {
                 const user = await userService.findById(token.user_id)
                 if (!user) return done(null, false);
-                    //TODO: To keep this simple, restricted scopes are not implemented,
-                    done(null, user, { scope: '*' });
+                //TODO: To keep this simple, restricted scopes are not implemented,
+                done(null, user, { scope: '*' });
             } else {
                 const client = clientService.findByClientId(token.client_id)
                 if (!client) return done(null, false);
@@ -83,32 +87,64 @@ passport.use(new KeyCloakStrategy({
     sslRequired: appConfig.AUTH.KEYCLOAK.SSL_REQUIRED,
     authServerURL: appConfig.AUTH.KEYCLOAK.URL,
     callbackURL: `${appConfig.APP_BASE_URL}/api/auth/keycloak/callback`
-  },
-  (accessToken: string, refreshToken: string, profile: any, done: any) => {
-    if(!profile.email) {
-        return done(new Error("email is required field"))
-    }
-    // check if user exists then return user , otherwise create user and return the user
-    userService.find({email_address: profile.email}).then((user: any) => {
-        return done(null, user)
-    }).catch((error:any) => {
-        if(error === "user_not_found") {
-            const userInfo: User = {
-                id: v4(),
-                user_name: profile.email,
-                created_on: new Date().toISOString(),
-                provider: PROVIDERS.KEYCLOAK,
-                email_address: profile.email
-
-            }
-            userService.create(userInfo).then((user: User) => {
-                return done(null, user)
-            }).catch((error: any) => {
-                return done(error)
-            });
-        } else {
-            return done(error)
+},
+    (accessToken: string, refreshToken: string, profile: any, done: any) => {
+        if (!profile.email) {
+            return done(new Error(emailAddressErrorMessage))
         }
-    })
-  }
+        // check if user exists then return user , otherwise create user and return the user
+        userService.find({ email_address: profile.email }).then((user: any) => {
+            return done(null, user)
+        }).catch((error: any) => {
+            if (error === "user_not_found") {
+               return createUser(profile.email, PROVIDERS.KEYCLOAK, done)
+            } else {
+                return done(error)
+            }
+        })
+    }
 ));
+
+
+passport.use(new GoogleStrategy({
+    clientID: appConfig.AUTH.GOOGLE.CLIENT_ID,
+    clientSecret: appConfig.AUTH.GOOGLE.CLIENT_SECRET,
+    callbackURL: `${appConfig.APP_BASE_URL}/api/auth/google/callback`
+},
+    (accessToken, refreshToken, profile, done) => {
+        if (profile.emails && profile.emails?.length <= 0) {
+            return done(new Error(emailAddressErrorMessage))
+        }
+
+        const emailAddress = profile?.emails && profile?.emails[0]['value']
+        if (!emailAddress) {
+            return done(new Error(emailAddressErrorMessage))
+        }
+
+        userService.find({ email_address: emailAddress }).then((user: any) => {
+            return done(null, user)
+        }).catch((error: any) => {
+            if (error === "user_not_found") {
+                return createUser(emailAddress, PROVIDERS.GOOGLE, done)
+            } else {
+                return done(error)
+            }
+        })
+    }
+))
+
+const createUser = (emailAddress: string, provider: string, done: any) => {
+    const userInfo: User = {
+        id: v4(),
+        user_name: emailAddress,
+        created_on: new Date().toISOString(),
+        provider: provider,
+        email_address: emailAddress
+
+    }
+    userService.create(userInfo).then((user: User) => {
+        return done(null, user)
+    }).catch((error: any) => {
+        return done(error)
+    });
+}
