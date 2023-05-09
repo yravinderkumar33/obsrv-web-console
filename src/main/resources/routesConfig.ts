@@ -75,6 +75,26 @@ export default [
                     }
                 ]
 
+            },
+            {
+                path: 'google',
+                routes: [
+                    {
+                        path: '',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('google', { scope: ['profile','email'] })
+                        ],
+                    },  
+                    {
+                        path: 'callback',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('google', { successReturnToOrRedirect: '/', failureRedirect: '/login' })
+                        ],
+                    }
+                ]
+
             }
         ],
     },
