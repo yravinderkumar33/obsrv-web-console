@@ -392,12 +392,16 @@ export const metricsMetadata = [
                     xs: 12,
                     sm: 6,
                     md: 4,
-                    lg: 3
+                    lg: 4
                 },
                 metadata: [
                     {
                         description: "This chart shows the current success backup count",
                         chart: <ReportCard primary="0" secondary="Success Backups Count" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'backup_count.query')} />
+                    },
+                    {
+                        description: "This chart shows the total size of deep storage.",
+                        chart: <ReportCard primary="0" secondary="Deep Storage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'deep_storage_total.query')} />
                     }
                 ]
             },

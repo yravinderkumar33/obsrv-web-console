@@ -72,13 +72,10 @@ export default {
         "query": 'avg_over_time(sum by (entity) (node_query_response_time)[$interval:$res])'
     },
     "data_usage_growth": {
-        "query": 'max(sum(minio_bucket_usage_total_bytes{job="loki-minio"}) by (instance,server))'
-    },
-    "deep_storage_used": {
-        "query": 'topk(1, sum(minio_cluster_capacity_usable_total_bytes{job="loki-minio"}) by (instance)) - topk(1, sum(minio_cluster_capacity_usable_free_bytes{job="loki-minio"}) by (instance))'
+        "query": 'sum by (job) (s3_objects_size_sum_bytes)'
     },
     "deep_storage_total": {
-        "query": 'topk(1, sum(minio_cluster_capacity_usable_free_bytes{job="loki-minio"}) by (instance)) '
+        "query": 'sum(s3_objects_size_sum_bytes)'
     },
     "api_failure_percentage": {
         "query": "((sum_over_time(sum by (job) (node_failed_api_calls)[$interval:30s]) / sum_over_time(sum by (job) (node_total_api_calls)[$interval:30s]))*100)"
