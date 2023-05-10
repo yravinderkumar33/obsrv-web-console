@@ -32,6 +32,7 @@ const dataValidation = {
     type: 'radio',
     justifyContents: 'flex-start',
     name: 'dataValidation',
+    noChildForm: true,
     fields: [
         {
             name: "dataValidation",
