@@ -25,47 +25,82 @@ const addRequiredFields = (
     })
 }
 
-export const getNesting = (payload: any, jsonSchemaData: any) => {
-    const data = _.reduce(payload, (acc: any, current: any) => {
-        const { column } = current;
-        const [parent]: any = _.split(column, '.');
-        const existing = acc[parent] || [];
-        acc[parent] = [...existing, current];
-        return acc;
-    }, {});
-    return nestedToColumns(data, jsonSchemaData);
+// const reduceColumnsToParent = (payload: any) => {
+//     return _.reduce(payload, (acc: any, current: any) => {
+//         const { column } = current;
+//         const [parent]: any = _.split(column, '.');
+//         const existing = acc[parent] || [];
+//         acc[parent] = [...existing, current];
+//         return acc;
+//     }, {});
+// }
+
+const insertProperties = (data: any) => data.flatMap((item: any, index: any) => (index === data.length - 1 ? [item] : [item, 'properties']));
+
+const transformData = (data: any, jsonSchemaData: any) => {
+    return _.reduce(data, (result: any, obj) => {
+        const columns = obj.column.split('.');
+        let parent: any = result;
+        columns.forEach((column: any, index: any) => {
+            const originalColumn = obj.column;
+            let rootType = _.cloneDeep(columns).slice(0, -1);
+            const columnWithoutDots = column.replace(/\./g, '');
+            let subRows: any = _.get(parent, 'subRows');
+            if (!subRows) {
+                subRows = [];
+                parent.subRows = subRows;
+            }
+            let subRow = _.find(subRows, { column: columnWithoutDots });
+            if (!subRow) {
+                subRow = { column: columnWithoutDots, originalColumn, type: _.get(jsonSchemaData, ['properties', ...insertProperties(rootType), 'type']) };
+                subRows.push(subRow);
+            }
+            parent = subRow;
+            if (index === columns.length - 1) {
+                Object.assign(subRow, _.omit(obj, ['column']));
+            }
+        });
+        return result;
+    }, { "subRows": [] });
 }
 
-export const nestedToColumns = (payload: any, jsonSchemaData: any) => {
-    return _.reduce(payload, (acc: any, current: any) => {
-        const property = current;
-        const existing = acc || [];
-        if (_.values(property).length === 1) {
-            let [data] = property;
-            data = { ...data, originalColumn: data.column };
-            acc = [...existing, data];
-        }
-        else if (property.length > 1) {
-            const subRows = property;
-            const [element] = property;
-            const [parent] = _.split(element?.column, ".");
-            const subRowsData = subRows.map((item: any) => (
-                {
-                    ...item,
-                    column: item.column.replace(`${parent}.`, ''),
-                    originalColumn: item.column,
-                }
-            ));
-            const data = {
-                column: parent,
-                type: _.get(jsonSchemaData, ['properties', parent, 'type']),
-                subRows: subRowsData,
-            }
-            acc = [...existing, data];
-        }
-        return acc;
-    }, []);
+export const getNesting = (payload: any, jsonSchemaData: any) => {
+    // const data = reduceColumnsToParent(payload);
+    const dataTest: any = transformData(payload, jsonSchemaData);
+    // return nestedToColumns(data, jsonSchemaData);
+    return dataTest.subRows;
 }
+
+// export const nestedToColumns = (payload: any, jsonSchemaData: any) => {
+//     return _.reduce(payload, (acc: any, current: any,) => {
+//         const property = current;
+//         const existing = acc || [];
+//         if (_.values(property).length === 1) {
+//             let [data] = property;
+//             data = { ...data, originalColumn: data.column };
+//             acc = [...existing, data];
+//         }
+//         else if (property.length > 1) {
+//             const subRows = property;
+//             const [element] = property;
+//             const [parent] = _.split(element?.column, ".");
+//             const subRowsData = subRows.map((item: any) => (
+//                 {
+//                     ...item,
+//                     column: item.column.replace(`${parent}.`, ''),
+//                     originalColumn: item.column,
+//                 }
+//             ));
+//             const data = {
+//                 column: parent,
+//                 type: _.get(jsonSchemaData, ['properties', parent, 'type']),
+//                 subRows: subRowsData,
+//             }
+//             acc = [...existing, data];
+//         }
+//         return acc;
+//     }, []);
+// }
 
 const flatten = (schemaObject: Record<string, any>) => {
     let schemaObjectData = schemaObject;
