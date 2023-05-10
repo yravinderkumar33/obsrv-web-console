@@ -11,7 +11,7 @@ const AnalyticsDataCard = (props: any) => {
             <MainCard content={false} style={{ height: '100%' }}>
                 <Box p={2.25} height="100%">
                     <Stack spacing={0.5} height="100%">
-                        <Typography align='center' variant="h1" mb={2}>
+                        <Typography align='center' variant="h5" mb={2}>
                             {title}
                         </Typography>
                         <Stack direction="row" alignItems="center">
