@@ -26,6 +26,7 @@ import { renderActionsCell, renderColumnCell, renderDataTypeCell, renderRequired
 import ExpandingTable from 'components/ExpandingTable';
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
+import interactIds  from 'data/telemetry/interact.json';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -282,8 +283,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         <Typography variant="body2" color="secondary" mr={1}>
                             Filter Suggestion by:
                         </Typography>
-                        {columnFilters.map((filter) => <Chip
-                            data-edataid="dataset:list:columns"
+                        {columnFilters.map((filter) => 
+                        <Chip
+                            data-edataid={interactIds.dataset_list_columns}
                             data-objectid={`filter: ${filter.label}`}
                             data-objecttype={master ? 'masterDataset' : 'dataset'}
                             key={filter.label}
@@ -306,6 +308,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     <Box display="flex" justifyContent="space-evenly" alignItems="center">
                         <IconButtonWithTips
                             tooltipText="View all suggestions"
+                            data-edataid={interactIds.view_suggestions}
+                            data-objectid="view:suggestions"
+                            data-objecttype="dataset"
                             icon={<FolderViewOutlined style={{ fontSize: '1.25rem' }} />}
                             handleClick={handleSuggestionsView}
                             buttonProps={{ size: "large" }}

@@ -11,7 +11,7 @@ import { addState, updateState } from "store/reducers/wizard";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
-import { interactIds } from "data/telemetry/interactIds";
+import  interactIds  from "data/telemetry/interact.json";
 import JSONataPlayground from "components/JSONataPlayground";
 import * as yup from "yup";
 import { useFormik } from 'formik';
@@ -119,7 +119,7 @@ const AddNewField = (props: any) => {
                 {onClose ? (
                     <IconButton
                         id="iconButton"
-                        data-edataid={interactIds.button.icon.menu.close}
+                        data-edataid={interactIds.sidebar_close}
                         data-objectid="closeOutlined:addNewField"
                         data-objecttype="dataset"
                         aria-label="close"
@@ -158,7 +158,7 @@ const AddNewField = (props: any) => {
                             <Grid item xs={12} display="flex" alignItems="center" justifyContent="flex-end">
                                 <Box mx={2}>
                                     <StandardWidthButton
-                                        data-edataid="jsonata:editor:open"
+                                        data-edataid={interactIds.jsonata}
                                         data-objectid="jsonata"
                                         data-objecttype="dataset"
                                         onClick={handleClick}
@@ -170,8 +170,7 @@ const AddNewField = (props: any) => {
                                     </StandardWidthButton>
                                 </Box>
                                 <StandardWidthButton
-                                    data-edataid={interactIds.dataset.edit.add.transformation}
-                                    data-objectid={newFieldForm.values}
+                                    data-edataid={interactIds.add_dataset}
                                     data-objecttype="dataset"
                                     variant="contained"
                                     onClick={_ => updateAdditionalField()}

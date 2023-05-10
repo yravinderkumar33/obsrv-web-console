@@ -14,7 +14,7 @@ import { addState } from "store/reducers/wizard";
 import { useNavigate } from "react-router";
 import { error } from "services/toaster";
 import { updateDenormConfig } from "services/dataset";
-import { interactIds } from "data/telemetry/interactIds";
+import interactIds from "data/telemetry/interact.json"
 import { StandardWidthButton } from "components/styled/Buttons";
 
 const { spacing } = config;
@@ -108,9 +108,9 @@ const DataDenorm = (props: any) => {
             Header: 'Delete',
             Cell: ({ value, cell }: any) => {
                 return <IconButton
-                    data-edataid={interactIds.masterDataset.create.delete.denorm}
-                    data-objectid="delete"
-                    data-objecttype="masterDataset"
+                data-edataid={`${interactIds.delete_daatset_denorm}:master`}
+                data-objectid="deleteOutlined:masterDataset"
+                data-objecttype="masterDataset"
                     size="large"
                     onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
                     <DeleteOutlined style={{ fontSize: '1.25rem' }} />
@@ -128,7 +128,7 @@ const DataDenorm = (props: any) => {
                     </Typography>
                     <Box>
                         <StandardWidthButton
-                            data-edataid={interactIds.masterDataset.create.add.denorm}
+                            data-edataid={`${interactIds.add_dataset_denorm}:master`}
                             data-objectid="createMasterDataset"
                             data-objecttype="masterDataset"
                             onClick={_ => openCreateMasterDataset()}
@@ -174,7 +174,7 @@ const DataDenorm = (props: any) => {
                 <Stack spacing={spacing} direction="row" justifyContent="flex-end" my={2}>
                     <Box>
                         <StandardWidthButton
-                            data-edataid={interactIds.masterDataset.create.add.denorm}
+                            data-edataid={`${interactIds.add_dataset_denorm_field}:master`}
                             data-objectid="addDenormField"
                             data-objecttype="masterDataset"
                             variant="contained"
@@ -189,7 +189,7 @@ const DataDenorm = (props: any) => {
                     </Box>
                     <Box>
                         <StandardWidthButton
-                            data-edataid={interactIds.masterDataset.create.add.denorm}
+                            data-edataid={`${interactIds.add_dataset_denorm}:master`}
                             data-objectid="createMasterDataset"
                             data-objecttype="masterDataset"
                             onClick={_ => openCreateMasterDataset()}

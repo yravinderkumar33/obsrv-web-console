@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { addState } from "store/reducers/wizard";
-import { interactIds } from "data/telemetry/interactIds";
+import interactIds  from "data/telemetry/interact.json";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 const { spacing } = config;
 
@@ -80,7 +80,7 @@ const InputAccordion = (props: any) => {
                         actions.map((action: any) => {
                             return (
                                 <Button
-                                    data-edataid={`dataset:transformation:input`}
+                                    data-edataid={interactIds.add_dataset_transformation}
                                     data-objectid={`input:${action?.label}`}
                                     data-objecttype="dataset"
                                     size="large"
@@ -100,8 +100,8 @@ const InputAccordion = (props: any) => {
             id: 'actions',
             Cell: ({ value, cell }: any) => {
                 return <IconButton
-                    data-edataid={interactIds.dataset.edit.delete.transformation}
-                    data-objectid="deleteOutline"
+                    data-edataid={interactIds.delete_dataset_transformation}
+                    data-objectid="deleteOutlined:datasetCell"
                     data-objecttype="dataset"
                     onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}
                 >
@@ -131,7 +131,7 @@ const InputAccordion = (props: any) => {
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
             <Grid item xs={12} textAlign="end" my={2}>
                 <Button
-                    data-edataid={`dataset:input:${label}`}
+                    data-edataid={`${interactIds.add_dataset_transformation}:${label}`}
                     data-objectid={label}
                     data-objecttype="dataset"
                     onClick={_ => setDialogOpen(true)}

@@ -50,10 +50,14 @@ export const generateImpressionEvent = ({ object, edata }: any) => {
   logEvent(event);
 }
 
-const generateStartEvent = () => {
-
+export const generateStartEvent = ( {object, edata}:any) => {
+  const defaultPayload = getOptions();
+  const event = {...defaultPayload, eid: "START", object, edata};
+  logEvent(event);
 }
 
-const generateEndEvent = () => {
-
+export const generateEndEvent = ({ object, edata }: any) => {
+  const defaultPayload = getOptions();
+  const event = {...defaultPayload, eid: "END", object, edata};
+  logEvent(event);
 }

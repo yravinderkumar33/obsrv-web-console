@@ -12,7 +12,7 @@ import initialConfig from 'data/initialConfig'
 import AddRollup from "./transformationDialogs/AddRollup"
 import { useDispatch, useSelector } from "react-redux"
 import { addState, updateState } from "store/reducers/wizard"
-import { interactIds } from "data/telemetry/interactIds"
+import interactIds  from "data/telemetry/interact.json"
 
 const { spacing } = config;
 
@@ -65,11 +65,11 @@ const RollupConfiguration = (props: any) => {
         {
             Header: 'Actions',
             Cell: ({ value, cell }: any) => {
-                return <IconButton
-                    data-edataid={interactIds.rollup.delete}
-                    data-objectid="deleteRollup"
-                    data-objecttype="dataset"
-                    variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
+                return <IconButton 
+                        data-edataid={interactIds.delete_dataset_rollup}
+                        data-objectid="deleteOutlined:rollup"
+                        data-objecttype="dataset"
+                        variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
                     <DeleteOutlined />
                 </IconButton>
             }
@@ -121,7 +121,7 @@ const RollupConfiguration = (props: any) => {
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="row" justifyContent="flex-end">
                     <Button
-                        data-edataid={interactIds.rollup.add}
+                        data-edataid={interactIds.add_dataset_rollup}
                         data-objectid="addRollup"
                         data-objecttype="dataset"
                         onClick={_ => setDialogOpen(true)}

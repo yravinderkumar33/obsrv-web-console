@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
 import PasteData from './PasteData';
 import { readJsonFileContents } from 'services/utils';
 import { error, success } from 'services/toaster';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds  from 'data/telemetry/interact.json';
 
 const tabProps = (index: number) => ({ id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` });
 
@@ -88,13 +88,13 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema 
                     <Box sx={{ width: '100%' }}>
                         <Tabs value={tabIndex} onChange={handleTabChange} variant="fullWidth">
                             <Tab
-                                data-edataid={interactIds.schema.upload}
+                                data-edataid={interactIds.upload_JSON}
                                 data-objectid="uploadJSON"
                                 data-objecttype="dataset"
                                 label={allowSchema ? "Upload JSON Data/Schema" : "Upload JSON Data"}
                                 {...tabProps(0)} />
                             <Tab
-                                data-edataid={interactIds.schema.edit}
+                                data-edataid={interactIds.edit_JSON}
                                 data-objectid="editJSON"
                                 data-objecttype="dataset"
                                 label={allowSchema ? "Paste/Edit JSON Data/Schema" : "Paste/Edit JSON Data"}
