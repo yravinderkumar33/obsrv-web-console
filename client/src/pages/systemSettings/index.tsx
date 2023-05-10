@@ -7,6 +7,8 @@ import { addSystemSettings } from 'store/reducers/systemSettings';
 import AccordionSection from 'components/AccordionSection';
 import SystemSetting from './components/SystemSetting';
 import { Typography } from '@mui/material';
+import useImpression from 'hooks/useImpression';
+import pageIds from 'data/telemetry/pageIds';
 
 const getSectionsConfig = (sections: Record<string, any>) => {
     return _.entries(sections).map((section: any) => {
@@ -24,6 +26,7 @@ const SystemSettings = () => {
     const settings = useSelector((state: any) => _.get(state, 'systemSettings'));
     const formattedSettingsPayload = transformSystemSettingsResponse(settings);
     const sections = getSectionsConfig(formattedSettingsPayload);
+    useImpression({ type: "detail", pageid: _.get(pageIds, ['systemSettings', 'list']) });
 
     const allSettings = async () => {
         const settings = await getAllSettings({});

@@ -5,6 +5,7 @@ export default {
   login: 'login',
   metrics: {
     infra: 'metrics:infra',
+    overallInfra: 'metrics:infra',
     api: 'metrics:api',
     ingestion: 'metrics:ingestion',
     processing: 'metrics:processing',
@@ -32,5 +33,8 @@ export default {
       field: "fields",
       review: "review"
     }
+  },
+  systemSettings: {
+    list: "systemSettings:list"
   }
 };
