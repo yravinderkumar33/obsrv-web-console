@@ -5,7 +5,8 @@ import { BasicStrategy } from 'passport-http';
 import { Strategy as ClientPasswordStrategy } from 'passport-oauth2-client-password';
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import { v4 } from "uuid";
-var KeyCloakStrategy = require('passport-keycloak-oauth2-oidc').Strategy;
+const KeyCloakStrategy = require('passport-keycloak-oauth2-oidc').Strategy;
+const ActiveDirectoryStrategy = require('passport-activedirectory').Strategy;
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import userService from './oauthUsers';
 import clientService from './oauthClients';
@@ -97,7 +98,7 @@ passport.use(new KeyCloakStrategy({
             return done(null, user)
         }).catch((error: any) => {
             if (error === "user_not_found") {
-               return createUser(profile.email, PROVIDERS.KEYCLOAK, done)
+                return createUser(profile.email, PROVIDERS.KEYCLOAK, done)
             } else {
                 return done(error)
             }
@@ -132,6 +133,23 @@ passport.use(new GoogleStrategy({
         })
     }
 ))
+
+
+passport.use(new ActiveDirectoryStrategy({
+    integrated: false,
+    ldap: {
+        url: 'ldap://my.domain.com',
+        baseDN: 'DC=my,DC=domain,DC=com',
+        username: 'readuser@my.domain.com',
+        password: 'readuserspassword'
+    }
+}, (profile: any, ad: any, done: any) => {
+    console.log(profile, ad, done)
+    // ad.isUserMemberOf(profile._json.dn, 'AccessGroup', function (err:any , isMember: any) {
+    //     if (err) return done(err)
+    //     return done(null, profile)
+    // })
+}))
 
 const createUser = (emailAddress: string, provider: string, done: any) => {
     const userInfo: User = {
