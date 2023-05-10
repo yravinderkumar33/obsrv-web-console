@@ -5,7 +5,7 @@ import { Box, Button, Grid, Stack, Typography } from '@mui/material';
 
 import config from 'config';
 import error404 from 'assets/images/maintenance/Error404.png';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds  from 'data/telemetry/interact.json';
 
 function Error404() {
   return (
@@ -34,7 +34,7 @@ function Error404() {
               The requested page does not exists.
             </Typography>
             <Button 
-            data-edataid="button:home"
+            data-edataid={interactIds.page_not_found}
             data-objectid={config.defaultPath}
             data-objecttype="404"
             component={Link} to={config.defaultPath} variant="contained">

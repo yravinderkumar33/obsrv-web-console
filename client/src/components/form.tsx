@@ -3,22 +3,22 @@ import * as _ from 'lodash';
 import { Autocomplete, Checkbox, FormControl, FormControlLabel, FormGroup, FormHelperText, FormLabel, Grid, InputLabel, MenuItem, Radio, Select, Stack, TextField, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import { ToggleButton } from '@mui/material';
-import { useCallback, useEffect } from 'react';
+import interactIds from 'data/telemetry/interact.json';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
 
 const useStyles = makeStyles((theme: any) => ({
     formControl: { margin: theme.spacing(1), minWidth: 120 },
     selectEmpty: { marginTop: theme.spacing(2) },
 }));
 
-const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, subscribeErrors = null, size = {}, enableReinitialize = false, formComponent = null, customUpdate = null, }: any) => {
+const MUIForm = forwardRef((props: any, ref: any) => {
+    const { initialValues, validationSchema = null, onSubmit, fields, children, subscribe = null, subscribeErrors = null, size = {}, enableReinitialize = false, formComponent = null, customUpdate = null } = props
     const classes: any = useStyles;
     let { xs = 12, sm = 12, lg = 12 } = size;
-    const form = useFormik({
-        initialValues: initialValues,
-        validationSchema: validationSchema,
-        onSubmit: onSubmit,
-        enableReinitialize: enableReinitialize,
-    });
+
+    const form = useFormik({ initialValues, validationSchema, onSubmit, enableReinitialize });
+    const formRef = useRef(form);
+    if (ref) { ref.current = formRef.current; }
 
     const handleAutoComplete = (setFieldValue: any, value: any, multiple: boolean, name: string) => {
         if (multiple) {
@@ -143,7 +143,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                             <InputLabel >{label}</InputLabel>
                                             <Select
                                                 name={name} id={name} label={label} value={_.get(form.values, name)} onChange={form.handleChange} onBlur={form.handleBlur}>
-                                                {selectOptions.map((option: any) => (<MenuItem data-edataid={`form:select:${option.value}`} value={option.value}>{option.label}</MenuItem>))}
+                                                {selectOptions.map((option: any) => (<MenuItem data-edataid={`${interactIds.form_select_option}:${option.label}`} value={option.value}>{option.label}</MenuItem>))}
                                             </Select>
                                         </FormControl>
                                     </Tooltip>
@@ -180,7 +180,7 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
                                             <ToggleButtonGroup exclusive color="info" aria-label="text alignment" onChange={form.handleChange} onBlur={form.handleBlur}>
                                                 {
                                                     selectOptions.map((option: any, index: number) => {
-                                                        return <ToggleButton data-edataid={`form:buttonGroup:${name}:${option.value}`} key={index} id={name} value={option.value} aria-label="first">
+                                                        return <ToggleButton data-edataid={`${interactIds.form_button}:${name}:${option.value}`} key={index} id={name} value={option.value} aria-label="first">
                                                             {option?.label}
                                                         </ToggleButton>
                                                     })
@@ -200,6 +200,6 @@ const MUIForm = ({ initialValues, validationSchema = null, onSubmit, fields, chi
             </Grid>
         </form>
     );
-};
+});
 
 export default MUIForm;

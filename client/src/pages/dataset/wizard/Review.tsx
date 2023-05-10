@@ -13,7 +13,8 @@ import IconButtonWithTips from 'components/IconButtonWithTips';
 import { DownloadOutlined } from '@ant-design/icons';
 import { updateJSONSchema } from 'services/json-schema';
 import { downloadJsonFile } from 'utils/downloadUtils';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds  from 'data/telemetry/interact.json';
+
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
 
@@ -52,7 +53,7 @@ const Final = ({ handleBack, master, edit }: any) => {
         <>
             <Box display="flex" justifyContent="flex-end" alignItems="center">
                 <IconButtonWithTips
-                    data-edataid={`${master ? 'masterDataset' : 'dataset'}:download:JSON`}
+                    data-edataid={`${master ? 'masterDataset': 'dataset'}:${interactIds.download_JSON}`}
                     data-objectid="downloadSchema"
                     data-objecttype={master ? 'masterDataset' : 'dataset'}
                     tooltipText="Download Schema"

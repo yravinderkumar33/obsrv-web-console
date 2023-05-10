@@ -2,7 +2,6 @@ import { Box, Chip, Stack, Typography, Paper, Tooltip } from '@mui/material';
 import MainCard from 'components/MainCard';
 import { RiseOutlined, FallOutlined } from '@ant-design/icons';
 import globalConfig from 'data/initialConfig';
-import { interactIds } from 'data/telemetry/interactIds';
 
 const AnalyticsDataCard = (props: any) => {
     const { color = 'primary', title, count, percentage, isLoss, children, description = '', id } = props;

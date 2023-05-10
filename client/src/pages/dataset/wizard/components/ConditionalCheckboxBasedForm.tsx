@@ -4,10 +4,9 @@ import { Checkbox, FormControlLabel, FormGroup, Grid, Radio, Stack, Box, Typogra
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useFormik } from "formik";
 import config from 'data/initialConfig';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
-import { interactIds } from "data/telemetry/interactIds";
 import HtmlTooltip from "components/HtmlTooltip";
 import * as yup from "yup";
 const { spacing } = config;
@@ -17,7 +16,8 @@ const ConditionalCheckboxForm = (props: any) => {
     const { id, type = "checkbox", justifyContents = 'flex-start', fields, name, display = "column", noChildForm = false } = props;
     const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || {});
     const [childFormValue, setChildFormValues] = useState<any>({});
-    const [errors, subscribeErrors] = useState<any>(null);
+    const childFormRef = useRef([]);
+    const formikRef = useRef(null);
 
     const filterPredicate = (field: any) => {
         if (_.includes(_.get(existingState, 'formFieldSelection'), _.get(field, 'value'))) return true;
@@ -47,48 +47,44 @@ const ConditionalCheckboxForm = (props: any) => {
 
     const onSubmission = (value: any) => { };
 
-    useEffect(() => {
-        onSubmission(formValues);
-        const dataPresent = _.map(childFormValue, (item: any) => item === '' || !item);
-        if (noChildForm || (formValues[id].length > 1 && _.size(dataPresent) > 1 && !_.includes(dataPresent, true))) {
-            subscribeErrors(null);
+    const validateForm = async () => {
+        let validationPassed = true;
+
+        if (childFormRef.current) {
+            if (formikRef.current) {
+                const formikReference = formikRef.current as any
+                const validationStatus = await formikReference.validateForm(childFormValue);
+                validationPassed = _.size(validationStatus) === 0;
+            }
+        }
+
+        if (formValues[id].length > 1 && validationPassed) {
             persist(false);
         } else if (formValues[id].length === 1) {
-            subscribeErrors(null);
             persist(false);
         } else {
-            subscribeErrors({ 'error': true });
             persist({ 'error': true });
         }
-    }, [formValues, childFormValue,]);
+    }
+
+    useEffect(() => {
+        validateForm();
+    }, [formValues, childFormValue]);
 
     const handleParentFormChange = (e: any) => {
         formik.handleChange(e);
         setChildFormValues({});
-        subscribeErrors(null);
     }
 
     const getFormType = (metadata: Record<string, any>) => {
         const { name, value } = metadata;
         switch (type) {
             case "checkbox":
-                return <Checkbox
-                    data-edataid={interactIds.dataset.create.add.transformation}
-                    data-objectid={`buttonCheckbox-${value}`}
-                    data-objecttype="dataset"
-                    name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
+                return <Checkbox name={name} className="size-medium" checked={_.includes(_.get(formValues, name), value)} value={value} onChange={handleParentFormChange} />
             case "radio":
-                return <Radio
-                    data-edataid={interactIds.dataset.create.add.transformation}
-                    data-objectid={`buttonRadio-${value}`}
-                    data-objecttype="dataset"
-                    name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
+                return <Radio name={name} className="size-medium" checked={value === _.get(formValues, name)} value={value} onChange={handleParentFormChange} />
             default:
-                return <Checkbox
-                    data-edataid={interactIds.dataset.create.add.transformation}
-                    data-objectid={`buttonCheckbox-${value}`}
-                    data-objecttype="dataset"
-                    name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
+                return <Checkbox name={name} className="size-medium" value={value} onChange={handleParentFormChange} />
         }
     }
 
@@ -126,9 +122,16 @@ const ConditionalCheckboxForm = (props: any) => {
             const metadata = _.find(fields, ['value', value]);
             if (!metadata) return null;
             const { form, description, component, formComponent, topComponent, value: type, ...rest } = metadata;
+            childFormRef.current = form;
             const validations: any = {};
-            const data = _.map(form, (item) => { validations[item.name] = item.validationSchema });
+            _.forEach(form, formItem => {
+                const validationSchema = _.get(formItem, 'validationSchema')
+                if (!validationSchema) return;
+                validations[formItem.name] = validationSchema
+            });
+
             const validationSchemas = yup.object().shape(validations);
+
             return <>
                 {topComponent && <Grid item sm={12}>{topComponent}</Grid>}
                 {form && (
@@ -141,7 +144,7 @@ const ConditionalCheckboxForm = (props: any) => {
                             size={{ sm: 4, xs: 4, lg: 4 }}
                             formComponent={formComponent}
                             validationSchema={validationSchemas}
-                            subscribeErrors={subscribeErrors}
+                            ref={formikRef}
                         />
                     </Grid>)
                 }

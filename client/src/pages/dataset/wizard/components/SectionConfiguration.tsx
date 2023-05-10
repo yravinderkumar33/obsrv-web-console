@@ -53,11 +53,11 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
     const renderData = sections.filter(predicate);
 
     const verifyErrorsResolved = () => {
-        const currenState: any = _.cloneDeep(wizardState?.pages);
+        const currenState: any = _.cloneDeep(wizardState?.pages) || {};
         const sectionIds: any = _.map(renderData, 'id');
-        const error = _.map(sectionIds, (item: any) => _.get(currenState[item], 'error'));
-        const data = _.every(error, (item) => item === false || item === undefined);
-        return data;
+        const error = _.map(sectionIds, (sectionId: any) => _.get(currenState[sectionId], 'error'));
+        const isResolved = _.every(error, (item) => item === false || item === undefined);
+        return isResolved;
     }
 
     const gotoNextSection = () => {

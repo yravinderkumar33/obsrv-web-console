@@ -2,6 +2,7 @@ export default {
   home: {
     home: 'home'
   },
+  login: 'login',
   metrics: {
     infra: 'metrics:infra',
     api: 'metrics:api',

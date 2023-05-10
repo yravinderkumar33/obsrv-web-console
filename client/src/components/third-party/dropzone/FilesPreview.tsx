@@ -4,7 +4,7 @@ import IconButton from 'components/@extended/IconButton';
 import { DropzopType, FilePreviewProps } from 'types/dropzone';
 import { DeleteOutlined, FileTextOutlined } from '@ant-design/icons';
 import { CustomFile } from 'types/dropzone';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds  from 'data/telemetry/interact.json';
 
 function LinearProgressWithLabel({ value, theme, ...props }: any) {
     return (
@@ -82,7 +82,9 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
 
                         {onRemove && (
                             <IconButton
-                                data-edataid={interactIds.file.remove.one}
+                                data-edataid={`${interactIds.file_remove_single}:${key}`}
+                                data-objectid={`deleteOutlined:${name}:${type}`}
+                                data-objecttype="dataset"
                                 size="small"
                                 color="error"
                                 shape="rounded"

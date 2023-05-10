@@ -10,7 +10,7 @@ import { addState } from "store/reducers/wizard";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
-import { interactIds } from "data/telemetry/interactIds";
+import  interactIds  from "data/telemetry/interact.json";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import * as yup from "yup";
 import { StandardWidthButton } from "components/styled/Buttons";
@@ -101,7 +101,7 @@ const AddPIIDialog = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        data-edataid={interactIds.button.icon.menu.close}
+                        data-edataid={interactIds.sidebar_close}
                         data-objectid="closeOutlined:addPII"
                         data-objecttype="dataset"
                         onClick={onClose}
@@ -128,7 +128,7 @@ const AddPIIDialog = (props: any) => {
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
                 <StandardWidthButton
-                    data-edataid={interactIds.pii.add}
+                    data-edataid={interactIds.add_dataset_pii}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained"

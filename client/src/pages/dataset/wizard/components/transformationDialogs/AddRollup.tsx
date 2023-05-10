@@ -5,7 +5,7 @@ import MUIForm from "components/form";
 import { useState } from "react";
 import * as _ from 'lodash';
 import { useSelector } from "react-redux";
-import { interactIds } from "data/telemetry/interactIds";
+import  interactIds  from "data/telemetry/interact.json";
 import * as yup from "yup";
 import { StandardWidthButton } from 'components/styled/Buttons';
 
@@ -109,7 +109,7 @@ const AddRollup = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        data-edataid={interactIds.button.icon.menu.close}
+                        data-edataid={interactIds.sidebar_close}
                         data-objectid="closeCircleOutlined:addNewRollup"
                         data-objecttype="dataset"
                         onClick={onClose}
@@ -136,7 +136,7 @@ const AddRollup = (props: any) => {
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
                 <StandardWidthButton
-                    data-edataid={interactIds.rollup.add}
+                    data-edataid={interactIds.add_dataset_field}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained"
