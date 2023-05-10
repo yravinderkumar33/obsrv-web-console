@@ -100,10 +100,12 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
         }
     };
 
+    const enableDedupeChecked = enableDedupe.includes("yes")
+
     const dedup_config = {
-        dedup_key: _.get(dedupeConfig, 'dedupeKey'),
-        dedup_period: _.get(dedupeConfig, 'dedupePeriod'),
-        drop_duplicates: enableDedupe.includes("yes"),
+        dedup_key: enableDedupeChecked && _.get(dedupeConfig, 'dedupeKey'),
+        dedup_period: enableDedupeChecked && _.get(dedupeConfig, 'dedupePeriod'),
+        drop_duplicates: enableDedupe.includes("yes")
     }
 
     const router_config = {

@@ -73,7 +73,7 @@ const dataValidation = {
 const transformer = (formMeta: Array<Record<string, any>>, context: Record<string, any>) => {
     const schema = _.get(context, 'redux.jsonSchema.data.schema');
     if (!schema) return formMeta;
-    const flattenedData = flattenSchema(schema);
+    flattenSchema(schema);
     return formMeta;
 }
 

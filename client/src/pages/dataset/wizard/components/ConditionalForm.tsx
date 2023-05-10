@@ -1,5 +1,5 @@
 import MUIForm from "components/form";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as _ from 'lodash';
 import { Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,46 +15,58 @@ const ConditionalForm = (props: any) => {
     const { questionSelection, optionSelection } = existingState;
     const [response, subscribe] = useState<any>(questionSelection || {});
     const [childFormValue, setChildFormValues] = useState<any>(optionSelection || {});
-    const [formErrors, subscribeErrors] = useState<any>(null);
     const selectedOption = _.get(response, _.get(question, 'name'));
     const onSubmission = (value: any) => { };
     const [config, setConfig] = useState<any>({});
+    const formikRef = useRef(null);
 
     const selectForm = () => {
         const optionMeta = _.get(options, [selectedOption]);
         if (optionMeta) {
             const { form, description, size = { sm: 6, xs: 6, lg: 6 } } = optionMeta;
             const validations: any = {};
-            const data = _.map(form, (item) => { validations[item.name] = item.validationSchema });
+
+            _.forEach(form, formItem => {
+                const validationSchema = _.get(formItem, 'validationSchema')
+                if (!validationSchema) return;
+                validations[formItem.name] = validationSchema
+            });
+
             const validationSchemas = yup.object().shape(validations);
             setConfig({ form, description, size, validationSchemas });
             return true;
         } else {
             setConfig({});
-            subscribeErrors(null);
             return false;
         };
     }
 
     const persistState = (state: Record<string, any>, error?: any) => dispatch(addState({ id, ...state, error: error }));
 
+    const validateForm = async () => {
+        let validationPassed = true;
+
+        if (formikRef.current) {
+            const formikReference = formikRef.current as any
+            const validationStatus = await formikReference.validateForm(childFormValue);
+            validationPassed = _.size(validationStatus) === 0;
+        }
+
+        persistState({ questionSelection: response, optionSelection: childFormValue }, validationPassed ? false : { error: true });
+    }
+
+    useEffect(() => {
+        setChildFormValues({});
+    }, [response]);
+
     useEffect(() => {
         const data = selectForm();
         if (!data) {
-            onSubmission({});
             persistState({ questionSelection: response, optionSelection: childFormValue }, false);
             return;
         }
         else {
-            const dataPresent = _.map(childFormValue, (item: any) => item === '' || !item);
-            if (_.size(dataPresent) > 0 && !_.includes(dataPresent, true)) {
-                subscribeErrors(null);
-                persistState({ questionSelection: response, optionSelection: childFormValue }, false);
-            } else {
-                subscribeErrors({ 'error': true });
-                persistState({ questionSelection: response, optionSelection: childFormValue }, { 'error': true });
-            }
-            return;
+            validateForm();
         }
     }, [selectedOption, childFormValue]);
 
@@ -70,7 +82,7 @@ const ConditionalForm = (props: any) => {
                         fields={_.get(config, 'form')}
                         size={_.get(config, 'size')}
                         validationSchema={_.get(config, 'validationSchemas')}
-                        subscribeErrors={subscribeErrors}
+                        ref={formikRef}
                     />
                 </Grid>
             ) : null}
