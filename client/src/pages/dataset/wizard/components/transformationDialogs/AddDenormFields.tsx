@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 import { useDispatch, useSelector } from "react-redux";
 import { error } from "services/toaster";
 import { updateDenormConfig } from "services/dataset";
-import { interactIds } from "data/telemetry/interactIds";
+import  interactIds  from "data/telemetry/interact.json";
 import * as yup from "yup";
 import { StandardWidthButton } from 'components/styled/Buttons';
 
@@ -117,7 +117,7 @@ const AddDenormField = (props: any) => {
                 </Typography>
                 {onClose ? (
                     <IconButton
-                        data-edataid={interactIds.button.icon.menu.close}
+                        data-edataid={interactIds.sidebar_close}
                         data-objectid="closeOutlined:denormField"
                         data-objecttype="dataset"
                         aria-label="close"
@@ -137,9 +137,9 @@ const AddDenormField = (props: any) => {
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
                 <StandardWidthButton
-                    data-edataid={interactIds.dataset.create.add.denorm}
+                    data-edataid={interactIds.add_dataset_denorm_field}
                     data-objectid={value}
-                    data-objecttype="dataset"
+                    data-objecttype="masterDataset"
                     variant="contained"
                     onClick={_ => addField()}
                     size="large"

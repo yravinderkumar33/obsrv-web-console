@@ -1,6 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import HtmlTooltip from "./HtmlTooltip";
-import { interactIds } from "data/telemetry/interactIds";
+import  interactIds  from "data/telemetry/interact.json";
 
 interface Props {
     tooltipText: string;
@@ -14,7 +14,7 @@ interface Props {
 const IconButtonWithTips = ({ tooltipText, handleClick = () => { }, tooltipProps, buttonProps, label, icon, }: Props) => {
     return (
         <HtmlTooltip title={tooltipText} {...tooltipProps}>
-            <Button data-edataid={interactIds.button.icon.tooltip} data-objectid={`iconButton:${label}`} onClick={handleClick} startIcon={icon} {...buttonProps}>
+            <Button data-edataid={`${interactIds.button_icon_tooltip}:${tooltipText}`} onClick={handleClick} startIcon={icon} {...buttonProps}>
                 <Typography variant="body2" color="text.primary">{label}</Typography>
             </Button>
         </HtmlTooltip>

@@ -8,7 +8,7 @@ import { CheckCircleOutlined, FileSearchOutlined, InfoCircleOutlined } from '@an
 import * as _ from 'lodash';
 import { CardTitle } from 'components/styled/Cards';
 import SuggestionBox from 'components/SuggestionBox';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds  from 'data/telemetry/interact.json';
 
 interface Props {
     flattenedData: Array<Record<string, any>>;
@@ -104,7 +104,7 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                     </Typography>
                                     <Chip
                                         id="chip"
-                                        data-edataid={interactIds.suggestions.required}
+                                        data-edataid={interactIds.suggestions_must_fix}
                                         data-objectid={requiredFilter}
                                         data-objecttype="dataset"
                                         onDelete={requiredFilter === "true" ? () => setRequiredFilter('') : undefined}
@@ -121,7 +121,7 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                     </Typography>
                                     <Chip
                                         id="chip"
-                                        data-edataid={interactIds.suggestions.required}
+                                        data-edataid={interactIds.suggestions_must_fix}
                                         data-objectid={requiredFilter}
                                         data-objecttype="dataset"
                                         onDelete={requiredFilter === "false" ? () => setRequiredFilter('') : undefined}

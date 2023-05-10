@@ -11,7 +11,7 @@ import { Stack } from "@mui/material";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { v4 } from "uuid";
-import { interactIds } from "data/telemetry/interactIds";
+import  interactIds  from "data/telemetry/interact.json";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import JSONataPlayground from "components/JSONataPlayground";
 import * as yup from "yup";
@@ -152,7 +152,7 @@ const AddTransformationExpression = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        data-edataid={interactIds.button.icon.menu.close}
+                        data-edataid={interactIds.sidebar_close}
                         data-objectid="closeOutlined:addTransformation"
                         data-objecttype="dataset"
                         onClick={onClose}
@@ -193,7 +193,7 @@ const AddTransformationExpression = (props: any) => {
                         </StandardWidthButton>
                     </Box>}
                 <StandardWidthButton
-                    data-edataid={interactIds.dataset.edit.add.transformation}
+                    data-edataid={interactIds.add_dataset_transformation}
                     data-objectid={value}
                     data-objecttype="dataset"
                     variant="contained" autoFocus
