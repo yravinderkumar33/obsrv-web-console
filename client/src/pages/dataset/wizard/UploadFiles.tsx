@@ -12,7 +12,7 @@ import Box from '@mui/material/Box';
 import PasteData from './PasteData';
 import { readJsonFileContents } from 'services/utils';
 import { error, success } from 'services/toaster';
-import interactIds  from 'data/telemetry/interact.json';
+import interactIds from 'data/telemetry/interact.json';
 
 const tabProps = (index: number) => ({ id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` });
 
@@ -36,11 +36,23 @@ function TabPanel(props: any) {
     );
 }
 
-const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema = false, subscribeErrors = null, }: any) => {
+const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema = false, subscribeErrors = null, generateInteractTelemetry }: any) => {
     const dispatch = useDispatch();
     const [tabIndex, setTabIndex] = useState(0);
 
     const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+
+        switch (newValue) {
+            case 0: {
+                generateInteractTelemetry({ edata: { id: interactIds.upload_sample_file } })
+                break;
+            }
+            case 1: {
+                generateInteractTelemetry({ edata: { id: interactIds.editor_schema } })
+                break;
+            }
+        }
+
         setTabIndex(newValue);
     };
 
@@ -88,15 +100,9 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema 
                     <Box sx={{ width: '100%' }}>
                         <Tabs value={tabIndex} onChange={handleTabChange} variant="fullWidth">
                             <Tab
-                                data-edataid={interactIds.upload_JSON}
-                                data-objectid="uploadJSON"
-                                data-objecttype="dataset"
                                 label={allowSchema ? "Upload JSON Data/Schema" : "Upload JSON Data"}
                                 {...tabProps(0)} />
                             <Tab
-                                data-edataid={interactIds.edit_JSON}
-                                data-objectid="editJSON"
-                                data-objecttype="dataset"
                                 label={allowSchema ? "Paste/Edit JSON Data/Schema" : "Paste/Edit JSON Data"}
                                 {...tabProps(1)} />
                         </Tabs>

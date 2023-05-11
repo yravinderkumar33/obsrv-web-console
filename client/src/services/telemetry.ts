@@ -28,7 +28,7 @@ const logEvent = (event: Record<string, any>) => {
   console.log(event);
 }
 
-const generateInteractEvent = ({ object, edata, eid }: any) => {
+export const generateInteractEvent = ({ object, edata, eid = "INTERACT" }: any) => {
   const defaultPayload = getOptions();
   const event = { ...defaultPayload, eid, object, edata };
   logEvent(event);
@@ -37,10 +37,10 @@ const generateInteractEvent = ({ object, edata, eid }: any) => {
 export const globalInteractEventsHandler = (event: any) => {
   const target = _.get(event, 'target');
   const dataset = _.get(target, 'dataset');
-  if (!(target && _.size(dataset) !== 0)) return;
+  if (!(target && _.has(dataset, 'edataid'))) return;
   const { edataid, edatatype = 'CLICK', objectid, objecttype, objectversion = '1.0.0' } = dataset as Record<string, any>;
   const edata = { id: edataid, type: edatatype };
-  const object = { ...(objectid && objecttype && { objectid, objecttype, objectversion }) };
+  const object = { ...(objectid && objecttype && { id: objectid, type: objecttype, ver: objectversion }) };
   generateInteractEvent({ edata, object, eid: 'INTERACT' })
 }
 
@@ -50,14 +50,14 @@ export const generateImpressionEvent = ({ object, edata }: any) => {
   logEvent(event);
 }
 
-export const generateStartEvent = ( {object, edata}:any) => {
+export const generateStartEvent = ({ object, edata }: any) => {
   const defaultPayload = getOptions();
-  const event = {...defaultPayload, eid: "START", object, edata};
+  const event = { ...defaultPayload, eid: "START", object, edata };
   logEvent(event);
 }
 
 export const generateEndEvent = ({ object, edata }: any) => {
   const defaultPayload = getOptions();
-  const event = {...defaultPayload, eid: "END", object, edata};
+  const event = { ...defaultPayload, eid: "END", object, edata };
   logEvent(event);
 }

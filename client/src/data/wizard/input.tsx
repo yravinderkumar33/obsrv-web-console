@@ -6,7 +6,7 @@ import { downloadJSONFile } from 'services/utils';
 import VerifyKafka from 'pages/dataset/wizard/components/VerifyKafka';
 import { generateSample } from 'data/sampleBatchEvent';
 import DataKeySelection from 'pages/dataset/wizard/components/DataKeySelection';
-import  interactIds  from 'data/telemetry/interact.json';
+import interactIds from 'data/telemetry/interact.json';
 
 const downloadBatchConfig = () => {
     downloadJSONFile(generateSample("observations"), "sampleBatchConfig.json");
@@ -36,10 +36,7 @@ const dataFormatQues = {
             description: "Select this option if you wish to send multiple events at once for this dataset.",
             topComponent: <>
                 <Button
-                data-edataid={`${interactIds.button_download_events}`}
-                data-objectid="downloadOutlined:dataset:batchEvents"
-                data-objecttype="dataset"
-                   
+                    data-edataid={`${interactIds.download_sample_batch_file}`}
                     onClick={_ => downloadBatchConfig()}
                     variant="text"
                     sx={{ my: 0.5, fontSize: '1.25rem' }}
@@ -91,7 +88,7 @@ export const sections = [
         componentType: 'box',
         navigation: {
             next: 'dataSource'
-        },
+        }
     },
     {
         id: 'dataSource',

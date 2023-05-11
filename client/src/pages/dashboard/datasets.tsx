@@ -15,7 +15,7 @@ import pageIds from 'data/telemetry/pageIds';
 const ClusterHealth = () => {
     const dataset = useSelector((state: any) => state.dataset)
     const dispatch = useDispatch();
-    useImpression({ type: "detail", pageid: _.get(pageIds, 'dataset.list') });
+    useImpression({ type: "list", pageid: _.get(pageIds, 'dataset.list') });
     const showNoDatasetsError = (message = 'No Datasets Found') => <AlertMessage color='error' messsage={message} icon={BugFilled} />
     const [loading, setLoading] = useState(false);
 

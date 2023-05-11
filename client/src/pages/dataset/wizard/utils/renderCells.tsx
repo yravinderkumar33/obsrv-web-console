@@ -1,17 +1,13 @@
 import React from "react";
 import {
-    Box, Typography, Button, Dialog, DialogTitle, Select,
-    DialogContent, TextareaAutosize, FormControl, MenuItem,
-    Popover, FormControlLabel, Stack, IconButton,
+    Box, Typography, Button, Dialog, DialogTitle, Select, DialogContent, TextareaAutosize, FormControl, MenuItem, Popover, FormControlLabel, Stack, IconButton,
 } from "@mui/material";
 import RequiredSwitch from "components/RequiredSwitch";
-import {
-    CloseCircleOutlined, PlusOutlined, CheckOutlined,
-    DeleteOutlined, InfoCircleOutlined,
-} from '@ant-design/icons';
+import { CloseCircleOutlined, PlusOutlined, CheckOutlined, DeleteOutlined, InfoCircleOutlined, } from '@ant-design/icons';
 import * as _ from "lodash";
 import HtmlTooltip from "components/HtmlTooltip";
 import { VerticalOverflowText } from "components/styled/Typography";
+import interactIds from 'data/telemetry/interact.json';
 
 const renderColumnCell = ({
     cell, setFlattenedData, persistState, value,
@@ -280,9 +276,11 @@ const renderRequiredCell = ({
     }
 }
 
-const renderActionsCell = ({ cell, value, setSelection, setOpenAlertDialog, theme }: any) => {
+const renderActionsCell = ({ cell, setSelection, setOpenAlertDialog, theme, generateInteractTelemetry }: any) => {
     const row = cell?.row?.original || {};
+
     const handleDeleteColumn = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.delete_schema } })
         setSelection(row);
         setOpenAlertDialog(true);
     }

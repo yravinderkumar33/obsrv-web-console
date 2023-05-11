@@ -83,8 +83,6 @@ export default function FilesPreview({ showList = false, files, onRemove, type }
                         {onRemove && (
                             <IconButton
                                 data-edataid={`${interactIds.file_remove_single}:${key}`}
-                                data-objectid={`deleteOutlined:${name}:${type}`}
-                                data-objecttype="dataset"
                                 size="small"
                                 color="error"
                                 shape="rounded"

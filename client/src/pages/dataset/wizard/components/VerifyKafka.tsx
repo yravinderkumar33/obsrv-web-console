@@ -5,15 +5,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { verifyKafkaConnection } from 'services/dataset';
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import interactIds  from 'data/telemetry/interact.json';
+import interactIds from 'data/telemetry/interact.json';
 
-const VerifyKafka = () => {
+const VerifyKafka = (props: any) => {
+    const { generateInteractTelemetry } = props;
     const dispatch = useDispatch();
     const state: any = useSelector((state: any) => state);
     const connectorInfo: any = _.get(state, ['wizard', 'pages', 'dataSource', 'value']);
     const [loading, setLoading] = useState(false);
 
     const testConnection = async () => {
+        generateInteractTelemetry({ edata: { id: interactIds.verify_kafka_connection } });
         setLoading(true);
         try {
             const data = await verifyKafkaConnection(connectorInfo);
@@ -33,9 +35,6 @@ const VerifyKafka = () => {
 
     return (
         <LoadingButton
-            data-edataid={interactIds.verify_kafka_connection}
-            data-objectid="kafka:testConnection"
-            data-objecttype="dataset"
             onClick={_ => testConnection()}
             variant="outlined"
             color="primary"

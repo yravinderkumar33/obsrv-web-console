@@ -143,7 +143,7 @@ const MUIForm = forwardRef((props: any, ref: any) => {
                                             <InputLabel >{label}</InputLabel>
                                             <Select
                                                 name={name} id={name} label={label} value={_.get(form.values, name)} onChange={form.handleChange} onBlur={form.handleBlur}>
-                                                {selectOptions.map((option: any) => (<MenuItem data-edataid={`${interactIds.form_select_option}:${option.label}`} value={option.value}>{option.label}</MenuItem>))}
+                                                {selectOptions.map((option: any) => (<MenuItem value={option.value}>{option.label}</MenuItem>))}
                                             </Select>
                                         </FormControl>
                                     </Tooltip>
@@ -180,7 +180,7 @@ const MUIForm = forwardRef((props: any, ref: any) => {
                                             <ToggleButtonGroup exclusive color="info" aria-label="text alignment" onChange={form.handleChange} onBlur={form.handleBlur}>
                                                 {
                                                     selectOptions.map((option: any, index: number) => {
-                                                        return <ToggleButton data-edataid={`${interactIds.form_button}:${name}:${option.value}`} key={index} id={name} value={option.value} aria-label="first">
+                                                        return <ToggleButton key={index} id={name} value={option.value} aria-label="first">
                                                             {option?.label}
                                                         </ToggleButton>
                                                     })

@@ -1,32 +1,21 @@
 import { useMemo } from 'react';
-import {
-    Grid, Box, Stack, Typography,
-    Accordion, useTheme, AccordionDetails,
-    Paper, Collapse, AccordionSummary, Chip,
-} from '@mui/material';
+import { Grid, Box, Stack, Typography, Accordion, useTheme, AccordionDetails, Paper, Collapse, AccordionSummary, Chip, } from '@mui/material';
 import { CheckCircleOutlined, FileSearchOutlined, InfoCircleOutlined } from '@ant-design/icons';
 import * as _ from 'lodash';
 import { CardTitle } from 'components/styled/Cards';
 import SuggestionBox from 'components/SuggestionBox';
-import interactIds  from 'data/telemetry/interact.json';
+import interactIds from 'data/telemetry/interact.json';
 
 interface Props {
     flattenedData: Array<Record<string, any>>;
     showSuggestions: boolean;
     setRequiredFilter: React.Dispatch<React.SetStateAction<string>>;
     requiredFilter: string;
+    generateInteractTelemetry?: any
 }
 
-const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setRequiredFilter, requiredFilter, }: Props) => {
+const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setRequiredFilter, requiredFilter, generateInteractTelemetry }: Props) => {
     const theme = useTheme();
-    const getSuggestionCount = useMemo(() => {
-        let count = 0;
-        _.map(flattenedData, (item) => {
-            if (_.has(item, 'suggestions'))
-                count += item.suggestions.length;
-        });
-        return count;
-    }, [flattenedData]);
 
     const getRequiredFields = useMemo(() => {
         let requiredCount = 0;
@@ -54,7 +43,6 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                         <AccordionSummary aria-controls="data-type-suggestions" id="data-type-suggestions-header">
                             <Typography variant="h5">
                                 {`Data type suggestions`}
-                                {/*- Total (${getSuggestionCount})*/}
                             </Typography>
                         </AccordionSummary>
                         <AccordionDetails sx={{ p: 1, maxHeight: 270, overflow: 'auto' }}>
@@ -104,11 +92,14 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                     </Typography>
                                     <Chip
                                         id="chip"
-                                        data-edataid={interactIds.suggestions_must_fix}
-                                        data-objectid={requiredFilter}
-                                        data-objecttype="dataset"
-                                        onDelete={requiredFilter === "true" ? () => setRequiredFilter('') : undefined}
-                                        onClick={() => setRequiredFilter("true")}
+                                        onDelete={requiredFilter === "true" ? () => {
+                                            setRequiredFilter('');
+                                            generateInteractTelemetry({ edata: { id: interactIds.remove_mark_as_required_filter } });
+                                        } : undefined}
+                                        onClick={() => {
+                                            setRequiredFilter("true");
+                                            generateInteractTelemetry({ edata: { id: interactIds.add_mark_as_required_filter } });
+                                        }}
                                         label={'Review all fields marked as required'}
                                         sx={{ mx: 2 }}
                                         variant="filled"
@@ -121,11 +112,14 @@ const CollapsibleSuggestions = ({ showSuggestions = false, flattenedData, setReq
                                     </Typography>
                                     <Chip
                                         id="chip"
-                                        data-edataid={interactIds.suggestions_must_fix}
-                                        data-objectid={requiredFilter}
-                                        data-objecttype="dataset"
-                                        onDelete={requiredFilter === "false" ? () => setRequiredFilter('') : undefined}
-                                        onClick={() => setRequiredFilter("false")}
+                                        onDelete={requiredFilter === "false" ? () => {
+                                            setRequiredFilter('');
+                                            generateInteractTelemetry({ edata: { id: interactIds.remove_mark_as_optional_filter } });
+                                        } : undefined}
+                                        onClick={() => {
+                                            setRequiredFilter("false");
+                                            generateInteractTelemetry({ edata: { id: interactIds.add_mark_as_optional_filter } });
+                                        }}
                                         label={'Review all fields marked as optional'}
                                         sx={{ mx: 2 }}
                                         variant="filled"

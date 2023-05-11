@@ -11,14 +11,14 @@ import { Stack } from "@mui/material";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { v4 } from "uuid";
-import  interactIds  from "data/telemetry/interact.json";
+import interactIds from "data/telemetry/interact.json";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import JSONataPlayground from "components/JSONataPlayground";
 import * as yup from "yup";
 import { StandardWidthButton } from "components/styled/Buttons";
 
 const AddTransformationExpression = (props: any) => {
-    const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
+    const { id, data, onClose, selection, setSelection, actions, mainDatasetId, generateInteractTelemetry } = props;
     const dispatch = useDispatch();
     const [value, subscribe] = useState<any>({});
     const filteredData = _.filter(data, payload => {
@@ -95,6 +95,7 @@ const AddTransformationExpression = (props: any) => {
     }
 
     const updateTransformation = () => {
+        generateInteractTelemetry({ edata: { id: `${interactIds.add_dataset_transformation}:${id}` } });
         onSubmission({});
         if (_.keys(formErrors).length > 0) { return; }
         const { column, transformation, expression } = value;
@@ -152,9 +153,6 @@ const AddTransformationExpression = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        data-edataid={interactIds.sidebar_close}
-                        data-objectid="closeOutlined:addTransformation"
-                        data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
                             color: (theme) => theme.palette.grey[500],
@@ -181,9 +179,8 @@ const AddTransformationExpression = (props: any) => {
             <DialogActions sx={{ px: 4 }}>
                 {_.get(value, 'transformation') === 'custom' &&
                     <Box mx={2}>
-                        <StandardWidthButton data-edataid="jsonata:editor:open"
-                            data-objectid="jsonata"
-                            data-objecttype="dataset"
+                        <StandardWidthButton
+                            data-edataid={interactIds.jsonata}
                             onClick={handleClick}
                             sx={{ width: 'auto' }}
                         >
@@ -193,9 +190,6 @@ const AddTransformationExpression = (props: any) => {
                         </StandardWidthButton>
                     </Box>}
                 <StandardWidthButton
-                    data-edataid={interactIds.add_dataset_transformation}
-                    data-objectid={value}
-                    data-objecttype="dataset"
                     variant="contained" autoFocus
                     onClick={_ => updateTransformation()}
                     size="large"

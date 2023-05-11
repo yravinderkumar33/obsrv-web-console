@@ -11,13 +11,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { addState } from "store/reducers/wizard";
-import interactIds  from "data/telemetry/interact.json";
+import interactIds from "data/telemetry/interact.json";
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 const { spacing } = config;
 
 const InputAccordion = (props: any) => {
     const dispatch = useDispatch();
-    const { id, title, description, actions, data, label, dialog } = props;
+    const { id, title, description, actions, data, label, dialog, generateInteractTelemetry } = props;
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selection, setSelection] = useState<Array<any>>([]);
     const existingState = useSelector((state: any) => _.get(state, ['wizard', 'pages', id, 'selection']));
@@ -25,6 +25,7 @@ const InputAccordion = (props: any) => {
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
     const deleteSelection = async (record: Record<string, any>) => {
+        generateInteractTelemetry({ edata: { id: interactIds.delete_dataset_transformation } })
         const dispatchError = () => dispatch(error({ message: "Unable to delete the config item" }))
         try {
             const data = await deleteTransformations(record.id);
@@ -80,9 +81,6 @@ const InputAccordion = (props: any) => {
                         actions.map((action: any) => {
                             return (
                                 <Button
-                                    data-edataid={interactIds.add_dataset_transformation}
-                                    data-objectid={`input:${action?.label}`}
-                                    data-objecttype="dataset"
                                     size="large"
                                     key="one"
                                     variant={_transformationType === action?.value ? 'contained' : 'outlined'}
@@ -100,9 +98,6 @@ const InputAccordion = (props: any) => {
             id: 'actions',
             Cell: ({ value, cell }: any) => {
                 return <IconButton
-                    data-edataid={interactIds.delete_dataset_transformation}
-                    data-objectid="deleteOutlined:datasetCell"
-                    data-objecttype="dataset"
                     onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}
                 >
                     <DeleteOutlined style={{ fontSize: '1.25rem' }} />
@@ -111,8 +106,13 @@ const InputAccordion = (props: any) => {
         }
     ]
 
+    const onDialogClose = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.dialog_close } });
+        setDialogOpen(false);
+    }
+
     const updateDialogProps = () => {
-        return React.cloneElement(dialog, { id, actions, selection, setSelection, data, onClose: () => setDialogOpen(false), mainDatasetId, });
+        return React.cloneElement(dialog, { id, actions, selection, setSelection, data, onClose: onDialogClose, mainDatasetId, generateInteractTelemetry });
     }
 
     const renderTable = () => {
@@ -131,10 +131,10 @@ const InputAccordion = (props: any) => {
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
             <Grid item xs={12} textAlign="end" my={2}>
                 <Button
-                    data-edataid={`${interactIds.add_dataset_transformation}:${label}`}
-                    data-objectid={label}
-                    data-objecttype="dataset"
-                    onClick={_ => setDialogOpen(true)}
+                    onClick={_ => {
+                        setDialogOpen(true);
+                        generateInteractTelemetry({ edata: { id: `${interactIds.add_dataset_transformation}:${id}:dialog:open` } })
+                    }}
                     startIcon={<AddOutlinedIcon fontSize="large" />}
                 >
                     <Typography variant="body2" fontWeight="500">

@@ -14,6 +14,7 @@ import { useTheme } from '@mui/material';
 import grafanaIcon from 'assets/images/icons/grafana_icon.svg';
 import pageIds from 'data/telemetry/pageIds';
 import useImpression from 'hooks/useImpression';
+import intereactIds from 'data/telemetry/interact.json'
 
 const MetricsDetails = (props: any) => {
     const { id } = props;
@@ -69,7 +70,7 @@ const MetricsDetails = (props: any) => {
         return (
             <Tooltip title="Navigate to Grafana Dashboard" onClick={_ => navigateToGrafana(link)}>
                 <IconButton
-                    data-edataid={pageIds.metrics.infra}
+                    data-edataid={`${intereactIds.grafana_navigate}:${metricId}`}
                     color="secondary" variant="light" sx={{ color: 'text.primary', bgcolor: iconBackColor, ml: 0.75 }}>
                     <Avatar alt="Gradana" src={grafanaIcon} />
                 </IconButton>

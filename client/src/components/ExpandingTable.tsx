@@ -137,7 +137,6 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
                             else if (isResolved) return { bgcolor: `#EAFBEE` };
                             else return {};
                         }
-                        const rowProps = row.getRowProps();
 
                         return (
                             <Fragment key={i}>
@@ -154,8 +153,6 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
                                         )
                                     }
                                 </TableRow>
-                                {/* Enable for Asynchronously loading data */}
-                                {/* {row.isExpanded && renderRowSubComponent({ row, rowProps, visibleColumns })} */}
                             </Fragment>
                         );
                     })}

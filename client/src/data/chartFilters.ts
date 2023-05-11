@@ -2,6 +2,7 @@ export default {
     default: [
         {
             label: 'Today',
+            telemetryId: "today",
             value: 1140,
             default: true,
             step: '5m',
@@ -10,6 +11,7 @@ export default {
         },
         {
             label: 'Last 7 Days',
+            telemetryId: "lastSevenDays",
             value: 10080,
             step: '30m',
             granularity: "fifteen_minute",
@@ -17,6 +19,7 @@ export default {
         },
         {
             label: 'Last 15 Days',
+            telemetryId: "lastFifteenDays",
             value: 21600,
             step: '1h',
             granularity: "thirty_minute",
@@ -24,6 +27,7 @@ export default {
         },
         {
             label: 'Last 30 Days',
+            telemetryId: "lastThirtyDays",
             value: 43200,
             step: '6h',
             granularity: "hour",
@@ -33,12 +37,14 @@ export default {
     variant1: [
         {
             label: 'Today',
+            telemetryId: "today",
             value: 1140,
             default: true,
             step: '5m',
         },
         {
             label: 'Last 7 Days',
+            telemetryId: "lastSevenDays",
             value: 10080,
             step: '30m'
         }

@@ -13,12 +13,12 @@ import IconButtonWithTips from 'components/IconButtonWithTips';
 import { DownloadOutlined } from '@ant-design/icons';
 import { updateJSONSchema } from 'services/json-schema';
 import { downloadJsonFile } from 'utils/downloadUtils';
-import interactIds  from 'data/telemetry/interact.json';
+import interactIds from 'data/telemetry/interact.json';
 
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
 
-const Final = ({ handleBack, master, edit }: any) => {
+const Final = ({ handleBack, master, edit, generateInteractTelemetry }: any) => {
     const storeState: any = useSelector((state: any) => state);
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const jsonSchema = _.get(wizardState, 'pages.jsonSchema.schema');
@@ -31,6 +31,7 @@ const Final = ({ handleBack, master, edit }: any) => {
 
     const handleDownloadButton = () => {
         if (jsonSchema && flattenedData) {
+            generateInteractTelemetry({ edata: { id: interactIds.download_JSON } })
             const data = updateJSONSchema(jsonSchema, { schema: flattenedData });
             downloadJsonFile(data, 'json-schema');
         }
@@ -38,6 +39,7 @@ const Final = ({ handleBack, master, edit }: any) => {
 
     const publish = async () => {
         try {
+            generateInteractTelemetry({ edata: { id: interactIds.save_dataset } })
             await publishDataset(wizardState, storeState, master);
             dispatch(fetchDatasetsThunk({}));
             dispatch(success({ message: 'Dataset Saved.' }));
@@ -47,15 +49,15 @@ const Final = ({ handleBack, master, edit }: any) => {
         }
     }
 
-    const gotoPreviousSection = () => handleBack();
+    const gotoPreviousSection = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.previous } })
+        handleBack();
+    }
 
     return (
         <>
             <Box display="flex" justifyContent="flex-end" alignItems="center">
                 <IconButtonWithTips
-                    data-edataid={`${master ? 'masterDataset': 'dataset'}:${interactIds.download_JSON}`}
-                    data-objectid="downloadSchema"
-                    data-objecttype={master ? 'masterDataset' : 'dataset'}
                     tooltipText="Download Schema"
                     icon={<DownloadOutlined style={{ fontSize: '1.25rem' }} />}
                     handleClick={handleDownloadButton}
@@ -71,18 +73,12 @@ const Final = ({ handleBack, master, edit }: any) => {
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
                             <Button
-                                data-edataid={`${master ? 'masterDataset' : 'dataset'}:review:${edit ? 'edit' : 'create'}`}
-                                data-objectid="previous"
-                                data-objecttype={master ? 'masterDataset' : 'dataset'}
                                 variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                 Previous
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
                             <Button
-                                data-edataid={`${master ? 'masterDataset' : 'dataset'}:review:${edit ? 'edit' : 'create'}`}
-                                data-objectid="saveDataset"
-                                data-objecttype={master ? 'masterDataset' : 'dataset'}
                                 variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>

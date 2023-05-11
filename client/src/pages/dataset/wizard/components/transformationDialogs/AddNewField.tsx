@@ -11,7 +11,7 @@ import { addState, updateState } from "store/reducers/wizard";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
-import  interactIds  from "data/telemetry/interact.json";
+import interactIds from "data/telemetry/interact.json";
 import JSONataPlayground from "components/JSONataPlayground";
 import * as yup from "yup";
 import { useFormik } from 'formik';
@@ -22,7 +22,7 @@ export const openJsonAtaEditor = () => {
 }
 
 const AddNewField = (props: any) => {
-    const { id, data, onClose, selection, setSelection, mainDatasetId, } = props;
+    const { id, data, onClose, selection, setSelection, mainDatasetId, generateInteractTelemetry } = props;
     const [evaluationData, setEvaluationData] = useState<string>('');
     const [transformErrors, setTransformErrors] = useState<boolean>(false);
     const dispatch = useDispatch();
@@ -61,6 +61,7 @@ const AddNewField = (props: any) => {
     }
 
     const updateAdditionalField = () => {
+        generateInteractTelemetry({ edata: { id: `${interactIds.add_dataset_transformation}:${id}` } });
         onSubmission({});
         if (_.keys(newFieldForm.errors).length > 0) { return; }
         const { column, transformation } = newFieldForm.values;
@@ -119,9 +120,6 @@ const AddNewField = (props: any) => {
                 {onClose ? (
                     <IconButton
                         id="iconButton"
-                        data-edataid={interactIds.sidebar_close}
-                        data-objectid="closeOutlined:addNewField"
-                        data-objecttype="dataset"
                         aria-label="close"
                         onClick={onClose}
                         sx={{
@@ -159,8 +157,6 @@ const AddNewField = (props: any) => {
                                 <Box mx={2}>
                                     <StandardWidthButton
                                         data-edataid={interactIds.jsonata}
-                                        data-objectid="jsonata"
-                                        data-objecttype="dataset"
                                         onClick={handleClick}
                                         sx={{ width: 'auto' }}
                                     >
@@ -170,8 +166,6 @@ const AddNewField = (props: any) => {
                                     </StandardWidthButton>
                                 </Box>
                                 <StandardWidthButton
-                                    data-edataid={interactIds.add_dataset}
-                                    data-objecttype="dataset"
                                     variant="contained"
                                     onClick={_ => updateAdditionalField()}
                                     size="large"

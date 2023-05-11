@@ -10,7 +10,7 @@ import PlaceholderContent from './PlaceholderContent';
 
 // types
 import { CustomFile, DropzopType, UploadMultiFileProps } from 'types/dropzone';
-import interactIds  from 'data/telemetry/interact.json';
+import interactIds from 'data/telemetry/interact.json';
 import { useEffect } from 'react';
 
 const DropzoneWrapper = styled('div')(({ theme }) => ({
@@ -80,10 +80,8 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
             >
                 <Stack {...(type === DropzopType.standard && { alignItems: 'center' })}>
                     <DropzoneWrapper
-                    data-edataid={interactIds.file_add_multiple}
-                    data-edatatype="DRAG&DROP"
-                    data-objectid={DropzopType.default}
-                    data-objecttype="dataset"
+                        data-edataid={interactIds.file_add_multiple}
+                        data-edatatype="DRAG&DROP"
                         {...getRootProps()}
                         sx={{
                             ...(type === DropzopType.standard && {
@@ -105,10 +103,8 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
                     </DropzoneWrapper>
                     {type === DropzopType.standard && files && files.length > 1 && (
                         <Button
-                        data-edataid={interactIds.file_remove_multiple}
-                        data-objectid={`${DropzopType.standard}:remove:multiple:files`}
-                        data-objecttype="dataset"
-                         variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
+                            data-edataid={interactIds.file_remove_multiple}
+                            variant="contained" color="error" size="extraSmall" onClick={onRemoveAll}>
                             Remove all
                         </Button>
                     )}
@@ -118,10 +114,8 @@ const MultiFileUpload = ({ error, showList = false, files, type, setFieldValue, 
             {type !== DropzopType.standard && files && files.length > 0 && (
                 <Stack direction="row" justifyContent="flex-end" spacing={1.5} sx={{ mt: 1.5 }}>
                     <Button
-                    data-edataid={interactIds.file_remove_multiple}
-                    data-objectid={`${DropzopType.default}:remove:multiple:files`}
-                    data-objecttype="dataset"
-                    color="inherit" size="small" onClick={onRemoveAll}>
+                        data-edataid={interactIds.file_remove_multiple}
+                        color="inherit" size="small" onClick={onRemoveAll}>
                         Remove all
                     </Button>
                 </Stack>

@@ -14,7 +14,7 @@ import { error } from 'services/toaster';
 const { spacing } = config;
 
 const FieldSection = (props: any) => {
-    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, master, section, noMasterNav, noGrid = false, ...rest } = props;
+    const { id, expanded, alwaysExpanded, title, description, componentType = "accordion", navigation, setExpanded, handleChange, index, master, section, noMasterNav, noGrid = false, generateInteractTelemetry, ...rest } = props;
     const theme = useTheme();
     const open = (id === expanded);
     const clientState: any = useSelector((state: any) => state?.wizard);

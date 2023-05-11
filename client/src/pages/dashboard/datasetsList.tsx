@@ -12,7 +12,7 @@ import { druidQueries } from 'services/druid';
 import dayjs from 'dayjs';
 import chartMeta from 'data/charts';
 import * as _ from 'lodash';
-import interactIds  from 'data/telemetry/interact.json';
+import interactIds from 'data/telemetry/interact.json';
 
 const connectors = ["Kafka"];
 const alertDialogContext = { title: 'Delete Dataset', content: 'Are you sure you want to delete this dataset ?' };
@@ -99,11 +99,7 @@ const DatasetsList = ({ datasets }: any) => {
                     const row = cell?.row?.original || {};
                     return <Grid container spacing={1} justifyContent="center">
                         <Grid item>
-                            <Chip
-                                data-edataid={`${interactIds.view_live_dataset}:${value}`}
-                                data-objectid={`live:dataset:type:${value}`}
-                                data-objecttype="datasetLive"
-                                color={'success'} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" /></Grid>
+                            <Chip color={'success'} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" /></Grid>
                     </Grid>
                 }
             },
@@ -115,11 +111,7 @@ const DatasetsList = ({ datasets }: any) => {
                     const row = cell?.row?.original || {};
                     return <Grid container spacing={1} justifyContent="center">
                         <Grid item>
-                            <Chip
-                                data-edataid={`${interactIds.view_live_dataset}:${value}`}
-                                data-objectid={`live:dataset:status:${value}`}
-                                data-objecttype="datasetLive"
-                                color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" />          </Grid>
+                            <Chip color={'success' || row?.color} label={typeof value == 'string' && value.toUpperCase().replace(/_/g, " ")} size="small" variant="light" />          </Grid>
                     </Grid>
                 }
             },
@@ -216,28 +208,29 @@ const DatasetsList = ({ datasets }: any) => {
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="View Metrics" onClick={(e: any) => navigateToPath(`/datasets/${row?.id}`)}>
                             <IconButton
-                                data-edataid={interactIds.view_live_dataset}
-                                data-objectid="dashboardOutlined:view:metrics"
-                                data-objecttype="datasetLive"
+                                data-edataid={interactIds.view_dataset_metrics}
+                                data-objectid={row?.dataset_id}
+                                data-objecttype="dataset"
                                 disabled={row?.type !== "dataset"} color="primary" size="large">
                                 < DashboardOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Create Events" onClick={(e: any) => navigateToPath(`/datasets/addEvents/${row?.id}/${row?.dataset_id}`)}>
                             <IconButton
-                                data-edataid={interactIds.create_live_dataset_events}
-                                data-objectid="databaseOutlined:create:events"
-                                data-objecttype="datasetLive"
+                                data-edataid={interactIds.push_dataset_events}
+                                data-objectid={row?.dataset_id}
+                                data-objecttype="dataset"
                                 color="primary" size="large">
                                 <DatabaseOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
                             <IconButton
-                                data-edataid={interactIds.edit_live_dataset}
-                                data-objectid="editOutlined:dataset"
-                                data-objecttype="datasetLive"
-                                color="primary" size="large" disabled>
+                                data-edataid={interactIds.edit_dataset}
+                                data-objectid={row?.dataset_id}
+                                data-objecttype="dataset"
+                                color="primary" size="large"
+                                disabled>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

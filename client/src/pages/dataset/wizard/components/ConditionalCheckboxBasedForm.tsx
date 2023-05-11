@@ -4,7 +4,7 @@ import { Checkbox, FormControlLabel, FormGroup, Grid, Radio, Stack, Box, Typogra
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useFormik } from "formik";
 import config from 'data/initialConfig';
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
 import HtmlTooltip from "components/HtmlTooltip";
@@ -142,7 +142,7 @@ const ConditionalCheckboxForm = (props: any) => {
                             onSubmit={(value: any) => onSubmission(value)}
                             fields={form}
                             size={{ sm: 4, xs: 4, lg: 4 }}
-                            formComponent={formComponent}
+                            formComponent={formComponent && React.cloneElement(formComponent, { ...props })}
                             validationSchema={validationSchemas}
                             ref={formikRef}
                         />

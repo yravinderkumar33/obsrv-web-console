@@ -117,9 +117,6 @@ const AddDenormField = (props: any) => {
                 </Typography>
                 {onClose ? (
                     <IconButton
-                        data-edataid={interactIds.sidebar_close}
-                        data-objectid="closeOutlined:denormField"
-                        data-objecttype="dataset"
                         aria-label="close"
                         onClick={onClose}
                         sx={{

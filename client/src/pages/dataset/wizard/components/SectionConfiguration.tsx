@@ -12,7 +12,7 @@ import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
 import WizardNavigator from './WizardNavigator';
 
-const SectionsConfiguration = ({ handleNext, handleBack, index, section, master, edit }: any) => {
+const SectionsConfiguration = ({ handleNext, handleBack, index, section, master, edit, generateInteractTelemetry }: any) => {
     const sections = _.get(allSections, section) || [];
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const jsonSchemaData = _.get(wizardState, 'pages.columns.state.schema') || [];
@@ -47,6 +47,7 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
                 section={section}
                 index={index}
                 master={master}
+                generateInteractTelemetry={generateInteractTelemetry}
             />
         );
     }
@@ -89,6 +90,8 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
                     gotoNextSection={gotoNextSection}
                     gotoPreviousSection={gotoPreviousSection}
                     nextDisabled={!verifyErrorsResolved()}
+                    edit={edit}
+                    generateInteractTelemetry={generateInteractTelemetry}
                 />
             </Grid>
         </Grid>

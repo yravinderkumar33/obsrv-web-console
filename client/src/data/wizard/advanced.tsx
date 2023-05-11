@@ -1,27 +1,5 @@
-import { confirmationOptions } from "data/forms/common";
-import { forms } from 'data/forms';
 import DataRetentionAndArchival from "pages/dataset/wizard/components/DataRetentionAndArchival";
 import RollupConfiguration from "pages/dataset/wizard/components/RollupConfiguration";
-
-const retentionQues = {
-    question: {
-        name: "question",
-        label: "Configure Retention Period ?",
-        type: 'select',
-        required: true,
-        selectOptions: confirmationOptions
-    },
-    options: {
-        yes: {
-            form: forms.advanced_retention,
-            description: "Select Retention Period in Days"
-        },
-        no: {
-            form: null,
-            description: null
-        }
-    }
-}
 
 export const sections = [
     {

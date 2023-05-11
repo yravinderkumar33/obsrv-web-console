@@ -10,13 +10,13 @@ import { addState } from "store/reducers/wizard";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
-import  interactIds  from "data/telemetry/interact.json";
+import interactIds from "data/telemetry/interact.json";
 import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import * as yup from "yup";
 import { StandardWidthButton } from "components/styled/Buttons";
 
 const AddPIIDialog = (props: any) => {
-    const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
+    const { id, data, onClose, selection, setSelection, actions, mainDatasetId, generateInteractTelemetry } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
     const [errors, subscribeErrors] = useState<any>(null);
@@ -49,6 +49,7 @@ const AddPIIDialog = (props: any) => {
     }
 
     const updatePIIMeta = () => {
+        generateInteractTelemetry({ edata: { id: `${interactIds.add_dataset_transformation}:${id}` } });
         onSubmission({});
         if (_.keys(errors).length > 0) { return; }
         const { column, transformation } = value;
@@ -101,9 +102,6 @@ const AddPIIDialog = (props: any) => {
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        data-edataid={interactIds.sidebar_close}
-                        data-objectid="closeOutlined:addPII"
-                        data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
                             color: (theme) => theme.palette.grey[500],
@@ -128,9 +126,6 @@ const AddPIIDialog = (props: any) => {
             </DialogContent>
             <DialogActions sx={{ px: 4 }}>
                 <StandardWidthButton
-                    data-edataid={interactIds.add_dataset_pii}
-                    data-objectid={value}
-                    data-objecttype="dataset"
                     variant="contained"
                     onClick={_ => updatePIIMeta()}
                     size="large"
