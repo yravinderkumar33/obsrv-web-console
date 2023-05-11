@@ -26,7 +26,7 @@ import { renderActionsCell, renderColumnCell, renderDataTypeCell, renderRequired
 import ExpandingTable from 'components/ExpandingTable';
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
-import interactIds  from 'data/telemetry/interact.json';
+import interactIds from 'data/telemetry/interact.json';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -130,8 +130,8 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 editable: 'false',
                 Cell: ({ row }: any) => {
                     const collapseIcon = row.isExpanded ? <ExpandMoreIcon /> : <ChevronRightIcon />;
-                    return row.canExpand && (
-                        <Box sx={{ fontSize: '1rem', color: 'text.secondary' }} {...row.getToggleRowExpandedProps()}>
+                    return row.canExpand && row.depth === 0 && (
+                        <Box sx={{ fontSize: '1rem', }} {...row.getToggleRowExpandedProps()}>
                             {collapseIcon}
                         </Box>
                     );
@@ -283,21 +283,21 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         <Typography variant="body2" color="secondary" mr={1}>
                             Filter Suggestion by:
                         </Typography>
-                        {columnFilters.map((filter) => 
-                        <Chip
-                            data-edataid={interactIds.dataset_list_columns}
-                            data-objectid={`filter: ${filter.label}`}
-                            data-objecttype={master ? 'masterDataset' : 'dataset'}
-                            key={filter.label}
-                            aria-label='filter-button'
-                            clickable
-                            label={filter.label}
-                            sx={{ mx: 0.5 }}
-                            color={filter.color}
-                            size="medium"
-                            variant="outlined"
-                            onClick={() => handleFilterChange(filter)}
-                        />
+                        {columnFilters.map((filter) =>
+                            <Chip
+                                data-edataid={interactIds.dataset_list_columns}
+                                data-objectid={`filter: ${filter.label}`}
+                                data-objecttype={master ? 'masterDataset' : 'dataset'}
+                                key={filter.label}
+                                aria-label='filter-button'
+                                clickable
+                                label={filter.label}
+                                sx={{ mx: 0.5 }}
+                                color={filter.color}
+                                size="medium"
+                                variant="outlined"
+                                onClick={() => handleFilterChange(filter)}
+                            />
                         )}
                         {filterByChip &&
                             <Button data-edataid={`${master ? 'masterDataset' : 'dataset'}:list:columns`} data-objecid="closeOutlined:clearFilter" data-objecttype={master ? 'masterDataset' : 'dataset'} size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>

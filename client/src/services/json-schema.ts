@@ -43,7 +43,7 @@ const transformData = (data: any, jsonSchemaData: any) => {
         let parent: any = result;
         columns.forEach((column: any, index: any) => {
             const originalColumn = obj.column;
-            let rootType = _.cloneDeep(columns).slice(0, -1);
+            let rootType = _.size(columns) > 1 ? _.cloneDeep(columns).slice(0, -1) : columns;
             const columnWithoutDots = column.replace(/\./g, '');
             let subRows: any = _.get(parent, 'subRows');
             if (!subRows) {
@@ -57,7 +57,7 @@ const transformData = (data: any, jsonSchemaData: any) => {
             }
             parent = subRow;
             if (index === columns.length - 1) {
-                Object.assign(subRow, _.omit(obj, ['column']));
+                Object.assign(subRow, _.omit(obj, ['column',]));
             }
         });
         return result;
@@ -66,9 +66,9 @@ const transformData = (data: any, jsonSchemaData: any) => {
 
 export const getNesting = (payload: any, jsonSchemaData: any) => {
     // const data = reduceColumnsToParent(payload);
-    const dataTest: any = transformData(payload, jsonSchemaData);
+    const data: any = transformData(payload, jsonSchemaData);
     // return nestedToColumns(data, jsonSchemaData);
-    return dataTest.subRows;
+    return data.subRows;
 }
 
 // export const nestedToColumns = (payload: any, jsonSchemaData: any) => {
@@ -116,7 +116,7 @@ const flatten = (schemaObject: Record<string, any>) => {
             if (['array', 'object'].includes(items?.type)) {
                 flattenHelperFn(items, prefix, getKeyName(ref, `items`))
             } else {
-                flattenHelperFn(items, prefix, ref)
+                result[prefix] = { type, key: ref, ref, properties, items, ...rest };
             }
         } else {
             result[prefix] = { type, key: ref, ref, properties, items, ...rest };

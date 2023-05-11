@@ -12,12 +12,16 @@ import {
 import * as _ from "lodash";
 import HtmlTooltip from "components/HtmlTooltip";
 import { VerticalOverflowText } from "components/styled/Typography";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const renderColumnCell = ({
     cell, setFlattenedData, persistState, value,
     theme, edit, setEdit, text, setText
 }: any) => {
     const row = cell?.row?.original || {};
+    const mainRow = cell?.row || {};
+    const collapseIcon = mainRow.isExpanded ? <ExpandMoreIcon sx={{ ml: -1 }} /> : <ChevronRightIcon sx={{ ml: -1 }} />;
     const editDescription = () => {
         updateState();
         setEdit((prevState: any) => !prevState);
@@ -45,12 +49,19 @@ const renderColumnCell = ({
     }
 
     return (
-        <Box alignItems="baseline" maxWidth={'40vw'} minWidth={'40vw'} paddingLeft={cell?.row?.depth > 0 ? 2 : 0}>
+        <Box alignItems="baseline" maxWidth={'40vw'} minWidth={'40vw'} paddingLeft={mainRow.depth > 0 ? mainRow.depth * 3 : 0}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
                 <HtmlTooltip title={value}>
-                    <Typography variant="h6" my={1} maxWidth={'70%'} textOverflow='ellipsis' overflow='hidden' whiteSpace='nowrap'>
-                        {cell?.row?.depth > 0 ? '- ' : ''}{value}
-                    </Typography>
+                    <Box display="flex" alignItems="center" minWidth="75%" maxWidth="80%">
+                        {mainRow?.canExpand && mainRow?.depth > 0 && (
+                            <Box sx={{ fontSize: '1rem', }} {...mainRow.getToggleRowExpandedProps()}>
+                                {collapseIcon}
+                            </Box>
+                        )}
+                        <Typography variant="h6" my={1} maxWidth={'70%'} textOverflow='ellipsis' overflow='hidden' whiteSpace='nowrap'>
+                            {value}
+                        </Typography>
+                    </Box>
                 </HtmlTooltip>
                 {!row.description &&
                     <Button sx={{ fontWeight: 500 }} onClick={handleClose} startIcon={<PlusOutlined style={{ fontSize: '1.25rem', strokeWidth: 25, stroke: theme.palette.primary.main }} />}>
