@@ -133,8 +133,8 @@ const ListColumns = (props: any) => {
                 editable: 'false',
                 Cell: ({ row }: any) => {
                     const collapseIcon = row.isExpanded ? <ExpandMoreIcon /> : <ChevronRightIcon />;
-                    return row.canExpand && (
-                        <Box sx={{ fontSize: '1rem', color: 'text.secondary' }} {...row.getToggleRowExpandedProps()}>
+                    return row.canExpand && row.depth === 0 && (
+                        <Box sx={{ fontSize: '1rem', }} {...row.getToggleRowExpandedProps()}>
                             {collapseIcon}
                         </Box>
                     );
