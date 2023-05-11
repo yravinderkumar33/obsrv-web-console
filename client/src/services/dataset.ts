@@ -103,8 +103,8 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
     const enableDedupeChecked = enableDedupe.includes("yes")
 
     const dedup_config = {
-        dedup_key: enableDedupeChecked && _.get(dedupeConfig, 'dedupeKey'),
-        dedup_period: enableDedupeChecked && _.get(dedupeConfig, 'dedupePeriod'),
+        dedup_key: enableDedupeChecked ? _.get(dedupeConfig, 'dedupeKey') : '',
+        dedup_period: enableDedupeChecked ? _.get(dedupeConfig, 'dedupePeriod') : 0,
         drop_duplicates: enableDedupe.includes("yes")
     }
 

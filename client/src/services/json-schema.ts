@@ -167,7 +167,8 @@ const changeRequiredPropertyInSchema = (schema: Record<string, any>, schemaKeyPa
         } else {
             // remove from required property.
             const updatedRequiredKeys = _.difference(existingRequiredKeys, [schemaKey]);
-            _.set(schema, pathToRequiredProperty, updatedRequiredKeys);
+            if (_.size(updatedRequiredKeys) > 0)
+                _.set(schema, pathToRequiredProperty, updatedRequiredKeys);
         }
     }
 }
