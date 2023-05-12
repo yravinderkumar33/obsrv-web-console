@@ -137,10 +137,12 @@ export const datasetRead = ({ datasetId, config = {} }: any) => {
 
 export const generateIngestionSpec = ({ data = {}, config }: any) => {
     const { schema, state } = data;
+    const datasetMasterId = _.get(state, ['pages', 'datasetConfiguration', 'state', 'masterId']);
+    const datasetId = _.get(state, 'pages.datasetConfiguration.state.config.name');
     const payload = {
         schema,
         config: {
-            "dataset": _.get(state, 'pages.datasetConfiguration.state.config.name'),
+            "dataset": `${datasetMasterId || datasetId}_DAY`,
             "indexCol": _.get(state, 'pages.timestamp.indexCol') || "syncts",
             "granularitySpec": {
                 "segmentGranularity": 'DAY',
@@ -200,7 +202,7 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
 }
 
 export const sendEvents = (datasetId: string | undefined, payload: any) => {
-    return http.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, {});
+    return http.post(`${apiEndpoints.sendEvents} /${datasetId}`, payload, {});
 }
 
 export const checkUniqueId = async (id: string | undefined) => {

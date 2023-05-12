@@ -32,11 +32,4 @@ export const dedupeForm = [
         required: true,
         validationSchema: yup.string().required('This field is required'),
     },
-    {
-        name: "dedupePeriod",
-        label: "Select Dedupe Period (Minutes)",
-        type: 'number',
-        required: true,
-        validationSchema: yup.number().required('This field is required'),
-    }
 ]

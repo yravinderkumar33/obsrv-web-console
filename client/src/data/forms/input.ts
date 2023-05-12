@@ -34,33 +34,6 @@ export const batchForm = [
         required: true,
         validationSchema: yup.string().required('This field is required').min(1, 'Minimum of 1 character is required for this field'),
     },
-    {
-        name: "dedupeRequired",
-        label: "Enable Deduplication",
-        type: 'checkbox',
-        tooltip: 'Select if you want to dedupe batch or not ?',
-        selectOptions: [{
-            label: 'Enable Deduplication',
-            value: 'yes'
-        }],
-        validationSchema: yup.array().optional(),
-    },
-    {
-        name: "dedupePeriod",
-        label: "Deduplication Period (Minutes)",
-        type: 'number',
-        required: true,
-        filterInclude: true,
-        dependsOn: {
-            key: "dedupeRequired",
-            value: 'yes'
-        },
-        validationSchema: yup.number().when(
-            'dedupeRequired', {
-            is: (option: any) => { if (option) return option.includes('yes'); else return false; },
-            then: yup.number().required('This field is required')
-        }),
-    }
 ]
 
 
