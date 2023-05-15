@@ -101,16 +101,9 @@ export default [
                 routes: [
                     {
                         path: '',
-                        method: 'GET',
+                        method: 'POST',
                         middlewares: [
-                            passport.authenticate('ActiveDirectory', { failWithError: true })
-                        ],
-                    },  
-                    {
-                        path: 'callback',
-                        method: 'GET',
-                        middlewares: [
-                            passport.authenticate('ActiveDirectory', { successReturnToOrRedirect: '/', failureRedirect: '/login' })
+                            passport.authenticate('ActiveDirectory', { failWithError: true, successReturnToOrRedirect: '/', failureRedirect: '/login' })
                         ],
                     }
                 ]
