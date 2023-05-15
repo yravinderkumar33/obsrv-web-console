@@ -6,8 +6,9 @@ import { EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import { Button, Grid, InputAdornment, OutlinedInput, Stack } from '@mui/material';
 import LoginSocialButton from './LoginSocialButton';
 import interactEdataIds from 'data/telemetry/interact.json'
-import { interactIds } from 'data/telemetry/interactIds';
 import React from 'react';
+import pageIds from 'data/telemetry/pageIds';
+import { generateStartEvent } from 'services/telemetry';
 
 
 const LoginForm = (props: any) => {
@@ -17,6 +18,14 @@ const LoginForm = (props: any) => {
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
+    const startEvent = (event: any) => {
+        generateStartEvent({
+          edata: {
+            type: interactEdataIds.login,
+            pageid: pageIds.login,
+          }, object: {}
+        });
+      }
 
     const handleMouseDownPassword = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -81,7 +90,7 @@ const LoginForm = (props: any) => {
                         </Grid>
                         <Grid item xs={12}>
                             <AnimateButton>
-                                <Button data-edataid={interactEdataIds.login} disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
+                                <Button onClick={startEvent} data-edataid={interactEdataIds.login} disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="primary">
                                     Login
                                 </Button>
                             </AnimateButton>
