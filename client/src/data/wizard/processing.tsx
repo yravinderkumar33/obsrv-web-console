@@ -1,5 +1,3 @@
-
-import { confirmationOptions } from "data/forms/common";
 import ConditionalForm from "pages/dataset/wizard/components/ConditionalForm";
 import { forms } from 'data/forms';
 import * as _ from 'lodash';
@@ -9,11 +7,14 @@ import DataDenorm from "pages/dataset/wizard/components/DataDenormalization";
 
 const dedupeQues = {
     question: {
-        name: "dedupeEvents",
+        name: "dedupe",
         label: "Dedupe Events ?",
-        type: 'select',
+        type: 'checkbox',
         required: true,
-        selectOptions: confirmationOptions
+        selectOptions: [{
+            label: 'Enable Deduplication',
+            value: 'yes'
+        }],
     },
     options: {
         yes: {
@@ -30,10 +31,11 @@ const dedupeQues = {
 const dataValidation = {
     type: 'radio',
     justifyContents: 'flex-start',
-    name: 'validateType',
+    name: 'dataValidation',
+    noChildForm: true,
     fields: [
         {
-            name: "validateType",
+            name: "dataValidation",
             label: "None",
             value: "none",
             required: true,
@@ -41,7 +43,7 @@ const dataValidation = {
             form: null
         },
         {
-            name: "validateType",
+            name: "dataValidation",
             label: "Strict",
             value: "Strict",
             selected: true,
@@ -50,7 +52,7 @@ const dataValidation = {
             form: null
         },
         {
-            name: "validateType",
+            name: "dataValidation",
             label: "Ignore New Fields",
             value: "IgnoreNewFields",
             required: true,
@@ -58,20 +60,20 @@ const dataValidation = {
             description: "Skip validation for the new fields added.",
         },
         {
-            name: "validateType",
+            name: "dataValidation",
             label: "Auto Index New Fields",
             value: "DiscardNewFields",
             required: true,
             form: null,
             description: "Auto index new fields added",
-        }
+        },
     ]
 }
 
 const transformer = (formMeta: Array<Record<string, any>>, context: Record<string, any>) => {
     const schema = _.get(context, 'redux.jsonSchema.data.schema');
     if (!schema) return formMeta;
-    const flattenedData = flattenSchema(schema);
+    flattenSchema(schema);
     return formMeta;
 }
 

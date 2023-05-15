@@ -1,5 +1,5 @@
-import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons";
-import { Alert, Button, Dialog, Grid, Typography } from "@mui/material";
+import { DeleteOutlined } from "@ant-design/icons";
+import { ButtonGroup, Box, Button, Dialog, Grid, Typography } from "@mui/material";
 import MainCard from "components/MainCard"
 import BasicReactTable from "components/BasicReactTable";
 import ScrollX from "components/ScrollX";
@@ -7,17 +7,17 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import IconButton from "components/@extended/IconButton";
 import config from 'data/initialConfig';
-import { ButtonGroup } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { addState } from "store/reducers/wizard";
-import { interactIds } from "data/telemetry/interactIds";
+import interactIds from "data/telemetry/interact.json";
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 const { spacing } = config;
 
 const InputAccordion = (props: any) => {
     const dispatch = useDispatch();
-    const { id, title, description, actions, data, label, dialog } = props;
+    const { id, title, description, actions, data, label, dialog, generateInteractTelemetry } = props;
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selection, setSelection] = useState<Array<any>>([]);
     const existingState = useSelector((state: any) => _.get(state, ['wizard', 'pages', id, 'selection']));
@@ -25,6 +25,7 @@ const InputAccordion = (props: any) => {
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
 
     const deleteSelection = async (record: Record<string, any>) => {
+        generateInteractTelemetry({ edata: { id: interactIds.delete_dataset_transformation } })
         const dispatchError = () => dispatch(error({ message: "Unable to delete the config item" }))
         try {
             const data = await deleteTransformations(record.id);
@@ -54,67 +55,92 @@ const InputAccordion = (props: any) => {
 
     const columns = [
         {
-            Header: 'Column Name', accessor: 'column'
+            Header: () => null,
+            accessor: 'column',
+            Cell: ({ value, cell }: any) => {
+                return (
+                    <Box minWidth="35vw" maxWidth="35vw">
+                        <Typography variant="h5">
+                            {value}
+                        </Typography>
+                    </Box>
+                );
+            }
         },
         {
-            Header: 'Transformation',
-            accessor: 'age',
+            Header: () => null,
+            id: 'transformation',
+            className: 'cell-center',
+            accessor: 'transformation',
             Cell: ({ value, cell }: any) => {
                 const row = cell?.row?.original || {};
                 const _transformationType = row?._transformationType;
                 if (_.get(actions, 'length') < 2 && _transformationType === 'custom') return renderExpression(row);
-                return <ButtonGroup variant="outlined" aria-label="outlined button group">
+                return <ButtonGroup variant="outlined" aria-label="outlined button group" sx={{ minWidth: "20vw", maxWidth: "20vw" }}>
                     {
                         actions.map((action: any) => {
-                            return <Button
-                            data-edataid={`dataset:transformation:input`}
-                            data-objectid={`input:${action?.label}`}
-                            data-objecttype="dataset"
-                             key="one" variant={_transformationType === action?.value ? 'contained' : 'outlined'}>{action?.label}</Button>
+                            return (
+                                <Button
+                                    size="large"
+                                    key="one"
+                                    variant={_transformationType === action?.value ? 'contained' : 'outlined'}
+                                >
+                                    {action?.label}
+                                </Button>
+                            );
                         })
                     }
                 </ButtonGroup>
             }
         },
         {
-            Header: 'Delete',
+            Header: () => null,
+            id: 'actions',
             Cell: ({ value, cell }: any) => {
-                return <IconButton 
-                data-edataid={interactIds.dataset.edit.delete.transformation}
-                data-objectid="deleteOutline"
-                data-objecttype="dataset"
-                variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
-                    <DeleteOutlined />
+                return <IconButton
+                    onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}
+                >
+                    <DeleteOutlined style={{ fontSize: '1.25rem' }} />
                 </IconButton>
             }
         }
     ]
 
+    const onDialogClose = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.dialog_close } });
+        setDialogOpen(false);
+    }
+
     const updateDialogProps = () => {
-        return React.cloneElement(dialog, { id, actions, selection, setSelection, data, onClose: () => setDialogOpen(false), mainDatasetId, });
+        return React.cloneElement(dialog, { id, actions, selection, setSelection, data, onClose: onDialogClose, mainDatasetId, generateInteractTelemetry });
     }
 
     const renderTable = () => {
         if (!_.get(selection, 'length')) return null;
         return <Grid item xs={12}>
-            <MainCard content={false}>
+            <MainCard content={false} headerSX={{}}>
                 <ScrollX>
-                    <BasicReactTable columns={columns} data={selection} striped={true} />
+                    <BasicReactTable header={false} columns={columns} data={selection} striped={true} />
                 </ScrollX>
             </MainCard >
         </Grid>
     }
 
     return <>
+        {renderTable()}
         <Grid container rowSpacing={spacing} columnSpacing={spacing}>
-            <Grid item xs={12}> <Alert sx={{ alignItems: 'center' }} color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>
-            {renderTable()}
-            <Grid item xs={12}>
-                <Button 
-                data-edataid={`dataset:input:${label}`}
-                data-objectid={label}
-                data-objecttype="dataset"
-                variant="outlined" onClick={_ => setDialogOpen(true)} >{label}</Button>
+            <Grid item xs={12} textAlign="end" my={2}>
+                <Button
+                    onClick={_ => {
+                        setDialogOpen(true);
+                        generateInteractTelemetry({ edata: { id: `${interactIds.add_dataset_transformation}:${id}:dialog:open` } })
+                    }}
+                    startIcon={<AddOutlinedIcon fontSize="large" />}
+                >
+                    <Typography variant="body2" fontWeight="500">
+                        {label}
+                    </Typography>
+                </Button>
             </Grid>
             <Grid item xs={12}>
                 <Dialog open={dialogOpen} onClose={_ => setDialogOpen(false)} aria-labelledby={title} aria-describedby={title}>
@@ -125,4 +151,4 @@ const InputAccordion = (props: any) => {
     </>
 }
 
-export default InputAccordion
+export default InputAccordion;

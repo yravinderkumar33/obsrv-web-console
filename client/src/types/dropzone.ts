@@ -37,6 +37,7 @@ export interface UploadMultiFileProps extends DropzoneOptions {
     onRemoveAll?: VoidFunction;
     setFieldValue: (field: string, value: any) => void;
     onFileRemove: any;
+    subscribeErrors?: any;
 }
 
 export interface FilePreviewProps {

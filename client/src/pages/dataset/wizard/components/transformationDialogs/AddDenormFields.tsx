@@ -1,14 +1,17 @@
-import { CloseCircleOutlined } from "@ant-design/icons";
-import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import {
+    Box, DialogActions, DialogContent, DialogTitle,
+    Typography, IconButton, Stack
+} from "@mui/material";
 import MUIForm from "components/form";
 import { useEffect, useState } from "react";
 import * as _ from 'lodash';
-import { Stack } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { error } from "services/toaster";
 import { updateDenormConfig } from "services/dataset";
-import { interactIds } from "data/telemetry/interactIds";
+import  interactIds  from "data/telemetry/interact.json";
+import * as yup from "yup";
+import { StandardWidthButton } from 'components/styled/Buttons';
 
 const AddDenormField = (props: any) => {
     const { selection, redisConfig, onClose, setSelection, persistState, masterDatasets = [] } = props;
@@ -19,6 +22,7 @@ const AddDenormField = (props: any) => {
     const jsonSchemaCols = _.get(wizardState, 'pages.columns.state.schema') || [];
     const [masterDatasetSchema, setMasterDatasetSchema] = useState<any>([]);
     const datasetId: string = useSelector((state: any) => _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'config', 'dataset_id']));
+    const [formErrors, subscribeErrors] = useState<any>(null);
 
     useEffect(() => {
         const { redis_db } = value;
@@ -64,6 +68,13 @@ const AddDenormField = (props: any) => {
         },
     ];
 
+    const validationSchema = yup.object().shape({
+        denorm_key: yup.string().required("This field is required"),
+        redis_db: yup.string().required("This field is required"),
+        denorm_out_field: yup.string().required("This field is required"),
+    });
+
+
     const updateDenormFields = async (payload: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the config" }));
         try {
@@ -89,47 +100,52 @@ const AddDenormField = (props: any) => {
     }
 
     const addField = () => {
+        onSubmission({});
+        if (_.keys(formErrors).length > 0) { return; }
         if (_.size(value) === fields.length) {
             updateDenormFields(value);
             onClose();
+            return;
         }
     }
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", height: 'auto' }}>
-            <DialogTitle id="alert-dialog-title">
-                Add Denorm Field
+            <DialogTitle component={Box} display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h5">
+                    Add Denorm Field
+                </Typography>
                 {onClose ? (
                     <IconButton
-                        data-edataid={interactIds.button.icon.menu.close}
-                        data-objectid="closeOutlined:denormField"
-                        data-objecttype="dataset"
                         aria-label="close"
                         onClick={onClose}
                         sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseCircleOutlined />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2} margin={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                <Stack spacing={2} my={1}>
+                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} validationSchema={validationSchema} subscribeErrors={subscribeErrors} />
                 </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button 
-                data-edataid={interactIds.dataset.create.add.denorm}
-                data-objectid={value}
-                data-objecttype="dataset"
-                variant="contained" autoFocus onClick={_ => addField()}>
-                    Add Field
-                </Button>
+            <DialogActions sx={{ px: 4 }}>
+                <StandardWidthButton
+                    data-edataid={interactIds.add_dataset_denorm_field}
+                    data-objectid={value}
+                    data-objecttype="masterDataset"
+                    variant="contained"
+                    onClick={_ => addField()}
+                    size="large"
+                    sx={{ width: 'auto' }}
+                >
+                    <Typography variant="h5">
+                        Add Field
+                    </Typography>
+                </StandardWidthButton>
             </DialogActions>
         </Box>
     </>

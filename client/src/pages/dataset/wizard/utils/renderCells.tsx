@@ -1,24 +1,26 @@
 import React from "react";
 import {
-    Box, Typography, Button, Dialog, DialogTitle, Select,
-    DialogContent, TextareaAutosize, FormControl, MenuItem,
-    Popover, FormControlLabel, Stack, IconButton,
+    Box, Typography, Button, Dialog, DialogTitle, Select, DialogContent, TextareaAutosize, FormControl, MenuItem, Popover, FormControlLabel, Stack, IconButton,
 } from "@mui/material";
 import RequiredSwitch from "components/RequiredSwitch";
-import {
-    CloseCircleOutlined, PlusOutlined, CheckOutlined,
-    DeleteOutlined, InfoCircleOutlined,
-} from '@ant-design/icons';
+import { CloseCircleOutlined, PlusOutlined, CheckOutlined, DeleteOutlined, InfoCircleOutlined, } from '@ant-design/icons';
 import * as _ from "lodash";
+import HtmlTooltip from "components/HtmlTooltip";
+import { VerticalOverflowText } from "components/styled/Typography";
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import interactIds from 'data/telemetry/interact.json';
 
 const renderColumnCell = ({
     cell, setFlattenedData, persistState, value,
     theme, edit, setEdit, text, setText
 }: any) => {
     const row = cell?.row?.original || {};
+    const mainRow = cell?.row || {};
+    const collapseIcon = mainRow.isExpanded ? <ExpandMoreIcon sx={{ ml: -1 }} /> : <ChevronRightIcon sx={{ ml: -1 }} />;
     const editDescription = () => {
-        setEdit((prevState: any) => !prevState);
         updateState();
+        setEdit((prevState: any) => !prevState);
     }
 
     const handleClose = () => {
@@ -33,9 +35,9 @@ const renderColumnCell = ({
         setFlattenedData((preState: Array<Record<string, any>>) => {
             const updatedValues = { ...row };
             const values = _.map(preState, state => {
-                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                    return { ...state, ...updatedValues, isModified: true, description: text };
-                else return state
+                if (_.get(state, 'column') === _.get(updatedValues, 'originalColumn'))
+                    return { ...state, ...updatedValues, isModified: true, description: text, column: _.get(updatedValues, 'originalColumn') };
+                else return state;
             });
             persistState(values);
             return values;
@@ -43,11 +45,20 @@ const renderColumnCell = ({
     }
 
     return (
-        <Box alignItems="baseline" maxWidth={537}>
+        <Box alignItems="baseline" maxWidth={'40vw'} minWidth={'40vw'} paddingLeft={mainRow.depth > 0 ? mainRow.depth * 3 : 0}>
             <Box display="flex" alignItems="center" justifyContent="space-between">
-                <Typography variant="h6" m={1}>
-                    {value}
-                </Typography>
+                <HtmlTooltip title={value}>
+                    <Box display="flex" alignItems="center" minWidth="75%" maxWidth="80%">
+                        {mainRow?.canExpand && mainRow?.depth > 0 && (
+                            <Box sx={{ fontSize: '1rem', }} {...mainRow.getToggleRowExpandedProps()}>
+                                {collapseIcon}
+                            </Box>
+                        )}
+                        <Typography variant="h6" my={1} maxWidth={'70%'} textOverflow='ellipsis' overflow='hidden' whiteSpace='nowrap'>
+                            {value}
+                        </Typography>
+                    </Box>
+                </HtmlTooltip>
                 {!row.description &&
                     <Button sx={{ fontWeight: 500 }} onClick={handleClose} startIcon={<PlusOutlined style={{ fontSize: '1.25rem', strokeWidth: 25, stroke: theme.palette.primary.main }} />}>
                         Description
@@ -55,25 +66,15 @@ const renderColumnCell = ({
                 }
             </Box>
             {row.description &&
-                <Typography
-                    variant="body3"
-                    color="secondary"
-                    m={1}
-                    sx={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        display: "-webkit-box",
-                        WebkitLineClamp: "2",
-                        WebkitBoxOrient: "vertical",
-                        minWidth: 200,
-                        height: 40,
-                        maxHeight: 40,
-                        whiteSpace: 'nowrap',
-                    }}
-                    onClick={editDescription}
-                >
-                    {row.description}
-                </Typography>
+                <HtmlTooltip title={row.description} placement="top-start" arrow>
+                    <VerticalOverflowText
+                        variant="body3"
+                        color="secondary"
+                        onClick={handleClose}
+                    >
+                        {row.description}
+                    </VerticalOverflowText>
+                </HtmlTooltip>
             }
             <Dialog open={edit} onClose={handleClose}>
                 <DialogTitle
@@ -81,9 +82,11 @@ const renderColumnCell = ({
                     justifyContent="space-between"
                     alignItems="center"
                 >
-                    <Typography mx={2}>
-                        {value}
-                    </Typography>
+                    <HtmlTooltip title={value}>
+                        <Typography mx={2} maxWidth={'70%'} textOverflow='ellipsis' overflow='hidden' whiteSpace='nowrap'>
+                            {value}
+                        </Typography>
+                    </HtmlTooltip>
                     <CloseCircleOutlined onClick={handleClose} />
                 </DialogTitle>
                 <DialogContent>
@@ -156,7 +159,7 @@ const renderDataTypeCell = ({
     );
 
     return (
-        <Box position="relative" maxWidth={180} display='block' alignItems="center" m={1}>
+        <Box position="relative" maxWidth={180} display='block' alignItems="center" my={1}>
             {row?.oneof && !isResolved &&
                 <Button startIcon={<InfoCircleOutlined />} color="error" onClick={handleSuggestions} sx={{ mx: 1 }}>
                     <Typography variant="caption">Recommended Change</Typography>
@@ -262,8 +265,8 @@ const renderRequiredCell = ({
         setFlattenedData((preState: Array<Record<string, any>>) => {
             const updatedValues = { ...row };
             const values = _.map(preState, state => {
-                if (_.get(state, 'column') === _.get(updatedValues, 'column'))
-                    return { ...state, ...updatedValues, isModified: true, required: e.target.checked };
+                if (_.get(state, 'column') === _.get(updatedValues, 'originalColumn'))
+                    return { ...state, ...updatedValues, isModified: true, required: e.target.checked, column: _.get(updatedValues, 'originalColumn') };
                 else return state
             });
             persistState(values);
@@ -284,9 +287,11 @@ const renderRequiredCell = ({
     }
 }
 
-const renderActionsCell = ({ cell, value, setSelection, setOpenAlertDialog, theme }: any) => {
+const renderActionsCell = ({ cell, setSelection, setOpenAlertDialog, theme, generateInteractTelemetry }: any) => {
     const row = cell?.row?.original || {};
+
     const handleDeleteColumn = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.delete_schema } })
         setSelection(row);
         setOpenAlertDialog(true);
     }

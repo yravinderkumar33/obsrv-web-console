@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import 'simplebar/src/simplebar.css';
-
+import './index.css';
 import 'assets/third-party/apex-chart.css';
 import 'assets/third-party/react-table.css';
 
@@ -19,12 +19,12 @@ const root = createRoot(container!);
 
 
 root.render(
-  <ReduxProvider store={store}>
-    <ConfigProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </ConfigProvider>
-  </ReduxProvider>
+    <ReduxProvider store={store}>
+        <ConfigProvider>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </ConfigProvider>
+    </ReduxProvider>
 );
 reportWebVitals();

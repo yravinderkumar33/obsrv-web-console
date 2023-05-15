@@ -10,7 +10,7 @@ import ApexWithFilters from "sections/dashboard/analytics/ChartFilters";
 import filters from 'data/chartFilters';
 import AsyncLabel from "components/cards/statistics/AsyncLabel";
 import { totalVsRunningNodes, percentageUsage, cpuPercentageUsage, backupStatus, alertsFilterByLabels } from 'services/transformers';
-import { Stack } from "@mui/material";
+import { Grid } from "@mui/material";
 import GrafanaChart from "sections/dashboard/analytics/GrafanaEmbedded";
 import IngestionCharts from "sections/dashboard/analytics/IngestionCharts";
 
@@ -41,35 +41,56 @@ export const metricsMetadata = [
                         id: "nodeRunningStatus",
                         description: "Nodes Running Status",
                         chart: <AnalyticsDataCard title="Nodes Status">
-                            <Stack spacing={4} direction="column" justifyContent="space-around" height={'auto'} >
-                                <AsyncLabel align="center" variant="h1" component="h1" color="textPrimary" fontSize={'8vh'} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
-                                <AsyncLabel align="center" variant="caption" color="textSecondary" suffix='Nodes Running'></AsyncLabel>
-                            </Stack>
+                            <Grid container height="100%">
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={2}>
+                                    <AsyncLabel align="center" variant="h3" fontSize={'8vh'} query={[_.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'total_nodes_count.query')]} transformer={totalVsRunningNodes}></AsyncLabel>
+                                </Grid>
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={1}>
+                                    <AsyncLabel align="center" verticalAlign="flex-end" variant="body2" color="secondary" suffix='Nodes Running' />
+                                </Grid>
+                            </Grid>
                         </AnalyticsDataCard>
                     },
                     {
                         id: "cpuUsge",
                         description: "Current CPU Usage Percent",
                         chart: <AnalyticsDataCard title="CPU Usage">
-                            <GaugeChart query={_.get(chartMeta, 'cpu_usage_radial.query')} />
-                            <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'cpu_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'totalCPU.query')]} transformer={cpuPercentageUsage}></AsyncLabel>
+                            <Grid container height="100%">
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={2}>
+                                    <GaugeChart query={_.get(chartMeta, 'cpu_usage_radial.query')} />
+                                </Grid>
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={1}>
+                                    <AsyncLabel align="center" variant="body2" color="secondary" query={[_.get(chartMeta, 'cpu_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query'), _.get(chartMeta, 'totalCPU.query')]} transformer={cpuPercentageUsage}></AsyncLabel>
+                                </Grid>
+                            </Grid>
                         </AnalyticsDataCard>
                     },
                     {
-                        id:"memoryUsage",
+                        id: "memoryUsage",
                         description: "Current Memory Usage Percent",
                         chart: <AnalyticsDataCard title="Memory Usage">
-                            <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
-                            <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'memory_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
-
+                            <Grid container height="100%">
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={2}>
+                                    <GaugeChart query={_.get(chartMeta, 'memory_usage_radial.query')} />
+                                </Grid>
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={1}>
+                                    <AsyncLabel align="center" variant="body2" color="textSecondary" query={[_.get(chartMeta, 'memory_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
+                                </Grid>
+                            </Grid>
                         </AnalyticsDataCard>
                     },
                     {
-                        id:"diskUsage",
+                        id: "diskUsage",
                         description: "Current Disk Usage Percent",
                         chart: <AnalyticsDataCard title="Disk Usage">
-                            <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
-                            <AsyncLabel align="center" variant="caption" color="textSecondary" query={[_.get(chartMeta, 'disk_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage}></AsyncLabel>
+                            <Grid container height="100%">
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={2}>
+                                    <GaugeChart arcsLength={[60, 20, 20]} query={_.get(chartMeta, 'disk_usage_radial.query')} />
+                                </Grid>
+                                <Grid item xs={12} textAlign="center" alignSelf="flex-end" mb={1}>
+                                    <AsyncLabel align="center" variant="body2" color="textSecondary" query={[_.get(chartMeta, 'disk_usage_radial.query'), _.get(chartMeta, 'total_running_nodes_count.query')]} transformer={percentageUsage} />
+                                </Grid>
+                            </Grid>
                         </AnalyticsDataCard>
                     },
                 ]
@@ -85,21 +106,21 @@ export const metricsMetadata = [
                     {
                         id: 'cpuUsage',
                         description: "This chart typically displays the percentage of a computer's central processing unit (CPU) that is currently being utilized. The chart may show a live update of the CPU usage over time, or display a historical record of usage over a specified period.",
-                        chart: <ApexWithFilters title="CPU Usage" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="CPU Usage" filters={_.get(filters, 'default')} id="cpuUsage">
                             <ApexChart metadata={_.get(chartMeta, 'instance_cpu')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
                         id: 'memoryUsage',
                         description: "This chart is a graphical representation of the amount of memory being used by a computer system at a given time. The chart typically displays the amount of memory usage as a percentage of the total available memory, with the horizontal axis representing time and the vertical axis representing memory usage percentage",
-                        chart: <ApexWithFilters title="Memory Usage" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Memory Usage" filters={_.get(filters, 'default')} id="memoryUsage">
                             <ApexChart metadata={_.get(chartMeta, 'instance_memory')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
                         id: 'diskUsage',
                         description: "This is a graphical representation of the amount of disk space being used across a cluster",
-                        chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')} id="diskUsage">
                             <ApexChart metadata={_.get(chartMeta, 'instance_disk')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     }
@@ -116,7 +137,7 @@ export const metricsMetadata = [
                     {
                         id: 'incidents/alerts',
                         description: "This table shows the currently active infrastructure alerts within the cluster",
-                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]}>
+                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]} id="alertsInfra">
                             <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "infra" } })} />
                         </ApexWithFilters>
                     }
@@ -174,25 +195,25 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         description: "This chart shows the average query response time of http calls within the cluster",
-                        chart: <ApexWithFilters title="Query Response Time (Avg)" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Query Response Time (Avg)" filters={_.get(filters, 'default')} id="queryResponseTime">
                             <ApexChart metadata={_.get(chartMeta, 'node_query_response_avg_timeseries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
                         description: "This chart shows the total number of api calls within the cluster",
-                        chart: <ApexWithFilters title="Number of API Calls" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Number of API Calls" filters={_.get(filters, 'default')} id="numApiCalls">
                             <ApexChart metadata={_.get(chartMeta, 'node_total_api_call')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
                         description: "This chart shows the total number of failed api calls within the cluster",
-                        chart: <ApexWithFilters title="Number of Failed API Calls" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Number of Failed API Calls" filters={_.get(filters, 'default')} id="numFailedApiCalls">
                             <ApexChart metadata={_.get(chartMeta, 'node_total_failed_api_call')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
                         description: "This chart shows the API throughput.",
-                        chart: <ApexWithFilters title="API Throughput" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="API Throughput" filters={_.get(filters, 'default')} id="apiThroughput">
                             <ApexChart metadata={_.get(chartMeta, 'api_throughput')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     }
@@ -207,7 +228,7 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]}>
+                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]} id="alertsApi">
                             <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "api" } })} />
                         </ApexWithFilters>
                     }
@@ -252,7 +273,7 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         description: "This chart shows the total number of events received within the cluster. It shows the cumulative count of all the datasets",
-                        chart: <ApexWithFilters title="Total Data Received (All Datasets)" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Total Data Received (All Datasets)" filters={_.get(filters, 'default')} id="totalEventsAllDatasets">
                             <ApexChart metadata={_.get(chartMeta, 'totalEventsProcessedTimeSeries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     }
@@ -270,7 +291,7 @@ export const metricsMetadata = [
                         chart: <IngestionCharts title="Total Data Received " chartName="totalEventsProcessedTimeSeriesPerDataset" />
                     },
                     {
-                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]}>
+                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]} id="alertsIngestion">
                             <AlertsMessages interval={1140} predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "ingestion" } })} />
                         </ApexWithFilters>
                     }
@@ -323,7 +344,7 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         description: "This chart shows the average processing time for all the datasets",
-                        chart: <ApexWithFilters title="Processing Time (All Datasets)" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Processing Time (All Datasets)" filters={_.get(filters, 'default')} id="processingTimeAllDatasets">
                             <ApexChart metadata={_.get(chartMeta, 'minProcessingTimeSeries')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     }
@@ -341,7 +362,7 @@ export const metricsMetadata = [
                         chart: <IngestionCharts title="Procesing Time" chartName="minProcessingTimeSeriesPerDataset" />
                     },
                     {
-                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]}>
+                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]} id="alertsProcessing">
                             <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "processing" } })} />
                         </ApexWithFilters>
                     }
@@ -392,12 +413,16 @@ export const metricsMetadata = [
                     xs: 12,
                     sm: 6,
                     md: 4,
-                    lg: 3
+                    lg: 4
                 },
                 metadata: [
                     {
                         description: "This chart shows the current success backup count",
                         chart: <ReportCard primary="0" secondary="Success Backups Count" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'backup_count.query')} />
+                    },
+                    {
+                        description: "This chart shows the total size of deep storage.",
+                        chart: <ReportCard primary="0" secondary="Deep Storage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'deep_storage_total.query')} />
                     }
                 ]
             },
@@ -411,12 +436,12 @@ export const metricsMetadata = [
                 metadata: [
                     {
                         description: "This is a graphical representation of the amount of disk space being used across a cluster",
-                        chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Disk Usage" filters={_.get(filters, 'default')} id="diskUsage">
                             <ApexChart metadata={_.get(chartMeta, 'instance_disk')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
                     {
-                        chart: <ApexWithFilters title="Deep Storage Usage Growth" filters={_.get(filters, 'default')}>
+                        chart: <ApexWithFilters title="Deep Storage Usage Growth" filters={_.get(filters, 'default')} id="deepStorageDataGrowth">
                             <ApexChart metadata={_.get(chartMeta, 'data_growth_over_time')} interval={1140}></ApexChart>
                         </ApexWithFilters>
                     },
@@ -434,7 +459,7 @@ export const metricsMetadata = [
                         chart: <GrafanaChart url="/d-solo/EbXSjT24k/velero?orgId=1&panelId=13" width="100%" height="400" />
                     },
                     {
-                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]}>
+                        chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]} id="alertsStorage">
                             <AlertsMessages predicate={alertsFilterByLabels({ matchLabels: { bb: "obsrv", type: "storage" } })} />
                         </ApexWithFilters>
                     }

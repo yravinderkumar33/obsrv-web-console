@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import {
-    Button, Grid, Box, Stack,
-    Typography, Chip, useTheme
-} from '@mui/material';
+import { Button, Grid, Box, Stack, Typography, Chip, useTheme } from '@mui/material';
 import * as _ from 'lodash';
-import { CloseOutlined, FolderViewOutlined, DownOutlined, RightOutlined } from '@ant-design/icons';
+import { CloseOutlined, FolderViewOutlined } from '@ant-design/icons';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
 import { addState } from 'store/reducers/wizard';
@@ -24,6 +23,7 @@ import { renderActionsCell, renderColumnCell, renderDataTypeCell, renderRequired
 import ExpandingTable from 'components/ExpandingTable';
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
+import interactIds from 'data/telemetry/interact.json';
 
 const validDatatypes = ['string', 'number', 'integer', 'object', 'array', 'boolean', 'null'];
 const pageMeta = { pageId: 'columns', title: "Derive Schema" };
@@ -33,7 +33,8 @@ interface columnFilter {
     label: string,
     id: string | boolean,
     lookup: string,
-    color: "default" | "error" | "warning" | "success" | "primary" | "secondary" | "info"
+    color: "default" | "error" | "warning" | "success" | "primary" | "secondary" | "info",
+    edata: string
 }
 
 const columnFilters: columnFilter[] = [
@@ -41,17 +42,20 @@ const columnFilters: columnFilter[] = [
         'label': 'Must-Fix',
         'id': 'MUST-FIX',
         'lookup': 'severity',
-        'color': "error"
+        'color': "error",
+        'edata': "schemaFilter:mustFix"
     },
     {
         'label': 'Resolved',
         'id': true,
         'lookup': 'resolved',
-        'color': "success"
+        'color': "success",
+        'edata': "schemaFilter:resolved"
     }
 ];
 
-const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStoreState, edit, master = false }: any) => {
+const ListColumns = (props: any) => {
+    const { handleNext, setErrorIndex, handleBack, index, wizardStoreState, edit, master = false, generateInteractTelemetry } = props;
     const [selection, setSelection] = useState<Record<string, any>>({});
     const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
@@ -69,7 +73,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     useImpression({ type: "view", pageid: `${pageIdPrefix}:${pageIdSuffix}` });
 
     const markRowAsDeleted = (cellValue: Record<string, any>) => {
-        const column = cellValue?.column;
+        const column = cellValue?.originalColumn;
         if (column) {
             setFlattenedData((preState: Array<Record<string, any>>) => {
                 const data = _.map(preState, payload => {
@@ -96,9 +100,10 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         }
     }
 
-    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData } }));
+    const persistState = (data?: any) => dispatch(addState({ id: pageMeta.pageId, index, state: { schema: data || flattenedData }, error: !areConflictsResolved(data || flattenedData) }));
 
     const gotoNextSection = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.proceed } })
         const data = deleteFilter();
         if (areConflictsResolved(flattenedData)) {
             persistState(data);
@@ -111,6 +116,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }
 
     const gotoPreviousSection = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.previous } })
         const data = deleteFilter();
         persistState(data);
         persistClientState();
@@ -126,9 +132,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 tipText: '',
                 editable: 'false',
                 Cell: ({ row }: any) => {
-                    const collapseIcon = row.isExpanded ? <DownOutlined /> : <RightOutlined />;
-                    return row.canExpand && (
-                        <Box sx={{ fontSize: '0.75rem', color: 'text.secondary' }} {...row.getToggleRowExpandedProps()}>
+                    const collapseIcon = row.isExpanded ? <ExpandMoreIcon /> : <ChevronRightIcon />;
+                    return row.canExpand && row.depth === 0 && (
+                        <Box sx={{ fontSize: '1rem', }} {...row.getToggleRowExpandedProps()}>
                             {collapseIcon}
                         </Box>
                     );
@@ -194,7 +200,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 Cell: ({ value, cell, row, ...rest }: any) => {
                     if (row.canExpand) return null;
                     return renderActionsCell({
-                        cell, value, setSelection, setOpenAlertDialog, theme,
+                        cell, value, setSelection, setOpenAlertDialog, theme, generateInteractTelemetry
                     })
                 }
             },
@@ -203,8 +209,9 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     );
 
     const handleDownloadButton = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.download_JSON } });
         if (jsonSchema && flattenedData) {
-            const data = updateJSONSchema(jsonSchema, flattenedData);
+            const data = updateJSONSchema(jsonSchema, { schema: flattenedData });
             downloadJsonFile(data, 'json-schema');
         }
     }
@@ -230,6 +237,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }
 
     const handleFilterChange = (filter: columnFilter) => {
+        generateInteractTelemetry({ edata: { id: filter.edata } });
         setFilterByChip(filter);
         setFlattenedData(() => {
             const data = wizardStoreState.pages[pageMeta.pageId].state.schema;
@@ -256,6 +264,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
     }
 
     const handleSuggestionsView = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.view_suggestions } });
         setShowSuggestions((prevState) => !prevState);
     }
 
@@ -271,6 +280,11 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
         }
     }, [jsonSchema]);
 
+    const handleClearFilters = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.clear_filters } })
+        deleteFilter();
+    }
+
     return (
         <>
             <GenericCard elevation={1}>
@@ -280,23 +294,21 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                         <Typography variant="body2" color="secondary" mr={1}>
                             Filter Suggestion by:
                         </Typography>
-                        {columnFilters.map((filter) => <Chip
-                            data-edataid="dataset:list:columns"
-                            data-objectid={`filter: ${filter.label}`}
-                            data-objecttype={master ? 'masterDataset': 'dataset'}
-                            key={filter.label}
-                            aria-label='filter-button'
-                            clickable
-                            label={filter.label}
-                            sx={{ mx: 0.5 }}
-                            color={filter.color}
-                            size="medium"
-                            variant="outlined"
-                            onClick={() => handleFilterChange(filter)}
-                        />
+                        {columnFilters.map((filter) =>
+                            <Chip
+                                key={filter.label}
+                                aria-label='filter-button'
+                                clickable
+                                label={filter.label}
+                                sx={{ mx: 0.5 }}
+                                color={filter.color}
+                                size="medium"
+                                variant="outlined"
+                                onClick={() => handleFilterChange(filter)}
+                            />
                         )}
                         {filterByChip &&
-                            <Button data-edataid={`${master ? 'masterDataset': 'dataset'}:list:columns`} data-objecid="closeOutlined:clearFilter" data-objecttype={master ? 'masterDataset': 'dataset'}  size="medium" onClick={deleteFilter} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
+                            <Button size="medium" onClick={handleClearFilters} startIcon={<CloseOutlined />} sx={{ fontWeight: 500 }}>
                                 Clear filters
                             </Button>
                         }
@@ -316,6 +328,7 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                     showSuggestions={showSuggestions}
                     setRequiredFilter={setRequiredFieldFilters}
                     requiredFilter={requiredFieldFilters}
+                    generateInteractTelemetry={generateInteractTelemetry}
                 />
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={12}>
@@ -333,12 +346,15 @@ const ListColumns = ({ handleNext, setErrorIndex, handleBack, index, wizardStore
                 </Grid>
             </GenericCard>
             <WizardNavigator
+                pageId={'list:columns'}
                 master={master}
-                showPrevious={edit}
+                showPrevious={false}
                 gotoPreviousSection={gotoPreviousSection}
                 gotoNextSection={gotoNextSection}
                 enableDownload
                 handleDownload={handleDownloadButton}
+                nextDisabled={!areConflictsResolved(flattenedData)}
+                edit={edit}
             />
         </>
     );

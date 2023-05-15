@@ -5,20 +5,19 @@ import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import { TabPanel } from 'pages/dataset/wizard/UploadFiles';
+import pageIds from 'data/telemetry/pageIds';
+import useImpression from 'hooks/useImpression';
 
 
 const AuthLogin = () => {
   const dispatch = useDispatch();
   const allowedAuthTypes = process.env.REACT_APP_AUTHENTICATION_ALLOWED_TYPES || 'obsrv';
-  
+  const [showPassword, setShowPassword] = React.useState(false);
   const [searchParams] = useSearchParams();
   const [tabIndex, setTabIndex] = useState(0);
   const loginView = (allowedAuthTypes.includes("obsrv") && allowedAuthTypes.includes("ad")) ? "tabs" : "non-tabs"
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
-  };
-
+  useImpression({ type: "view", pageid: pageIds.login });
   const getLoginType = () => {
     if(allowedAuthTypes.includes("obsrv")) {
       return "obsrv"
@@ -28,6 +27,24 @@ const AuthLogin = () => {
       return ""
     }
   }
+  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+
+    switch (newValue) {
+        case 0: {
+          // TODO: instrumentation
+            // generateInteractTelemetry({ edata: { id: interactIds.upload_sample_file } })
+            break;
+        }
+        case 1: {
+          // TODO: instrumentation
+            // generateInteractTelemetry({ edata: { id: interactIds.editor_schema } })
+            break;
+        }
+    }
+
+    setTabIndex(newValue);
+};
+  
 
   useEffect(() => {
     const err = searchParams.get('err');

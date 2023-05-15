@@ -10,6 +10,8 @@ const SystemMetrics = Loadable(lazy(() => import('pages/metrics/metrics')));
 const HomePage = Loadable(lazy(() => import('pages/home')));
 const MetricsDetails = Loadable(lazy(() => import('pages/metrics/details')));
 const DatasetCreateEvents = Loadable(lazy(() => import('pages/dashboard/createEvents')));
+const SystemSettings = Loadable(lazy(() => import('pages/systemSettings')));
+
 
 const MainRoutes = {
     path: '/',
@@ -50,6 +52,10 @@ const MainRoutes = {
         {
             path: 'dataset/new/master',
             element: <NewDataset master key="master-dataset" />
+        },
+        {
+            path: 'systemSettings',
+            element: <SystemSettings />
         }
     ]
 };

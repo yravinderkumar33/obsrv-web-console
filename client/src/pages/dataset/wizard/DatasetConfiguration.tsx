@@ -1,4 +1,4 @@
-import { Button, Grid, TextField, Typography, Box } from '@mui/material';
+import { Button, Grid, TextField, Typography, Box, FormHelperText } from '@mui/material';
 import * as yup from 'yup';
 import * as _ from 'lodash'
 import AnimateButton from 'components/@extended/AnimateButton';
@@ -15,7 +15,8 @@ import { checkUniqueId, getUrls, uploadToUrl, createDraftDataset } from 'service
 import { fetchJsonSchema } from 'services/json-schema';
 import FilesPreview from 'components/third-party/dropzone/FilesPreview';
 import { CardTitle, GenericCard } from 'components/styled/Cards';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds from 'data/telemetry/interact.json';
+import RejectionFiles from 'components/third-party/dropzone/RejectionFiles';
 
 const idCheck = async (value: any, resolve: any) => {
     const data = await checkUniqueId(value);
@@ -41,7 +42,7 @@ const validationSchema = yup.object()
 export const pageMeta = { pageId: 'datasetConfiguration' };
 export const s3Urls = { pageId: 'cloudFiles' };
 
-const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
+const DatasetConfiguration = ({ setShowWizard, datasetType, generateInteractTelemetry }: any) => {
     const dispatch = useDispatch();
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const maxFileSizeConfig: Number = useSelector((state: any) => state?.config?.maxFileSize || 5242880)
@@ -50,8 +51,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     const [data, setData] = useState(dataState);
     const [files, setFiles] = useState(filesState);
     const initialValues = pageData?.state?.config || { name: '', dataset_id: '' };
-
-
+    const [formErrors, setFormErrors] = useState<any>(null);
 
     const generateJSONSchema = async (data: Array<any>, config: Record<string, any>) => {
         const dataset = _.get(config, 'name');
@@ -130,6 +130,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
     };
 
     const onRemoveAll = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.file_remove_multiple } })
         setFiles(null);
     };
 
@@ -152,9 +153,6 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                         <Grid item xs={12} sm={6} lg={6}>
                                             <HtmlTooltip title="Name of the dataset" arrow placement='top-start'>
                                                 <TextField
-                                                    data-edataid={interactIds.dataset.view}
-                                                    data-objectid={values.name}
-                                                    data-objecttype="datasetCreate"
                                                     name={'name'}
                                                     label={'Dataset Name'}
                                                     onBlur={handleBlur}
@@ -174,9 +172,6 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                         <Grid item xs={12} sm={6} lg={6}>
                                             <HtmlTooltip title="ID for the dataset - for querying" arrow placement='top-start'>
                                                 <TextField
-                                                    data-edataid={interactIds.dataset.view}
-                                                    data-objectid={values.dataset_id}
-                                                    data-objecttype="dataset"
                                                     name={'dataset_id'}
                                                     label={'Dataset ID'}
                                                     onBlur={handleBlur}
@@ -199,7 +194,7 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                     <CardTitle>Upload Data/Schema</CardTitle>
                                     <Grid container spacing={3} justifyContent="center" alignItems="center">
                                         <Grid item xs={12}>
-                                            <UploadFiles data={data} setData={setData} files={files} setFiles={setFiles} maxFileSize={maxFileSizeConfig} allowSchema />
+                                            <UploadFiles generateInteractTelemetry={generateInteractTelemetry} data={data} setData={setData} files={files} setFiles={setFiles} maxFileSize={maxFileSizeConfig} allowSchema subscribeErrors={setFormErrors} />
                                         </Grid>
                                     </Grid>
                                 </GenericCard>
@@ -207,22 +202,17 @@ const DatasetConfiguration = ({ setShowWizard, datasetType }: any) => {
                                     <GenericCard elevation={1}>
                                         <Box display="flex" justifyContent="space-between">
                                             <Typography variant="h5" gutterBottom>Files Uploaded</Typography>
-                                            <Button 
-                                            data-edataid={interactIds.dataset.view}
-                                            data-objectid="removeDataset"
-                                            data-objecttype="dataset"
-                                            onClick={onRemoveAll}>Remove all</Button>
+                                            <Button onClick={onRemoveAll}>Remove all</Button>
                                         </Box>
                                         <FilesPreview files={files} showList={false} onRemove={onFileRemove} />
                                     </GenericCard>
                                 }
+                                {formErrors?.length > 0 && <RejectionFiles fileRejections={formErrors} />}
                                 <Box display="flex" justifyContent="flex-end">
                                     <AnimateButton>
-                                        <Button 
-                                        data-edataid={interactIds.dataset.view}
-                                        data-objectid="createSchema"
-                                        data-objecttype="dataset"
-                                        disabled={!(files || data)} variant="contained" sx={{ my: 2, ml: 1 }} type="submit">
+                                        <Button
+                                            onClick={_ => generateInteractTelemetry({ edata: { id: interactIds.create_dataset } })}
+                                            disabled={!(files || data)} variant="contained" sx={{ my: 2, ml: 1 }} type="submit">
                                             Create Schema
                                         </Button>
                                     </AnimateButton>

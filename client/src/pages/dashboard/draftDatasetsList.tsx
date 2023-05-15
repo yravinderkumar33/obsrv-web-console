@@ -12,7 +12,7 @@ import { publishDataset } from 'services/system';
 import { error, success } from 'services/toaster';
 import dayjs from 'dayjs';
 import * as _ from 'lodash';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds from 'data/telemetry/interact.json';
 
 const connectors = ["Kafka"];
 const alertDialogContext = { title: 'Delete Dataset', content: 'Are you sure you want to delete this dataset ?' };
@@ -109,21 +109,23 @@ const DraftDatasetsList = ({ datasets }: any) => {
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
                             <IconButton
-                                id="dataset/publish"
-                                data-edataid={interactIds.dataset.create.publish}
-                                data-objectid="dataset/publish"
-                                data-objecttype="datasetDraft"
-                                color="primary" size="large" disabled={status !== "ready_to_publish"}>
+                                data-edataid={interactIds.publish_dataset}
+                                data-objectid={row?.dataset_id}
+                                data-objecttype={row?.type === 'master' ? 'masterDataset' : 'dataset'}
+                                color="primary"
+                                size="large"
+                                disabled={status !== "ready_for_publish"}>
                                 < PlayCircleOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
                             <IconButton
-                                id="dataset/edit"
-                                data-edataid={interactIds.dataset.edit.add.transformation}
-                                data-objectid="dataset/edit"
-                                data-objecttype="datasetDraft"
-                                color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
+                                data-edataid={interactIds.edit_dataset}
+                                data-objectid={row?.dataset_id}
+                                data-objecttype={row?.type === 'master' ? 'masterDataset' : 'dataset'}
+                                color="primary"
+                                size="large"
+                                onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

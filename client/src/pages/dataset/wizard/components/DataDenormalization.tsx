@@ -1,31 +1,30 @@
-import { BugFilled, DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons"
-import { Box, Grid, Typography } from "@mui/material"
-import { Alert, Button } from "@mui/material"
-import { Stack } from "@mui/system"
-import BasicReactTable from "components/BasicReactTable"
-import MainCard from "components/MainCard"
-import ScrollX from "components/ScrollX"
-import { useEffect, useState } from "react"
+import { DeleteOutlined } from "@ant-design/icons";
+import { Stack, Box, Grid, Typography } from "@mui/material";
+import BasicReactTable from "components/BasicReactTable";
+import MainCard from "components/MainCard";
+import ScrollX from "components/ScrollX";
+import { useEffect, useState } from "react";
 import config from 'data/initialConfig';
-import { Dialog } from "@mui/material"
-import AddDenormField from "./transformationDialogs/AddDenormFields"
+import { Dialog } from "@mui/material";
+import AddDenormField from "./transformationDialogs/AddDenormFields";
 import IconButton from "components/@extended/IconButton";
 import * as _ from 'lodash';
-import { useDispatch, useSelector } from "react-redux"
-import { addState } from "store/reducers/wizard"
-import { useNavigate } from "react-router"
-import { error } from "services/toaster"
-import { updateDenormConfig } from "services/dataset"
-import { interactIds } from "data/telemetry/interactIds"
+import { useDispatch, useSelector } from "react-redux";
+import { addState } from "store/reducers/wizard";
+import { useNavigate } from "react-router";
+import { error } from "services/toaster";
+import { updateDenormConfig } from "services/dataset";
+import interactIds from "data/telemetry/interact.json"
+import { StandardWidthButton } from "components/styled/Buttons";
 
 const { spacing } = config;
 
 const getMasterDatasets = (datasets: Array<any>) => {
-    return _.filter(datasets, (dataset: Record<string, any>) => _.get(dataset, 'type') === "master-dataset" && ['ACTIVE', 'PUBLISHED'].includes(_.get(dataset, 'status')));
+    return _.filter(datasets, (dataset: Record<string, any>) => _.get(dataset, 'type') === "master-dataset" && ['ACTIVE', 'PUBLISHED',].includes(_.get(dataset, 'status')));
 }
 
 const getRedisConfig = (datasets: Array<any>) => {
-    const data = _.filter(datasets, dataset => _.get(dataset, 'type') === "master-dataset" && ['ACTIVE', 'PUBLISHED'].includes(_.get(dataset, 'status')));
+    const data = _.filter(datasets, dataset => _.get(dataset, 'type') === "master-dataset" && ['ACTIVE', 'PUBLISHED',].includes(_.get(dataset, 'status')));
     if (data.length > 0)
         return {
             redis_db_host: _.get(data, '[0].denorm_config.redis_db_host'),
@@ -109,11 +108,12 @@ const DataDenorm = (props: any) => {
             Header: 'Delete',
             Cell: ({ value, cell }: any) => {
                 return <IconButton
-                        data-edataid={interactIds.masterDataset.create.delete.denorm}
-                        data-objectid="delete"
-                        data-objecttype="masterDataset"
-                         variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
-                    <DeleteOutlined />
+                data-edataid={`${interactIds.delete_daatset_denorm}:master`}
+                data-objectid="deleteOutlined:masterDataset"
+                data-objecttype="masterDataset"
+                    size="large"
+                    onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
+                    <DeleteOutlined style={{ fontSize: '1.25rem' }} />
                 </IconButton>
             }
         }
@@ -123,14 +123,24 @@ const DataDenorm = (props: any) => {
         return <>
             <Grid item xs={12}>
                 <Stack spacing={spacing} direction="column" justifyContent="center" alignItems="center">
-                    <Alert color="error" icon={<BugFilled />}>
+                    <Typography variant="body1" fontWeight={500}>
                         There are no master datasets configured in the system. Please create one to setup data denormalization for the dataset.
-                    </Alert>
-                    <Box><Button 
-                        data-edataid={interactIds.masterDataset.create.add.denorm}
-                        data-objectid="createMasterDataset"
-                        data-objecttype="masterDataset"
-                        variant="contained" onClick={_ => openCreateMasterDataset()}>Create Master Dataset</Button></Box>
+                    </Typography>
+                    <Box>
+                        <StandardWidthButton
+                            data-edataid={`${interactIds.add_dataset_denorm}:master`}
+                            data-objectid="createMasterDataset"
+                            data-objecttype="masterDataset"
+                            onClick={_ => openCreateMasterDataset()}
+                            variant="contained"
+                            size="large"
+                            sx={{ width: 'auto' }}
+                        >
+                            <Typography variant="h5">
+                                Create Master Dataset
+                            </Typography>
+                        </StandardWidthButton>
+                    </Box>
                 </Stack>
             </Grid>
         </>
@@ -138,9 +148,14 @@ const DataDenorm = (props: any) => {
 
     const renderSelectionTable = () => {
         return <>
-            <MainCard content={false}>
+            <MainCard content={false} headerSX={{}}>
                 <ScrollX>
-                    <BasicReactTable columns={columns} data={selection} striped={true} />
+                    <BasicReactTable
+                        columns={columns}
+                        data={selection}
+                        striped={true}
+                        styles={{ '&.MuiTableCell-root': { border: '1px solid #D9D9D9', } }}
+                    />
                 </ScrollX>
             </MainCard >
         </>
@@ -156,17 +171,35 @@ const DataDenorm = (props: any) => {
                 {renderSelectionTable()}
             </Grid>
             <Grid item xs={12}>
-                <Stack spacing={spacing} direction="row">
-                    <Box><Button 
-                            data-edataid={interactIds.masterDataset.create.add.denorm}
+                <Stack spacing={spacing} direction="row" justifyContent="flex-end" my={2}>
+                    <Box>
+                        <StandardWidthButton
+                            data-edataid={`${interactIds.add_dataset_denorm_field}:master`}
                             data-objectid="addDenormField"
                             data-objecttype="masterDataset"
-                            variant="contained" onClick={_ => setDialogOpen(true)}>Add Denorm Field</Button> </Box>
-                    <Box><Button 
-                        data-edataid={interactIds.masterDataset.create.add.denorm}
-                        data-objectid="createMasterDataset"
-                        data-objecttype="masterDataset"
-                        variant="contained" onClick={_ => openCreateMasterDataset()}>Create New Master Dataset</Button></Box>
+                            variant="contained"
+                            size="large"
+                            onClick={_ => setDialogOpen(true)}
+                            sx={{ width: 'auto' }}
+                        >
+                            <Typography variant="h5">
+                                Add Denorm Field
+                            </Typography>
+                        </StandardWidthButton>
+                    </Box>
+                    <Box>
+                        <StandardWidthButton
+                            data-edataid={`${interactIds.add_dataset_denorm}:master`}
+                            data-objectid="createMasterDataset"
+                            data-objecttype="masterDataset"
+                            onClick={_ => openCreateMasterDataset()}
+                            sx={{ width: 'auto' }}
+                        >
+                            <Typography variant="h5">
+                                Create New Master Dataset
+                            </Typography>
+                        </StandardWidthButton>
+                    </Box>
                 </Stack>
             </Grid>
             <Grid item xs={12}>
@@ -186,7 +219,6 @@ const DataDenorm = (props: any) => {
 
     return <>
         <Grid container rowSpacing={spacing}>
-            {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             {masterDatasetsExists ? masterDatasetFound() : masterDatasetNotFound()}
         </Grid>
     </>

@@ -4,17 +4,15 @@ import * as _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { IWizard } from 'types/formWizard';
 import FieldSection from './FieldSection';
-import { Stack } from '@mui/material';
-import AnimateButton from 'components/@extended/AnimateButton';
-import { Button } from '@mui/material';
 import { sections as allSections } from 'data/wizard';
 import { updateClientState } from 'services/dataset';
 import { error } from 'services/toaster';
 import { useSearchParams } from 'react-router-dom';
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
+import WizardNavigator from './WizardNavigator';
 
-const SectionsConfiguration = ({ handleNext, handleBack, index, section, master, edit }: any) => {
+const SectionsConfiguration = ({ handleNext, handleBack, index, section, master, edit, generateInteractTelemetry }: any) => {
     const sections = _.get(allSections, section) || [];
     const wizardState: IWizard = useSelector((state: any) => state?.wizard);
     const jsonSchemaData = _.get(wizardState, 'pages.columns.state.schema') || [];
@@ -49,8 +47,18 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
                 section={section}
                 index={index}
                 master={master}
+                generateInteractTelemetry={generateInteractTelemetry}
             />
         );
+    }
+    const renderData = sections.filter(predicate);
+
+    const verifyErrorsResolved = () => {
+        const currenState: any = _.cloneDeep(wizardState?.pages) || {};
+        const sectionIds: any = _.map(renderData, 'id');
+        const error = _.map(sectionIds, (sectionId: any) => _.get(currenState[sectionId], 'error'));
+        const isResolved = _.every(error, (item) => item === false || item === undefined);
+        return isResolved;
     }
 
     const gotoNextSection = () => {
@@ -62,7 +70,7 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
         persistClientState();
     };
 
-    const persistClientState = async () => {
+    const persistClientState: any = async () => {
         try {
             await updateClientState({ clientState: wizardState });
         } catch (err) {
@@ -72,28 +80,19 @@ const SectionsConfiguration = ({ handleNext, handleBack, index, section, master,
 
     return <>
         <Grid container>
-            <Grid item xs={12}>{sections.filter(predicate).map(renderSection)}</Grid>
+            <Grid item xs={12}>{renderData.map(renderSection)}</Grid>
             <Grid item xs={12}>
-                <Stack direction="row" justifyContent="space-between">
-                    <AnimateButton>
-                        <Button
-                            data-edataid={`${master ? 'masterDataset': 'dataset'}:section:config:${section}`}
-                            data-objectid="previous"
-                            data-objecttype={master ? 'masterDataset': 'dataset'}
-                            variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoPreviousSection}>
-                            Previous
-                        </Button>
-                    </AnimateButton>
-                    <AnimateButton>
-                        <Button
-                            data-edataid={`${master ? 'masterDataset': 'dataset'}:section:config:${section}`}
-                            data-objectid="next"
-                            data-objecttype={master ? 'masterDataset': 'dataset'}
-                            variant="contained" sx={{ my: 3, ml: 1 }} type="button" onClick={gotoNextSection}>
-                            Next
-                        </Button>
-                    </AnimateButton>
-                </Stack>
+                <WizardNavigator
+                    showPrevious={true}
+                    pageId='section:config'
+                    master={master}
+                    section={section}
+                    gotoNextSection={gotoNextSection}
+                    gotoPreviousSection={gotoPreviousSection}
+                    nextDisabled={!verifyErrorsResolved()}
+                    edit={edit}
+                    generateInteractTelemetry={generateInteractTelemetry}
+                />
             </Grid>
         </Grid>
     </>;

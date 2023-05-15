@@ -1,21 +1,25 @@
-import { CloseCircleOutlined } from "@ant-design/icons";
-import { Button, IconButton } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    Stack, IconButton, Typography, Box, DialogActions,
+    DialogContent, DialogTitle,
+} from "@mui/material";
 import MUIForm from "components/form";
 import { useMemo, useState } from "react";
 import * as _ from 'lodash';
 import { useDispatch } from "react-redux";
 import { addState } from "store/reducers/wizard";
-import { Stack } from "@mui/material";
 import { v4 } from "uuid";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
-import { interactIds } from "data/telemetry/interactIds";
+import interactIds from "data/telemetry/interact.json";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import * as yup from "yup";
+import { StandardWidthButton } from "components/styled/Buttons";
 
 const AddPIIDialog = (props: any) => {
-    const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
+    const { id, data, onClose, selection, setSelection, actions, mainDatasetId, generateInteractTelemetry } = props;
     const [value, subscribe] = useState<any>({});
     const dispatch = useDispatch();
+    const [errors, subscribeErrors] = useState<any>(null);
 
     const filteredData = _.filter(data, payload => {
         if (_.find(selection, ['column', _.get(payload, 'column')])) return false;
@@ -45,6 +49,9 @@ const AddPIIDialog = (props: any) => {
     }
 
     const updatePIIMeta = () => {
+        generateInteractTelemetry({ edata: { id: `${interactIds.add_dataset_transformation}:${id}` } });
+        onSubmission({});
+        if (_.keys(errors).length > 0) { return; }
         const { column, transformation } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
@@ -79,43 +86,55 @@ const AddPIIDialog = (props: any) => {
             required: true,
             selectOptions: actions
         }
-    ]
+    ];
+
+    const validationSchema = yup.object().shape({
+        column: yup.string().required("This field is required"),
+        transformation: yup.string().required("This field is required"),
+    });
 
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', maxWidth: "100%", }}>
-            <DialogTitle id="alert-dialog-title">
-                Add PII Field
+            <DialogTitle component={Box} display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h5">
+                    Add PII Field
+                </Typography>
                 {onClose ? (
                     <IconButton
                         aria-label="close"
-                        data-edataid={interactIds.button.icon.menu.close}
-                        data-objectid="closeOutlined:addPII"
-                        data-objecttype="dataset"
                         onClick={onClose}
                         sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseCircleOutlined />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2} margin={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
+                <Stack spacing={2} my={1}>
+                    <MUIForm
+                        initialValues={{}}
+                        subscribe={subscribe}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={fields}
+                        size={{ xs: 12 }}
+                        validationSchema={validationSchema}
+                        subscribeErrors={subscribeErrors}
+                    />
                 </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button 
-                data-edataid={interactIds.pii.add}
-                data-objectid={value}
-                data-objecttype="dataset"
-                variant="contained" onClick={_ => updatePIIMeta()}>
-                    Add
-                </Button>
+            <DialogActions sx={{ px: 4 }}>
+                <StandardWidthButton
+                    variant="contained"
+                    onClick={_ => updatePIIMeta()}
+                    size="large"
+                    sx={{ width: 'auto' }}
+                >
+                    <Typography variant="h5">
+                        Add
+                    </Typography>
+                </StandardWidthButton>
             </DialogActions>
         </Box></>
 }

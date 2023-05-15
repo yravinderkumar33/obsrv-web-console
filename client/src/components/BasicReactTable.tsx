@@ -1,7 +1,7 @@
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@mui/material';
 import { useTable } from 'react-table';
 
-function BasicReactTable({ columns, data, striped }: any) {
+function BasicReactTable({ columns, data, striped, header = true, styles = {} }: any) {
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } = useTable({
         columns,
         data
@@ -9,22 +9,26 @@ function BasicReactTable({ columns, data, striped }: any) {
 
     return (
         <Table {...getTableProps()}>
-            <TableHead>
-                {headerGroups.map((headerGroup) => (
-                    <TableRow {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map((column: any) => (
-                            <TableCell {...column.getHeaderProps([{ className: column.className }])}>{column.render('Header')}</TableCell>
-                        ))}
-                    </TableRow>
-                ))}
-            </TableHead>
+            {header &&
+                (<TableHead>
+                    {headerGroups.map((headerGroup) => (
+                        <TableRow {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map((column: any) => (
+                                <TableCell sx={{ ...styles, textTransform: 'unset' }} {...column.getHeaderProps([{ className: column.className }])}>
+                                    <Typography variant="h5">{column.render('Header')}</Typography>
+                                </TableCell>
+                            ))}
+                        </TableRow>
+                    ))}
+                </TableHead>)
+            }
             <TableBody {...getTableBodyProps()} {...(striped && { className: 'striped' })}>
                 {rows.map((row, i) => {
                     prepareRow(row);
                     return (
                         <TableRow {...row.getRowProps()}>
                             {row.cells.map((cell: any) => (
-                                <TableCell {...cell.getCellProps([{ className: cell.column.className }])}>{cell.render('Cell')}</TableCell>
+                                <TableCell sx={{ ...styles }} {...cell.getCellProps([{ className: cell.column.className }])}>{cell.render('Cell')}</TableCell>
                             ))}
                         </TableRow>
                     );

@@ -1,5 +1,4 @@
-import { confirmationOptions } from "./common"
-
+import * as yup from "yup";
 export const kafkaForm = [
     {
         name: "topic",
@@ -7,13 +6,15 @@ export const kafkaForm = [
         tooltip: "Name of the kafka topic where raw data is stored",
         type: 'text',
         required: true,
+        validationSchema: yup.string().required('This field is required'),
     },
     {
         name: "kafkaBrokers",
         label: "Comma Seprated List of Broker Urls",
         tooltip: "The list of brokers seprated by comma that we want to send the messages to",
         type: 'text',
-        required: true
+        required: true,
+        validationSchema: yup.string().required('This field is required').min(10, 'Minimum of 10 characters is required for this field'),
     }
 ]
 
@@ -23,34 +24,42 @@ export const batchForm = [
         label: "Extraction Key",
         tooltip: "Path to the events property inside the batch object",
         type: 'text',
-        required: true
-    },
-    {
-        name: "dedupeRequired",
-        label: "Dedupe Batch ?",
-        type: 'select',
-        tooltip: 'Select if you want to dedupe batch or not ?',
-        selectOptions: confirmationOptions
+        required: true,
+        validationSchema: yup.string().required('This field is required').min(1, 'Minimum of 1 character is required for this field'),
     },
     {
         name: "batchId",
-        label: "Batch ID",
+        label: "Batch Identifier",
         type: 'text',
         required: true,
-        dependsOn: {
-            key: "dedupeRequired",
+        validationSchema: yup.string().required('This field is required').min(1, 'Minimum of 1 character is required for this field'),
+    },
+    {
+        name: "dedupeRequired",
+        label: "Enable Deduplication",
+        type: 'checkbox',
+        tooltip: 'Select if you want to dedupe batch or not ?',
+        selectOptions: [{
+            label: 'Enable Deduplication',
             value: 'yes'
-        }
+        }],
+        validationSchema: yup.array().optional(),
     },
     {
         name: "dedupePeriod",
-        label: "Dedupe Period in Minutes",
+        label: "Deduplication Period (Minutes)",
         type: 'number',
         required: true,
+        filterInclude: true,
         dependsOn: {
             key: "dedupeRequired",
             value: 'yes'
-        }
+        },
+        validationSchema: yup.number().when(
+            'dedupeRequired', {
+            is: (option: any) => { if (option) return option.includes('yes'); else return false; },
+            then: yup.number().required('This field is required')
+        }),
     }
 ]
 

@@ -1,8 +1,7 @@
-import { CameraOutlined } from '@ant-design/icons';
 import { Typography, Stack, CardMedia } from '@mui/material';
 
 import UploadCover from 'assets/images/upload/upload.svg';
-import { interactIds } from 'data/telemetry/interactIds';
+import interactIds from 'data/telemetry/interact.json';
 import { DropzopType } from 'types/dropzone';
 
 
@@ -11,10 +10,8 @@ export default function PlaceholderContent({ type }: { type?: string }) {
         <>
             {type !== DropzopType.standard && (
                 <Stack
-                    data-edataid={interactIds.file.add}
+                    data-edataid={interactIds.file_add_single}
                     data-edatatype="DRAG&DROP"
-                    data-objectid={`${DropzopType.default}:add:files`}
-                    data-objecttype="dataset"
                     spacing={2}
                     alignItems="center"
                     justifyContent="center"
@@ -22,19 +19,15 @@ export default function PlaceholderContent({ type }: { type?: string }) {
                     sx={{ width: 1, textAlign: { xs: 'center', md: 'left' } }}
                 >
                     <CardMedia
-                         data-edataid={interactIds.file.add}
-                         data-edatatype="DRAG&DROP"
-                         data-objectid={`${DropzopType.default}:add:files`}
-                         data-objecttype="dataset"
+                        data-edataid={interactIds.file_add_single}
+                        data-edatatype="DRAG&DROP"
                         component="img"
                         image={UploadCover}
                         sx={{ width: 100 }}
                     />
                     <Stack
-                         data-edataid={interactIds.file.add}
-                         data-edatatype="DRAG&DROP"
-                         data-objectid={`${DropzopType.default}:add:files`}
-                         data-objecttype="dataset"
+                        data-edataid={interactIds.file_add_single}
+                        data-edatatype="DRAG&DROP"
                         sx={{ p: 3 }}
                         spacing={1}
                     >

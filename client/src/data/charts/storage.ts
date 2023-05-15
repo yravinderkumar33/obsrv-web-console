@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import prettyBytes from 'pretty-bytes';
 import dayjs from 'dayjs';
 import defaultConf from './common';
 import promql from 'data/promql';
@@ -30,7 +31,7 @@ export default {
             yaxis: {
                 labels: {
                     formatter: function (value: number) {
-                        return `${_.round(value / (1024 * 1024), 1)} M`;
+                        return prettyBytes(+value, { minimumFractionDigits: 2 });
                     }
                 }
             },
@@ -69,33 +70,12 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: "Data Usage Growth",
+                    name: _.get(payload, 'metric.bucket') || "Data Usage Growth",
                     data: _.get(payload, 'values')
                 }))
             },
             error() {
                 return [0]
-            }
-        }
-    },
-    deep_storage_used: {
-        query: {
-            type: 'api',
-            timeout: 3000,
-            url: '/prom/api/v1/query',
-            method: 'GET',
-            headers: {},
-            body: {},
-            params: {
-                query: promql.deep_storage_used.query
-            },
-            parse: (response: any) => {
-                const result = _.get(response, 'data.result[0].value[1]');
-                if (!result) throw new Error();
-                return _.floor(result / (1024 * 1024));
-            },
-            error() {
-                return 0
             }
         }
     },
@@ -113,10 +93,10 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result[0].value[1]');
                 if (!result) throw new Error();
-                return _.floor(result / (1024 * 1024));
+                return prettyBytes(+result);
             },
             error() {
-                return 0
+                return prettyBytes(0);
             }
         }
     },

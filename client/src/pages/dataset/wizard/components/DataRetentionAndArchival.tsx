@@ -1,8 +1,8 @@
-import { InfoCircleOutlined } from "@ant-design/icons";
-import { Radio } from "@mui/material";
-import { Stack } from "@mui/material";
-import { InputLabel } from "@mui/material";
-import { Alert, Checkbox, FormControl, FormControlLabel, Grid, RadioGroup, TextField, Tooltip } from "@mui/material";
+import {
+    Radio, Stack, Checkbox, FormControl,
+    FormControlLabel, Grid, RadioGroup,
+    TextField, Tooltip, Typography
+} from "@mui/material";
 import config from 'data/initialConfig';
 import { useFormik } from "formik";
 import { useEffect, useState } from "react";
@@ -36,9 +36,11 @@ const DataRetentionAndArchival = (props: any) => {
     }, [existingState]);
 
     const renderArchivalForm = () => {
-        return <Stack spacing={1}>
-            <InputLabel htmlFor="email">Archival Policy</InputLabel>
-            <FormControl component="fieldset">
+        return <Stack spacing={1} my={2}>
+            <Typography variant="h6" fontWeight="500" aria-label='form-label' gutterBottom>
+                Archival Policy
+            </Typography>
+            <FormControl component="fieldset" sx={{ my: 1 }}>
                 <RadioGroup aria-label="gender" value={formik.values.archivalPolicy} name="archivalPolicy" row onChange={handleChange}>
                     <FormControlLabel value="purge" control={<Radio />} label="Purge Data" />
                     <FormControlLabel value="coldStorage" control={<Radio />} label="Move to Cold Storage" />
@@ -58,8 +60,10 @@ const DataRetentionAndArchival = (props: any) => {
 
     const renderRetentionForm = () => {
         const name = "configureRetention"
-        return <Stack spacing={1}>
-            <InputLabel htmlFor="email">Retention Policy</InputLabel>
+        return <Stack spacing={1} my={1}>
+            <Typography variant="h6" fontWeight="500" aria-label='form-label' gutterBottom>
+                Retention Policy
+            </Typography>
             <Grid container rowSpacing={spacing} justifyContent="flex-start" alignItems="center">
                 <Grid item xs={3}>
                     <FormControlLabel key={`${name}`} name={name} control={<Checkbox name={'configureRetention'} checked={formik.values['configureRetention']} className="size-medium" onChange={formik.handleChange} />} label={'Configure Retention Period'} />
@@ -83,7 +87,6 @@ const DataRetentionAndArchival = (props: any) => {
 
     return <>
         <Grid container rowSpacing={2}>
-            {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             <Grid item xs={12} >
                 <form onSubmit={formik.handleSubmit}>
                     {renderRetentionForm()}

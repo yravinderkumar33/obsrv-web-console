@@ -63,7 +63,6 @@ function SubRowAsync({ row, rowProps }: any) {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            // setData();
             setLoading(false);
         }, 500);
 
@@ -138,7 +137,6 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
                             else if (isResolved) return { bgcolor: `#EAFBEE` };
                             else return {};
                         }
-                        const rowProps = row.getRowProps();
 
                         return (
                             <Fragment key={i}>
@@ -155,7 +153,6 @@ function ReactTable({ columns, data, updateMyData, skipPageReset, limitHeight, t
                                         )
                                     }
                                 </TableRow>
-                                {row.isExpanded && renderRowSubComponent({ row, rowProps, visibleColumns })}
                             </Fragment>
                         );
                     })}
