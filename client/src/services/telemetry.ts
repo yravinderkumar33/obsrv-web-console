@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 import { v4 } from 'uuid'
+import { sendEvents } from './dataset';
 
 const getOptions = () => {
   return {
@@ -24,8 +25,16 @@ const getOptions = () => {
   };
 };
 
+const sendTelemetryEvents = (event: Record<string, any>) => {
+
+  const payload = { data: { id: v4(), events: [event] } }
+
+  sendEvents("web-console-telemetry", payload);
+}
+
 const logEvent = (event: Record<string, any>) => {
   console.log(event);
+  sendTelemetryEvents(event);
 }
 
 export const generateInteractEvent = ({ object, edata, eid = "INTERACT" }: any) => {
