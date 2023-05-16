@@ -107,7 +107,7 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
     const dedup_config = {
         // dedup_period will be set by API
         dedup_key: dedupKey,
-        drop_duplicates: enableDedupeChecked,
+        drop_duplicates: master ? true : enableDedupeChecked,
     };
 
     const router_config = {
