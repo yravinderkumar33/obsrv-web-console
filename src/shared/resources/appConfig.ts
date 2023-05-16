@@ -43,7 +43,7 @@ export default {
       URL: env.AUTH_AD_URL || "ldap://localhost:3004",
       BASE_DN: env.AUTH_AD_BASE_DN || "dc=example,dc=com",
       USER_NAME: env.AUTH_AD_USER_NAME || "admin",
-      PASSWORD: env.AITH_AD_PASSWORD || "password1"
+      PASSWORD: env.AUTH_AD_PASSWORD || "password1"
     }
   }
 };
