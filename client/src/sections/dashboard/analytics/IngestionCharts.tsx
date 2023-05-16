@@ -10,7 +10,8 @@ import { Grid } from "@mui/material";
 
 
 const IngestionCharts = (props: any) => {
-    const { chartName, title } = props;
+    const { chartName, title, size = { xs: 12, sm: 6, lg: 6, md: 6 } } = props;
+    const { xs, sm, md, lg } = size;
     const [charts, setCharts] = useState<any>(null);
 
     const getLiveDatasets = async () => {
@@ -37,7 +38,7 @@ const IngestionCharts = (props: any) => {
     const renderChart = (payload: any) => {
         const [id, metadata] = payload;
         return <>
-            <Grid item xs={6}>
+            <Grid item xs={xs} sm={sm} md={md} lg={lg}>
                 <ApexWithFilters title={`${title}- (${id})`} filters={_.get(filters, 'default')}>
                     <ApexChart metadata={metadata} interval={1140}></ApexChart>
                 </ApexWithFilters>
@@ -50,10 +51,8 @@ const IngestionCharts = (props: any) => {
     }, [])
 
     return <>
-        <Grid container rowSpacing={1} columnSpacing={1} marginBottom={2}>
-            {!charts && <Loader />}
-            {charts && _.map(charts, renderChart)}
-        </Grid>
+        {!charts && <Loader />}
+        {charts && _.map(charts, renderChart)}
     </>
 }
 

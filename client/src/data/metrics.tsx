@@ -250,7 +250,7 @@ export const metricsMetadata = [
                     xs: 12,
                     sm: 6,
                     md: 4,
-                    lg: 3
+                    lg: 6
                 },
                 metadata: [
                     {
@@ -288,7 +288,8 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <IngestionCharts title="Total Data Received " chartName="totalEventsProcessedTimeSeriesPerDataset" />
+                        noItem: true,
+                        chart: <IngestionCharts title="Total Data Received " chartName="totalEventsProcessedTimeSeriesPerDataset" size={{ xs: 12, sm: 6, md: 6, lg: 6 }} />
                     },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]} id="alertsIngestion">
@@ -359,7 +360,8 @@ export const metricsMetadata = [
                 },
                 metadata: [
                     {
-                        chart: <IngestionCharts title="Procesing Time" chartName="minProcessingTimeSeriesPerDataset" />
+                        noItem: true,
+                        chart: <IngestionCharts title="Procesing Time" chartName="minProcessingTimeSeriesPerDataset" size={{ xs: 12, sm: 6, md: 6, lg: 6 }} />
                     },
                     {
                         chart: <ApexWithFilters title="Incidents/Alerts" filters={[..._.get(filters, 'variant1')]} id="alertsProcessing">
@@ -413,7 +415,7 @@ export const metricsMetadata = [
                     xs: 12,
                     sm: 6,
                     md: 4,
-                    lg: 4
+                    lg: 3
                 },
                 metadata: [
                     {

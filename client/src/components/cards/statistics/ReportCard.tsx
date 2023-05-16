@@ -6,6 +6,7 @@ import { GenericCardProps } from 'types/root';
 import globalConfig from 'data/initialConfig';
 import * as _ from 'lodash';
 import { Paper } from '@mui/material';
+import { OverflowTypography } from 'components/styled/Typography';
 
 interface ReportCardProps extends GenericCardProps { }
 
@@ -15,6 +16,8 @@ const ReportCard = ({ primary, suffix, secondary, iconPrimary, color, query, des
     const primaryIcon = iconPrimary ? <IconPrimary fontSize="large" /> : null;
     const [primaryLabel, setPrimaryLabel] = useState<any>(primary);
     const [colorType, setColorType] = useState("primary");
+    const fullHeightWidth = { width: '100%', 'height': '100%', };
+    const contentSx = { height: '100%', width: '100%', px: 3, display: 'flex', };
 
     const fetchData = async () => {
         const { type } = query;
@@ -46,21 +49,23 @@ const ReportCard = ({ primary, suffix, secondary, iconPrimary, color, query, des
     }, [])
 
     return (
-        <Paper elevation={globalConfig.elevation}>
+        <Paper elevation={globalConfig.elevation} sx={fullHeightWidth}>
             <Tooltip title={description}>
-                <MainCard>
-                    <Grid container justifyContent="space-between" alignItems="center" color={_.get(theme, ['palette', colorType, 'dark'])}>
-                        <Grid item>
+                <MainCard sx={fullHeightWidth} contentSX={contentSx}>
+                    <Grid container justifyContent="center" alignItems="center" color={_.get(theme, ['palette', colorType, 'main'])}>
+                        <Grid item xs={10}>
                             <Stack spacing={1}>
                                 <Typography variant="h4">
                                     {primaryLabel} {suffix}
                                 </Typography>
-                                <Typography variant="body1" color="secondary">
-                                    {secondary}
-                                </Typography>
+                                <Tooltip title={secondary}>
+                                    <OverflowTypography variant="body1" color="secondary">
+                                        {secondary}
+                                    </OverflowTypography>
+                                </Tooltip>
                             </Stack>
                         </Grid>
-                        <Grid item>
+                        <Grid item xs={2}>
                             <Typography variant="h2" style={{ color }}>
                                 {primaryIcon}
                             </Typography>
