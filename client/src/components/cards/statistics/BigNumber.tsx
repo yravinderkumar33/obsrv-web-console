@@ -29,7 +29,8 @@ const BigNumberCard = ({ primary, secondary, iconPrimary, color, onClick }: Metr
   const primaryIcon = iconPrimary ? <IconPrimary fontSize="large" /> : null;
 
   return (
-    <Card elevation={0} sx={{ background: color, position: 'relative', color: '#fff' }} onClick={onClick}>
+    <Card
+    elevation={0} sx={{ background: color, position: 'relative', color: '#fff' }} onClick={onClick}>
       <CardContent>
         <IconWrapper>{primaryIcon}</IconWrapper>
         <Grid container direction="column" justifyContent="center" alignItems="center" spacing={1}>

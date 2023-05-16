@@ -1,10 +1,12 @@
 import { Box, Chip, Grid, MenuItem, Select, Stack, Typography, Paper, Tooltip } from "@mui/material"
-import React, { useEffect, useState } from 'react';
+import { v4 } from 'uuid'
+import React, { useState } from 'react';
 import MainCard from 'components/MainCard';
 import * as _ from 'lodash';
 import { InfoCircleOutlined } from "@ant-design/icons";
 import globalConfig from 'data/initialConfig';
 import dayjs from 'dayjs';
+import interactIds from "data/telemetry/interact.json";
 
 const transformFilter = (filter: Record<string, any>) => {
 
@@ -18,7 +20,7 @@ const transformFilter = (filter: Record<string, any>) => {
 }
 
 const ApexWithFilters = (props: any) => {
-    const { title = '', filters = [], children, type = 'chip', description = '' } = props;
+    const { title = '', filters = [], children, type = 'chip', description = '', id = v4() } = props;
     const defaultFilter = transformFilter(_.find(filters, ['default', true]));
     const [filter, setFilter] = useState<any>(_.get(defaultFilter, 'value'));
     const [step, setStep] = useState<string>(_.get(defaultFilter, 'step') || '5m');
@@ -54,17 +56,23 @@ const ApexWithFilters = (props: any) => {
 
         return <Select value={filter} size="small" onChange={handlechange}>{menuItems}</ Select>
     }
-
     const renderChipFilters = () => {
         const menuItems = _.map(filters, (filterMeta: Record<string, any>, index) => {
             const transformedFilter = transformFilter(filterMeta);
             const variant = (_.get(transformedFilter, 'value') === filter) ? "filled" : "outlined";
             const color = _.get(filterMeta, 'color') || "primary"
-            return <Chip label={filterMeta.label} variant={variant} color={color} onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
+            return <Chip
+                data-edataid={interactIds.chart_filter}
+                data-objectid={`${title}:${filterMeta.label}`}
+                data-objecttype="chart"
+                label={<div
+                    data-edataid={`${interactIds.chart_filter}:${filterMeta.telemetryId}`}
+                    data-objectid={id}
+                    data-objecttype="chart"
+                >{filterMeta.label}</div>}
+                variant={variant} color={color} onClick={_ => onClickHandler(filterMeta)} key={`chip-${index}`} />
         })
-        return <Stack direction="row" spacing={2}>
-            {menuItems}
-        </Stack>
+        return <Stack direction="row" spacing={2}> {menuItems}</Stack>
     }
 
     const childrenWithProps = React.Children.map(children, child => {

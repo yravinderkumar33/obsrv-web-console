@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 export const validateDataForm = [
     {
         name: "validateType",
@@ -24,15 +26,10 @@ export const validateDataForm = [
 export const dedupeForm = [
     {
         name: "dedupeKey",
-        label: "Dedupe Field",
+        label: "Select Dedupe Field",
         type: 'text',
         tooltip: "Column based on which you want to enable the dedupe",
-        required: true
+        required: true,
+        validationSchema: yup.string().required('This field is required'),
     },
-    {
-        name: "dedupePeriod",
-        label: "Dedupe Period in Minutes",
-        type: 'number',
-        required: true
-    }
 ]

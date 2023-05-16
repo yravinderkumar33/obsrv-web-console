@@ -1,28 +1,29 @@
 import MUIForm from "components/form";
 import * as _ from 'lodash';
-import { Checkbox, FormControlLabel, FormGroup, Grid, Radio, Stack } from "@mui/material";
-import { Alert } from "@mui/material";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { Checkbox, FormControlLabel, FormGroup, Grid, Radio, Stack, Box, Typography } from "@mui/material";
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useFormik } from "formik";
 import config from 'data/initialConfig';
-import { useEffect,useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addState } from "store/reducers/wizard";
+import HtmlTooltip from "components/HtmlTooltip";
+import * as yup from "yup";
 const { spacing } = config;
 
 const ConditionalCheckboxForm = (props: any) => {
-
     const dispatch = useDispatch();
-    const { id, type = "checkbox", justifyContents = 'flex-start', fields, name } = props;
-    const onSubmission = (value: any) => { };
-    const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || ({}));
+    const { id, type = "checkbox", justifyContents = 'flex-start', fields, name, display = "column", noChildForm = false } = props;
+    const existingState: any = useSelector((state: any) => _.get(state, ['wizard', 'pages', id]) || {});
     const [childFormValue, setChildFormValues] = useState<any>({});
+    const childFormRef = useRef([]);
+    const formikRef = useRef(null);
 
     const filterPredicate = (field: any) => {
         if (_.includes(_.get(existingState, 'formFieldSelection'), _.get(field, 'value'))) return true;
         if (_.get(field, ['selected']) === true) return true;
         return false;
-    }
+    };
 
     const getInitialValues = () => {
         const selectedFields = _.filter(fields, filterPredicate);
@@ -39,13 +40,35 @@ const ConditionalCheckboxForm = (props: any) => {
     const formik = useFormik({ initialValues: getInitialValues(), onSubmit: values => { } });
     const formValues = formik.values;
 
-    const persist = () => {
+    const persist = (error: any) => {
         const formFieldSelection = _.get(formValues, [name]);
-        persistState({ formFieldSelection, value: { ...childFormValue } });
+        persistState({ formFieldSelection, value: { ...childFormValue, }, error: error });
+    }
+
+    const onSubmission = (value: any) => { };
+
+    const validateForm = async () => {
+        let validationPassed = true;
+
+        if (childFormRef.current) {
+            if (formikRef.current) {
+                const formikReference = formikRef.current as any
+                const validationStatus = await formikReference.validateForm(childFormValue);
+                validationPassed = _.size(validationStatus) === 0;
+            }
+        }
+
+        if (formValues[id].length > 1 && validationPassed) {
+            persist(false);
+        } else if (formValues[id].length === 1) {
+            persist(false);
+        } else {
+            persist({ 'error': true });
+        }
     }
 
     useEffect(() => {
-        persist();
+        validateForm();
     }, [formValues, childFormValue]);
 
     const handleParentFormChange = (e: any) => {
@@ -65,14 +88,28 @@ const ConditionalCheckboxForm = (props: any) => {
         }
     }
 
+    const renderDescription = (description: string) => {
+        if (description.length > 50) return (
+            <HtmlTooltip title={description}>
+                <InfoOutlinedIcon fontSize="small" color="primary" />
+            </HtmlTooltip>
+        );
+        return (<Typography variant="body2" color="secondary">{`(${description})`}</Typography>);
+    }
+
     const renderFormControl = (option: Record<string, any>) => {
-        const { name, value, label, disabled = false } = option;
-        return <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={getFormType(option)} label={label} />
+        const { name, value, label, description, disabled = false } = option;
+        return (
+            <Box display="flex" alignItems="center">
+                <FormControlLabel key={`${name}-${value}`} name={name} disabled={disabled} control={getFormType(option)} label={label} disableTypography />
+                {description && renderDescription(description)}
+            </Box>
+        );
     }
 
     const renderForm = () => <form onSubmit={formik.handleSubmit}>
         <FormGroup>
-            <Stack direction="row" spacing={spacing} justifyContent={justifyContents}>
+            <Stack direction={display} spacing={spacing} justifyContent={justifyContents}>
                 {fields.map(renderFormControl)}
             </Stack>
         </FormGroup>
@@ -84,9 +121,19 @@ const ConditionalCheckboxForm = (props: any) => {
         return _.map(values, (value: any) => {
             const metadata = _.find(fields, ['value', value]);
             if (!metadata) return null;
-            const { form, description, component, value: type, ...rest } = metadata;
+            const { form, description, component, formComponent, topComponent, value: type, ...rest } = metadata;
+            childFormRef.current = form;
+            const validations: any = {};
+            _.forEach(form, formItem => {
+                const validationSchema = _.get(formItem, 'validationSchema')
+                if (!validationSchema) return;
+                validations[formItem.name] = validationSchema
+            });
+
+            const validationSchemas = yup.object().shape(validations);
+
             return <>
-                {description && <Grid key={Math.random()} item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
+                {topComponent && <Grid item sm={12}>{topComponent}</Grid>}
                 {form && (
                     <Grid item sm={12}>
                         <MUIForm
@@ -94,11 +141,14 @@ const ConditionalCheckboxForm = (props: any) => {
                             initialValues={{ type, ..._.get(existingState, 'value') }}
                             onSubmit={(value: any) => onSubmission(value)}
                             fields={form}
-                            size={{ sm: 6, xs: 6, lg: 6 }}
+                            size={{ sm: 4, xs: 4, lg: 4 }}
+                            formComponent={formComponent && React.cloneElement(formComponent, { ...props })}
+                            validationSchema={validationSchemas}
+                            ref={formikRef}
                         />
                     </Grid>)
                 }
-                {component && <Grid item sm={12}> {component}</Grid>}
+                {component && <Grid item sm={12}>{component}</Grid>}
             </>
         })
     }

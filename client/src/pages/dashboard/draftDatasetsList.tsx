@@ -12,6 +12,7 @@ import { publishDataset } from 'services/system';
 import { error, success } from 'services/toaster';
 import dayjs from 'dayjs';
 import * as _ from 'lodash';
+import interactIds from 'data/telemetry/interact.json';
 
 const connectors = ["Kafka"];
 const alertDialogContext = { title: 'Delete Dataset', content: 'Are you sure you want to delete this dataset ?' };
@@ -30,7 +31,8 @@ const DraftDatasetsList = ({ datasets }: any) => {
         const { dataset_id } = payload;
         try {
             await publishDataset({ data: { datasetId: dataset_id } });
-            dispatch(success({ message: "Dataset publishing is under progress." }))
+            dispatch(success({ message: "Dataset publishing is under progress." }));
+            window.location.reload();
         } catch (err) {
             dispatch(error({ message: "Failed to publish dataset" }));
         }
@@ -107,12 +109,24 @@ const DraftDatasetsList = ({ datasets }: any) => {
                     const status = _.toLower(row?.status)
                     return <Stack direction="row" justifyContent="center" alignItems="center">
                         <Tooltip title="Publish Dataset" onClick={(e: any) => publish(row)}>
-                            <IconButton color="primary" size="large" disabled={status !== "ready_to_publish"}>
+                            <IconButton
+                                data-edataid={interactIds.publish_dataset}
+                                data-objectid={row?.dataset_id}
+                                data-objecttype={row?.type === 'master' ? 'masterDataset' : 'dataset'}
+                                color="primary"
+                                size="large"
+                                disabled={status !== "ready_for_publish"}>
                                 < PlayCircleOutlined />
                             </IconButton>
                         </Tooltip>
                         <Tooltip title="Edit Dataset">
-                            <IconButton color="primary" size="large" onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
+                            <IconButton
+                                data-edataid={interactIds.edit_dataset}
+                                data-objectid={row?.dataset_id}
+                                data-objecttype={row?.type === 'master' ? 'masterDataset' : 'dataset'}
+                                color="primary"
+                                size="large"
+                                onClick={_ => navigateToPath(`/dataset/edit/${row.id}?master=${row.type === "master-dataset"}&status=${row.status}`)}>
                                 <EditOutlined />
                             </IconButton>
                         </Tooltip>

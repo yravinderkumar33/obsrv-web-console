@@ -25,9 +25,9 @@ import { BellOutlined, GiftOutlined } from '@ant-design/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAlertsThunk } from 'store/middlewares';
 import { alertsFilterByLabels } from 'services/transformers';
+import edataIds from 'data/telemetry/interact.json'
 
 const avatarSX = { width: 36, height: 36, fontSize: '1rem' };
-
 const actionSX = { mt: '6px', ml: 1, top: 'auto', right: 'auto', alignSelf: 'flex-start', transform: 'none' };
 
 const Notification = () => {
@@ -91,9 +91,11 @@ const Notification = () => {
 
   return (
     <Box sx={{ flexShrink: 0, ml: 0.75, zIndex: 1 }}>
+
       <IconButton
         color="secondary"
         variant="light"
+        data-edataid={edataIds.notifications}
         sx={{ color: 'text.primary', bgcolor: open ? iconBackColorOpen : iconBackColor }}
         aria-label="open profile"
         ref={anchorRef}

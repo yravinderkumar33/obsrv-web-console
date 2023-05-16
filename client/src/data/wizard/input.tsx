@@ -1,23 +1,24 @@
-import { DownloadOutlined } from '@ant-design/icons';
-import { Button } from '@mui/material';
+import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
+import { Button, Typography } from '@mui/material';
 import { forms } from 'data/forms'
 import ConditionalCheckboxForm from "pages/dataset/wizard/components/ConditionalCheckboxBasedForm";
 import { downloadJSONFile } from 'services/utils';
 import VerifyKafka from 'pages/dataset/wizard/components/VerifyKafka';
 import { generateSample } from 'data/sampleBatchEvent';
 import DataKeySelection from 'pages/dataset/wizard/components/DataKeySelection';
+import interactIds from 'data/telemetry/interact.json';
 
 const downloadBatchConfig = () => {
     downloadJSONFile(generateSample("observations"), "sampleBatchConfig.json");
 }
 
 const dataFormatQues = {
-    name: 'isBatch',
+    name: 'dataFormat',
     justifyContents: 'flex-start',
     type: 'checkbox',
     fields: [
         {
-            name: "isBatch",
+            name: "dataFormat",
             label: "Individual Events",
             value: "no",
             required: true,
@@ -27,14 +28,24 @@ const dataFormatQues = {
             form: null
         },
         {
-            name: "isBatch",
+            name: "dataFormat",
             label: "Batch Mode",
             value: "yes",
             required: true,
             form: forms.input_batch,
             description: "Select this option if you wish to send multiple events at once for this dataset.",
-            component: <>
-                <Button onClick={_ => downloadBatchConfig()} variant="contained" startIcon={<DownloadOutlined />}>Download Sample Batch Event</Button>
+            topComponent: <>
+                <Button
+                    data-edataid={`${interactIds.download_sample_batch_file}`}
+                    onClick={_ => downloadBatchConfig()}
+                    variant="text"
+                    sx={{ my: 0.5, fontSize: '1.25rem' }}
+                    startIcon={<FileDownloadOutlinedIcon fontSize='inherit' />}
+                >
+                    <Typography variant="h6">
+                        Download Sample Batch Event
+                    </Typography>
+                </Button>
             </>
         }
     ]
@@ -43,34 +54,26 @@ const dataFormatQues = {
 const datasourceQues = {
     type: 'checkbox',
     justifyContents: 'flex-start',
-    name: 'datasource',
-    defaultValues: {
-        datasource: {
-            extractionKey: "events",
-            batchId: "123",
-            dedupeRequired: "yes",
-            dedupePeriod: 7
-        }
-    },
+    name: 'dataSource',
     fields: [
         {
-            name: "datasource",
+            name: "dataSource",
             label: "API",
             value: "api",
             selected: true,
             required: true,
             disabled: true,
-            description: "API input is by enabled for all the datasets.",
+            description: "API input is by enabled for all datasets.",
             form: null
         },
         {
-            name: "datasource",
+            name: "dataSource",
             label: "Kafka",
             value: "kafka",
             required: true,
             form: forms.input_kafka,
             description: "Load streaming data in real-time from Apache Kafka. Configure topic name and list of Kafka brokers in the form: <BROKER_1>:<PORT_1>,<BROKER_2>:<PORT_2>,...",
-            component: <VerifyKafka />,
+            formComponent: <VerifyKafka />,
         },
     ]
 }
@@ -85,13 +88,13 @@ export const sections = [
         componentType: 'box',
         navigation: {
             next: 'dataSource'
-        },
+        }
     },
     {
         id: 'dataSource',
         title: 'Input Data Sources',
         description: 'Read data from a wide variety of data sources. Batch and Real time data integration.',
-        component: <ConditionalCheckboxForm {...datasourceQues} />,
+        component: <ConditionalCheckboxForm key="dataSource" {...datasourceQues} />,
         componentType: 'box',
         navigation: {
             next: 'dataFormat'
@@ -101,6 +104,6 @@ export const sections = [
         id: 'dataFormat',
         title: 'Input Data Formats',
         description: 'Decide how the data is ingested into the system.',
-        component: <ConditionalCheckboxForm {...dataFormatQues} />
+        component: <ConditionalCheckboxForm key="dataFormat" {...dataFormatQues} />
     }
 ];

@@ -8,9 +8,10 @@ import { Card, CardContent, CardHeader, Divider, Typography, CardProps, CardHead
 import { KeyedObject } from 'types/root';
 
 
-const headerSX = {
+const defaultHeaderSX = {
     px: 2.5,
     py: 1,
+    minHeight: 50,
     '& .MuiCardHeader-action': { m: '0px auto', alignSelf: 'center' }
 };
 
@@ -30,6 +31,7 @@ export interface MainCardProps extends KeyedObject {
     shadow?: string;
     elevation?: number;
     title?: ReactNode | string;
+    tagLine?: string;
     modal?: boolean;
 }
 
@@ -42,6 +44,7 @@ const MainCard = forwardRef(
             subheader,
             content = true,
             contentSX = { px: 3 },
+            headerSX = { ...defaultHeaderSX },
             darkTitle,
             divider = true,
             elevation,
@@ -49,6 +52,7 @@ const MainCard = forwardRef(
             shadow,
             sx = {},
             title,
+            tagLine,
             modal = false,
             ...others
         }: MainCardProps,
@@ -89,16 +93,25 @@ const MainCard = forwardRef(
                 {!darkTitle && title && (
                     <CardHeader
                         sx={headerSX}
-                        titleTypographyProps={{ variant: 'subtitle1' }}
+                        titleTypographyProps={{ variant: 'h5' }}
                         title={title}
                         action={secondary}
                         subheader={subheader}
                     />
                 )}
                 {darkTitle && title && <CardHeader sx={headerSX} title={<Typography variant="h4">{title}</Typography>} action={secondary} />}
+                {tagLine && (
+                    <CardHeader
+                        sx={{ ...headerSX, pt: 1, pb: 3 }}
+                        titleTypographyProps={{ variant: 'body2', color: 'secondary' }}
+                        title={tagLine}
+                        action={secondary}
+                        subheader={subheader}
+                    />
+                )}
                 {title && divider && <Divider />}
 
-            
+
                 {content && <CardContent sx={contentSX}>{children}</CardContent>}
                 {!content && children}
             </Card>

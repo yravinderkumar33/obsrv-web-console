@@ -9,10 +9,13 @@ import { fetchDatasets } from 'services/dataset';
 import * as _ from 'lodash';
 import DatasetsList from './datasetsList';
 import DraftDatasetsList from './draftDatasetsList';
+import useImpression from 'hooks/useImpression';
+import pageIds from 'data/telemetry/pageIds';
 
 const ClusterHealth = () => {
     const dataset = useSelector((state: any) => state.dataset)
     const dispatch = useDispatch();
+    useImpression({ type: "list", pageid: _.get(pageIds, 'dataset.list') });
     const showNoDatasetsError = (message = 'No Datasets Found') => <AlertMessage color='error' messsage={message} icon={BugFilled} />
     const [loading, setLoading] = useState(false);
 

@@ -13,8 +13,12 @@ import IconButtonWithTips from 'components/IconButtonWithTips';
 import { DownloadOutlined } from '@ant-design/icons';
 import { updateJSONSchema } from 'services/json-schema';
 import { downloadJsonFile } from 'utils/downloadUtils';
+import interactIds from 'data/telemetry/interact.json';
 
-const Final = ({ handleNext, handleBack, index, master }: any) => {
+import useImpression from 'hooks/useImpression';
+import pageIds from 'data/telemetry/pageIds';
+
+const Final = ({ handleBack, master, edit, generateInteractTelemetry }: any) => {
     const storeState: any = useSelector((state: any) => state);
     const wizardState: any = useSelector((state: any) => state?.wizard);
     const jsonSchema = _.get(wizardState, 'pages.jsonSchema.schema');
@@ -22,13 +26,20 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const pageIdPrefix = _.get(pageIds, [master ? 'masterdataset' : 'dataset', edit ? 'edit' : 'create']);;
+    useImpression({ type: "view", pageid: `${pageIdPrefix}:review` });
+
     const handleDownloadButton = () => {
-        const data = updateJSONSchema(jsonSchema, flattenedData);
-        downloadJsonFile(data, 'json-schema');
+        if (jsonSchema && flattenedData) {
+            generateInteractTelemetry({ edata: { id: interactIds.download_JSON } })
+            const data = updateJSONSchema(jsonSchema, { schema: flattenedData });
+            downloadJsonFile(data, 'json-schema');
+        }
     }
 
     const publish = async () => {
         try {
+            generateInteractTelemetry({ edata: { id: interactIds.save_dataset } })
             await publishDataset(wizardState, storeState, master);
             dispatch(fetchDatasetsThunk({}));
             dispatch(success({ message: 'Dataset Saved.' }));
@@ -39,18 +50,16 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
     }
 
     const gotoPreviousSection = () => {
+        generateInteractTelemetry({ edata: { id: interactIds.previous } })
         handleBack();
     }
 
     return (
         <>
-            <Box display="flex" justifyContent="space-between" alignItems="center">
-                <Typography variant="h4">
-                    Review
-                </Typography>
+            <Box display="flex" justifyContent="flex-end" alignItems="center">
                 <IconButtonWithTips
                     tooltipText="Download Schema"
-                    icon={<DownloadOutlined />}
+                    icon={<DownloadOutlined style={{ fontSize: '1.25rem' }} />}
                     handleClick={handleDownloadButton}
                     buttonProps={{ size: "large", sx: { color: "#000" } }}
                     tooltipProps={{ arrow: true }}
@@ -63,12 +72,14 @@ const Final = ({ handleNext, handleBack, index, master }: any) => {
                 <Grid item xs={12}>
                     <Stack direction="row" justifyContent="space-between">
                         <AnimateButton>
-                            <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
+                            <Button
+                                variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={gotoPreviousSection}>
                                 Previous
                             </Button>
                         </AnimateButton>
                         <AnimateButton>
-                            <Button variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
+                            <Button
+                                variant="contained" sx={{ my: 1, ml: 1 }} type="button" onClick={publish}>
                                 Save Dataset
                             </Button>
                         </AnimateButton>

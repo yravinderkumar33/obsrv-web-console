@@ -2,7 +2,7 @@
 import { Theme } from '@mui/material/styles';
 
 // assets
-import { RightCircleOutlined } from '@ant-design/icons';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 // ==============================|| OVERRIDES - ALERT TITLE ||============================== //
 
@@ -12,11 +12,10 @@ export default function AccordionSummary(theme: Theme) {
     return {
         MuiAccordionSummary: {
             defaultProps: {
-                expandIcon: <RightCircleOutlined style={{ fontSize: '1.25rem' }} />
+                expandIcon: <ArrowForwardIosIcon sx={{ fontSize: '1.25rem' }} />
             },
             styleOverrides: {
                 root: {
-                    backgroundColor: palette.secondary.lighter,
                     minHeight: 46
                 },
                 expandIconWrapper: {
@@ -24,11 +23,6 @@ export default function AccordionSummary(theme: Theme) {
                         transform: 'rotate(90deg)'
                     }
                 },
-                content: {
-                    marginTop: spacing(1.25),
-                    marginBottom: spacing(1.25),
-                    marginLeft: spacing(1)
-                }
             }
         }
     };

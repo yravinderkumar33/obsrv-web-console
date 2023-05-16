@@ -1,32 +1,42 @@
-import { CloseCircleOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, IconButton, Paper, Typography } from "@mui/material";
-import { Box, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+    IconButton, Popover, Typography,
+    Box, DialogActions, DialogContent, DialogTitle
+} from "@mui/material";
 import MUIForm from "components/form";
-import {useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import * as _ from 'lodash';
-import { useDispatch, useSelector } from "react-redux";
-import { addState, updateState } from "store/reducers/wizard";
+import { useDispatch } from "react-redux";
+import { addState } from "store/reducers/wizard";
 import { Stack } from "@mui/material";
-import { openJsonAtaEditor } from "./AddNewField";
 import { saveTransformations } from "services/dataset";
 import { error } from "services/toaster";
 import { v4 } from "uuid";
-import PreviewTransformation from "./PreviewTransform";
+import interactIds from "data/telemetry/interact.json";
+import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
+import JSONataPlayground from "components/JSONataPlayground";
+import * as yup from "yup";
+import { StandardWidthButton } from "components/styled/Buttons";
 
 const AddTransformationExpression = (props: any) => {
-    const { id, data, onClose, selection, setSelection, actions, mainDatasetId } = props;
+    const { id, data, onClose, selection, setSelection, actions, mainDatasetId, generateInteractTelemetry } = props;
     const dispatch = useDispatch();
     const [value, subscribe] = useState<any>({});
     const filteredData = _.filter(data, payload => {
         if (_.find(selection, ['column', _.get(payload, 'column')])) return false;
         return true
     });
+    const [evaluationData, setEvaluationData] = useState<string>('');
+    const [transformErrors, setTransformErrors] = useState<boolean>(false);
+    const [updateValues, setUpdateValues] = useState<any>(null);
+    const [formErrors, subscribeErrors] = useState<any>(null);
 
     const transformDataPredicate = (payload: Record<string, any>) => ({ label: _.get(payload, 'column'), value: _.get(payload, 'column') });
     const columns = useMemo(() => _.map(filteredData, transformDataPredicate), [data]);
 
     const pushStateToStore = (values: Record<string, any>) => dispatch(addState({ id, ...values }));
     const onSubmission = (value: any) => { };
+    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+    const open = Boolean(anchorEl);
 
     const fields = [
         {
@@ -58,6 +68,16 @@ const AddTransformationExpression = (props: any) => {
         }
     ];
 
+    const validationSchema = yup.object().shape({
+        column: yup.string().required("This field is required"),
+        transformation: yup.string().required("This field is required"),
+        expression: yup.string().when(
+            'transformation', {
+            is: 'custom',
+            then: yup.string().required("This field is required"),
+        }),
+    });
+
     const saveTransformation = async (payload: any, updateStateData: any) => {
         const dispatchError = () => dispatch(error({ message: "Error occured saving the transformation config" }));
         try {
@@ -75,6 +95,9 @@ const AddTransformationExpression = (props: any) => {
     }
 
     const updateTransformation = () => {
+        generateInteractTelemetry({ edata: { id: `${interactIds.add_dataset_transformation}:${id}` } });
+        onSubmission({});
+        if (_.keys(formErrors).length > 0) { return; }
         const { column, transformation, expression } = value;
         const targetColumn = _.find(data, ['column', column]);
         if (targetColumn) {
@@ -112,40 +135,90 @@ const AddTransformationExpression = (props: any) => {
         }
     }
 
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        if (!transformErrors) updateValues('expression', evaluationData);
+        setAnchorEl(null);
+    };
+
     return <>
         <Box sx={{ p: 1, py: 1.5, width: '50vw', height: 'auto', maxWidth: "100%", }}>
-            <DialogTitle id="alert-dialog-title">
-                Add Field Transformation
+            <DialogTitle component={Box} display="flex" alignItems="center" justifyContent="space-between">
+                <Typography variant="h5">
+                    Add Field Transformation
+                </Typography>
                 {onClose ? (
                     <IconButton
                         aria-label="close"
                         onClick={onClose}
                         sx={{
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
                             color: (theme) => theme.palette.grey[500],
                         }}
                     >
-                        <CloseCircleOutlined />
+                        <CloseOutlinedIcon />
                     </IconButton>
                 ) : null}
             </DialogTitle>
             <DialogContent>
-                <Stack spacing={2} margin={1}>
-                    <MUIForm initialValues={{}} subscribe={subscribe} onSubmit={(value: any) => onSubmission(value)} fields={fields} size={{ xs: 12 }} />
-                    {
-                        value && value.transformation === 'custom' && value.expression &&
-                        <PreviewTransformation fieldName={value.column} expression={value.expression} />
-                    }
-                    {_.get(value, 'transformation') === 'custom' && <Box><Button onClick={_ => openJsonAtaEditor()} variant="contained" size="small" startIcon={<EditOutlined />}>Try it Out</Button></Box>}
+                <Stack spacing={2} my={1}>
+                    <MUIForm
+                        initialValues={{}}
+                        subscribe={subscribe}
+                        onSubmit={(value: any) => onSubmission(value)}
+                        fields={fields}
+                        size={{ xs: 12 }}
+                        validationSchema={validationSchema}
+                        customUpdate={setUpdateValues}
+                        subscribeErrors={subscribeErrors}
+                    />
                 </Stack>
             </DialogContent>
-            <DialogActions>
-                <Button variant="contained" autoFocus onClick={_ => updateTransformation()}>
-                    Add
-                </Button>
+            <DialogActions sx={{ px: 4 }}>
+                {_.get(value, 'transformation') === 'custom' &&
+                    <Box mx={2}>
+                        <StandardWidthButton
+                            data-edataid={interactIds.jsonata}
+                            onClick={handleClick}
+                            sx={{ width: 'auto' }}
+                        >
+                            <Typography variant="h5">
+                                Try Out
+                            </Typography>
+                        </StandardWidthButton>
+                    </Box>}
+                <StandardWidthButton
+                    variant="contained" autoFocus
+                    onClick={_ => updateTransformation()}
+                    size="large"
+                    sx={{ width: 'auto' }}
+                >
+                    <Typography variant="h5">
+                        Add
+                    </Typography>
+                </StandardWidthButton>
             </DialogActions>
+            <Popover
+                id={id}
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                }}
+                PaperProps={{ sx: { height: '100%', width: '100%', overflow: 'hidden' } }}
+            >
+                <JSONataPlayground
+                    handleClose={handleClose}
+                    evaluationData={evaluationData}
+                    setEvaluationData={setEvaluationData}
+                    setTransformErrors={setTransformErrors}
+                    transformErrors={transformErrors}
+                />
+            </Popover>
         </Box>
     </>
 }

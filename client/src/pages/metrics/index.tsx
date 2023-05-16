@@ -19,10 +19,26 @@ function Panel(props: any) {
 }
 
 const MetricsPanel = () => {
+
     const [value, setValue] = useState(0);
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
         setValue(newValue);
     };
+
+    const renderTabHeader = (metric: any, index: any) => {
+        const { menuIcon, id, primaryLabel } = metric;
+        const MenuIcon = menuIcon
+        return <Tab
+            data-edataid={`home:metrics:tabs:${primaryLabel.toLowerCase()}`}
+            label={primaryLabel} id={id} icon={<MenuIcon />} iconPosition="start" aria-controls={`metrics-tabpanel-${index}`} key={index} />
+    }
+
+    const renderTabContent = (metric: any, index: any) => {
+        const { id } = metric;
+        return <Panel value={value} index={index} id={id} key={index}>
+            <MetricsDetails id={id} showClusterPanel={true}></ MetricsDetails>
+        </Panel>
+    }
 
     return (
         <>
@@ -33,20 +49,12 @@ const MetricsPanel = () => {
                 <Grid item xs={12} id="tabSectionStart">
                     <Box sx={{ width: '100%' }}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <Tabs variant="fullWidth" value={value} onChange={handleChange} aria-label="metrics tabs">
-                                {metricsMetadata.map((metric, index) => {
-                                    const { menuIcon, id, primaryLabel } = metric;
-                                    const MenuIcon = menuIcon
-                                    return <Tab label={primaryLabel} id={id} icon={<MenuIcon />} iconPosition="start" aria-controls={`metrics-tabpanel-${index}`} key={index} />
-                                })}
+                            <Tabs
+                                variant="fullWidth" value={value} onChange={handleChange} aria-label="metrics tabs">
+                                {metricsMetadata.map(renderTabHeader)}
                             </Tabs>
                         </Box>
-                        {metricsMetadata.map((metric, index) => {
-                            const { id } = metric;
-                            return <Panel value={value} index={index} id={id} key={index}>
-                                <MetricsDetails id={id} showClusterPanel={true}></ MetricsDetails>
-                            </Panel>
-                        })}
+                        {metricsMetadata.map(renderTabContent)}
                     </Box>
                 </Grid>
 

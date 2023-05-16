@@ -24,7 +24,7 @@ export default function TableCell(theme: Theme) {
                 root: {
                     fontSize: '0.875rem',
                     padding: 12,
-                    borderColor: theme.palette.divider
+                    overflow: 'hidden',
                 },
                 sizeSmall: {
                     padding: 8
@@ -39,7 +39,7 @@ export default function TableCell(theme: Theme) {
                     fontSize: '0.75rem',
                     textTransform: 'uppercase',
                     ...commonCell
-                }
+                },
             }
         }
     };

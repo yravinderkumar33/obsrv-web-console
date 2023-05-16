@@ -6,7 +6,7 @@ import apiEndpoints from 'data/apiEndpoints';
 
 const synctsObject = {
     "column": "syncts",
-    "type": "number",
+    "type": "integer",
     "key": "properties.syncts",
     "ref": "properties.syncts",
     "isModified": true,
@@ -18,8 +18,8 @@ const formatDenormFields = (denormFields: any) => {
         const final = _.map(denormFields, (item: any) => ({
             "column": item.denorm_out_field,
             "type": "json",
-            "key": `properties.${item.denorm_out_field}`,
-            "ref": `properties.${item.denorm_out_field}`,
+            "key": `properties.${_.get(item, 'denorm_out_field')}`,
+            "ref": `properties.${_.get(item, 'denorm_out_field')}`,
             "isModified": true,
             "required": false,
         }));
@@ -33,8 +33,8 @@ const formatNewFields = (newFields: any) => {
         const final = _.map(newFields, (item: any) => ({
             "column": item.column,
             "type": "string",
-            "key": `properties.${item.column}`,
-            "ref": `properties.${item.column}`,
+            "key": `properties.${_.get(item, 'column')}`,
+            "ref": `properties.${_.get(item, 'column')}`,
             "isModified": true,
             "required": false,
         }));
@@ -80,8 +80,10 @@ export const prepareConfigurationsBySection = (payload: Record<string, any>[], m
 export const saveDataset = ({ data = {}, config, master }: any) => {
     const { schema, state } = data;
     const validate = _.get(state, 'pages.dataValidation.formFieldSelection') || {};
-    const extractionConfig = _.get(state, 'pages.dataFormat.value');
-
+    const extractionConfig = _.get(state, 'pages.dataFormat.value') || {};
+    const dedupeConfig = _.get(state, 'pages.dedupe.optionSelection') || {};
+    const dataKey = _.get(state, 'pages.dataKey.dataKey') || null;
+    const enableDedupe = _.get(state, 'pages.dedupe.questionSelection.dedupe') || [];
 
     const validation_config = {
         validate: validate !== "none",
@@ -93,17 +95,20 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
         batch_id: _.get(extractionConfig, 'batchId'),
         extraction_key: _.get(extractionConfig, 'extractionKey'),
         dedup_config: {
-            dedup_key: _.get(extractionConfig, 'dedupeKey'),
-            dedup_period: _.get(extractionConfig, 'dedupePeriod'),
-            drop_duplicates: true
-        }
+            // dedup_period will be set by API
+            dedup_key: _.get(extractionConfig, 'batchId'),
+            drop_duplicates: _.get(extractionConfig, 'type') === 'yes',
+        },
     };
 
+    const enableDedupeChecked = enableDedupe.includes("yes");
+
+    const dedupKey = master ? dataKey : enableDedupeChecked ? _.get(dedupeConfig, 'dedupeKey') : '';
     const dedup_config = {
-        dedup_key: _.get(extractionConfig, 'dedupeKey'),
-        dedup_period: _.get(extractionConfig, 'dedupePeriod'),
-        drop_duplicates: true
-    }
+        // dedup_period will be set by API
+        dedup_key: dedupKey,
+        drop_duplicates: master ? true : enableDedupeChecked,
+    };
 
     const router_config = {
         "topic": _.get(state, 'pages.datasetConfiguration.state.config.dataset_id'),
@@ -134,24 +139,26 @@ export const datasetRead = ({ datasetId, config = {} }: any) => {
 
 export const generateIngestionSpec = ({ data = {}, config }: any) => {
     const { schema, state } = data;
+    const datasetMasterId = _.get(state, ['pages', 'datasetConfiguration', 'state', 'masterId']);
+    const datasetId = _.get(state, 'pages.datasetConfiguration.state.config.name');
     const payload = {
         schema,
         config: {
-            "dataset": _.get(state, 'pages.datasetConfiguration.state.config.name'),
+            "dataset": `${datasetMasterId || datasetId}_DAY`,
             "indexCol": _.get(state, 'pages.timestamp.indexCol') || "syncts",
             "granularitySpec": {
                 "segmentGranularity": 'DAY',
                 "rollup": false
             },
             "tuningConfig": {
-                "maxRowPerSegment": 50000,
+                "maxRowPerSegment": 500000,
                 "taskCount": 1
             },
             "ioConfig": {
                 "topic": _.get(state, 'pages.datasetConfiguration.state.config.dataset_id'),
                 "bootstrap": "kafka-headless.kafka.svc.cluster.local:9092",
                 "taskDuration": "PT1H",
-            }
+            },
         }
     };
     return http.post(apiEndpoints.generateIngestionSpec, payload, config);
@@ -161,7 +168,7 @@ export const saveTransformations = async (payload: any) => {
     return http.post(`${apiEndpoints.transformationsConfig}`, payload);
 }
 
-const connectorInfoToDraft = async (state: Record<string, any>, master: any) => {
+const saveConnectorMetadata = async (state: Record<string, any>, master: any) => {
     const data = _.get(state, ['wizard', 'pages', 'dataSource', 'value']) || {};
     const datasetId = _.get(state, ['wizard', 'pages', 'datasetConfiguration', 'state', 'masterId']);
     if (datasetId && _.get(data, 'type') === 'kafka') {
@@ -178,7 +185,7 @@ const connectorInfoToDraft = async (state: Record<string, any>, master: any) => 
 }
 
 export const publishDataset = async (state: Record<string, any>, storeState: any, master: any) => {
-    await connectorInfoToDraft(storeState, master);
+    await saveConnectorMetadata(storeState, master);
     const jsonSchema = _.get(state, 'pages.jsonSchema');
     const timestampCol = _.get(state, 'pages.timestamp.indexCol') || "syncts";
     let denormFields = _.get(state, 'pages.denorm.values') || [];
@@ -187,7 +194,7 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
     newFields = formatNewFields(newFields);
     const updatePayload = { schema: [..._.get(state, 'pages.columns.state.schema')] };
     const updatedJsonSchema = _.get(updateJSONSchema(jsonSchema, updatePayload), 'schema');
-    const saveDatasetResponse = await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
+    await saveDataset({ data: { schema: updatedJsonSchema, state }, master });
     let ingestionPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), ...denormFields, ...newFields] };
     if (timestampCol === "syncts")
         ingestionPayload = { schema: [..._.get(state, 'pages.columns.state.schema'), synctsObject, ...denormFields, ...newFields] };
@@ -195,7 +202,6 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
     const ingestionSpec = await generateIngestionSpec({ data: { schema: updatedIngestionPayload, state }, config: {} });
     return saveDatasource({ data: { state, storeState, ingestionSpec: _.get(ingestionSpec, 'data.result') } });
 }
-
 
 export const sendEvents = (datasetId: string | undefined, payload: any) => {
     return http.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, {});

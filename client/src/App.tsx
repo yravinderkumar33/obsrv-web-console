@@ -1,4 +1,5 @@
 import Routes from 'routes';
+import _ from 'lodash';
 import ThemeCustomization from 'themes';
 import Locales from 'components/Locales';
 import ScrollTop from 'components/ScrollTop';
@@ -7,6 +8,7 @@ import { useEffect } from 'react';
 import { addHttpRequestsInterceptor, errorInterceptor, responseInterceptor } from 'services/http';
 import { useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
+import { globalInteractEventsHandler } from 'services/telemetry';
 
 const App = () => {
   const navigate = useNavigate();
@@ -16,16 +18,18 @@ const App = () => {
     addHttpRequestsInterceptor({ responseInterceptor, errorInterceptor: errorInterceptor({ navigate, dispatch }) })
   }, [])
 
-  return <ThemeCustomization>
-    <Locales>
-      <ScrollTop>
-        <>
-          <Routes />
-          <Snackbar />
-        </>
-      </ScrollTop>
-    </Locales>
-  </ThemeCustomization>
+  return <div onClick={globalInteractEventsHandler}>
+    <ThemeCustomization>
+      <Locales>
+        <ScrollTop>
+          <>
+            <Routes />
+            <Snackbar />
+          </>
+        </ScrollTop>
+      </Locales>
+    </ThemeCustomization>
+  </div>
 }
 
 export default App;

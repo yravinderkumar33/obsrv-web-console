@@ -1,6 +1,7 @@
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { Alert, Grid, Button } from '@mui/material';
 import MainCard from 'components/MainCard';
+import interactIds from 'data/telemetry/interact.json';
 import UploadFiles from 'pages/dataset/wizard/UploadFiles';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -42,7 +43,11 @@ const DatasetCreateEvents = () => {
                     <UploadFiles data={data} setData={setData} files={files} setFiles={setFiles}></ UploadFiles>
                 </Grid>
                 <Grid item xs={12} sm={12}>
-                    <Button disabled={!data} variant="contained" onClick={(e: any) => pushEvents()}>Send Events</Button>
+                    <Button
+                        data-edataid={`${interactIds.create_events}${params.datasetName}`}
+                        data-objectid={params.datasetId}
+                        data-objecttype="dataset"
+                        disabled={!data} variant="contained" onClick={(e: any) => pushEvents()}>Send Events</Button>
                 </Grid>
             </Grid>
         </MainCard >

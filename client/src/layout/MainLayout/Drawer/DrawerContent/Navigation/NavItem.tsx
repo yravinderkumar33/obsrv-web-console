@@ -47,7 +47,7 @@ const NavItem = ({ item, level }: any) => {
     }, []);
 
     const textColor = 'text.primary';
-    const iconSelectedColor = 'primary.main';
+    const iconSelectedColor = 'primary.400';
 
     return (
         <ListItemButton
@@ -65,8 +65,8 @@ const NavItem = ({ item, level }: any) => {
                     },
                     '&.Mui-selected': {
                         bgcolor: 'primary.lighter',
-                        borderRight: `2px solid ${theme.palette.primary.main}`,
-                        color: iconSelectedColor,
+                        borderRight: `2px solid ${theme.palette.primary[400]}`,
+                        color: "text.primary",
                         '&:hover': {
                             color: iconSelectedColor,
                             bgcolor: 'primary.lighter'
@@ -90,7 +90,9 @@ const NavItem = ({ item, level }: any) => {
                 <ListItemIcon
                     sx={{
                         minWidth: 28,
-                        color: isSelected ? iconSelectedColor : textColor,
+                        color: textColor,
+                        stroke: theme.palette.text.primary,
+                        strokeWidth: 25,
                         ...(!drawerOpen && {
                             borderRadius: 1.5,
                             width: 36,
@@ -115,8 +117,11 @@ const NavItem = ({ item, level }: any) => {
             )}
             {(drawerOpen || (!drawerOpen && level !== 1)) && (
                 <ListItemText
+
                     primary={
-                        <Typography variant="h6" sx={{ color: isSelected ? iconSelectedColor : textColor }}>
+                        <Typography
+                            data-edataid={`navigation:${item.id}`}
+                            variant="h6" sx={{ color: textColor }}>
                             {item.title}
                         </Typography>
                     }

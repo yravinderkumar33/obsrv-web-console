@@ -1,6 +1,7 @@
 import { Box, Fab } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { ArrowUpOutlined, ArrowDownOutlined } from '@ant-design/icons';
+import  interactIds  from 'data/telemetry/interact.json';
 
 const ScrollButton = () => {
     const [icon, setIcon] = useState(<ArrowDownOutlined />);
@@ -43,6 +44,10 @@ const ScrollButton = () => {
     return (<Box sx={{ position: "fixed", bottom: 0, mb: 3, right: 0, mr: 1 }}>
         <Fab
             size="small"
+            id="window-scroll" 
+            data-edataid={interactIds.button_scroll} 
+            data-objecttype="scroll-button" 
+            data-objectid={icon.key}
             onClick={() => toggleScroll()}
             sx={{ minWidth: "unset" }}
             color="primary"

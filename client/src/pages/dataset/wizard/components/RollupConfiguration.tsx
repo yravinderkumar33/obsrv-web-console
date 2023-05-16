@@ -1,19 +1,18 @@
-import { DeleteOutlined, InfoCircleOutlined } from "@ant-design/icons"
-import { Box, Chip, FormControl, FormHelperText, Grid, MenuItem, Select, TextField } from "@mui/material"
-import { Alert, Button } from "@mui/material"
-import { Stack } from "@mui/system"
+import { DeleteOutlined } from "@ant-design/icons"
+import { Box, Chip, FormControl, FormHelperText, Grid, MenuItem, Select, TextField, Typography } from "@mui/material"
+import { Button, Stack, Dialog } from "@mui/material"
 import BasicReactTable from "components/BasicReactTable"
 import MainCard from "components/MainCard"
 import ScrollX from "components/ScrollX"
 import { useEffect, useState } from "react"
 import config from 'data/initialConfig';
-import { Dialog } from "@mui/material"
 import IconButton from "components/@extended/IconButton";
 import * as _ from 'lodash';
 import initialConfig from 'data/initialConfig'
 import AddRollup from "./transformationDialogs/AddRollup"
 import { useDispatch, useSelector } from "react-redux"
 import { addState, updateState } from "store/reducers/wizard"
+import interactIds  from "data/telemetry/interact.json"
 
 const { spacing } = config;
 
@@ -66,7 +65,11 @@ const RollupConfiguration = (props: any) => {
         {
             Header: 'Actions',
             Cell: ({ value, cell }: any) => {
-                return <IconButton variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
+                return <IconButton 
+                        data-edataid={interactIds.delete_dataset_rollup}
+                        data-objectid="deleteOutlined:rollup"
+                        data-objecttype="dataset"
+                        variant="contained" onClick={(e: any) => deleteSelection(_.get(cell, 'row.original'))}>
                     <DeleteOutlined />
                 </IconButton>
             }
@@ -104,7 +107,7 @@ const RollupConfiguration = (props: any) => {
 
     const renderSelectionTable = () => {
         return <>
-            <MainCard content={false}>
+            <MainCard content={false} headerSX={{}}>
                 <ScrollX>
                     <BasicReactTable columns={columns} data={selection} striped={true} />
                 </ScrollX>
@@ -116,8 +119,17 @@ const RollupConfiguration = (props: any) => {
         return <>
             <Grid item xs={12}> {_.get(selection, 'length') ? renderSelectionTable() : null}</Grid>
             <Grid item xs={12}>
-                <Stack spacing={spacing} direction="row">
-                    <Box><Button variant="outlined" onClick={_ => setDialogOpen(true)}>Add New Rollup</Button> </Box>
+                <Stack spacing={spacing} direction="row" justifyContent="flex-end">
+                    <Button
+                        data-edataid={interactIds.add_dataset_rollup}
+                        data-objectid="addRollup"
+                        data-objecttype="dataset"
+                        onClick={_ => setDialogOpen(true)}
+                    >
+                        <Typography variant="body2" fontWeight="500">
+                            Add New Rollup
+                        </Typography>
+                    </Button>
                 </Stack>
             </Grid>
             <Grid item xs={12}>
@@ -134,7 +146,6 @@ const RollupConfiguration = (props: any) => {
 
     return <>
         <Grid container rowSpacing={2}>
-            {description && <Grid item xs={12}> <Alert color="info" icon={<InfoCircleOutlined />}> {description}</Alert></Grid>}
             {renderRollupGranulatiry()}
             {renderRollupConfigTable()}
         </Grid>

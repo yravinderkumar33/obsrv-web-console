@@ -1,7 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import schemas from '../utils/validationSchemas';
-import * as _ from 'lodash';
 import Ajv from 'ajv';
+import { ensureLoggedInMiddleware } from '../helpers/oauth';
 const ajv = new Ajv({ allErrors: true });
 
 export default {
@@ -13,19 +12,6 @@ export default {
                 if (request.path.includes("/api/oauth")) {
                     return next();
                 }
-
-                const userId = request?.session?.user?.id
-                const errorObj = {
-                    status: 401,
-                    message: "You don't have access to view this resource",
-                    responseCode: 'UNAUTHORIZED',
-                    errorCode: 'UNAUTHORIZED',
-                };
-
-                if (!userId) {
-                    return next(errorObj);
-                } else {
-                    return next()
-                }
+               return ensureLoggedInMiddleware(request, response, next)  
             },
 };

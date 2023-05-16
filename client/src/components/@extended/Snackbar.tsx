@@ -13,6 +13,7 @@ import { CloseOutlined } from '@ant-design/icons';
 
 import { KeyedObject, RootStateProps } from 'types/root';
 import { closeSnackbar } from 'store/reducers/snackbar';
+import interactIds from 'data/telemetry/interact.json';
 
 
 function TransitionSlideLeft(props: SlideProps) {
@@ -68,10 +69,16 @@ const Snackbar = () => {
                     TransitionComponent={animation[transition]}
                     action={
                         <>
-                            <Button color="secondary" size="small" onClick={handleClose}>
+                            <Button
+                                id="button"
+                                data-edataid={interactIds.snackbar_undo}
+                                color="secondary" size="small" onClick={handleClose}>
                                 UNDO
                             </Button>
-                            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose} sx={{ mt: 0.25 }}>
+                            <IconButton
+                                id="iconButton"
+                                data-edataid={interactIds.snackbar_close}
+                                size="small" aria-label="close" color="inherit" onClick={handleClose} sx={{ mt: 0.25 }}>
                                 <CloseOutlined />
                             </IconButton>
                         </>
@@ -86,6 +93,7 @@ const Snackbar = () => {
                     open={open}
                     autoHideDuration={3000}
                     onClose={handleClose}
+                    sx={{ alignItems: 'center' }}
                 >
                     <Alert
                         variant={alert.variant}
@@ -93,12 +101,17 @@ const Snackbar = () => {
                         action={
                             <>
                                 {actionButton !== false && (
-                                    <Button color={alert.color} size="small" onClick={handleClose}>
+                                    <Button
+                                        id="button"
+                                        data-edataid={interactIds.snackbar_undo}
+                                        color={alert.color} size="small" onClick={handleClose}>
                                         UNDO
                                     </Button>
                                 )}
                                 {close !== false && (
                                     <IconButton
+                                        id="iconButton"
+                                        data-edataid={interactIds.snackbar_close}
                                         sx={{ mt: 0.25 }}
                                         size="small"
                                         aria-label="close"

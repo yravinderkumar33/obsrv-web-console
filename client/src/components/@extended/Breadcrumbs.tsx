@@ -1,27 +1,17 @@
 import { CSSProperties, ReactElement, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
 import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import { useTheme } from '@mui/material/styles';
 import { Divider, Grid, Typography } from '@mui/material';
-
-
 import MainCard from '../MainCard';
-
-
 import { ApartmentOutlined, HomeOutlined, HomeFilled } from '@ant-design/icons';
-
-
 import { OverrideIcon } from 'types/root';
 import { NavItemType } from 'types/menu';
 import { useSelector } from 'react-redux';
-
-
 export interface BreadCrumbSxProps extends CSSProperties {
     mb?: string;
     bgcolor?: string;
 }
-
 interface Props {
     card?: boolean;
     divider?: boolean;
