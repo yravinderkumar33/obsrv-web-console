@@ -44,6 +44,15 @@ export default {
       BASE_DN: env.AUTH_AD_BASE_DN || "dc=example,dc=com",
       USER_NAME: env.AUTH_AD_USER_NAME || "admin",
       PASSWORD: env.AUTH_AD_PASSWORD || "password1"
+    },
+    OIDC: {
+      ISSUER: env.AUTH_OIDC_ISSUER || '',
+      AUTHRIZATION_URL: env.AUTH_OIDC_AUTHRIZATION_URL || '',
+      TOKEN_URL: env.AUTH_OIDC_TOKEN_URL || '',
+      USER_INFO_URL: env.AUTH_OIDC_USER_INFO_URL || '',
+      CLIENT_ID: env.AUTH_OIDC_CLIENT_ID || '',
+      CLIENT_SECRET: env.AUTH_OIDC_CLIENT_SECRET || '',
+      SCOPE: env.AUTH_OIDC_SCOPE || 'openid profile email'
     }
   }
 };

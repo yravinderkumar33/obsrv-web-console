@@ -1,4 +1,3 @@
-import commonMiddlewares from '../../shared/middlewares';
 import controllers from '../controllers';
 import schemaValidator from '../middlewares/schemaValidator';
 import authMiddleware from '../middlewares/auth';
@@ -104,6 +103,26 @@ export default [
                         method: 'POST',
                         middlewares: [
                             passport.authenticate('ActiveDirectory', { failWithError: true, successReturnToOrRedirect: '/', failureRedirect: '/login' })
+                        ],
+                    }
+                ]
+
+            },
+            {
+                path: 'oidc',
+                routes: [
+                    {
+                        path: '',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('openidconnect')
+                        ],
+                    },
+                    {
+                        path: 'callback',
+                        method: 'GET',
+                        middlewares: [
+                            passport.authenticate('openidconnect', { successReturnToOrRedirect: '/', failureRedirect: '/login', failureMessage: true })
                         ],
                     }
                 ]
