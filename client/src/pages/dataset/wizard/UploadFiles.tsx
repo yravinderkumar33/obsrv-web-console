@@ -44,11 +44,11 @@ const UploadFiles = ({ data, setData, files, setFiles, maxFileSize, allowSchema 
 
         switch (newValue) {
             case 0: {
-                generateInteractTelemetry({ edata: { id: interactIds.upload_sample_file } })
+                generateInteractTelemetry && generateInteractTelemetry({ edata: { id: interactIds.upload_sample_file } })
                 break;
             }
             case 1: {
-                generateInteractTelemetry({ edata: { id: interactIds.editor_schema } })
+                generateInteractTelemetry && generateInteractTelemetry({ edata: { id: interactIds.editor_schema } })
                 break;
             }
         }
