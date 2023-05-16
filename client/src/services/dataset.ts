@@ -6,7 +6,7 @@ import apiEndpoints from 'data/apiEndpoints';
 
 const synctsObject = {
     "column": "syncts",
-    "type": "number",
+    "type": "integer",
     "key": "properties.syncts",
     "ref": "properties.syncts",
     "isModified": true,
@@ -82,6 +82,7 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
     const validate = _.get(state, 'pages.dataValidation.formFieldSelection') || {};
     const extractionConfig = _.get(state, 'pages.dataFormat.value') || {};
     const dedupeConfig = _.get(state, 'pages.dedupe.optionSelection') || {};
+    const dataKey = _.get(state, 'pages.dataKey.dataKey') || null;
     const enableDedupe = _.get(state, 'pages.dedupe.questionSelection.dedupe') || [];
 
     const validation_config = {
@@ -94,19 +95,20 @@ export const saveDataset = ({ data = {}, config, master }: any) => {
         batch_id: _.get(extractionConfig, 'batchId'),
         extraction_key: _.get(extractionConfig, 'extractionKey'),
         dedup_config: {
+            // dedup_period will be set by API
             dedup_key: _.get(extractionConfig, 'batchId'),
-            dedup_period: _.get(extractionConfig, 'dedupePeriod'),
-            drop_duplicates: (_.get(extractionConfig, 'dedupeRequired') && _.get(extractionConfig, 'dedupeRequired').includes("yes")),
-        }
+            drop_duplicates: _.get(extractionConfig, 'type') === 'yes',
+        },
     };
 
-    const enableDedupeChecked = enableDedupe.includes("yes")
+    const enableDedupeChecked = enableDedupe.includes("yes");
 
+    const dedupKey = master ? dataKey : enableDedupeChecked ? _.get(dedupeConfig, 'dedupeKey') : '';
     const dedup_config = {
-        dedup_key: enableDedupeChecked ? _.get(dedupeConfig, 'dedupeKey') : '',
-        dedup_period: enableDedupeChecked ? _.get(dedupeConfig, 'dedupePeriod') : 0,
-        drop_duplicates: enableDedupe.includes("yes")
-    }
+        // dedup_period will be set by API
+        dedup_key: dedupKey,
+        drop_duplicates: enableDedupeChecked,
+    };
 
     const router_config = {
         "topic": _.get(state, 'pages.datasetConfiguration.state.config.dataset_id'),
@@ -149,14 +151,14 @@ export const generateIngestionSpec = ({ data = {}, config }: any) => {
                 "rollup": false
             },
             "tuningConfig": {
-                "maxRowPerSegment": 50000,
+                "maxRowPerSegment": 500000,
                 "taskCount": 1
             },
             "ioConfig": {
                 "topic": _.get(state, 'pages.datasetConfiguration.state.config.dataset_id'),
                 "bootstrap": "kafka-headless.kafka.svc.cluster.local:9092",
                 "taskDuration": "PT1H",
-            }
+            },
         }
     };
     return http.post(apiEndpoints.generateIngestionSpec, payload, config);
@@ -202,7 +204,7 @@ export const publishDataset = async (state: Record<string, any>, storeState: any
 }
 
 export const sendEvents = (datasetId: string | undefined, payload: any) => {
-    return http.post(`${apiEndpoints.sendEvents} /${datasetId}`, payload, {});
+    return http.post(`${apiEndpoints.sendEvents}/${datasetId}`, payload, {});
 }
 
 export const checkUniqueId = async (id: string | undefined) => {
