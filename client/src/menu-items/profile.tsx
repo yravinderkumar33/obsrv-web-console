@@ -9,13 +9,13 @@ const other: NavItemType = {
     title: <FormattedMessage id="Profile" />,
     type: 'group',
     children: [
-        {
-            id: 'SystemSettings',
-            title: <FormattedMessage id="SystemSettings" />,
-            type: 'item',
-            icon: icons.SettingOutlined,
-            url: '/systemSettings'
-        },
+        // {
+        //     id: 'SystemSettings',
+        //     title: <FormattedMessage id="SystemSettings" />,
+        //     type: 'item',
+        //     icon: icons.SettingOutlined,
+        //     url: '/systemSettings'
+        // },
         {
             id: 'Logout',
             title: <FormattedMessage id="Logout" />,
