@@ -10,7 +10,7 @@ import SectionConfiguration from './components/SectionConfiguration';
 import { fetchDatasetsThunk } from 'store/middlewares';
 import useImpression from 'hooks/useImpression';
 import pageIds from 'data/telemetry/pageIds';
-import { generateInteractEvent } from 'services/telemetry';
+import { generateEndEvent, generateInteractEvent } from 'services/telemetry';
 import { IWizard } from 'types/formWizard';
 
 const steps = ['Schema', 'Input', 'Fields', 'Processing', 'Advanced', 'Review'];
@@ -92,6 +92,13 @@ const DatasetOnboarding = ({ edit = false, master = false, key = Math.random() }
 
     window.addEventListener("beforeunload", (ev) => {
         ev.preventDefault();
+        generateEndEvent({  
+            edata: {
+                type: "App",
+                pageid: "logout"
+            },
+            object: {}
+        })
         return ev.returnValue = 'Are you sure you want to close?';
     });
 
