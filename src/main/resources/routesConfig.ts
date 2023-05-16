@@ -95,6 +95,19 @@ export default [
                     }
                 ]
 
+            },
+            {
+                path: 'ad',
+                routes: [
+                    {
+                        path: '',
+                        method: 'POST',
+                        middlewares: [
+                            passport.authenticate('ActiveDirectory', { failWithError: true, successReturnToOrRedirect: '/', failureRedirect: '/login' })
+                        ],
+                    }
+                ]
+
             }
         ],
     },

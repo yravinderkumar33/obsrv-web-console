@@ -16,7 +16,7 @@ import interactIds from 'data/telemetry/interact.json';
 
 const tabProps = (index: number) => ({ id: `tab-${index}`, 'aria-controls': `tabpanel-${index}` });
 
-function TabPanel(props: any) {
+export function TabPanel(props: any) {
     const { children, value, index, ...other } = props;
 
     return (

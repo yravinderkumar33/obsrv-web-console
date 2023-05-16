@@ -8,9 +8,12 @@ const LoginSocialButton = () => {
 
     const theme = useTheme();
     const matchDownSM = useMediaQuery(theme.breakpoints.down('sm'));
+    const allowedAuthTypes = process.env.REACT_APP_AUTHENTICATION_ALLOWED_TYPES || ""
 
     const renderSocialButtons = (option) => {
-        return <Button
+        return (
+           ( _.includes(allowedAuthTypes, _.lowerCase(option.value))) ? 
+        <Button
             data-edataid={_.get(interactIds, option.edataId)}
             key={option.value}
             variant="outlined"
@@ -21,7 +24,8 @@ const LoginSocialButton = () => {
             onClick={option.onClick}
         >
             {!matchDownSM && option.label}
-        </Button>
+        </Button> : <></>
+        )
     }
 
     return (
