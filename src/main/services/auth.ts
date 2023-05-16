@@ -6,8 +6,9 @@ import { Strategy as ClientPasswordStrategy } from 'passport-oauth2-client-passw
 import { Strategy as BearerStrategy } from 'passport-http-bearer';
 import { v4 } from "uuid";
 const KeyCloakStrategy = require('passport-keycloak-oauth2-oidc').Strategy;
-import ActiveDirectoryStrategy  from 'passport-activedirectory';
+import ActiveDirectoryStrategy from 'passport-activedirectory';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import { Strategy as OpenIDConnectStrategy } from 'passport-openidconnect';
 import userService from './oauthUsers';
 import clientService from './oauthClients';
 import accessTokenService from './oauthAccessTokens';
@@ -138,20 +139,55 @@ passport.use(new GoogleStrategy({
 
 passport.use(new ActiveDirectoryStrategy(
     {
-    integrated: false,
-    ldap: {
-        url: appConfig.AUTH.AD.URL,
-        baseDN: appConfig.AUTH.AD.BASE_DN,
-        username: appConfig.AUTH.AD.USER_NAME,
-        passport: appConfig.AUTH.AD.PASSWORD
-    }
-}, (profile: any, ad: any, done: any) => {
-    ad.isUserMemberOf(profile._json.dn, 'AccessGroup',  (err:any , isMember: any) => {
-        
-        if (err) {
-            console.log(err)
-            return done(err)
+        integrated: false,
+        ldap: {
+            url: appConfig.AUTH.AD.URL,
+            baseDN: appConfig.AUTH.AD.BASE_DN,
+            username: appConfig.AUTH.AD.USER_NAME,
+            passport: appConfig.AUTH.AD.PASSWORD
         }
+    }, (profile: any, ad: any, done: any) => {
+        ad.isUserMemberOf(profile._json.dn, 'AccessGroup', (err: any, isMember: any) => {
+
+            if (err) {
+                console.log(err)
+                return done(err)
+            }
+
+            if (profile.emails && profile.emails?.length <= 0) {
+                return done(new Error(emailAddressErrorMessage))
+            }
+
+            const emailAddress = profile?.emails && profile?.emails[0]['value']
+            if (!emailAddress) {
+                return done(new Error(emailAddressErrorMessage))
+            }
+            userService.find({ email_address: emailAddress }).then((user: any) => {
+                return done(null, user)
+            }).catch((error: any) => {
+                console.log(error)
+                if (error === "user_not_found") {
+                    return createUser(emailAddress, PROVIDERS.AD, done)
+                } else {
+                    return done(error)
+                }
+            })
+        })
+    }))
+
+
+
+passport.use(new OpenIDConnectStrategy({
+    issuer: appConfig.AUTH.OIDC.ISSUER,
+    authorizationURL: appConfig.AUTH.OIDC.AUTHRIZATION_URL,
+    tokenURL: appConfig.AUTH.OIDC.TOKEN_URL,
+    userInfoURL: appConfig.AUTH.OIDC.USER_INFO_URL,
+    clientID: appConfig.AUTH.OIDC.CLIENT_ID,
+    clientSecret: appConfig.AUTH.OIDC.CLIENT_SECRET,
+    scope: appConfig.AUTH.OIDC.SCOPE,
+    callbackURL: `${appConfig.APP_BASE_URL}/api/auth/oidc/callback`
+},
+    (issuer: string, profile: any, done: any) => {
 
         if (profile.emails && profile.emails?.length <= 0) {
             return done(new Error(emailAddressErrorMessage))
@@ -164,15 +200,19 @@ passport.use(new ActiveDirectoryStrategy(
         userService.find({ email_address: emailAddress }).then((user: any) => {
             return done(null, user)
         }).catch((error: any) => {
-        console.log(error)
+            console.log(error)
             if (error === "user_not_found") {
-                return createUser(emailAddress, PROVIDERS.AD, done)
+                console.log("creating user")
+                return createUser(emailAddress, issuer, done)
             } else {
                 return done(error)
             }
         })
-    })
-}))
+
+    }
+));
+
+
 
 const createUser = (emailAddress: string, provider: string, done: any) => {
     const userInfo: User = {
