@@ -16,7 +16,10 @@ export default {
                     show: false
                 }
             },
-            grid: defaultConf.grid,
+            grid: {
+                ...defaultConf.grid,
+                borderColor: 'rgba(26, 17, 16, .2)',
+            },
             annotations: {
                 yaxis: [
                     {
@@ -128,7 +131,10 @@ export default {
                     show: false
                 }
             },
-            grid: defaultConf.grid,
+            grid: {
+                ...defaultConf.grid,
+                borderColor: 'rgba(26, 17, 16, .2)',
+            },
             annotations: {
                 yaxis: [
                     {
