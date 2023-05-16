@@ -91,5 +91,17 @@ export default {
     },
     "apiThroughput": {
         "query": 'sum_over_time(sum by (job) (node_total_api_calls{job="web-console"})[$interval:$res]) / avg_over_time(avg by (job) (node_query_response_time{job="web-console"})[$interval:$res])'
+    },
+    "postgres_backup_files": {
+        "query": 's3_objects{job="s3-backups", bucket=~"backups-obsrv-dev-725876873105", prefix=~"postgresql"}'
+    },
+    "redis_backup_files": {
+        "query": 's3_objects{job="s3-backups", bucket=~"backups-obsrv-dev-725876873105", prefix=~"redis"}'
+    },
+    "postgres_last_backup_time": {
+        "query": '(time() - s3_last_modified_object_date{job="s3-backups", bucket=~"backups-obsrv-dev-725876873105", prefix=~"postgresql"})'
+    },
+    "redis_last_backup_time": {
+        "query": '(time() - s3_last_modified_object_date{job="s3-backups", bucket=~"backups-obsrv-dev-725876873105", prefix=~"redis"})'
     }
 }

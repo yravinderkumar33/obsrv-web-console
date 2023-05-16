@@ -4,6 +4,9 @@ import { error } from './toaster';
 
 axiosRetry(axios, { retries: 3 });
 
+axios.defaults.headers.common['Cache-Control'] = 'no-cache';
+axios.defaults.headers.common['Pragma'] = 'no-cache';
+
 const http = axios;
 
 const request = (config: AxiosRequestConfig) => {
