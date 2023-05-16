@@ -423,6 +423,22 @@ export const metricsMetadata = [
                     {
                         description: "This chart shows the total size of deep storage.",
                         chart: <ReportCard primary="0" secondary="Deep Storage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'deep_storage_total.query')} />
+                    },
+                    {
+                        description: "This chart shows total number of backup files for postgres",
+                        chart: <ReportCard primary="0" secondary="Total Postgres backup files" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'postgres_backup_files.query')} />
+                    },
+                    {
+                        description: "This chart shows total number of backup files for redis",
+                        chart: <ReportCard primary="0" secondary="Total Redis backup files" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'redis_backup_files.query')} />
+                    },
+                    {
+                        description: "This chart shows hours since last backup for postgres",
+                        chart: <ReportCard primary="0" secondary="Time since last backup (Postgres)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'postgres_last_backup_time.query')} />
+                    },
+                    {
+                        description: "This chart shows hours since last backup for redis",
+                        chart: <ReportCard primary="0" secondary="Time since last backup (Redis)" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'redis_last_backup_time.query')} />
                     }
                 ]
             },

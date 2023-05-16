@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import defaultConf from './common';
 import promql from 'data/promql';
 import endpoints from 'data/apiEndpoints';
+import prettyMilliseconds from 'pretty-ms';
 
 export default {
     data_growth_over_time: {
@@ -139,6 +140,90 @@ export default {
             },
             error() {
                 return 0
+            }
+        }
+    },
+    postgres_backup_files: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/prom/api/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.postgres_backup_files.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'data.result[0].value[1]');
+                if (!result) throw new Error();
+                return result;
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    redis_backup_files: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/prom/api/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.redis_backup_files.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'data.result[0].value[1]');
+                if (!result) throw new Error();
+                return result;
+            },
+            error() {
+                return 0
+            }
+        }
+    },
+    postgres_last_backup_time: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/prom/api/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.postgres_last_backup_time.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'data.result[0].value[1]');
+                if (!result) throw new Error();
+                return prettyMilliseconds(result * 1000);
+            },
+            error() {
+                return prettyMilliseconds(0)
+            }
+        }
+    },
+    redis_last_backup_time: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: '/prom/api/v1/query',
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.redis_last_backup_time.query
+            },
+            parse: (response: any) => {
+                const result = _.get(response, 'data.result[0].value[1]');
+                if (!result) throw new Error();
+                return prettyMilliseconds(result * 1000);
+            },
+            error() {
+                return prettyMilliseconds(0)
             }
         }
     }
