@@ -26,10 +26,9 @@ const getOptions = () => {
 };
 
 const sendTelemetryEvents = (event: Record<string, any>) => {
-
   const payload = { data: { id: v4(), events: [event] } }
-
-  sendEvents("web-console-telemetry", payload);
+  console.log(payload);
+  // sendEvents("web-console-telemetry", payload);
 }
 
 const logEvent = (event: Record<string, any>) => {
