@@ -10,4 +10,11 @@ const VerticalOverflowText = styled(Typography)(({ theme }) => ({
     maxWidth: '95%'
 }));
 
-export { VerticalOverflowText };
+const OverflowTypography = styled(Typography)(({ theme }) => ({
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    whiteSpace: 'nowrap',
+    maxWidth: '85%'
+}));
+
+export { VerticalOverflowText, OverflowTypography };

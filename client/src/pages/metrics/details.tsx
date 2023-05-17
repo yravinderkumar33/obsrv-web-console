@@ -49,17 +49,16 @@ const MetricsDetails = (props: any) => {
             return _.flatten(_.map(charts, (value, index) => {
                 const { size, metadata = [] } = value;
                 const { xs, sm, lg, md } = size;
-                return <Grid container rowSpacing={1} columnSpacing={1} key={`chart-${index}`} marginBottom={1}>
-                    {
-                        _.map(metadata, (meta, index) => {
-                            const { chart, description } = meta;
-                            return <Grid item xs={xs} sm={sm} md={md} lg={lg} key={`${index}-${Math.random()}`}>
-                                {React.cloneElement(chart, { description })}
-                            </Grid>
-                        })
-                    }
-                </Grid>
-            }))
+                return (
+                    _.map(metadata, (meta, metaIndex) => {
+                        const { chart, description, noItem = false } = meta;
+                        if (noItem) return React.cloneElement(chart, { description });
+                        return <Grid item xs={xs} sm={sm} md={md} lg={lg} key={`${metaIndex}-${Math.random()}`} alignItems="stretch">
+                            {React.cloneElement(chart, { description })}
+                        </Grid>
+                    })
+                );
+            }));
         }
     }
 
@@ -90,7 +89,9 @@ const MetricsDetails = (props: any) => {
                         </Grid>
                     }
                 </Grid>
-                {renderCharts(metadata)}
+                <Grid container rowSpacing={1} columnSpacing={1} marginBottom={1} alignItems="stretch">
+                    {renderCharts(metadata)}
+                </Grid>
             </MainCard >
         </>
     )
