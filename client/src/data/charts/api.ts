@@ -6,6 +6,11 @@ import promql from 'data/promql';
 import defaultConf from './common';
 import endpoints from 'data/apiEndpoints';
 
+const labelsMapping = {
+    "alert-manager": "Alerts",
+    "prometheus": "Reports"
+}
+
 export default {
     node_query_response_time_min: {
         query: {
@@ -113,7 +118,7 @@ export default {
             yaxis: {
                 labels: {
                     formatter: function (value: number) {
-                        return ` ${_.round(value, 1)}`;
+                        return ` ${_.round(value, 0)}`;
                     }
                 },
                 title: {
@@ -159,7 +164,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: _.get(payload, 'metric.entity') || 'Total Api Calls',
+                    name: _.get(labelsMapping, _.get(payload, 'metric.entity')) || 'Total Api Calls',
                     data: _.get(payload, 'values')
                 }))
             },
@@ -200,7 +205,7 @@ export default {
             yaxis: {
                 labels: {
                     formatter: function (value: number) {
-                        return ` ${_.round(value, 1)}`;
+                        return ` ${_.round(value, 0)}`;
                     }
                 },
                 title: {
@@ -246,7 +251,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: _.get(payload, 'metric.entity') || 'Total Failed Api Calls',
+                    name: _.get(labelsMapping, _.get(payload, 'metric.entity')) || 'Total Failed Api Calls',
                     data: _.get(payload, 'values')
                 }))
             },
@@ -399,7 +404,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: _.get(payload, 'metric.entity') || "Avg Query Response Time",
+                    name: _.get(labelsMapping, _.get(payload, 'metric.entity')) || "Avg Query Response Time",
                     data: _.get(payload, 'values')
                 }))
             },
@@ -504,5 +509,45 @@ export default {
                 return clonedPayload;
             }
         }
-    }
+    },
+    ninty_percentile_query_response_time: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: endpoints.prometheusRead,
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.ninty_percentile_query_response_time.query,
+            },
+            parse: (response: any) => {
+                const value = _.get(response, 'data.result[0].value[1]') || 0;
+                return prettyMilliseconds(+value)
+            },
+            error() {
+                return [0, "error"];
+            }
+        }
+    },
+    seventy_percentile_query_response_time: {
+        query: {
+            type: 'api',
+            timeout: 3000,
+            url: endpoints.prometheusRead,
+            method: 'GET',
+            headers: {},
+            body: {},
+            params: {
+                query: promql.seventy_percentile_query_response_time.query,
+            },
+            parse: (response: any) => {
+                const value = _.get(response, 'data.result[0].value[1]') || 0;
+                return prettyMilliseconds(+value)
+            },
+            error() {
+                return [0, "error"];
+            }
+        }
+    },
 }

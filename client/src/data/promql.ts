@@ -60,13 +60,13 @@ export default {
         "query": 'sum by (entity)(increase(node_failed_api_calls[$interval]))'
     },
     "node_query_response_time_min": {
-        "query": "min_over_time(sum by (job) (node_query_response_time{job='web-console'})[1d:5m])"
+        "query": "min_over_time(sum by (job) (node_query_response_time{job='web-console-ext'})[1d:5m])"
     },
     "node_query_response_time_max": {
-        "query": "max_over_time(sum by (job) (node_query_response_time{job='web-console'})[$interval:5m])"
+        "query": "max_over_time(sum by (job) (node_query_response_time{job='web-console-ext'})[$interval:5m])"
     },
     "node_query_response_time_avg": {
-        "query": "avg_over_time(sum by (job) (node_query_response_time{job='web-console'})[$interval:5m])"
+        "query": "avg_over_time(sum by (job) (node_query_response_time{job='web-console-ext'})[$interval:5m])"
     },
     "node_query_response_time_avg_timeseries": {
         "query": 'avg_over_time(sum by (entity) (node_query_response_time)[$interval:$res])'
@@ -90,7 +90,7 @@ export default {
         "query": 'sum(velero_backup_success_total{schedule=~".*"}) / sum(velero_backup_attempt_total{schedule=~".*"})'
     },
     "apiThroughput": {
-        "query": 'sum_over_time(sum by (job) (node_total_api_calls{job="web-console"})[$interval:$res]) / avg_over_time(avg by (job) (node_query_response_time{job="web-console"})[$interval:$res])'
+        "query": 'sum_over_time(sum by (job) (node_total_api_calls{job="web-console-ext"})[$interval:$res]) / avg_over_time(avg by (job) (node_query_response_time{job="web-console-ext"})[$interval:$res])'
     },
     "postgres_backup_files": {
         "query": 's3_objects{job="s3-backups", bucket=~"backups-obsrv-dev-725876873105", prefix=~"postgresql"}'
@@ -103,5 +103,14 @@ export default {
     },
     "redis_last_backup_time": {
         "query": '(time() - s3_last_modified_object_date{job="s3-backups", bucket=~"backups-obsrv-dev-725876873105", prefix=~"redis"})'
+    },
+    "ninty_percentile_query_response_time": {
+        "query": 'quantile(0.9, max_over_time(node_query_response_time[1d]))'
+    },
+    "seventy_percentile_query_response_time": {
+        "query": 'quantile(0.7, max_over_time(node_query_response_time[1d]))'
+    },
+    "ninty_percentile_query_response_time_interval": {
+        "query": 'quantile(0.9, max_over_time(node_query_response_time[$interval]))'
     }
 }

@@ -182,7 +182,7 @@ export const metricsMetadata = [
                     {
                         description: "Shows the api failure percentage for today",
                         chart: <ReportCard primary="0" secondary="Api Failure Percentage" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'api_failure_percent.query')} suffix="%" />
-                    },
+                    }
                 ]
             },
             medium: {
@@ -216,6 +216,14 @@ export const metricsMetadata = [
                         chart: <ApexWithFilters title="API Throughput" filters={_.get(filters, 'default')} id="apiThroughput">
                             <ApexChart metadata={_.get(chartMeta, 'api_throughput')} interval={1140}></ApexChart>
                         </ApexWithFilters>
+                    },
+                    {
+                        description: "Shows the 90th percentile for query response time",
+                        chart: <ReportCard primary="0" secondary="90th Percentile Query Response Time" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'ninty_percentile_query_response_time.query')} />
+                    },
+                    {
+                        description: "Shows the 70th percentile for query response time",
+                        chart: <ReportCard primary="0" secondary="70th Percentile Query Response Time" iconPrimary={BarChartOutlined} query={_.get(chartMeta, 'seventy_percentile_query_response_time.query')} />
                     }
                 ]
             },
