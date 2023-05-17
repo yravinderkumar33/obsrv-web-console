@@ -11,6 +11,12 @@ const labelsMapping = {
     "prometheus": "Reports"
 }
 
+const checkLabelExists = (entity: any, fallbackLabel: string) => {
+    if (!entity) return fallbackLabel;
+    const label = _.get(labelsMapping, entity);
+    return label || entity;
+}
+
 export default {
     node_query_response_time_min: {
         query: {
@@ -164,7 +170,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: _.get(labelsMapping, _.get(payload, 'metric.entity')) || 'Total Api Calls',
+                    name: checkLabelExists(_.get(payload, 'metric.entity'), 'Total Api Calls'),
                     data: _.get(payload, 'values')
                 }))
             },
@@ -251,7 +257,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: _.get(labelsMapping, _.get(payload, 'metric.entity')) || 'Total Failed Api Calls',
+                    name: checkLabelExists(_.get(payload, 'metric.entity'), 'Total Failed Api Calls'),
                     data: _.get(payload, 'values')
                 }))
             },
@@ -404,7 +410,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: _.get(labelsMapping, _.get(payload, 'metric.entity')) || "Avg Query Response Time",
+                    name: checkLabelExists(_.get(payload, 'metric.entity'), "Avg Query Response Time"),
                     data: _.get(payload, 'values')
                 }))
             },

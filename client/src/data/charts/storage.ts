@@ -71,7 +71,7 @@ export default {
             parse: (response: any) => {
                 const result = _.get(response, 'data.result');
                 return _.map(result, payload => ({
-                    name: _.get(payload, 'metric.bucket') || "Data Usage Growth",
+                    name: _.get(payload, 'metric.job') || "Data Usage Growth",
                     data: _.get(payload, 'values')
                 }))
             },
